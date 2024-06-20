@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore;
 using ASI.Basecode.Data.Models;
 
 namespace ASI.Basecode.Data
@@ -22,7 +19,7 @@ namespace ASI.Basecode.Data
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<TicketPriority> Priorities { get; set; }
         public DbSet<TicketStatus> Statuses { get; set; }
-        public DbSet<TicketHistory> TicketHistories { get; set; }
+        public DbSet<TicketActivity> TicketActivities { get; set; }
         public DbSet<Feedback> Feedbacks { get; set; }
         public DbSet<UserPreference> UserPreferences { get; set; }
         public DbSet<Article> Articles { get; set; }
@@ -69,67 +66,196 @@ namespace ASI.Basecode.Data
                 new ArticleCategory { CategoryId = 5, Name = "Customer Support" }
             );
 
-            // User Relationships
 
+            ConfigureUserEntity(modelBuilder);
+            ConfigureTicketEntity(modelBuilder);
+            ConfigureOtherEntities(modelBuilder);
+        }
 
+        private void ConfigureUserEntity(ModelBuilder modelBuilder)
+        {
             // User To Role
             modelBuilder.Entity<User>()
                 .HasOne(u => u.Role)
                 .WithMany(r => r.Users)
                 .HasForeignKey(u => u.RoleId)
+                .IsRequired();
+
+            modelBuilder.Entity<UserRole>()
+                .HasMany(r => r.Users)
+                .WithOne(u => u.Role)
+                .HasForeignKey(u => u.RoleId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            // User to Created Ticket
             modelBuilder.Entity<User>()
                 .HasMany(u => u.CreatedTickets)
                 .WithOne(t => t.Creator)
                 .HasForeignKey(t => t.CreatedBy)
                 .OnDelete(DeleteBehavior.Cascade);
-            
+
+            modelBuilder.Entity<Ticket>()
+                .HasOne(t => t.Creator)
+                .WithMany(u => u.CreatedTickets)
+                .HasForeignKey(t => t.CreatedBy)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
+            // User to Assigned Ticket
             modelBuilder.Entity<User>()
                 .HasMany(u => u.AssignedTickets)
-                .WithOne(t => t.Assignee)
+                .WithOne(t => t.AssignedAgent)
                 .HasForeignKey(t => t.AssignedTo)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Ticket>()
+                .HasOne(t => t.AssignedAgent)
+                .WithMany(u => u.AssignedTickets)
+                .HasForeignKey(t => t.AssignedTo)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
+            // User and TicketActivity
             modelBuilder.Entity<User>()
-                .HasMany(u => u.TicketHistories)
+                .HasMany(u => u.TicketActivities)
                 .WithOne(th => th.User)
                 .HasForeignKey(th => th.PerformedBy)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<User>()
-               .HasMany(u => u.Feedbacks)
-               .WithOne(f => f.User)
-               .HasForeignKey(f => f.UserId)
-               .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<TicketActivity>()
+                .HasOne(th => th.User)
+                .WithMany(u => u.TicketActivities)
+                .HasForeignKey(th => th.PerformedBy)
+                .OnDelete(DeleteBehavior.Restrict);
 
+            // User and Feedbacks
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.Feedbacks)
+                .WithOne(f => f.User)
+                .HasForeignKey(f => f.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Feedback>()
+                .HasOne(f => f.User)
+                .WithMany(u => u.Feedbacks)
+                .HasForeignKey(f => f.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // User and Articles
             modelBuilder.Entity<User>()
                 .HasMany(u => u.CreatedArticles)
                 .WithOne(a => a.Author)
                 .HasForeignKey(a => a.AuthorId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Article>()
+                .HasOne(a => a.Author)
+                .WithMany(u => u.CreatedArticles)
+                .HasForeignKey(a => a.AuthorId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // User and UserPreference
             modelBuilder.Entity<User>()
-                .HasMany(u => u.UserPreferences)
+                .HasOne(u => u.Preference)
                 .WithOne(up => up.User)
-                .HasForeignKey(up => up.UserId)
+                .HasForeignKey<UserPreference>(up => up.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<UserPreference>()
+                .HasOne(up => up.User)
+                .WithOne(u => u.Preference)
+                .HasForeignKey<UserPreference>(up => up.UserId)
+                .IsRequired();
+       
+        }
 
-
-            // Ticket Relationships
-
+        private void ConfigureTicketEntity(ModelBuilder modelBuilder)
+        {
+            // Ticket and Ticket Status
             modelBuilder.Entity<Ticket>()
-                .HasMany(t => t.TicketHistories)
+                .HasOne(t => t.Status)
+                .WithMany(s => s.Tickets)
+                .HasForeignKey(t => t.StatusId)
+                .IsRequired();
+
+            modelBuilder.Entity<TicketStatus>()
+                .HasMany(s => s.Tickets)
+                .WithOne(t => t.Status)
+                .HasForeignKey(t => t.StatusId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
+            // Ticket and Ticket Priority
+            modelBuilder.Entity<Ticket>()
+                .HasOne(t => t.Priority)
+                .WithMany(s => s.Tickets)
+                .HasForeignKey(t => t.PriorityId)
+                .IsRequired();
+
+            modelBuilder.Entity<TicketPriority>()
+                .HasMany(s => s.Tickets)
+                .WithOne(t => t.Priority)
+                .HasForeignKey(t => t.PriorityId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
+            // Ticket and Ticket History
+            modelBuilder.Entity<Ticket>()
+                .HasMany(t => t.TicketActivities)
                 .WithOne(th => th.Ticket)
                 .HasForeignKey(th => th.TicketId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Cascade); // Deleting Ticket will cascade to delete TicketActivities
 
+            modelBuilder.Entity<TicketActivity>()
+                .HasOne(th => th.Ticket)
+                .WithMany(t => t.TicketActivities)
+                .HasForeignKey(th => th.TicketId)
+                .OnDelete(DeleteBehavior.Restrict); // Deleting TicketActivity will not delete its Ticket
+
+
+            // Ticket and Ticket Feedback
             modelBuilder.Entity<Ticket>()
-               .HasOne(t => t.Feedback)
-               .WithOne(f => f.Ticket)
-               .HasForeignKey<Feedback>(f => f.TicketId)
-               .OnDelete(DeleteBehavior.Cascade);
+                .HasOne(t => t.Feedback)
+                .WithOne(f => f.Ticket)
+                .HasForeignKey<Feedback>(f => f.TicketId)
+                .OnDelete(DeleteBehavior.Cascade); // Deleting Ticket will delete Feedback
+
+            modelBuilder.Entity<Feedback>()
+                .HasOne(f => f.Ticket)
+                .WithOne(t => t.Feedback)
+                .HasForeignKey<Ticket>(t => t.TicketId)
+                .OnDelete(DeleteBehavior.Restrict);
+        }
+
+        private void ConfigureOtherEntities(ModelBuilder modelBuilder)
+        {
+            // Article to Category
+
+            modelBuilder.Entity<Article>()
+                .HasOne(a => a.Category)
+                .WithMany(c => c.Articles)
+                .HasForeignKey(a => a.CategoryId)
+                .IsRequired();
+
+            modelBuilder.Entity<ArticleCategory>()
+                .HasMany(ac  => ac.Articles)
+                .WithOne(a => a.Category)
+                .HasForeignKey(a => a.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            //TicketActivity to TicketOperation
+
+            modelBuilder.Entity<TicketActivity>()
+                .HasOne(ta => ta.Operation)
+                .WithMany(o => o.TicketActivities)
+                .HasForeignKey(ta => ta.OperationId)
+                .IsRequired();
+
+            modelBuilder.Entity<TicketOperation>()
+                .HasMany(to => to.TicketActivities)
+                .WithOne(ta => ta.Operation)
+                .HasForeignKey (ta => ta.OperationId)
+                .OnDelete (DeleteBehavior.Restrict);
         }
     }
 }

@@ -7,7 +7,8 @@ namespace ASI.Basecode.Data.Models
         public int ArticleId { get; set; }
         public string Title { get; set; }
         public string Body { get; set; }
-        public string Category { get; set; }
+        public int CategoryId { get; set; }
+        public ArticleCategory Category { get; set; }
         public DateTime CreatedAt { get; set; }
 
         public bool isPublished { get; set; }

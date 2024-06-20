@@ -18,10 +18,10 @@ namespace ASI.Basecode.Data.Models
         
         public TicketPriority Priority { get; set; }
         public User Creator { get; set; }
-        public User Assignee { get; set; }
+        public User AssignedAgent { get; set; }
         public TicketStatus Status { get; set; }
         public Feedback Feedback { get; set; }
 
-        public List<TicketHistory> TicketHistories { get; set; } = new List<TicketHistory>();
+        public List<TicketActivity> TicketActivities { get; set; } = new List<TicketActivity>();
     }
 }

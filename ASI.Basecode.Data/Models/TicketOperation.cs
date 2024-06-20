@@ -7,6 +7,6 @@ namespace ASI.Basecode.Data.Models
         public int OperationId { get; set; }
         public string Name { get; set; }
 
-        public List<Ticket> Tickets { get; set; } = new List<Ticket>();
+        public List<TicketActivity> TicketActivities { get; set; } = new List<TicketActivity>();
     }
 }
