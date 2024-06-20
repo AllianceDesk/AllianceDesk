@@ -34,6 +34,7 @@ namespace ASI.Basecode.WebApp.Controllers
         /// <returns> Home View </returns>
         public IActionResult Index()
         {
+            ViewBag.IsLoginOrRegister = false;
             return View();
         }
     }
