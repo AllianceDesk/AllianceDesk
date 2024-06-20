@@ -10,7 +10,7 @@ namespace ASI.Basecode.Data.Models
         public string Email { get; set; }
         public string Password { get; set; }
         public int RoleId { get; set; }
-        public Role Role { get; set; }
+        public UserRole Role { get; set; }
 
         // public string CreatedBy { get; set; }
         public DateTime CreatedTime { get; set; }
@@ -22,5 +22,7 @@ namespace ASI.Basecode.Data.Models
         public List<TicketHistory> TicketHistories { get; set; } = new List<TicketHistory>();
         public List<Feedback> Feedbacks { get; set; } = new List<Feedback>();
         public List<UserPreference> UserPreferences { get; set; } = new List<UserPreference>();
+
+        public List<Article> CreatedArticles { get; set; } = new List<Article>();
     }
 }

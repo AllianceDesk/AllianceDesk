@@ -8,6 +8,13 @@ namespace ASI.Basecode.Data.Models
         public string Title { get; set; }
         public string Body { get; set; }
         public string Category { get; set; }
-        public DateTime DateCreated { get; set; }
+        public DateTime CreatedAt { get; set; }
+
+        public bool isPublished { get; set; }
+
+        public int AuthorId { get; set; }
+        public User Author { get; set; }
+
+        public DateTime LastUpdatedAt { get; set;}
     }
 }
