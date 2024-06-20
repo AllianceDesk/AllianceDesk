@@ -17,45 +17,19 @@ namespace ASI.Basecode.Data
         {
         }
 
-        public virtual DbSet<User> Users { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<Ticket> Tickets { get; set; }
+        public DbSet<Priority> Priorities { get; set; }
+        public DbSet<Status> Statuses { get; set; }
+        public DbSet<TicketHistory> TicketHistories { get; set; }
+        public DbSet<Feedback> Feedbacks { get; set; }
+        public DbSet<UserPreference> UserPreferences { get; set; }
+        public DbSet<Article> Articles { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>(entity =>
-            {
-                entity.HasIndex(e => e.UserId, "UQ__Users__1788CC4D5F4A160F")
-                    .IsUnique();
-
-                entity.Property(e => e.CreatedBy)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.CreatedTime).HasColumnType("datetime");
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Password)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.UpdatedBy)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.UpdatedTime).HasColumnType("datetime");
-
-                entity.Property(e => e.UserId)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-            });
-
-            OnModelCreatingPartial(modelBuilder);
+            
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
