@@ -4,7 +4,7 @@ namespace ASI.Basecode.Data.Models
 {
     public partial class TicketActivity
     {
-        public int ActivityId { get; set; }
+        public string Id { get; set; }
         public int TicketId { get; set; }
         public Ticket Ticket { get; set; }
 

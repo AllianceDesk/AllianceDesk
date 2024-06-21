@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ASI.Basecode.Data.Models;
+using System;
 
 namespace ASI.Basecode.Data
 {
@@ -31,39 +32,39 @@ namespace ASI.Basecode.Data
             // Add values to tables
 
             modelBuilder.Entity<UserRole>().HasData(
-                new UserRole { RoleId = 1, Name = "Admin" },
-                new UserRole { RoleId = 2, Name = "User" },
-                new UserRole { RoleId = 3, Name = "Agent" }
+                new UserRole { Id = Guid.NewGuid().ToString(), Name = "Admin" },
+                new UserRole { Id = Guid.NewGuid().ToString(), Name = "User" },
+                new UserRole { Id = Guid.NewGuid().ToString(), Name = "Agent" }
             );
 
             modelBuilder.Entity<TicketStatus>().HasData(
-                new TicketStatus { StatusId = 1, Name = "Open" },
-                new TicketStatus { StatusId = 2, Name = "Assigned" },
-                new TicketStatus { StatusId = 3, Name = "In Progress" },
-                new TicketStatus { StatusId = 4, Name = "Resolved" },
-                new TicketStatus { StatusId = 5, Name = "Closed" }
+                new TicketStatus { Id = Guid.NewGuid().ToString(), Name = "Open" },
+                new TicketStatus { Id = Guid.NewGuid().ToString(), Name = "Assigned" },
+                new TicketStatus { Id = Guid.NewGuid().ToString(), Name = "In Progress" },
+                new TicketStatus { Id = Guid.NewGuid().ToString(), Name = "Resolved" },
+                new TicketStatus { Id = Guid.NewGuid().ToString(), Name = "Closed" }
             );
 
             modelBuilder.Entity<TicketPriority>().HasData(
-                new TicketPriority { PriorityId = 1, Name = "High" },
-                new TicketPriority { PriorityId = 2, Name = "Mid" },
-                new TicketPriority { PriorityId = 3, Name = "Low" }
+                new TicketPriority { Id = Guid.NewGuid().ToString(), Name = "High" },
+                new TicketPriority { Id = Guid.NewGuid().ToString(), Name = "Mid" },
+                new TicketPriority { Id = Guid.NewGuid().ToString(), Name = "Low" }
             );
 
             modelBuilder.Entity<TicketOperation>().HasData(
-                new TicketOperation { OperationId = 1, Name = "Created" },
-                new TicketOperation { OperationId = 2, Name = "Updated" },
-                new TicketOperation { OperationId = 3, Name = "Assigned" },
-                new TicketOperation { OperationId = 4, Name = "Reassigned" },
-                new TicketOperation { OperationId = 5, Name = "Closed"}
+                new TicketOperation { Id = Guid.NewGuid().ToString(), Name = "Created" },
+                new TicketOperation { Id = Guid.NewGuid().ToString(), Name = "Updated" },
+                new TicketOperation { Id = Guid.NewGuid().ToString(), Name = "Assigned" },
+                new TicketOperation { Id = Guid.NewGuid().ToString(), Name = "Reassigned" },
+                new TicketOperation { Id = Guid.NewGuid().ToString(), Name = "Closed"}
             );
 
             modelBuilder.Entity<ArticleCategory>().HasData(
-                new ArticleCategory { CategoryId = 1, Name = "Technical" },
-                new ArticleCategory { CategoryId = 2, Name = "Billing" },
-                new ArticleCategory { CategoryId = 3, Name = "General Questions" },
-                new ArticleCategory { CategoryId = 4, Name = "Account Management" },
-                new ArticleCategory { CategoryId = 5, Name = "Customer Support" }
+                new ArticleCategory { Id = Guid.NewGuid().ToString(), Name = "Technical" },
+                new ArticleCategory { Id = Guid.NewGuid().ToString(), Name = "Billing" },
+                new ArticleCategory { Id = Guid.NewGuid().ToString(), Name = "General Questions" },
+                new ArticleCategory { Id = Guid.NewGuid().ToString(), Name = "Account Management" },
+                new ArticleCategory { Id = Guid.NewGuid().ToString(), Name = "Customer Support" }
             );
 
 
@@ -223,7 +224,7 @@ namespace ASI.Basecode.Data
             modelBuilder.Entity<Feedback>()
                 .HasOne(f => f.Ticket)
                 .WithOne(t => t.Feedback)
-                .HasForeignKey<Ticket>(t => t.TicketId)
+                .HasForeignKey<Ticket>(t => t.Id)
                 .OnDelete(DeleteBehavior.Restrict);
         }
 
