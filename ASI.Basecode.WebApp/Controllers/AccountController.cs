@@ -68,6 +68,7 @@ namespace ASI.Basecode.WebApp.Controllers
             TempData["returnUrl"] = System.Net.WebUtility.UrlDecode(HttpContext.Request.Query["ReturnUrl"]);
             this._sessionManager.Clear();
             this._session.SetString("SessionId", System.Guid.NewGuid().ToString());
+            ViewBag.IsLoginOrRegister = true;
             return this.View();
         }
 
@@ -84,7 +85,6 @@ namespace ASI.Basecode.WebApp.Controllers
             this._session.SetString("HasSession", "Exist");
 
             //User user = null;
-
             User user = new() { Id = "0", UserId = "0", Email = "Email", Password = "Password" };
             
             await this._signInManager.SignInAsync(user);
@@ -113,6 +113,7 @@ namespace ASI.Basecode.WebApp.Controllers
         [AllowAnonymous]
         public IActionResult Register()
         {
+            ViewBag.IsLoginOrRegister = true;
             return View();
         }
 

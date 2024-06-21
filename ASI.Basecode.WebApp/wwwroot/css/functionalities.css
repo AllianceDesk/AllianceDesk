@@ -1,0 +1,22 @@
+.loginBtn {
+    background-color: #EAEAEA;
+    color: black;
+}
+
+.registerBtn, .loginBtnAccent {
+    background-color: #E21818;
+    color: #FAFAFA;
+}
+
+
+
+.loginBtn,
+.registerBtn, .loginBtnAccent {
+    border-radius: 4px;
+    border: none;
+    padding: 4px 1rem;
+}
+
+.bg-primary {
+    background-color: #E21818;
+}

@@ -13,6 +13,7 @@
 
 .register-box {
     width: 600px;
+    background-color: #E21818;
 }
 
 @media (min-width: 768px) {
