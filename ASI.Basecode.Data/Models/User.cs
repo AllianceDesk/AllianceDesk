@@ -24,7 +24,6 @@ namespace ASI.Basecode.Data.Models
         public List<Ticket> AssignedTickets { get; set; } = new List<Ticket>();
         public List<TicketActivity> TicketActivities { get; set; } = new List<TicketActivity>();
         public List<Feedback> Feedbacks { get; set; } = new List<Feedback>();
-
         public List<Article> CreatedArticles { get; set; } = new List<Article>();
     }
 }
