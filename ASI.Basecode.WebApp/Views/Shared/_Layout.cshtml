@@ -9,19 +9,22 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/main.css" />
-    <link rel="stylesheet" href="~/css/style.css" /> 
+    <link rel="stylesheet" href="~/css/style.css" />
+    <link rel="stylesheet" href="~/css/user_sidebar.css" />
     <link rel="stylesheet" href="~/css/functionalities.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     @RenderSection("Styles", required: false)
 </head>
 <body>
     @if (ViewBag.IsLoginOrRegister == true)
     {
-        @Html.Partial("_Header_Unin")
+       @Html.Partial("_Header_Unin")
     }
     else
     {
         @Html.Partial("_Header")
+        @Html.Partial("User_sidebar")
     }
     <div>
         <main role="main">
