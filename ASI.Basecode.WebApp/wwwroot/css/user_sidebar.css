@@ -8,6 +8,10 @@
     box-sizing: border-box;
 }
 
+html, body {
+    height: 100%;
+}
+
 :root {
     /* Colors */
     --sidebar-color: #FFFFFF;
@@ -20,14 +24,15 @@
 }
 
 .sidebar {
-    width: 40px;
+    /*width: 40px;*/
     position: fixed;
     top: 70px;
     left: 0;
-    height: calc(100% - 134px);
+    height: calc(100vh - 70px);
     width: 250px;
     background: var(--sidebar-color);
     z-index: 0;
+    overflow-y: auto;
 }
 
 /* For Search Bar */

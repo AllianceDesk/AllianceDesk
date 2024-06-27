@@ -8,7 +8,7 @@
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/main.css" />
+    @* <link rel="stylesheet" href="~/css/main.css" /> *@
     <link rel="stylesheet" href="~/css/style.css" />
     <link rel="stylesheet" href="~/css/user_sidebar.css" />
     <link rel="stylesheet" href="~/css/functionalities.css" />
@@ -20,6 +20,12 @@
     @if (ViewBag.IsLoginOrRegister == true)
     {
        @Html.Partial("_Header_Unin")
+
+        <footer class="border-top footer text-muted">
+            <div class="container">
+                @Copyright
+            </div>
+        </footer>
     }
     else
     {
@@ -31,11 +37,7 @@
             @RenderBody()
         </main>
     </div>
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            @Copyright
-        </div>
-    </footer>
+   
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
