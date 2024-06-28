@@ -33,6 +33,7 @@ html, body {
     background: var(--sidebar-color);
     z-index: 0;
     overflow-y: auto;
+    box-shadow: 3px 0 10px rgba(0, 0, 0, 0.05);
 }
 
 /* For Search Bar */

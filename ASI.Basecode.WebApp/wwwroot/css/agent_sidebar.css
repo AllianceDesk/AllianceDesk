@@ -28,7 +28,7 @@ html, body {
 
 
 /* For Tickets Navigator */
-.button-list {
+/*.button-list {
     display: flex;
     align-items: center;
     padding: 10px 15px;
@@ -43,7 +43,7 @@ html, body {
     outline: none;
     -webkit-tap-highlight-color: transparent;
     box-shadow: none !important;
-}
+}*/
 
 /*.button-list.active,
 .button-list:hover, .button-list:focus {
@@ -102,5 +102,53 @@ html, body {
     box-shadow: none !important;
     -webkit-tap-highlight-color: transparent;
 }
+
+.inactive-underline-button {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    width: 88%;    
+    color: var(--inactive-button-text);
+    margin: 20px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border: none;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    box-shadow: none !important;
+    text-decoration: none;
+}
+
+.active-underline-button {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    width: 88%;
+    color: var(--active-button);
+    margin: 20px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border: none;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    box-shadow: none !important;
+    text-decoration: underline;
+    text-decoration-color: var(--active-button);
+}
+
+.inactive-underline-button:hover {
+    color: var(--inactive-button-text);
+    text-decoration: none;
+    background-color: var(--inactive-button);
+    box-shadow: none; 
+}
+
+.active-underline-button:hover {
+    color: var(--active-button);
+    text-decoration-color: var(--active-button);
+    box-shadow: none;
+}
+
+
 
 

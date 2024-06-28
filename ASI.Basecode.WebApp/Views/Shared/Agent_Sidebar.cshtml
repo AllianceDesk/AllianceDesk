@@ -31,13 +31,22 @@
                 dropdownContainer.classList.add('dropdown-container');
 
                 var button = document.createElement('a');
-                button.classList.add('btn', 'inactive-button');
-                button.setAttribute('id', 'showListBtn');   
+                button.classList.add('inactive-underline-button', 'toggle-button');
                 button.setAttribute('href', item.link);
                 button.textContent = item.name;
 
                 dropdownContainer.appendChild(button);
                 containerList.appendChild(dropdownContainer);
+
+                button.addEventListener('click', function () {
+                    document.querySelectorAll('.toggle-button').forEach(function (btn) {
+                        btn.classList.remove('active-underline-button');
+                        btn.classList.add('inactive-underline-button');
+                    });
+
+                    button.classList.remove('inactive-underline-button');
+                    button.classList.add('active-underline-button');
+                });
             });
 
             containerList.style.display = 'block';
@@ -49,6 +58,7 @@
 
     // Function to handle toggle button active-inactive states
     document.addEventListener('DOMContentLoaded', function () {
+
         var showListBtn = document.getElementById('showListBtn');
 
         showListBtn.addEventListener('click', function () {
@@ -61,6 +71,7 @@
                 showListBtn.classList.add('active-button');
             }
         });
-    });
+
+    });    
 
 </script>
