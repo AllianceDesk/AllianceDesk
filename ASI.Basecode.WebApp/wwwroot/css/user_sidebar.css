@@ -24,7 +24,6 @@ html, body {
 }
 
 .sidebar {
-    /*width: 40px;*/
     position: fixed;
     top: 70px;
     left: 0;
@@ -32,7 +31,7 @@ html, body {
     width: 250px;
     background: var(--sidebar-color);
     z-index: 0;
-    overflow-y: auto;
+   /* overflow-y: auto;*/
     box-shadow: 3px 0 10px rgba(0, 0, 0, 0.05);
 }
 

@@ -10,8 +10,9 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/main.css" />
     <link rel="stylesheet" href="~/css/style.css" />
+    <link rel="stylesheet" href="~/css/general.css" />
     <link rel="stylesheet" href="~/css/user_sidebar.css" />
-    <link rel="stylesheet" href="~/css/agent_sidebar.css" />
+    <link rel="stylesheet" href="~/css/buttons.css" />
     <link rel="stylesheet" href="~/css/user_header.css" />
     <link rel="stylesheet" href="~/css/functionalities.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
@@ -31,10 +32,12 @@
     }
     else
     {
+        @* @Html.Partial("General_Header") *@
         @Html.Partial("User_Header")
         @* @Html.Partial("Agent_Admin_Header") *@
-       @*  @Html.Partial("User_Sidebar") *@
-        @Html.Partial("Agent_Sidebar")
+        @*  @Html.Partial("User_Sidebar") *@
+        @* @Html.Partial("Agent_Sidebar") *@
+        @Html.Partial("Admin_Sidebar")
 
     }
     <div>
