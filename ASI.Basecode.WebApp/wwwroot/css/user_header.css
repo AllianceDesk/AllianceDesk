@@ -1,0 +1,33 @@
+﻿:root {
+    /* Colors */
+    --sidebar-color: #FFFFFF;
+    --active-button: #E21818;
+    --active-button-text: #FFFFFF;
+    --text-color: #333333;
+    --border-color: #ccc;
+    --icon-color: #aaa;
+    --hover-background: #f1f1f1;
+}
+
+.logosec {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.hover-pointer {
+    cursor: pointer;
+}
+
+.button-hover {
+    background-color: var(--active-button);
+    color: var(--active-button-text);
+    transition: background-color 0.3s;
+    border-radius: 5px;
+}
+
+.button-hover:hover {
+    background-color: var(--hover-background);
+    color: var(--active-button-text);
+}

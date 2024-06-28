@@ -46,7 +46,7 @@ html, body {
     width: 100%;
     padding: 10px 15px 10px 40px;
     border: 1px solid var(--border-color);
-    border-radius: 10px;
+    border-radius: 5px;
     outline: none;
     font-size: 16px;
     color: var(--text-color);
@@ -68,7 +68,7 @@ html, body {
     padding: 10px 15px;
     width: 88%;
     background-color: var(--active-button);
-    border-radius: 10px;
+    border-radius: 5px;
     color: var(--active-button-text);
     margin: 20px 10px;
     cursor: pointer;
@@ -92,7 +92,7 @@ html, body {
 .instruction-container {
     width: 88%;
     border: 1px solid var(--border-color);
-    border-radius: 10px;
+    border-radius: 5px;
     margin: 20px 10px;
 }
 
@@ -171,94 +171,3 @@ hr {
 .instruction-label:hover {
     background-color: var(--hover-background);
 }
-
-
-    
-
-
-/* For Search Bar */
-/*.search-container {
-    position: relative;
-    width: 88%;
-    max-width: 600px;
-    margin: 20px auto; 
-}
-
-.search-input {
-    width: 100%;
-    padding: 10px 40px 10px 40px; 
-    border: 1px solid #ccc; 
-    border-radius: 5px;
-    outline: none;
-    font-size: 16px;
-    align-self:center;
-}
-
-.search-container i {
-    position: absolute;
-    top: 50%;
-    left: 10px;
-    transform: translateY(-50%);
-    font-size: 20px;
-    color: #aaa; 
-}*/
-
-/* For Tickets Navigator */
-/*.label-container {
-    position: relative;
-    width: 88%;
-    max-width: 600px;
-    margin: 20px auto;
-    background-color: var(--active-button);
-    border-radius: 5px;
-}
-
-.label-container i {
-    position: absolute;
-    top: 50%;
-    left: 10px;
-    transform: translateY(-50%);
-    font-size: 20px;
-    color: #FFFFFF;
-}
-
-.box-label {
-    width: 100%;
-    padding: 10px 40px 10px 40px;
-    outline: none;
-    font-size: 16px;
-    align-self: center;
-    color: #FFFFFF;
-}*/
-
-/* For Details */
-/*.detail-container {
-    position: relative;
-    border: 1px solid #ccc;
-    margin: 20px auto;
-    width: 90%;
-    max-width: 650px;
-}
-
-.instruction-container {
-    display: flex;
-    align-items: center;
-    width: 88%;
-    max-width: 600px;
-    margin: 20px auto;
-    background-color: var(--active-button);
-    border-radius: 5px;
-    padding: 10px 20px;
-}
-
-.instruction-container i {
-    font-size: 20px;
-    color: #aaa;
-    margin-right: 10px; 
-}
-
-.label {
-    font-size: 16px;
-    color: #333; 
-}
-*/

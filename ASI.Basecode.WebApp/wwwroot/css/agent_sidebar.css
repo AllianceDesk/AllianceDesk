@@ -1,0 +1,106 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+*{
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+}
+
+:root {
+    /* Colors */
+    --sidebar-color: #FFFFFF;
+    --active-button: #E21818;
+    --active-button-text: #FFFFFF;
+    --inactive-button: #FFFFFF;
+    --inactive-button-text: #000000;
+    --text-color: #333333;
+    --border-color: #ccc;
+    --icon-color: #aaa;
+    --hover-background: #f1f1f1;
+}
+
+
+
+/* For Tickets Navigator */
+.button-list {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    width: 88%;
+    background-color: var(--inactive-button);
+    border-radius: 5px;
+    color: var(--inactive-button-text);
+    margin: 20px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border: none;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    box-shadow: none !important;
+}
+
+/*.button-list.active,
+.button-list:hover, .button-list:focus {
+    background-color: var(--active-button);
+    color: var(--active-button-text);
+    border: none;
+    outline: none !important;
+    -webkit-tap-highlight-color: transparent;
+    box-shadow: none !important;
+}*/
+
+.active-button {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    width: 88%;
+    background-color: var(--active-button);
+    border-radius: 5px;
+    color: var(--active-button-text);
+    margin: 20px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border: none;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    box-shadow: none !important;
+}
+
+.active-button:hover {
+    background-color: var(--hover-background);
+    color: var(--active-button-text);
+    box-shadow: none !important;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.inactive-button {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    width: 88%;
+    background-color: var(--inactive-button);
+    border-radius: 5px;
+    color: var(--inactive-button-text);
+    margin: 20px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border: none;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    box-shadow: none !important;
+}
+
+.inactive-button:hover {
+    background-color: var(--hover-background);
+    color: var(--inactive-button-text);
+    box-shadow: none !important;
+    -webkit-tap-highlight-color: transparent;
+}
+
+
