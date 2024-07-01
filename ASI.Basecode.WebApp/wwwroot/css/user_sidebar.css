@@ -75,18 +75,18 @@ html, body {
     transition: background-color 0.3s;
 }
 
-    .button-container:hover {
-        background-color: darken(var(--active-button), 10%);
-    }
+.button-container:hover {
+    background-color: darken(var(--active-button), 10%);
+}
 
-    .button-container i {
-        margin-right: 10px;
-        font-size: 20px;
-    }
+.button-container i {
+    margin-right: 10px;
+    font-size: 20px;
+}
 
-    .button-container .label-1 {
-        font-size: 16px;
-    }
+.button-container .label-1 {
+    font-size: 16px;
+}
 
 /* For Details */
 .instruction-container {
@@ -105,12 +105,12 @@ html, body {
     cursor: pointer;
 }
 
-    .instruction-label i {
-        margin-right: 10px;
-        font-size: 20px;
-        color: var(--icon-color);
+.instruction-label i {
+    margin-right: 10px;
+    font-size: 20px;
+    color: var(--icon-color);
         
-    }
+}
 
 .instruction-detail {
     
@@ -119,18 +119,18 @@ html, body {
 
 
 
-    .instruction-detail li {
-        font-size: 12px;
-        color: #1682FD;
-        margin-bottom: 5px;
-        white-space: nowrap;
-    }
+.instruction-detail li {
+    font-size: 12px;
+    color: #1682FD;
+    margin-bottom: 5px;
+    white-space: nowrap;
+}
 
-    .instruction-detail ul {
-        overflow-x: hidden;
-        position: relative;
-        padding: 0;
-    }
+.instruction-detail ul {
+    overflow-x: hidden;
+    position: relative;
+    padding: 0;
+}
 
 .instruction-detail ul:hover {
     overflow-x: auto; /* Show horizontal scroll on hover */
