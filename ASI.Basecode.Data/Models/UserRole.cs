@@ -1,12 +1,18 @@
+﻿using System;
 using System.Collections.Generic;
 
 namespace ASI.Basecode.Data.Models
 {
     public partial class UserRole
     {
-        public string Id { get; set; }
-        public string Name { get; set; }
+        public UserRole()
+        {
+            Users = new HashSet<User>();
+        }
 
-        public List<User> Users { get; set; } = new List<User>();
+        public byte RoleId { get; set; }
+        public string RoleName { get; set; }
+
+        public virtual ICollection<User> Users { get; set; }
     }
 }

@@ -23,7 +23,7 @@ namespace ASI.Basecode.Data.Repositories
 
         public bool UserExists(string userId)
         {
-            return this.GetDbSet<User>().Any(x => x.UserId == userId);
+            return this.GetDbSet<User>().Any(x => x.UserId.ToString() == userId);
         }
 
         public void AddUser(User user)

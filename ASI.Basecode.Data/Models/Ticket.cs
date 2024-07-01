@@ -1,27 +1,39 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace ASI.Basecode.Data.Models
 {
     public partial class Ticket
     {
-        public string Id { get; set; }
+        public Ticket()
+        {
+            Attachments = new HashSet<Attachment>();
+            Feedbacks = new HashSet<Feedback>();
+            TicketActivities = new HashSet<TicketActivity>();
+            TicketMessages = new HashSet<TicketMessage>();
+        }
+
+        public Guid TicketId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public string Category { get; set; }
-        public string PriorityId { get; set; }
-        public string Attachment { get; set; }
-        public string CreatedBy { get; set; }
-        public string AssignedTo { get; set; }
-        public string StatusId { get; set; }
-        public string FeedbackId { get; set; }
-        
-        public TicketPriority Priority { get; set; }
-        public User Creator { get; set; }
-        public User AssignedAgent { get; set; }
-        public TicketStatus Status { get; set; }
-        public Feedback Feedback { get; set; }
+        public byte CategoryId { get; set; }
+        public byte PriorityId { get; set; }
+        public byte StatusId { get; set; }
+        public Guid CreatedBy { get; set; }
+        public Guid? AssignedAgent { get; set; }
+        public Guid? AssignedTeam { get; set; }
+        public DateTime DateCreated { get; set; }
+        public DateTime? DateClosed { get; set; }
 
-        public List<TicketActivity> TicketActivities { get; set; } = new List<TicketActivity>();
+        public virtual User AssignedAgentNavigation { get; set; }
+        public virtual Team AssignedTeamNavigation { get; set; }
+        public virtual Category Category { get; set; }
+        public virtual User CreatedByNavigation { get; set; }
+        public virtual TicketPriority Priority { get; set; }
+        public virtual TicketStatus Status { get; set; }
+        public virtual ICollection<Attachment> Attachments { get; set; }
+        public virtual ICollection<Feedback> Feedbacks { get; set; }
+        public virtual ICollection<TicketActivity> TicketActivities { get; set; }
+        public virtual ICollection<TicketMessage> TicketMessages { get; set; }
     }
 }
