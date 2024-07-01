@@ -1,0 +1,42 @@
+﻿@using Microsoft.AspNetCore.Http
+
+@inject IHttpContextAccessor HttpContextAccessor
+
+<nav class="sidebar">   
+
+    <button type="button" class="btn active-button flag"><i class='bx bx-grid-alt bx-sm as' style="align-self:center;"></i> Overview </button>
+    <button type="button" class="btn inactive-button flag"><i class='bx bx-purchase-tag-alt bx-sm as' style="align-self:center;"></i> Tickets </button>
+    <button type="button" class="btn inactive-button flag"><i class='bx bx-group bx-sm as' style="align-self:center;"></i> Teams </button>
+    <button type="button" class="btn inactive-button flag"><i class='bx bx-detail bx-sm as' style="align-self:center;"></i> Knowledge Base </button>
+    <button type="button" class="btn inactive-button flag"><i class='bx bx-objects-vertical-bottom bx-sm as' style="align-self:center;"></i> Analytics </button>
+    
+        
+    
+</nav>
+
+<script>
+    // Function to handle toggle button active-inactive states
+    document.addEventListener('DOMContentLoaded', function () {
+        var buttons = document.querySelectorAll('.flag');
+
+        buttons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                if (this.classList.contains('active-button')) {
+                    // If the button is already active, do nothing (toggle off)
+                    return;
+                }
+
+                // Remove active state from all buttons
+                buttons.forEach(function (btn) {
+                    btn.classList.remove('active-button');
+                    btn.classList.add('inactive-button');
+                });
+
+                // Set this button as active
+                this.classList.remove('inactive-button');
+                this.classList.add('active-button');
+            });
+        });
+    });
+
+</script>

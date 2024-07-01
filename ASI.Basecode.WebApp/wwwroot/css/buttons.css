@@ -1,0 +1,116 @@
+
+
+#showListBtn {
+    position: sticky;
+    z-index: 1;
+}
+
+.container-list {
+    height: calc(100vh - 70px - 20px);
+    overflow-y: auto;
+    padding-bottom: 60px;
+}
+
+.active-button {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    width: 88%;
+    background-color: var(--active-button);
+    border-radius: 5px;
+    color: var(--active-button-text);
+    margin: 20px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border: none;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    box-shadow: none !important;
+}
+
+.active-button:hover {
+    background-color: var(--hover-background);
+    color: var(--active-button-text);
+    box-shadow: none !important;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.inactive-button {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    width: 88%;
+    background-color: var(--inactive-button);
+    border-radius: 5px;
+    color: var(--inactive-button-text);
+    margin: 20px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border: none;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    box-shadow: none !important;
+}
+
+.inactive-button:hover {
+    background-color: var(--hover-background);
+    color: var(--inactive-button-text);
+    box-shadow: none !important;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.inactive-underline-button {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    width: 88%;    
+    color: var(--inactive-button-text);
+    margin: 20px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border: none;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    box-shadow: none !important;
+    text-decoration: none;
+}
+
+.active-underline-button {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    width: 88%;
+    color: var(--active-button);
+    margin: 20px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border: none;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    box-shadow: none !important;
+    text-decoration: underline;
+    text-decoration-color: var(--active-button);
+}
+
+.inactive-underline-button:hover {
+    color: var(--inactive-button-text);
+    text-decoration: none;
+    background-color: var(--inactive-button);
+    box-shadow: none; 
+}
+
+.active-underline-button:hover {
+    color: var(--active-button);
+    text-decoration-color: var(--active-button);
+    box-shadow: none;
+}
+
+.as {
+    margin-right: 8px;
+}
+
+.uh {
+    margin-right: 5px;
+    transform: scale(1.28);
+}
+

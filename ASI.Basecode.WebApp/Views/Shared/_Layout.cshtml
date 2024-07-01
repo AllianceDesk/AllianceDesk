@@ -9,30 +9,43 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/main.css" />
-    <link rel="stylesheet" href="~/css/style.css" /> 
+    <link rel="stylesheet" href="~/css/style.css" />
+    <link rel="stylesheet" href="~/css/general.css" />
+    <link rel="stylesheet" href="~/css/user_sidebar.css" />
+    <link rel="stylesheet" href="~/css/buttons.css" />
+    <link rel="stylesheet" href="~/css/user_header.css" />
     <link rel="stylesheet" href="~/css/functionalities.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     @RenderSection("Styles", required: false)
 </head>
 <body>
     @if (ViewBag.IsLoginOrRegister == true)
     {
-        @Html.Partial("_Header_Unin")
+       @Html.Partial("General_Header")
+
+        <footer class="border-top footer text-muted">
+            <div class="container">
+                @Copyright
+            </div>
+        </footer>
     }
     else
     {
-        @Html.Partial("_Header")
+        @* @Html.Partial("General_Header") *@
+        @Html.Partial("User_Header")
+        @* @Html.Partial("Agent_Admin_Header") *@
+        @*  @Html.Partial("User_Sidebar") *@
+        @* @Html.Partial("Agent_Sidebar") *@
+        @Html.Partial("Admin_Sidebar")
+
     }
     <div>
         <main role="main">
             @RenderBody()
         </main>
     </div>
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            @Copyright
-        </div>
-    </footer>
+   
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
