@@ -30,9 +30,6 @@ namespace ASI.Basecode.Data.Repositories
         public void Update(Ticket ticket)
         {
             this.GetDbSet<Ticket>().Update(ticket);
-            
-            // Update the TicketHistory table later
-            
             UnitOfWork.SaveChanges();
         }
 

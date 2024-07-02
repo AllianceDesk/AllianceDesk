@@ -45,5 +45,11 @@ namespace ASI.Basecode.Services.ServiceModels
         public string Attachment { get; set; }
 
         public string FeedbackId { get; set; }
+
+        public string AgentName { get; set; }
+
+        public string CreatorName { get; set; }
+
+        public string TeamName { get; set; }
     }
 }

@@ -67,9 +67,9 @@
                 @Html.DisplayFor(modelItem => item.DateCreated)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                @Html.ActionLink("Edit", "UserEdit", new { id= item.TicketId }) |
+                @Html.ActionLink("Details", "UserDetails", new { id = item.TicketId }) |
+                    @Html.ActionLink("Delete", "UserDelete", new { id = item.TicketId }, new { @class = "delete-link", onclick = "return confirm('Are you sure you want to delete this ticket?');" })
             </td>
         </tr>
 }

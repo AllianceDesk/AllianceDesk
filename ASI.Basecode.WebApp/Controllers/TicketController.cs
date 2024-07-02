@@ -89,10 +89,6 @@ namespace ASI.Basecode.WebApp.Controllers
 
 
         [HttpGet("/User/Tickets/Create")]
-        /// <summary>
-        /// Go to the Create a Ticket View
-        /// </summary>
-        /// <returns></returns>
         public IActionResult UserCreate()
         {
             var categories = _ticketService.GetCategories()
@@ -127,11 +123,9 @@ namespace ASI.Basecode.WebApp.Controllers
             
             return RedirectToAction(nameof(UserTickets));
         }
-        #endregion
 
-
-        [HttpGet("Admin/Tickets/{id}")]
-        public IActionResult AdminViewTicket(string id)
+        [HttpGet("/User/Tickets/{id}")]
+        public IActionResult UserDetails(string id)
         {
             var ticket = _ticketService.GetById(id);
 
@@ -140,8 +134,101 @@ namespace ASI.Basecode.WebApp.Controllers
                 return NotFound(); // Handle ticket not found scenario
             }
 
-            return View("Details", ticket);
+            return View(ticket);
         }
+
+        [HttpGet("/User/Tickets/{id}/Edit")]
+        public IActionResult UserEdit(string id)
+        {
+            var ticket = _ticketService.GetById(id);
+
+            if (ticket == null)
+            {
+                return NotFound(); // Handle ticket not found scenario
+            }
+
+            var categories = _ticketService.GetCategories()
+                                   .Select(c => new SelectListItem
+                                   {
+                                       Value = c.CategoryId.ToString(),
+                                       Text = c.CategoryName
+                                   })
+                                   .ToList();
+
+            var priorities = _ticketService.GetPriorities()
+                                           .Select(p => new SelectListItem
+                                           {
+                                               Value = p.PriorityId.ToString(),
+                                               Text = p.PriorityName
+                                           })
+                                           .ToList();
+            // Pass data to ViewBag
+            ViewBag.Categories = new SelectList(categories, "Value", "Text", ticket.CategoryId.ToString());
+            ViewBag.Priorities = new SelectList(priorities, "Value", "Text", ticket.PriorityId.ToString());
+
+            var ticketViewModel = new TicketViewModel
+            {
+                TicketId = ticket.TicketId,
+                Title = ticket.Title,
+                Description = ticket.Description,
+                CategoryId = ticket.CategoryId,
+                PriorityId = ticket.PriorityId
+            };
+
+            return View(ticketViewModel);
+        }
+         
+        [HttpPost("/User/Tickets/{id}/Edit")]
+        public IActionResult PostUserEdit(TicketViewModel ticket)
+        {
+
+            _ticketService.Update(ticket); 
+            return RedirectToAction(nameof(UserDetails), new { id = ticket.TicketId });
+        }
+
+        [HttpGet("/User/Tickets/{id}/Delete")]
+
+        public IActionResult UserDelete(string id)
+        {
+
+            var ticket = _ticketService.GetById(id);
+            if (ticket == null)
+            {
+                return NotFound();
+            }
+
+            _ticketService.Delete(id);
+
+            return RedirectToAction(nameof(UserTickets));
+        }
+
+        /*[HttpGet("User/Tickets/{id}/")]
+        public IActionResult UserEditTicket(string id)
+        {
+            var ticket = _ticketService.GetById(id);
+
+            if (ticket == null)
+            {
+                return NotFound(); // Handle ticket not found scenario
+            }
+
+            return View();
+        }
+
+        [HttpPost("User/Tickets/{id}")]
+        public IActionResult PostUserEditTicket(TicketViewModel ticket)
+        {
+            _ticketService.Update(ticket);
+
+            return RedirectToAction(nameof(UserEditTicket));
+        }*/
+
+
+
+
+        #endregion
+
+
 
        
         /*#region GET Methods        

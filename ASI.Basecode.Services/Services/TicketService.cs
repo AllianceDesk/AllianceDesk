@@ -69,9 +69,15 @@ namespace ASI.Basecode.Services.Services
 
         public void Update(TicketViewModel ticket)
         {
+            Console.WriteLine(ticket.TicketId);
             var existingTicket = _ticketRepository.RetrieveAll().Where(s => s.TicketId.ToString() == ticket.TicketId).FirstOrDefault();
 
-            _mapper.Map(ticket, existingTicket);
+            existingTicket.Title = ticket.Title;
+            existingTicket.Description = ticket.Description;
+            existingTicket.CategoryId = Convert.ToByte(ticket.CategoryId);
+            existingTicket.PriorityId = Convert.ToByte(ticket.PriorityId);
+            
+            // Add updated time
             
             _ticketRepository.Update(existingTicket);
         }
@@ -97,7 +103,18 @@ namespace ASI.Basecode.Services.Services
                 Description = ticket.Description,
                 CategoryId = ticket.CategoryId.ToString(),
                 PriorityId = ticket.PriorityId.ToString(),
-                StatusId = ticket.StatusId.ToString()
+                Category = _categoryRepository.RetrieveAll().FirstOrDefault(c => c.CategoryId == ticket.CategoryId)?.CategoryName,
+                Priority = _priorityRepository.RetrieveAll().FirstOrDefault(p => p.PriorityId == ticket.PriorityId)?.PriorityName,
+                Status = _statusRepository.RetrieveAll().FirstOrDefault(st => st.StatusId == ticket.StatusId)?.StatusName,
+                CreatorName = _userRepository.GetUsers().FirstOrDefault(u => u.UserId == ticket.CreatedBy)?.Name,
+                AgentName = _userRepository.GetUsers().FirstOrDefault(u => u.UserId == ticket.AssignedAgent)?.Name,
+                TeamName = null
+
+                // TicketHistory 
+                // Missing properties
+                // Attachments = ticket.Attachments.ToString(),
+                // Messages
+                // Feedback
             };
 
             return ticketViewModel;
