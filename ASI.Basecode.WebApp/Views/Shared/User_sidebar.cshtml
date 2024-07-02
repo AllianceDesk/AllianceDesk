@@ -1,0 +1,48 @@
+﻿@using Microsoft.AspNetCore.Http
+
+@inject IHttpContextAccessor HttpContextAccessor
+
+<nav class="sidebar">
+    <div class="search-container">
+        <i class='bx bx-search'></i>
+        <input type="text" class="search-input" placeholder="Search Tickets">        
+    </div>
+
+    <div class="button-container">
+        <i class='bx bx-list-ul'></i>
+        <span class="label-1">Tickets</span>
+    </div>
+
+    <div class="instruction-container">
+        <div class="instruction-label">
+            <i class='bx bx-star'></i>
+            <span class="label-2">Instructions</span>
+        </div>
+
+        <hr />
+
+        <div class="instruction-detail">
+            <ul>
+                <li>&#8226; Click the 'Create Ticket'</li>
+                <li>&#8226; Enter the necessary details</li>
+                <li>&#8226; Submit if done</li>
+            </ul>
+        </div>
+
+        <div class="instruction-label">
+            <i class='bx bx-link'></i>
+            <span class="label-2">Contacts</span>
+        </div>
+
+        <hr />
+
+        <div class="instruction-detail">
+            <ul>
+                <li>&#8226; abellalance2@gmail.com</li>
+                <li>&#8226; jethrocenas@gmail.com</li>
+                <li>&#8226; rehamdee.camama@g.msuiit.edu.ph</li>
+            </ul>
+        </div>
+    </div>
+
+</nav>

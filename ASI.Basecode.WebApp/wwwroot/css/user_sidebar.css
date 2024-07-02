@@ -1,0 +1,173 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+*{
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+}
+
+:root {
+    /* Colors */
+    --sidebar-color: #FFFFFF;
+    --active-button: #E21818;
+    --active-button-text: #FFFFFF;
+    --text-color: #333333;
+    --border-color: #ccc;
+    --icon-color: #aaa;
+    --hover-background: #f1f1f1;
+}
+
+.sidebar {
+    position: fixed;
+    top: 70px;
+    left: 0;
+    height: calc(100vh - 70px);
+    width: 250px;
+    background: var(--sidebar-color);
+    z-index: 0;
+   /* overflow-y: auto;*/
+    box-shadow: 3px 0 10px rgba(0, 0, 0, 0.05);
+}
+
+/* For Search Bar */
+.search-container {
+    position: relative;
+    width: 88%;
+    margin: 10px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 15px 10px 40px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    outline: none;
+    font-size: 16px;
+    color: var(--text-color);
+}
+
+.search-container i {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: var(--icon-color);
+}
+
+/* For Tickets Navigator */
+.button-container {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    width: 88%;
+    background-color: var(--active-button);
+    border-radius: 5px;
+    color: var(--active-button-text);
+    margin: 20px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.button-container:hover {
+    background-color: darken(var(--active-button), 10%);
+}
+
+.button-container i {
+    margin-right: 10px;
+    font-size: 20px;
+}
+
+.button-container .label-1 {
+    font-size: 16px;
+}
+
+/* For Details */
+.instruction-container {
+    width: 88%;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    margin: 20px 10px;
+}
+
+.instruction-label {
+    display: flex;
+    align-items: center;
+    padding: 10px 10px;
+    font-size: 16px;
+    color: var(--text-color);
+    cursor: pointer;
+}
+
+.instruction-label i {
+    margin-right: 10px;
+    font-size: 20px;
+    color: var(--icon-color);
+        
+}
+
+.instruction-detail {
+    
+    padding: 10px;
+}
+
+
+
+.instruction-detail li {
+    font-size: 12px;
+    color: #1682FD;
+    margin-bottom: 5px;
+    white-space: nowrap;
+}
+
+.instruction-detail ul {
+    overflow-x: hidden;
+    position: relative;
+    padding: 0;
+}
+
+.instruction-detail ul:hover {
+    overflow-x: auto; /* Show horizontal scroll on hover */
+}
+
+.instruction-detail ul::-webkit-scrollbar {
+    display: none; /* Hide scrollbar in WebKit (Chrome, Safari, etc.) */
+}
+
+.instruction-detail ul:hover::-webkit-scrollbar {
+    display: block; /* Show scrollbar on hover in WebKit */
+    width: 2px;
+}
+
+.instruction-detail ul::-webkit-scrollbar-track {
+    background-color: transparent; /* Track color */
+}
+
+.instruction-detail ul::-webkit-scrollbar-thumb {
+    background-color: #ccc; /* Thumb color */
+    border-radius: 10px; /* Thumb border radius */
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid var(--border-color);
+    margin: 5px 12px;
+    width: 88%;
+    align-self: center;
+}
+
+.instruction-container .label-2 {
+    font-size: 16px;
+}
+
+/* Hover Effects */
+.button-container:hover,
+.instruction-label:hover {
+    background-color: var(--hover-background);
+}

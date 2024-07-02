@@ -1,0 +1,70 @@
+﻿@model IEnumerable<ASI.Basecode.Services.ServiceModels.NotificationServiceModel>
+
+@{
+    ViewData["Title"] = "Notification";
+}
+@section styles {
+    <link rel="stylesheet" href="~/css/notification.css" />
+}
+
+<div class="card-body">
+    <div class="top-content">
+        <h3>Notifications</h3>
+        <i class='bx bx-x'></i>
+    </div>
+
+    <div class="card-content" id="card_content">
+
+    </div>
+
+</div>
+
+<script>
+
+    // Simulate data from an object (replace with actual database data)
+    var dataFromDatabase = [
+        { name: 'Notification 1', link: '#' },
+        { name: 'Notification 2', link: '#' },
+        { name: 'Notification 3', link: '#' },
+        { name: 'Notification 4', link: '#' },
+        { name: 'Notification 5', link: '#' },
+        { name: 'Notification 6', link: '#' },
+        { name: 'Notification 7', link: '#' },
+        { name: 'Notification 8', link: '#' },
+        { name: 'Notification 9', link: '#' },
+        { name: 'Notification 10', link: '#' },
+        { name: 'Notification 11', link: '#' },
+        { name: 'Notification 12', link: '#' },
+        { name: 'Notification 13', link: '#' },
+        { name: 'Notification 14', link: '#' },
+    ];
+
+    // Get the card-content div
+    var cardContent = document.getElementById('card_content');
+
+    // Iterate over the data and create a div and 'a' tag for each item
+    dataFromDatabase.forEach(function (item) {
+        // Create a new 'div' element for the container
+        var container = document.createElement('div');
+        container.className = 'notification-container';
+
+        var title = document.createElement('h6');
+        title.className = 'notification_title';
+        title.textContent = item.name;
+
+        // Create a new 'a' element
+        var link = document.createElement('a');
+        link.href = item.link;
+        link.textContent = 'Preview';
+        link.className = 'notification-link'; // Add a class for styling
+
+        // Append the 'a' element to the container
+        container.appendChild(title);
+        container.appendChild(link);
+
+        // Append the container to the card-content div
+        cardContent.appendChild(container);
+    });
+            
+
+</script>

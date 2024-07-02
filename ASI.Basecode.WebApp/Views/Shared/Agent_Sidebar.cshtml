@@ -1,0 +1,89 @@
+﻿@using Microsoft.AspNetCore.Http
+
+@inject IHttpContextAccessor HttpContextAccessor
+
+<nav class="sidebar">   
+
+    <button type="button" class="btn inactive-button" id="showListBtn"><i class='bx bx-list-ul bx-sm me-2' style="align-self:center;"></i> Tickets </button>
+
+    <div id="containerList" class="container-list">
+        
+    </div>
+</nav>
+
+<script>
+    // Function to handle button clicks and dynamic content loading
+    document.getElementById('showListBtn').addEventListener('click', function () {
+        var containerList = document.getElementById('containerList');
+
+        if (containerList.style.display === 'none' || containerList.style.display === '') {
+            containerList.innerHTML = '';
+
+            // Simulate data from an object (replace with actual database data)
+            var dataFromDatabase = [
+                { name: 'Container 1', link: '#' },
+                { name: 'Container 2', link: '#' },
+                { name: 'Container 3', link: '#' },
+                { name: 'Container 4', link: '#' },
+                { name: 'Container 5', link: '#' },
+                { name: 'Container 6', link: '#' },
+                { name: 'Container 7', link: '#' },
+                { name: 'Container 8', link: '#' },
+                { name: 'Container 9', link: '#' },
+                { name: 'Container 10', link: '#' },
+                { name: 'Container 11', link: '#' },
+                { name: 'Container 12', link: '#' },
+                { name: 'Container 13', link: '#' },
+                { name: 'Container 14', link: '#' },
+            ];
+
+            // Create buttons dynamically based on data
+            dataFromDatabase.forEach(function (item) {
+                var dropdownContainer = document.createElement('div');
+                dropdownContainer.classList.add('dropdown-container');
+
+                var button = document.createElement('a');
+                button.classList.add('inactive-underline-button', 'toggle-button');
+                button.setAttribute('href', item.link);
+                button.textContent = item.name;
+
+                dropdownContainer.appendChild(button);
+                containerList.appendChild(dropdownContainer);
+
+                button.addEventListener('click', function () {
+                    document.querySelectorAll('.toggle-button').forEach(function (btn) {
+                        btn.classList.remove('active-underline-button');
+                        btn.classList.add('inactive-underline-button');
+                    });
+
+                    button.classList.remove('inactive-underline-button');
+                    button.classList.add('active-underline-button');
+                });
+            });
+
+            containerList.style.display = 'block';
+        } 
+        else {
+            containerList.style.display = 'none';
+        }
+    });
+
+    // Function to handle toggle button active-inactive states
+    document.addEventListener('DOMContentLoaded', function () {
+
+        var showListBtn = document.getElementById('showListBtn');
+
+        showListBtn.addEventListener('click', function () {
+            if (showListBtn.classList.contains('active-button')) {
+                showListBtn.classList.remove('active-button');
+                showListBtn.classList.add('inactive-button');
+            }
+            else { 
+                showListBtn.classList.remove('inactive-button');
+                showListBtn.classList.add('active-button');
+            }
+        });
+
+    });    
+
+</script>
