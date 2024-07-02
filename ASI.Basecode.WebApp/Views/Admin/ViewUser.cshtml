@@ -1,0 +1,236 @@
+﻿@{
+    ViewData["Title"] = "Admin Page";
+}
+@section styles {
+    <link rel="stylesheet" href="~/css/functionalities.css" />
+    <link rel="stylesheet" href="~/css/Admin.css" />
+}
+
+<div class="admin-body p-y-3 relative">
+    <div style="padding-right: 2rem; border-right: 1.5px solid #9E9E9E;">
+        <h1>Agents and Team</h1>
+        <div class="flex-Row flex-between">
+            <div class="agent-nav pt-4">
+                <ul class="flex-Row gap-2">
+                    <li class="nav-item active" data-nav-item>Agents</li>
+                    <li class="nav-item" data-nav-item>Team</li>
+                </ul>
+            </div>
+            <div class="flex-Row gap-2 justify-content-center align-center">
+                <div class="search-container | flex-Row align-center justify-content-center">
+                    <i class="fa-solid fa-magnifying-glass text-1-5"></i>
+                    <input class="bg-transparent" type="text" placeholder="Search" />
+                </div>
+                <button class="mbtn-primary flex-Row gap-1 color-white bg-red align-center justify-content-center border-0 p-x-1 br-1-5" data-admin-add-btn>
+                    <i class="fa-solid fa-user-plus"></i>
+                    <p class="br-1-5 p-y-1">Add</p>
+                </button>
+            </div>
+        </div>
+        <div class="flex-Row flex-between p-y-1 p-x-1 border-b-2 text-1-5 mb-3">
+            <div class="flex-Row align-center gap-1 fw-semi">
+                <i class="fa-regular fa-user"></i>
+                <p>Profile</p>
+            </div>
+            <div class="flex-Row align-center gap-1 fw-semi">
+                <i class="fa-regular fa-address-card"></i>
+                <p>Name</p>
+            </div>
+            <div class="flex-Row align-center gap-1 fw-semi">
+                <i class="fa-solid fa-user-tie"></i>
+                <p>Role</p>
+            </div>
+        </div>
+        <div class="agents-container bg-white"> 
+            <div class="agents | flex-Row flex-between p-y-1 p-x-1 align-center" data-agents-1>
+                <div class="user-img-profile br-50 bg-red"></div>
+                <div class="flex-col justify-content-center align-center">
+                    <p class="fw-semi text-1-5">Agent Name</p>
+                    <p>agentemail@gmail.com</p>
+                </div>
+                <div class="role-container role-agent fw-semi text-0-5">Agent</div>
+            </div>
+            <div class="agents | flex-Row flex-between p-y-1 p-x-1 align-center" data-agents-2>
+                <div class="user-img-profile br-50 bg-red"></div>
+                <div class="flex-col justify-content-center align-center">
+                    <p class="fw-semi text-1-5">Agent Name</p>
+                    <p>agentemail@gmail.com</p>
+                </div>
+                <div class="role-container role-admin fw-semi text-0-5">Admin</div>
+            </div>
+            <div class="agents | flex-Row flex-between p-y-1 p-x-1 align-center" data-agents-3>
+                <div class="user-img-profile br-50 bg-red"></div>
+                <div class="flex-col justify-content-center align-center">
+                    <p class="fw-semi text-1-5">Agent Name</p>
+                    <p>agentemail@gmail.com</p>
+                </div>
+                <div class="role-container role-agent fw-semi text-0-5">Agent</div>
+            </div>
+        </div>
+    </div>
+    <div class="p-x-1 hidden" data-admin-edit-details>
+        <div class="flex-Row  align-center justify-content-between p-y-2 border-b-2">
+           <h2>Detail</h2>
+            <u class="fa-solid fa-pen-to-square text-1-5 cursor-pointer color-inactive" data-admin-edit-btn></u>
+        </div>
+        <div class="flex p-t-1">
+            <div class="agents-details | margin-1 bg-white flex-Row flex-between p-y-1 p-x-1 align-center">
+                <div class="user-img-profile br-50 bg-grey"></div>
+                <div class="flex-col justify-content-center align-center">
+                    <p class="fw-semi">Agent Name</p>
+                    <p class="text-sm">agentemail@gmail.com</p>
+                </div>
+                <div class="role-container role-agent fw-semi text-0-5">Agent</div>
+            </div>
+            <div>
+                <h4>Team</h4>
+                <div class="agents-details | margin-1 bg-white flex-Row flex-between p-y-1 p-x-1 align-center">
+                    <div class="user-img-profile br-50 bg-grey"></div>
+                    <div class="flex-col justify-content-center align-center">
+                        <p class="fw-semi">Agent Name</p>
+                        <p class="text-sm">agentemail@gmail.com</p>
+                    </div>
+                    <div class="role-container role-agent fw-semi text-0-5">Agent</div>
+                </div>
+            </div>
+            <div>
+                <h4>Recent Activity</h4>
+                <div class="agents-details | margin-1 bg-white flex-Row flex-between p-y-1 p-x-1 align-center">
+                    <div class="user-img-profile br-50 bg-grey"></div>
+                    <div class="flex-col justify-content-center align-center">
+                        <p class="fw-semi">Agent Name</p>
+                        <p class="text-sm">agentemail@gmail.com</p>
+                    </div>
+                    <div class="role-container role-agent fw-semi text-0-5">Agent</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="hidden modal-admin bg-modal" data-admin-modal-container>
+        <form class="hidden modal-container br-1 bg-white p-y-1 p-x-2" data-modal-edit-form>
+            <div class="flex-Row justify-content-between">
+                <h2>Edit User</h2>
+                <i class="text-md fa-regular fa-circle-xmark hover-pointer" data-admin-edit-close-btn></i>
+            </div>
+            <div class="agents-details | margin-1 bg-white flex-Row gap-2 flex-between p-y-1 p-x-1 align-center">
+                <div class="flex-Row gap-1">
+                    <div class="user-img-profile br-50 bg-grey"></div>
+                    <div class="flex-col justify-content-center align-center">
+                        <p class="fw-semi">Agent Name</p>
+                        <p class="text-sm">agentemail@gmail.com</p>
+                    </div>
+                </div>
+                <div class="delete-btn fw-semi cursor-pointer" data-admin-delete-btn>
+                    DELETE ACCOUNT 
+                </div>
+            </div>
+            <div class="modal-input-container">
+                <label class="modal-input relative flex">
+                    <span>First Name</span>
+                    <input type="text" placeholder="John" />
+                </label>
+                <label class="modal-input relative flex">
+                    <span>Last Name</span>
+                    <input type="text" placeholder="Doe" />
+                </label>
+                <label class="modal-input relative flex">
+                    <span>Email</span>
+                    <input type="text" placeholder="johndoe@gmail.com" />
+                </label>
+                <label class="modal-input relative flex">
+                    <span>Contact Number</span>
+                    <input type="text" placeholder="+123456789" />
+                </label>
+                <label class="modal-input relative flex">
+                    <select>
+                        <option value="none" selected disabled>Role</option>
+                        <option value="agent">Agent</option>
+                        <option value="admin">Admin</option>
+                        <option value="manager">Manager</option>
+                    </select>
+                </label>
+                <label class="modal-input relative flex">
+                    <select>
+                        <option value="none" selected disabled>Team</option>
+                        <option value="team1">Team 1</option>
+                        <option value="team2">Team 2</option>
+                        <option value="team3">Team 3</option>
+                    </select>
+                </label>
+            </div>
+            <div class="flex-Row gap-1">
+                <button class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-edit-cancel-btn>Cancel</button>
+                <button class="mbtn-primary color-white bg-red align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-edit-save-btn>Save</button>
+            </div>
+    
+                
+        
+        </form>
+        <form class="hidden modal-container br-1 bg-white p-y-1 p-x-2" data-modal-add-form>
+            <div class="flex-Row justify-content-between">
+                <h2>Add User</h2>
+                <i class="text-md fa-regular fa-circle-xmark hover-pointer" data-admin-add-close-btn></i>
+            </div>
+            <div class="modal-input-container">
+                <label class="modal-input relative flex">
+                    <span>First Name</span>
+                    <input type="text" placeholder="John" />
+                </label>
+                <label class="modal-input relative flex">
+                    <span>Last Name</span>
+                    <input type="text" placeholder="Doe" />
+                </label>
+                <label class="modal-input relative flex">
+                    <span>Email</span>
+                    <input type="text" placeholder="johndoe@gmail.com" />
+                </label>
+                <label class="modal-input relative flex">
+                    <span>Contact Number</span>
+                    <input type="text" placeholder="+123456789" />
+                </label>
+                <label class="modal-input relative flex">
+                    <span>Role</span>
+                    <input type="text" placeholder="Role" />
+                </label>
+                <label class="modal-input relative flex">
+                    <select>
+                        <option value="none" selected disabled>Team</option>
+                        <option value="team1">Team 1</option>
+                        <option value="team2">Team 2</option>
+                        <option value="team3">Team 3</option>
+                    </select>
+                </label>
+                <label class="modal-input relative flex">
+                    <select>
+                        <option value="none" selected disabled>Status</option>
+                        <option value="agent">sample</option>
+                        <option value="admin">sample</option>
+                        <option value="manager">sample</option>
+                    </select>
+                </label>
+                <label class="modal-input relative flex">
+                    <span>Password</span>
+                    <input type="password" placeholder="Password" />
+                </label>
+            </div>
+            <div class="flex-Row gap-1">
+                <button class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-add-cancel-btn>Cancel</button>
+                <button class=" mbtn-primary color-white bg-red align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-add-save-btn>Save</button>
+            </div>
+        </form>
+    </div>
+    <div class="hidden bg-modal delete-modal-container" data-admin-delete-modal-container>
+        <div class="delete-modal flex flex-col gap-1 justify-content-center align-items-center" data-admin-delete-modal>
+            <i class="text-md fa-regular fa-circle-xmark hover-pointer align-self-end" data-admin-delete-close-btn></i>
+            <div class="flex-between flex-col align-items-center justify-content-center">
+                <i class="fa-solid fa-circle-exclamation color-error text-3"></i>
+                <h1>Are you sure?</h1>
+                <p>Do you really want to delete this user? This process cannot be undone</p>
+            </div>
+            <div class="flex-Row gap-2">
+                <button class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-delete-cancel-btn>Cancel</button>
+                <button class=" mbtn-primary color-white bg-red align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-delete-save-btn>Save</button>
+            </div>
+        </div>
+    </div>
+</div>

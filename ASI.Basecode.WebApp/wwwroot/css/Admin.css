@@ -1,0 +1,173 @@
+.admin-body {
+    min-height: 100vh;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    margin: auto;
+}
+
+    .admin-body.edit-active {
+        display: grid;
+        grid-template-columns: 1fr 20rem;
+    }
+
+
+
+.search-container {
+    border: 2px solid #9E9E9E;
+    border-radius: 1rem;
+    padding: 0.6rem 1rem;
+}
+
+.search-container input {
+    border: none;
+    padding: 0.5rem 1rem 0.5rem 0.5rem;
+    outline: none; 
+}
+
+    .search-container input:focus {
+        border: none;
+        outline: none;
+    }
+
+    .search-container:focus-within {
+        border: 2px solid #E21818;
+    }
+
+    .search-container:focus-within i {
+        color :#E21818;
+    }
+
+.role-container {
+    padding: 0.3rem 0.5rem;
+    border-radius: 1rem;
+    font-size: 0.6rem;
+}
+
+.role-agent {
+    color: #3818D9;
+    border: 1px solid #A899F1;
+    background-color: #F7F5FF;
+}
+
+.role-admin {
+    color: #03781D;
+    border: 1px solid #6DC580;
+    background-color: #F0F9F2;
+}
+
+.agents:hover,
+.selected-agent {
+    background-color: #FFE5E5;
+    box-shadow: 0px 5px 4px grey;
+}
+
+.user-img-profile {
+    height: 3.5rem;
+    width: 3.5rem
+}
+
+/*MODAL */
+.modal-admin {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.modal-input-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    grid-column-gap: 1rem;
+    grid-row-gap: 1rem;
+}
+
+.modal-input, .select-input {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black;
+    border-radius: 0.5rem;
+    padding: 0.2rem 0.5rem;
+}
+
+    .modal-input span {
+        font-size: 0.5rem;
+    }
+
+    .modal-input:focus-within,
+    .select-input:focus-within {
+        border: 1px solid red;
+    }
+
+    .modal-input input {
+        border: none;
+    }
+
+    .modal-input input:focus {
+        outline: none;
+    }
+
+    .modal-input select {
+        border: none;
+        outline: none;
+        width: 100%;
+        height: 100%;
+        background-color: transparent;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+    }
+
+.delete-btn {
+    border-radius: 4px;
+    border: 1.5px solid #E21818;
+    background-color: white;
+    color: #E21818;
+    padding: 1rem 2rem;
+}
+
+.delete-btn:focus {
+    outline: 2px solid #E21818;
+}
+
+.delete-modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border-radius: 1rem;
+    padding: 1rem;
+    text-align: center;
+}
+
+.delete-modal-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/*ADMIN NAV BAR*/
+
+.nav-item.active {
+    padding-bottom: 0.5rem;
+    font-weight: 500;
+    color: #202020;
+    border-bottom: 2px solid #3818D9;
+}
+
+.nav-item {
+    color: #9E9E9E;
+}
