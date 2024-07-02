@@ -1,0 +1,165 @@
+﻿@{
+    ViewData["Title"] = "Admin Page";
+}
+@section styles {
+    <link rel="stylesheet" href="~/css/functionalities.css" />
+    <link rel="stylesheet" href="~/css/Admin.css" />
+}
+
+<div class="admin-body p-y-3 relative">
+    <div style="padding-right: 2rem; border-right: 1.5px solid #9E9E9E;">
+        <h1>Agents and Team</h1>
+        <div class="flex-Row flex-between">
+            <div class="agent-nav pt-4">
+                <ul class="flex-Row gap-2">
+                    <li class="color-active b-active pb-2 fw-semi">Agents</li>
+                    <li class="color-inactive">Team</li>
+                </ul>
+            </div>
+            <div class="flex-Row gap-2 justify-content-center align-center">
+                <div class="search-container | flex-Row align-center justify-content-center">
+                    <i class="fa-solid fa-magnifying-glass text-1-5"></i>
+                    <input class="bg-transparent" type="text" placeholder="Search" />
+                </div>
+                <button class="flex-Row gap-1 color-white bg-red align-center justify-content-center border-0 p-x-1 br-1-5">
+                    <i class="fa-solid fa-user-plus"></i>
+                    <p class="br-1-5 p-y-1">Add</p>
+                </button>
+            </div>
+        </div>
+        <div class="flex-Row flex-between p-y-1 p-x-1 border-b-2 text-1-5 mb-3">
+            <div class="flex-Row align-center gap-1 fw-semi">
+                <i class="fa-regular fa-user"></i>
+                <p>Profile</p>
+            </div>
+            <div class="flex-Row align-center gap-1 fw-semi">
+                <i class="fa-regular fa-address-card"></i>
+                <p>Name</p>
+            </div>
+            <div class="flex-Row align-center gap-1 fw-semi">
+                <i class="fa-solid fa-user-tie"></i>
+                <p>Role</p>
+            </div>
+        </div>
+        <div class="agents-container bg-white"> 
+            <div class="agents | flex-Row flex-between p-y-1 p-x-1 align-center" data-agents-1>
+                <div class="user-img-profile br-50 bg-grey"></div>
+                <div class="flex-col justify-content-center align-center">
+                    <p class="fw-semi text-1-5">Agent Name</p>
+                    <p>agentemail@gmail.com</p>
+                </div>
+                <div class="role-container role-agent fw-semi text-0-5">Agent</div>
+            </div>
+            <div class="agents | flex-Row flex-between p-y-1 p-x-1 align-center" data-agents-2>
+                <div class="user-img-profile br-50 bg-grey"></div>
+                <div class="flex-col justify-content-center align-center">
+                    <p class="fw-semi text-1-5">Agent Name</p>
+                    <p>agentemail@gmail.com</p>
+                </div>
+                <div class="role-container role-admin fw-semi text-0-5">Admin</div>
+            </div>
+            <div class="agents | flex-Row flex-between p-y-1 p-x-1 align-center" data-agents-3>
+                <div class="user-img-profile br-50 bg-white"></div>
+                <div class="flex-col justify-content-center align-center">
+                    <p class="fw-semi text-1-5">Agent Name</p>
+                    <p>agentemail@gmail.com</p>
+                </div>
+                <div class="role-container role-agent fw-semi text-0-5">Agent</div>
+            </div>
+        </div>
+    </div>
+    <div class="p-x-1 hidden" data-admin-edit-details>
+        <div class="flex-Row  align-center justify-content-between p-y-2 border-b-2">
+           <h2>Detail</h2>
+            <u class="fa-solid fa-pen-to-square text-1-5 color-inactive" data-admin-edit-btn></u>
+        </div>
+        <div class="flex p-t-1">
+            <div class="agents-details | margin-1 bg-white flex-Row flex-between p-y-1 p-x-1 align-center">
+                <div class="user-img-profile br-50 bg-grey"></div>
+                <div class="flex-col justify-content-center align-center">
+                    <p class="fw-semi">Agent Name</p>
+                    <p class="text-sm">agentemail@gmail.com</p>
+                </div>
+                <div class="role-container role-agent fw-semi text-0-5">Agent</div>
+            </div>
+            <div>
+                <h4>Team</h4>
+                <div class="agents-details | margin-1 bg-white flex-Row flex-between p-y-1 p-x-1 align-center">
+                    <div class="user-img-profile br-50 bg-grey"></div>
+                    <div class="flex-col justify-content-center align-center">
+                        <p class="fw-semi">Agent Name</p>
+                        <p class="text-sm">agentemail@gmail.com</p>
+                    </div>
+                    <div class="role-container role-agent fw-semi text-0-5">Agent</div>
+                </div>
+            </div>
+            <div>
+                <h4>Recent Activity</h4>
+                <div class="agents-details | margin-1 bg-white flex-Row flex-between p-y-1 p-x-1 align-center">
+                    <div class="user-img-profile br-50 bg-grey"></div>
+                    <div class="flex-col justify-content-center align-center">
+                        <p class="fw-semi">Agent Name</p>
+                        <p class="text-sm">agentemail@gmail.com</p>
+                    </div>
+                    <div class="role-container role-agent fw-semi text-0-5">Agent</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-admin bg-modal" data-admin-modal-container>
+        <form class="modal-container br-1 bg-white p-y-1 p-x-2" data-modal-edit-form>
+            <div class="flex-Row justify-content-between">
+                <h2>Edit User</h2>
+                <i class="text-md fa-regular fa-circle-xmark hover-pointer" data-admin-edit-close-btn></i>
+            </div>
+            <div class="agents-details | margin-1 bg-white flex-Row flex-between p-y-1 p-x-1 align-center">
+                <div class="flex-Row gap-1">
+                    <div class="user-img-profile br-50 bg-grey"></div>
+                    <div class="flex-col justify-content-center align-center">
+                        <p class="fw-semi">Agent Name</p>
+                        <p class="text-sm">agentemail@gmail.com</p>
+                    </div>
+                </div>
+                <div class="role-container role-agent fw-semi text-0-5">Agent</div>
+            </div>
+            <div class="modal-input-container">
+                <label class="modal-input relative flex">
+                    <span>First Name</span>
+                    <input type="text" placeholder="John" />
+                </label>
+                <label class="modal-input relative flex">
+                    <span>Last Name</span>
+                    <input type="text" placeholder="Doe" />
+                </label>
+                <label class="modal-input relative flex">
+                    <span>Email</span>
+                    <input type="text" placeholder="johndoe@gmail.com" />
+                </label>
+                <label class="modal-input relative flex">
+                    <span>Contact Number</span>
+                    <input type="text" placeholder="+123456789" />
+                </label>
+                <label class="select-input relative flex border-0">
+                    <select>
+                        <option value="none" selected disabled>Role</option>
+                        <option value="agent">Agent</option>
+                        <option value="admin">Admin</option>
+                        <option value="manager">Manager</option>
+                    </select>
+                </label>
+                <label class="select-input relative flex border-0">
+                    <select>
+                        <option value="none" selected disabled>Team</option>
+                        <option value="team1">Team 1</option>
+                        <option value="team2">Team 2</option>
+                        <option value="team3">Team 3</option>
+                    </select>
+                </label>
+            </div>
+            <div>
+                <button class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-edit-cancel-btn>Cancel</button>
+                <button class="color-white bg-red align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-edit-save-btn>Save</button>
+            </div>
+        </form>
+    </div>
+</div>

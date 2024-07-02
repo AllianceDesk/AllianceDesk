@@ -9,6 +9,16 @@
     font-family: "Poppins", sans-serif;
 }
 
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin-bottom: 0;
+}
+
 :root {
     --background-color1: #fafafa;
     --background-color2: #ffffff;
@@ -106,6 +116,7 @@ header {
     left: 19px;
     top: 8px;
 }
+
 
 .dp {
     height: 40px;
