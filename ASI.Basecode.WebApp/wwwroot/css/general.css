@@ -12,6 +12,10 @@ html, body {
     height: 100%;
 }
 
+header {
+    display: flex;
+}
+
 :root {
     /* Colors */
     --sidebar-color: #FFFFFF;
