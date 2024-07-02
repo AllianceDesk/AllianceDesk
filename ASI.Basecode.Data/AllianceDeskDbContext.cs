@@ -37,7 +37,6 @@ namespace ASI.Basecode.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
                 optionsBuilder.UseSqlServer("Addr=localhost;database=AllianceDeskDb;Integrated Security=False;Trusted_Connection=True");
             }
         }
@@ -52,7 +51,7 @@ namespace ASI.Basecode.Data
 
                 entity.Property(e => e.Body).HasColumnName("body");
 
-                entity.Property(e => e.CategoryId).HasColumnName("category_id");
+                entity.Property(e => e.Category).HasColumnName("category");
 
                 entity.Property(e => e.CreatedBy).HasColumnName("created_by");
 
@@ -129,7 +128,7 @@ namespace ASI.Basecode.Data
 
             modelBuilder.Entity<Favorite>(entity =>
             {
-                entity.HasIndex(e => new { e.UserId, e.ArticleId }, "UQ__Favorite__A57D5868EAFBBBBC")
+                entity.HasIndex(e => new { e.UserId, e.ArticleId }, "UQ__Favorite__A57D58687B5D9372")
                     .IsUnique();
 
                 entity.Property(e => e.FavoriteId)

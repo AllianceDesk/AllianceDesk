@@ -13,6 +13,8 @@ using System.IO;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 
 
@@ -53,10 +55,36 @@ namespace ASI.Basecode.WebApp.Controllers
         #region User Methods
 
         [HttpGet("/User/Tickets")]
-        public IActionResult UserTickets()
+        public IActionResult UserTickets(string? status)
         {
-            var data = _ticketService.RetrieveAll();
-            return View(data);
+            string user = "857949fe-ec30-4c0b-a514-eb0fd9262738"; // Replace with User.Identity.Name when authentication is implemented
+            string user2 = "90122701-1c8c-40a4-8936-7717Cfaa9c14";
+
+            var tickets = _ticketService.RetrieveAll();
+
+            var userTickets = tickets.Where(t => t.CreatorId == user).ToList();
+
+
+            if (userTickets.Count == 0)
+            {
+                Console.WriteLine("No tickets found for user");
+                return NotFound();
+            }
+
+            var statuses = _ticketService.GetStatuses()
+                                   .Select(c => new SelectListItem
+                                   {
+                                       Value = c.StatusId.ToString(),
+                                       Text = c.StatusName
+                                   })
+                                   .ToList();
+
+            // Pass data to ViewBag
+            ViewBag.Statuses = new SelectList(statuses, "Value", "Text");
+
+            
+           return View(userTickets);
+            
         }
 
 
@@ -93,13 +121,29 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpPost("/User/Tickets/Create")]
         public IActionResult PostUserCreate(TicketViewModel ticket)
         {
+            // Replace with User.Identity.Name when authentication is implemented
+            ticket.CreatorId = "857949FE-EC30-4C0B-A514-EB0FD9262738";
             _ticketService.Add(ticket);
-
+            
             return RedirectToAction(nameof(UserTickets));
         }
         #endregion
 
 
+        [HttpGet("Admin/Tickets/{id}")]
+        public IActionResult AdminViewTicket(string id)
+        {
+            var ticket = _ticketService.GetById(id);
+
+            if (ticket == null)
+            {
+                return NotFound(); // Handle ticket not found scenario
+            }
+
+            return View("Details", ticket);
+        }
+
+       
         /*#region GET Methods        
         /// <summary>
         /// Return the Index View with a list of Tickets

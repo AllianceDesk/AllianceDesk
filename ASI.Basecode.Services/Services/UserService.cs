@@ -109,5 +109,17 @@ namespace ASI.Basecode.Services.Services
         {
             return _repository.GetUsers().Where(u => u.RoleId == 2);
         }
+
+        public User GetUserById(string id)
+        {
+            User user = _repository.GetUsers().Where(x => x.UserId.ToString() == id).FirstOrDefault();
+
+            if (user !=  null)
+            {
+                return user;
+            }
+        
+            return null;
+        }
     }
 }

@@ -13,6 +13,8 @@ namespace ASI.Basecode.Services.Interfaces
         void Update(TicketViewModel ticket);
         void Delete(string id);
 
+        TicketViewModel GetById(string id);
+
         IEnumerable<Category> GetCategories();
         IEnumerable<TicketPriority> GetPriorities();
         IEnumerable<TicketStatus> GetStatuses();

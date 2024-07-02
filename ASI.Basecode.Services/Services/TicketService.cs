@@ -6,48 +6,40 @@ using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net.Sockets;
 
 namespace ASI.Basecode.Services.Services
 {
     public class TicketService : ITicketService
     {
         private readonly ITicketRepository _ticketRepository;
+        private readonly IUserRepository _userRepository;
         private readonly ICategoryRepository _categoryRepository;
         private readonly ITicketPriorityRepository _priorityRepository;
         private readonly ITicketStatusRepository _statusRepository;
         private readonly IMapper _mapper;
 
-        public TicketService(ITicketRepository ticketRepository, ICategoryRepository categoryRepository, ITicketPriorityRepository ticketPriorityRepository, ITicketStatusRepository ticketStatusRepository, IMapper mapper)
+        public TicketService(ITicketRepository ticketRepository, IUserRepository userRepository, ICategoryRepository categoryRepository, ITicketPriorityRepository ticketPriorityRepository, ITicketStatusRepository ticketStatusRepository, IMapper mapper)
         {
             _ticketRepository = ticketRepository;
+            _userRepository = userRepository;
             _categoryRepository = categoryRepository;
             _priorityRepository = ticketPriorityRepository;
             _statusRepository = ticketStatusRepository;
             _mapper = mapper;
         }
 
-
-        #region User Methods
-
-        #endregion
-
-        #region Admin Methods
-
-        #endregion 
-
         public IEnumerable<TicketViewModel> RetrieveAll()
         {
-
-            
 
             var data = _ticketRepository.RetrieveAll().Select(s => new TicketViewModel
             {
                 TicketId = s.TicketId.ToString(),
                 Title = s.Title,
                 Description = s.Description,
+                DateCreated = s.DateCreated,
+                CreatorId = s.CreatedBy.ToString(),
+                AgentId = s.AssignedAgent.ToString(),
+                StatusId = s.StatusId.ToString(),
                 Category = _categoryRepository.RetrieveAll().Where(c => c.CategoryId == s.CategoryId).FirstOrDefault().CategoryName,
                 Priority = _priorityRepository.RetrieveAll().Where(p => p.PriorityId == s.PriorityId).FirstOrDefault().PriorityName,
                 Status = _statusRepository.RetrieveAll().Where(st => st.StatusId == s.StatusId).FirstOrDefault().StatusName,
@@ -55,7 +47,7 @@ namespace ASI.Basecode.Services.Services
 
             return data;
         }
-
+        
         public void Add(TicketViewModel ticket)
         {
             if (ticket == null)
@@ -63,15 +55,12 @@ namespace ASI.Basecode.Services.Services
                 throw new ArgumentNullException(nameof(ticket), "TicketViewModel cannot be null.");
             }
 
-            var newTicket = new Ticket();
+            Ticket newTicket = new Ticket();
             newTicket.TicketId = Guid.NewGuid();
             newTicket.Title = ticket.Title;
             newTicket.Description = ticket.Description;
             newTicket.DateCreated = DateTime.Now;
-
-            // This is a temporary value for CreatedBy, replace when user authentication is implemented
-            newTicket.CreatedBy = Guid.Parse("c9876543-b21d-43e5-a345-556642441234");
-
+            newTicket.CreatedBy = Guid.Parse(ticket.CreatorId); 
             newTicket.StatusId = 1;
             newTicket.PriorityId = Convert.ToByte(ticket.PriorityId);
             newTicket.CategoryId = Convert.ToByte(ticket.CategoryId);
@@ -90,6 +79,28 @@ namespace ASI.Basecode.Services.Services
         public void Delete(String id)
         {
             _ticketRepository.Delete(id);
+        }
+        
+        public TicketViewModel GetById(string id)
+        {
+            var ticket = _ticketRepository.RetrieveAll().Where(s => s.TicketId.ToString() == id).FirstOrDefault();
+
+            if (ticket == null)
+            {
+                return null;
+            }
+
+            var ticketViewModel = new TicketViewModel
+            {
+                TicketId = ticket.TicketId.ToString(),
+                Title = ticket.Title,
+                Description = ticket.Description,
+                CategoryId = ticket.CategoryId.ToString(),
+                PriorityId = ticket.PriorityId.ToString(),
+                StatusId = ticket.StatusId.ToString()
+            };
+
+            return ticketViewModel;
         }
 
         public IEnumerable<Category> GetCategories()

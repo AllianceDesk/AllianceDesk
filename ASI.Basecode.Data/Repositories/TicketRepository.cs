@@ -23,7 +23,6 @@ namespace ASI.Basecode.Data.Repositories
 
         public void Add(Ticket ticket)
         {
-            ticket.TicketId = Guid.NewGuid();
             this.GetDbSet<Ticket>().Add(ticket);
             UnitOfWork.SaveChanges();
         }
