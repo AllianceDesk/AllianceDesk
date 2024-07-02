@@ -163,6 +163,13 @@ p {
     font-size: 1.2rem;
 }
 
+.text-2 {
+    font-size: 2rem;
+}
+
+.text-3 {
+    font-size: 3rem;
+}
 .text-md {
     font-size: 1.5rem;
 }
@@ -207,7 +214,22 @@ p {
     color: #202020;
 }
 
+.color-primary {
+    color: #E21818;
+}
+
+.color-error {
+    color: #F70707;
+}
 .hidden {
     display: none !important;
 }
 
+.cursor-pointer {
+    cursor: pointer;
+}
+
+/* BTN */
+.mbtn-primary:focus {
+    outline: 3px solid #E21818;
+}

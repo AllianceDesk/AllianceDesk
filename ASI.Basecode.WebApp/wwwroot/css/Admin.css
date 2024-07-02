@@ -92,19 +92,20 @@
     grid-row-gap: 1rem;
 }
 
-.modal-input {
+.modal-input, .select-input {
     display: flex;
     flex-direction: column;
     border: 1px solid black;
     border-radius: 0.5rem;
-    padding: 0.5rem 1rem;
+    padding: 0.2rem 0.5rem;
 }
 
     .modal-input span {
         font-size: 0.5rem;
     }
 
-    .modal-input:focus-within {
+    .modal-input:focus-within,
+    .select-input:focus-within {
         border: 1px solid red;
     }
 
@@ -116,6 +117,57 @@
         outline: none;
     }
 
-.select-input select {
+    .modal-input select {
+        border: none;
+        outline: none;
+        width: 100%;
+        height: 100%;
+        background-color: transparent;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+    }
+
+.delete-btn {
+    border-radius: 4px;
+    border: 1.5px solid #E21818;
+    background-color: white;
+    color: #E21818;
+    padding: 1rem 2rem;
+}
+
+.delete-btn:focus {
+    outline: 2px solid #E21818;
+}
+
+.delete-modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border-radius: 1rem;
+    padding: 1rem;
+    text-align: center;
+}
+
+.delete-modal-container {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
+    height: 100%;
+}
+
+/*ADMIN NAV BAR*/
+
+.nav-item.active {
+    padding-bottom: 0.5rem;
+    font-weight: 500;
+    color: #202020;
+    border-bottom: 2px solid #3818D9;
+}
+
+.nav-item {
+    color: #9E9E9E;
 }
