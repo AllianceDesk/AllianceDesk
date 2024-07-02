@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ASI.Basecode.WebApp.Models
+namespace ASI.Basecode.Data.Models
 {
     public partial class Favorite
     {
