@@ -1,12 +1,18 @@
+﻿using System;
 using System.Collections.Generic;
 
 namespace ASI.Basecode.Data.Models
 {
     public partial class TicketStatus
     {
-        public string Id { get; set; }
-        public string Name { get; set; }
+        public TicketStatus()
+        {
+            Tickets = new HashSet<Ticket>();
+        }
 
-        public List<Ticket> Tickets { get; set; } = new List<Ticket>();
+        public byte StatusId { get; set; }
+        public string StatusName { get; set; }
+
+        public virtual ICollection<Ticket> Tickets { get; set; }
     }
 }

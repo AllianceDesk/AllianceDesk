@@ -26,7 +26,8 @@ namespace ASI.Basecode.WebApp
             public AutoMapperProfileConfiguration()
             {
                 CreateMap<UserViewModel, User>();
-                CreateMap<NotificationServiceModel, NotificationDataModel>();   
+                CreateMap<TicketViewModel, Ticket>();
+                CreateMap<NotificationServiceModel, NotificationDataModel>();
             }
         }
     }

@@ -26,7 +26,7 @@ namespace ASI.Basecode.Services.Services
         {
             user = new User();
             var passwordKey = PasswordManager.EncryptPassword(password);
-            user = _repository.GetUsers().Where(x => x.UserId == userId &&
+            user = _repository.GetUsers().Where(x => x.UserId.ToString() == userId &&
                                                      x.Password == passwordKey).FirstOrDefault();
 
             return user != null ? LoginResult.Success : LoginResult.Failed;
@@ -39,10 +39,10 @@ namespace ASI.Basecode.Services.Services
             {
                 _mapper.Map(model, user);
                 user.Password = PasswordManager.EncryptPassword(model.Password);
-                user.CreatedTime = DateTime.Now;
+                /*user.CreatedTime = DateTime.Now;
                 user.UpdatedTime = DateTime.Now;
                 user.CreatedBy = System.Environment.UserName;
-                user.UpdatedBy = System.Environment.UserName;
+                user.UpdatedBy = System.Environment.UserName;*/
 
                 _repository.AddUser(user);
             }

@@ -1,12 +1,18 @@
+﻿using System;
 using System.Collections.Generic;
 
 namespace ASI.Basecode.Data.Models
 {
     public partial class TicketPriority
     {
-        public string Id { get; set; }
-        public string Name { get; set; }
+        public TicketPriority()
+        {
+            Tickets = new HashSet<Ticket>();
+        }
 
-        public List<Ticket> Tickets { get; set; } = new List<Ticket>();
+        public byte PriorityId { get; set; }
+        public string PriorityName { get; set; }
+
+        public virtual ICollection<Ticket> Tickets { get; set; }
     }
 }

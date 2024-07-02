@@ -5,26 +5,35 @@ namespace ASI.Basecode.Data.Models
 {
     public partial class User
     {
-        public string Id { get; set; }
-        public string UserId { get; set; }
-        public string Email { get; set; }
+        public User()
+        {
+            ArticleCreatedByNavigations = new HashSet<Article>();
+            ArticleUpdatedByNavigations = new HashSet<Article>();
+            Attachments = new HashSet<Attachment>();
+            Feedbacks = new HashSet<Feedback>();
+            TicketActivities = new HashSet<TicketActivity>();
+            TicketAssignedAgentNavigations = new HashSet<Ticket>();
+            TicketCreatedByNavigations = new HashSet<Ticket>();
+            TicketMessages = new HashSet<TicketMessage>();
+            UserPreferences = new HashSet<UserPreference>();
+        }
+
+        public Guid UserId { get; set; }
+        public string Username { get; set; }
         public string Password { get; set; }
-        public int RoleId { get; set; }
-        public UserRole Role { get; set; }
-
-        public int PreferenceId { get; set; }
-        public UserPreference Preference { get; set; }
-
-        public string CreatedBy { get; set; }
-        public DateTime CreatedTime { get; set; }
-        public string UpdatedBy { get; set; }
-        public DateTime UpdatedTime { get; set; }
-
-        public List<Ticket> CreatedTickets { get; set; } = new List<Ticket>();
-        public List<Ticket> AssignedTickets { get; set; } = new List<Ticket>();
-        public List<TicketActivity> TicketActivities { get; set; } = new List<TicketActivity>();
-        public List<Feedback> Feedbacks { get; set; } = new List<Feedback>();
-
-        public List<Article> CreatedArticles { get; set; } = new List<Article>();
+        public byte RoleId { get; set; }
+        public Guid? TeamId { get; set; }
+        public string Email { get; set; }
+        public virtual UserRole Role { get; set; }
+        public virtual Team Team { get; set; }
+        public virtual ICollection<Article> ArticleCreatedByNavigations { get; set; }
+        public virtual ICollection<Article> ArticleUpdatedByNavigations { get; set; }
+        public virtual ICollection<Attachment> Attachments { get; set; }
+        public virtual ICollection<Feedback> Feedbacks { get; set; }
+        public virtual ICollection<TicketActivity> TicketActivities { get; set; }
+        public virtual ICollection<Ticket> TicketAssignedAgentNavigations { get; set; }
+        public virtual ICollection<Ticket> TicketCreatedByNavigations { get; set; }
+        public virtual ICollection<TicketMessage> TicketMessages { get; set; }
+        public virtual ICollection<UserPreference> UserPreferences { get; set; }
     }
 }
