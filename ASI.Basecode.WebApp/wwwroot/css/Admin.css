@@ -3,6 +3,7 @@
     padding-left: 1.5rem;
     padding-right: 1.5rem;
     margin: auto;
+    width: 100%;
 }
 
     .admin-body.edit-active {
@@ -20,7 +21,7 @@
 
 .search-container input {
     border: none;
-    padding: 0.5rem 1rem 0.5rem 0.5rem;
+    padding: 0.5rem 1rem 0.5rem 2rem;
     outline: none; 
 }
 

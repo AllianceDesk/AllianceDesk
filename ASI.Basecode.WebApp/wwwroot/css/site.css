@@ -26,12 +26,6 @@ body {
     height: 100%;
 }
 
-.footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    white-space: nowrap;
-}
 
 #footer {
     height: 160px;

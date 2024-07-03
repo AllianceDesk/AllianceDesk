@@ -36,6 +36,7 @@ const adminDelForm = document.querySelector("[data-admin-delete-modal]")
 adminDelBtn.addEventListener("click", () => {
     console.log("clicking open btn", modalContainer, adminEditBtn)
     deleteModalContainer.classList.remove("hidden")
+    adminDelForm.classList.remove("hidden")
 })
 
 
