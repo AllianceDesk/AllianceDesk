@@ -50,6 +50,54 @@ namespace ASI.Basecode.WebApp.Controllers
             return View(data);
         }
 
+        [HttpGet("/Admin/Tickets/{id}")]
+        public IActionResult AdminDetails(string id)
+        {
+            var ticket = _ticketService.GetById(id);
+
+            if (ticket == null)
+            {
+                return NotFound();
+            }
+
+            return View(ticket);
+        }
+
+        [HttpGet("/Admin/Tickets/{id}/Assign")]
+
+        public IActionResult AssignTicket(string id)
+        {
+            var ticket = _ticketService.GetById(id);
+
+            if (ticket == null)
+            {
+                return NotFound();
+            }
+
+           /* var agents = _userService.GetAgents()
+                                   .Select(a => new SelectListItem
+                                   {
+                                       Value = a.AgentId.ToString(),
+                                       Text = a.AgentName
+                                   })
+                                   .ToList();
+
+            var teams = _userService.GetTeams()
+                                   .Select(t => new SelectListItem
+                                   {
+                                       Value = t.TeamId.ToString(),
+                                       Text = t.TeamName
+                                   })
+                                   .ToList();
+*/
+            // Pass data to ViewBag
+ /*           ViewBag.Agents = new SelectList(agents, "Value", "Text");
+            ViewBag.Teams = new SelectList(teams, "Value", "Text");
+*/
+            return View(ticket);
+        }
+
+
         #endregion
 
         #region User Methods
