@@ -24,14 +24,7 @@ html, body {
 }
 
 .sidebar {
-    position: fixed;
-    top: 70px;
-    left: 0;
-    height: calc(100vh - 70px);
-    width: 250px;
     background: var(--sidebar-color);
-    z-index: 0;
-   /* overflow-y: auto;*/
     box-shadow: 3px 0 10px rgba(0, 0, 0, 0.05);
 }
 
