@@ -7,34 +7,19 @@
 <h2>Assign Ticket</h2>
 
 <div>
-    <form asp-action="Assign">
-        <div class="form-group">
-            <label asp-for="TicketId" class="control-label"></label>
-            <input asp-for="TicketId" class="form-control" readonly />
-        </div>
 
-        <div class="form-group">
-            <label asp-for="TeamId" class="control-label">Assign Team:</label>
-            <select asp-for="TeamId" class="form-control">
-                <option value="">Select Team...</option>
-                @foreach (var team in ViewBag.Teams)
-                {
-                    <option value="@team.Id">@team.Name</option>
-                }
-            </select>
-        </div>
-
+    <form asp-controller="Ticket" asp-action="PostAssign" asp-route-id="@Model.TicketId" method="post">
+        <input type="hidden" name="id" value="@Model.TicketId" />
         <div class="form-group">
             <label asp-for="AgentId" class="control-label">Assign Agent:</label>
-            <select asp-for="AgentId" class="form-control">
+            <select asp-for="AgentId" name="agentId" class="form-control">
                 <option value="">Select Agent...</option>
                 @foreach (var agent in ViewBag.Agents)
                 {
-                    <option value="@agent.Id">@agent.Name</option>
+                    <option value="@agent.Value">@agent.Text</option>
                 }
             </select>
         </div>
-
         <button type="submit" class="btn btn-primary">Assign</button>
     </form>
 </div>

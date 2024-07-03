@@ -24,6 +24,7 @@ namespace ASI.Basecode.WebApp.Controllers
     {
 
         private readonly ITicketService _ticketService;
+        private readonly IUserService _userService;
 
         /// <summary>
         /// Constructor
@@ -33,13 +34,14 @@ namespace ASI.Basecode.WebApp.Controllers
         /// <param name="configuration"></param>
         /// <param name="localizer"></param>
         /// <param name="mapper"></param>
-        public TicketController(ITicketService ticketService,
+        public TicketController(ITicketService ticketService, IUserService userService,
             IHttpContextAccessor httpContextAccessor,
                               ILoggerFactory loggerFactory,
                               IConfiguration configuration,
                               IMapper mapper = null) : base(httpContextAccessor, loggerFactory, configuration, mapper)
         {
             _ticketService = ticketService;
+            _userService = userService;
         }
 
         #region Admin Methods
@@ -64,8 +66,7 @@ namespace ASI.Basecode.WebApp.Controllers
         }
 
         [HttpGet("/Admin/Tickets/{id}/Assign")]
-
-        public IActionResult AssignTicket(string id)
+        public IActionResult Assign(string id)
         {
             var ticket = _ticketService.GetById(id);
 
@@ -74,29 +75,34 @@ namespace ASI.Basecode.WebApp.Controllers
                 return NotFound();
             }
 
-           /* var agents = _userService.GetAgents()
+            var agents = _userService.GetAgents()
                                    .Select(a => new SelectListItem
                                    {
-                                       Value = a.AgentId.ToString(),
-                                       Text = a.AgentName
+                                       Value = a.UserId.ToString(),
+                                       Text = a.Name
                                    })
                                    .ToList();
 
-            var teams = _userService.GetTeams()
-                                   .Select(t => new SelectListItem
-                                   {
-                                       Value = t.TeamId.ToString(),
-                                       Text = t.TeamName
-                                   })
-                                   .ToList();
-*/
-            // Pass data to ViewBag
- /*           ViewBag.Agents = new SelectList(agents, "Value", "Text");
-            ViewBag.Teams = new SelectList(teams, "Value", "Text");
-*/
+            ViewBag.Agents = new SelectList(agents, "Value", "Text");
+
             return View(ticket);
         }
 
+        [HttpPost("/Admin/Tickets/{id}/Assign")]
+        public IActionResult PostAssign(string id, string agentId)
+        {
+            var ticket = _ticketService.GetById(id);
+
+            if (ticket == null)
+            {
+                return NotFound();
+            }
+
+            ticket.AgentId = agentId;
+            _ticketService.Update(ticket);
+
+            return RedirectToAction(nameof(AdminDetails), new { id = ticket.TicketId });
+        }
 
         #endregion
 
@@ -250,170 +256,7 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction(nameof(UserTickets));
         }
 
-        /*[HttpGet("User/Tickets/{id}/")]
-        public IActionResult UserEditTicket(string id)
-        {
-            var ticket = _ticketService.GetById(id);
-
-            if (ticket == null)
-            {
-                return NotFound(); // Handle ticket not found scenario
-            }
-
-            return View();
-        }
-
-        [HttpPost("User/Tickets/{id}")]
-        public IActionResult PostUserEditTicket(TicketViewModel ticket)
-        {
-            _ticketService.Update(ticket);
-
-            return RedirectToAction(nameof(UserEditTicket));
-        }*/
-
-
-
-
-        #endregion
-
-
-
        
-        /*#region GET Methods        
-        /// <summary>
-        /// Return the Index View with a list of Tickets
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        
-        public IActionResult Index()
-        {
-            var data = _ticketService.RetrieveAll();
-            return View(data);
-        }
-
-        
-
-        /// <summary>
-        /// Get the Full Details of a Ticket using the Ticket ID
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <returns></returns>
-        [HttpGet]
-        public IActionResult Details(string id)
-        {
-            *//*var ticket = _ticketService.RetrieveAll().FirstOrDefault(x => x.Id.Equals(id));
-
-            if (ticket == null)
-            {
-                return NotFound();
-            }
-
-
-            TicketPriority priority = _ticketService.GetPriorityById(ticket.PriorityId);
-
-            TicketStatus status = _ticketService.GetStatusById(ticket.StatusId);
-
-            ticket.StatusName = status.Name;
-            ticket.PriorityName = priority.Name;*//*
-
-            return View(null);
-        }
-
-
-        /// <summary>
-        /// Go to the Edit View of a Ticket
-        /// </summary>
-        /// <param name="Id">The identifier.</param>
-        /// <returns></returns>
-        [HttpGet]
-        public IActionResult Edit(string Id)
-        {
-            var data = _ticketService.RetrieveAll().Where(x => x.Id.Equals(Id)).FirstOrDefault();
-
-            if (data == null)
-            {
-                return NotFound();
-            }
-
-            return View(data);
-        }
-
-        /// <summary>
-        /// Go to the Delete View of a Ticket
-        /// </summary>
-        /// <param name="Id">The identifier.</param>
-        /// <returns></returns>
-        [HttpGet]
-        public IActionResult Delete(string Id)
-        {
-            var data = _ticketService.RetrieveAll().Where(x => x.Id.Equals(Id)).FirstOrDefault();
-
-            if (data == null)
-            {
-                return NotFound();
-            }
-
-            return View(data);
-        }
-
         #endregion
-
-        #region POST METHODS        
-        /// <summary>
-        /// Posts the Creation of a Ticket.
-        /// </summary>
-        /// <param name="ticket">The ticket.</param>
-        /// <param name="attachments">The attachments.</param>
-        /// <returns></returns>
-       
-
-        /// <summary>
-        /// Posts the changes or updates of a Ticket.
-        /// </summary>
-        /// <param name="ticket">The ticket.</param>
-        /// <returns></returns>
-        [HttpPost]
-        public IActionResult PostUpdate(TicketViewModel ticket)
-        {
-            _ticketService.Update(ticket);
-
-            // Add a check if the ticket was successfully updated
-
-            return RedirectToAction("Index");
-        }
-
-        /// <summary>
-        /// Posts the deletion of a Ticket.
-        /// </summary>
-        /// <param name="Id">The identifier.</param>
-        /// <returns></returns>
-        [HttpPost]
-        public IActionResult PostDelete(string Id)
-        {
-            _ticketService.Delete(Id);
-
-            // Add a check if the ticket was successfully deleted
-
-            return RedirectToAction("Index");
-        }
-
-        #endregion
-
-        /// <summary>
-        /// Determines whether [is image file] [the specified file].
-        /// </summary>
-        /// <param name="file">The file.</param>
-        /// <returns>
-        ///   <c>true</c> if [is image file] [the specified file]; otherwise, <c>false</c>.
-        /// </returns>
-        private bool IsImageFile(IFormFile file)
-        {
-            if (file == null)
-                return false;
-
-            string[] allowedImageTypes = { "image/jpeg", "image/png", "image/gif" };
-            return allowedImageTypes.Contains(file.ContentType);
-        }*/
     }
 }

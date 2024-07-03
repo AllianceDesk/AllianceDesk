@@ -43,6 +43,8 @@ namespace ASI.Basecode.Services.Services
                 Category = _categoryRepository.RetrieveAll().Where(c => c.CategoryId == s.CategoryId).FirstOrDefault().CategoryName,
                 Priority = _priorityRepository.RetrieveAll().Where(p => p.PriorityId == s.PriorityId).FirstOrDefault().PriorityName,
                 Status = _statusRepository.RetrieveAll().Where(st => st.StatusId == s.StatusId).FirstOrDefault().StatusName,
+                AgentName = _userRepository.GetUsers().Where(u => u.UserId == s.AssignedAgent).FirstOrDefault()?.Name,
+                CreatorName = _userRepository.GetUsers().Where(u => u.UserId == s.CreatedBy).FirstOrDefault()?.Name,
             });
 
             return data;
@@ -75,8 +77,8 @@ namespace ASI.Basecode.Services.Services
             existingTicket.Title = ticket.Title;
             existingTicket.Description = ticket.Description;
             existingTicket.CategoryId = Convert.ToByte(ticket.CategoryId);
-            existingTicket.PriorityId = Convert.ToByte(ticket.PriorityId);
-            
+            existingTicket.PriorityId = Convert.ToByte(ticket.PriorityId);           
+            existingTicket.AssignedAgent = Guid.Parse(ticket.AgentId);
             // Add updated time
             
             _ticketRepository.Update(existingTicket);

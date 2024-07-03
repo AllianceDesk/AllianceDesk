@@ -158,6 +158,7 @@ namespace ASI.Basecode.WebApp
 
             this._app.UseAuthentication();
             this._app.UseAuthorization();
+
         }
     }
 }

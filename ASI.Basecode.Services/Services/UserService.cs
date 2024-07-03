@@ -121,5 +121,12 @@ namespace ASI.Basecode.Services.Services
         
             return null;
         }
+
+        public IEnumerable<UserViewModel> GetAgents()
+        {
+            var agents = _repository.GetUsers().Where(x => x.RoleId == 2).ToList();
+
+            return _mapper.Map<IEnumerable<UserViewModel>>(agents);
+        }
     }
 }
