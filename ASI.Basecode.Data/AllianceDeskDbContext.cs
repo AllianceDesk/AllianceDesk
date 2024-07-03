@@ -129,7 +129,7 @@ namespace ASI.Basecode.Data
 
             modelBuilder.Entity<Favorite>(entity =>
             {
-                entity.HasIndex(e => new { e.UserId, e.ArticleId }, "UQ__Favorite__A57D5868B56E9F0D")
+                entity.HasIndex(e => new { e.UserId, e.ArticleId }, "UQ__Favorite__A57D5868F1EF9D25")
                     .IsUnique();
 
                 entity.Property(e => e.FavoriteId)
@@ -269,7 +269,7 @@ namespace ASI.Basecode.Data
             modelBuilder.Entity<TicketActivity>(entity =>
             {
                 entity.HasKey(e => e.HistoryId)
-                    .HasName("PK__TicketAc__096AA2E98D0B2CDD");
+                    .HasName("PK__TicketAc__096AA2E9C72212C0");
 
                 entity.Property(e => e.HistoryId)
                     .ValueGeneratedNever()
@@ -311,7 +311,7 @@ namespace ASI.Basecode.Data
             modelBuilder.Entity<TicketActivityOperation>(entity =>
             {
                 entity.HasKey(e => e.OperationId)
-                    .HasName("PK__TicketAc__9DE171233655A1A1");
+                    .HasName("PK__TicketAc__9DE17123B6D037DA");
 
                 entity.Property(e => e.OperationId).HasColumnName("operation_id");
 
@@ -323,7 +323,7 @@ namespace ASI.Basecode.Data
             modelBuilder.Entity<TicketMessage>(entity =>
             {
                 entity.HasKey(e => e.MessageId)
-                    .HasName("PK__TicketMe__0BBF6EE6800B396D");
+                    .HasName("PK__TicketMe__0BBF6EE6BA3A0BC2");
 
                 entity.Property(e => e.MessageId)
                     .ValueGeneratedNever()
@@ -357,7 +357,7 @@ namespace ASI.Basecode.Data
             modelBuilder.Entity<TicketPriority>(entity =>
             {
                 entity.HasKey(e => e.PriorityId)
-                    .HasName("PK__TicketPr__EE325785F21A662E");
+                    .HasName("PK__TicketPr__EE325785D7A71898");
 
                 entity.Property(e => e.PriorityId).HasColumnName("priority_id");
 
@@ -370,7 +370,7 @@ namespace ASI.Basecode.Data
             modelBuilder.Entity<TicketStatus>(entity =>
             {
                 entity.HasKey(e => e.StatusId)
-                    .HasName("PK__TicketSt__3683B53190EF3D68");
+                    .HasName("PK__TicketSt__3683B531370E8C7E");
 
                 entity.Property(e => e.StatusId).HasColumnName("status_id");
 
@@ -420,7 +420,7 @@ namespace ASI.Basecode.Data
             modelBuilder.Entity<UserPreference>(entity =>
             {
                 entity.HasKey(e => e.PreferenceId)
-                    .HasName("PK__UserPref__FB41DBCFD48EA294");
+                    .HasName("PK__UserPref__FB41DBCFC435C54A");
 
                 entity.Property(e => e.PreferenceId)
                     .ValueGeneratedNever()
@@ -444,7 +444,7 @@ namespace ASI.Basecode.Data
             modelBuilder.Entity<UserRole>(entity =>
             {
                 entity.HasKey(e => e.RoleId)
-                    .HasName("PK__UserRole__760965CCE7060D2D");
+                    .HasName("PK__UserRole__760965CCD79E505F");
 
                 entity.Property(e => e.RoleId).HasColumnName("role_id");
 
