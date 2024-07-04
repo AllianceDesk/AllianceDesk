@@ -16,7 +16,7 @@ namespace ASI.Basecode.Data.Repositories
 
         }
 
-        public IEnumerable<Article> GetArticles()
+        public IEnumerable<Article> RetrieveAll()
         {
             return this.GetDbSet<Article>();
         }

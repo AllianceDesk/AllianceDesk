@@ -9,7 +9,7 @@ namespace ASI.Basecode.Data.Interfaces
 {
     public interface IArticleRepository
     {
-        IEnumerable<Article> GetArticles();
+        IEnumerable<Article> RetrieveAll();
         void AddArticle(Article article);
     }
 }
