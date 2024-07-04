@@ -23,9 +23,6 @@ namespace ASI.Basecode.Data.Repositories
 
         public void AddArticle(Article article)
         {
-            article.ArticleId = Guid.NewGuid();
-            article.DateCreated = DateTime.Now;
-            article.DateUpdated = DateTime.Now;
 
             this.GetDbSet<Article>().Add(article);
             UnitOfWork.SaveChanges();

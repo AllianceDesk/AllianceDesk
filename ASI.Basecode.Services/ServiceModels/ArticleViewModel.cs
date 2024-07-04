@@ -23,6 +23,6 @@ namespace ASI.Basecode.Services.ServiceModels
         public DateTime? DateUpdated { get; set; }
         public string UpdatedBy { get; set; }
 
-        public string Category { get; set; }
+        public string CategoryNavigation { get; set; }
     }
 }

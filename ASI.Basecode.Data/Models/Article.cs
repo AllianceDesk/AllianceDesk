@@ -19,7 +19,7 @@ namespace ASI.Basecode.Data.Models
         public DateTime? DateUpdated { get; set; }
         public Guid UpdatedBy { get; set; }
 
-        public virtual Category Category { get; set; }
+        public virtual Category CategoryNavigation { get; set; }
         public virtual User CreatedByNavigation { get; set; }
         public virtual User UpdatedByNavigation { get; set; }
         public virtual ICollection<Favorite> Favorites { get; set; }

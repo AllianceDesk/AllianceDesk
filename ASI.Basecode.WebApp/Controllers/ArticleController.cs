@@ -41,73 +41,12 @@ namespace ASI.Basecode.WebApp.Controllers
             _articleService = articleService;
         }
 
-        #region Admin Methods
-        [HttpGet("/Admin/Tickets")]
-        public IActionResult AdminTickets()
-        {
-            var data = _ticketService.RetrieveAll();
-            return View(data);
-        }
 
-        #endregion
-
-        #region User Methods
-
-        [HttpGet("/User/Tickets")]
-        public IActionResult UserTickets()
-        {
-            var data = _ticketService.RetrieveAll();
-            return View(data);
-        }
-
-
-        [HttpGet("/User/Tickets/Create")]
-        /// <summary>
-        /// Go to the Create a Ticket View
-        /// </summary>
-        /// <returns></returns>
-        public IActionResult UserCreate()
-        {
-            var categories = _ticketService.GetCategories()
-                                   .Select(c => new SelectListItem
-                                   {
-                                       Value = c.CategoryId.ToString(),
-                                       Text = c.CategoryName
-                                   })
-                                   .ToList();
-
-            var priorities = _ticketService.GetPriorities()
-                                           .Select(p => new SelectListItem
-                                           {
-                                               Value = p.PriorityId.ToString(),
-                                               Text = p.PriorityName
-                                           })
-                                           .ToList();
-
-            // Pass data to ViewBag
-            ViewBag.Categories = new SelectList(categories, "Value", "Text");
-            ViewBag.Priorities = new SelectList(priorities, "Value", "Text");
-
-            return View();
-        }
-
-        [HttpPost("/User/Tickets/Create")]
-        public IActionResult PostUserCreate(TicketViewModel ticket)
-        {
-            _ticketService.Add(ticket);
-
-            return RedirectToAction(nameof(UserTickets));
-        }
-        #endregion
-
-
-        #region GET Methods        
+/*        #region GET Methods       */ 
         /// <summary>
         /// Return the Index View with a list of Tickets
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
-        
         public IActionResult Index()
         {
             var data = _articleService.RetrieveAll();

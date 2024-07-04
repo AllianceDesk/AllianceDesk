@@ -1,54 +1,70 @@
-﻿@model ASI.Basecode.Services.ServiceModels.ArticleViewModel
+﻿@model IEnumerable<ASI.Basecode.Services.ServiceModels.ArticleViewModel>
 
-@{
-    ViewData["Title"] = "Index";
+@section styles {
+    <link rel="stylesheet" href="~/css/knowledgebase/index.css" />
+    <link rel="stylesheet" href="~/css/style.css" />
+    <script src="https://kit.fontawesome.com/1e457ac318.js" crossorigin="anonymous"></script>
 }
 
-<h1>Index</h1>
-<form asp-action="SearchUsers">
-    <label asp-for="IdFilter" class="control-label"></label>
-    <input asp-for="IdFilter" class="form-control" />
-    <label asp-for="FirstNameFilter" class="control-label"></label>
-    <input asp-for="FirstNameFilter" class="form-control" />
-    <div class="form-group">
-        <input type="submit" value="SearchUsers" class="btn btn-primary" />
+<div class="header-container">
+    <h1 class="page-title">Knowledge Base</h1>
+    <a asp-action="Create" class="addArticleBtn">Add Article</a>
+    <div class="addArt-dropdown">
+        <button class="dp-logo">
+            <i class="fa-solid fa-angle-down"></i>
+        </button>
+        <div class="dropdown-content">
+            <ul>
+                <li>
+                    <i class="fa-solid fa-gear"></i>
+                    <a href="#">Document</a>
+                    <
+                </li>
+                <li>
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <a href="#">PDF</a>
+                </li>
+            </ul>
+        </div>
     </div>
-</form>
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+</div>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.dataList.FirstOrDefault().Id)
+                @Html.DisplayNameFor(model => model.Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.dataList.FirstOrDefault().Name)
+                @Html.DisplayNameFor(model => model.Body)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.dataList.FirstOrDefault().Description)
+                @Html.DisplayNameFor(model => model.CategoryNavigation)
             </th>
-            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateUpdated)
+            </th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.dataList)
+        @foreach (var item in Model)
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Id)
+                    @Html.DisplayFor(modelItem => item.Body)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Name)
+                    @Html.DisplayFor(modelItem => item.Title)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Description)
+                    @Html.DisplayFor(modelItem => item.CategoryNavigation)
                 </td>
                 <td>
-                    @Html.ActionLink("Edit", "Edit", new { Id = item.Id }) |
-                    @Html.ActionLink("Details", "Details", new { Id = item.Id }) |
-                    <a href="javascript:void(0);" onclick="displayDeleteModal(@item.Id)">Delete</a>
+                    @Html.DisplayFor(modelItem => item.DateUpdated)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { Id = item.ArticleId }) |
+                    @Html.ActionLink("Details", "Details", new { Id = item.ArticleId }) |
+                    @Html.ActionLink("Delete", "Delete", new { Id = item.ArticleId })
                 </td>
             </tr>
         }

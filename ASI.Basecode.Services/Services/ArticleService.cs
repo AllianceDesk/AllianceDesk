@@ -1,5 +1,4 @@
 ﻿using ASI.Basecode.Data.Interfaces;
-using ASI.Basecode.Data.Repositories;
 using ASI.Basecode.Services.ServiceModels;
 using ASI.Basecode.Data.Models;
 using AutoMapper;
@@ -31,11 +30,11 @@ namespace ASI.Basecode.Services.Services
 
 
             var data = _articleRepository.RetrieveAll().Select(s => new ArticleViewModel
-            {
+            { 
                 ArticleId = s.ArticleId.ToString(),
                 Title = s.Title,
                 Body = s.Body,
-                Category = _categoryRepository.RetrieveAll().Where(c => c.CategoryId == s.CategoryId).FirstOrDefault().CategoryName,
+                CategoryNavigation = _categoryRepository.RetrieveAll().Where(c => c.CategoryId == s.CategoryId).FirstOrDefault().CategoryName,
                 
             });
 

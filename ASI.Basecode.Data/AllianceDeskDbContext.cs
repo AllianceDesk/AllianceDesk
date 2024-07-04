@@ -52,7 +52,7 @@ namespace ASI.Basecode.Data
 
                 entity.Property(e => e.Body).HasColumnName("body");
 
-                entity.Property(e => e.Category).HasColumnName("category");
+                entity.Property(e => e.CategoryId).HasColumnName("category_id");
 
                 entity.Property(e => e.CreatedBy).HasColumnName("created_by");
 
@@ -70,7 +70,7 @@ namespace ASI.Basecode.Data
 
                 entity.HasOne(d => d.CategoryNavigation)
                     .WithMany(p => p.Articles)
-                    .HasForeignKey(d => d.Category)
+                    .HasForeignKey(d => d.CategoryId)
                     .HasConstraintName("FK_Article_Category");
 
                 entity.HasOne(d => d.CreatedByNavigation)
