@@ -1,0 +1,119 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@{
+    ViewData["Title"] = "User Page";
+}
+
+@section styles {
+    <link rel="stylesheet" href="~/css/user_open_tickets.css" />
+}
+
+<div id="container">
+    <header>
+        <div class="logo">
+            <img src="~/img/alliancedesk-logo.png" style="width: 185px;" alt="logo" onclick="window.location.href = '@Url.Action("Index", "Home")';">
+        </div>
+
+        <div class="header-buttons">
+            <button type="button" class="btn button"><i class='bx bx-plus-circle bx-xs bx-fw uh' style="align-self:center;"></i> Create Ticket </button>
+            <i class='bx bx-bell bx-sm icon' style="color: #45474B; cursor: pointer;"></i>
+            <i class='bx bx-cog bx-sm icon' style="color: #45474B; cursor: pointer;"></i>                        
+            
+            <a class="profile" href="#">
+                <img src="~/img/profile-logo.png" class="dpicn hover-pointer" alt="dp">
+            </a>
+
+            <ul class="dropdown" id="dropdownMenu">
+                <li>
+                    
+                    <a class="dropdown-item" href="#"><i class="bx bx-user bx-xs bx-fw" style="color: #3D3B40;"></i> Profile</a>
+                </li>
+                <li>
+                    
+                    <a class="dropdown-item" asp-action="SignOutUser" asp-controller="Account"><i class="bx bx-log-out bx-xs bx-fw" style="color: #3D3B40;"></i> Logout</a>
+                </li>
+            </ul>
+           
+        </div>
+    </header>
+
+    <nav>
+        Navbar
+    </nav>
+
+    <main>
+        Main
+    </main>
+
+    <div id="sidebar">
+
+        <div id="search-container">
+            <i class='bx bx-search'></i>
+            <input type="text" id="search-input" placeholder="Search Tickets">
+        </div>
+
+        <div id="button-container">
+            <i class='bx bx-list-ul'></i>
+            <span class="label-1">Tickets</span>
+        </div>
+
+        <div id="instruction-container">
+
+            <div class="instruction-label">
+                <i class='bx bx-star'></i>
+                <span class="label-2">Instructions</span>
+            </div>
+
+            <hr />
+
+            <div class="instruction-detail">
+                <ul>
+                    <li>&#8226; Click the 'Create Ticket'</li>
+                    <li>&#8226; Enter the necessary details</li>
+                    <li>&#8226; Submit if done</li>
+                </ul>
+            </div>
+
+            <div class="instruction-label">
+                <i class='bx bx-link'></i>
+                <span class="label-2">Contacts</span>
+            </div>
+
+            <hr />
+
+            <div class="instruction-detail">
+                <ul>
+                    <li>&#8226; abellalance2@gmail.com</li>
+                    <li>&#8226; jethrocenas@gmail.com</li>
+                    <li>&#8226; rehamdee.camama@g.msuiit.edu.ph</li>
+                </ul>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var dpIcon = document.querySelector('.dpicn');
+            var dropdownMenu = document.getElementById('dropdownMenu');
+
+            dpIcon.addEventListener('click', function (event) {
+                event.stopPropagation(); // Prevents event from bubbling up and immediately closing dropdown
+
+                if (dropdownMenu.style.display === 'block') {
+                    dropdownMenu.style.display = 'none'; // Close dropdown if already open
+                } else {
+                    dropdownMenu.style.display = 'block'; // Open dropdown if closed
+                }
+            });
+        }); // Ensure this closing brace was missing in your provided code
+
+</script>

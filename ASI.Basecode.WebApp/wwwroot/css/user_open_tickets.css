@@ -1,0 +1,346 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+:root {
+    --main-radius: 5px;
+    --main-padding: 5px;
+    --sidebar-color: #FFFFFF;
+    --header-color: #FFFFFF;
+    --active-button: #E21818;
+    --active-button-text: #FFFFFF;
+    --text-color: #333333;
+    --border-color: #ccc;
+    --icon-color: #aaa;
+    --hover-background: #f1f1f1;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+body {
+    margin: 0;
+    padding: 0 !important;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+#container {
+    display: grid;
+    height: 100vh;
+    width: 100%;
+    grid-template-columns: 0.2fr 7fr;
+    grid-template-rows: 0.3fr 0.8fr 11fr;
+    grid-template-areas:
+        "header header"
+        "sidebar nav"
+        "sidebar main";
+    /*grid-gap: 0.2rem;*/
+    font-family: "Poppins", sans-serif;
+    /*font-weight: 800;
+    text-transform: uppercase;*/
+    /*font-size: 12px;
+    color: black;
+    text-align: center;*/
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+/*Header Designs*/
+
+header {
+    background-color: var(--header-color);
+    grid-area: header;
+    display: flex;
+    flex-direction: row;
+    padding: 0;
+    overflow: visible;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.3);
+    /*border-radius: var(--main-radius);*/
+    /*padding-top: var(--main-padding);*/
+}
+
+.header-buttons {
+    width: 20em;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1em;
+    overflow: visible;
+}
+
+.logo {
+    margin-left: 1em;
+    margin-bottom: 0.3em;
+}
+
+.icon {
+    height: 1em;
+}
+
+.dpicn {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.profile {
+    position: relative; 
+}
+
+.dropdown {
+    display: none;
+    position: absolute;
+    top: 58px;
+    right: 0;
+    transform: translateX(-16%);
+    background-color: #ffffff;
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.1);
+    z-index: 1000;
+    width: 9em;
+    border-radius: var(--main-radius);
+    padding: 5px;
+}
+
+.dropdown li {
+    list-style: none;        
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.dropdown li a {
+    text-decoration: none;
+    color: #3D3B40;
+    width: 9em;
+    padding: 0 7px 0 0;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    align-items: center;
+}
+
+.dropdown li a:hover {
+    background-color: #f0f0f0;  
+}
+
+.button {
+    background-color: var(--active-button);
+    color: var(--active-button-text);
+}
+
+.button:hover {
+    background-color: var(--hover-background);
+    color: var(--active-button-text);
+}
+
+
+
+/*Nav Designs*/
+
+nav {
+    background-color: #405D72;
+    grid-area: nav;
+    /*border-radius: var(--main-radius);*/
+    /*padding-top: var(--main-padding);*/
+}
+
+/*Main Designs*/
+
+main {
+    background-color: #758694;
+    grid-area: main;
+    /*border-radius: var(--main-radius);*/
+    /*padding-top: var(--main-padding);*/
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 80%;
+}
+
+input[type="text"], button {
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: var(--main-radius);
+}
+
+button {
+    background-color: #405D72;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #E68369;
+}
+
+/*Sidebar Designs*/
+
+#sidebar {
+    background-color: var(--sidebar-color);
+    grid-area: sidebar;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /*border-radius: var(--main-radius);*/
+    /*padding-top: var(--main-padding);*/
+}
+
+/* For Search Bar */
+#search-container {
+    position: relative;
+    width: 88%;
+    margin-top: 15px;
+    background-color: var(--sidebar-color);
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+#search-input {
+    width: 85%;
+    margin-left: 2em;
+    border: none;
+    
+    outline: none;
+    font-size: 16px;
+    color: var(--text-color);
+}
+
+#search-container i {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: var(--icon-color);
+}
+
+/* For Tickets Navigator */
+#button-container {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    width: 88%;
+    background-color: var(--active-button);
+    border-radius: 5px;
+    color: var(--active-button-text);
+    margin: 15px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#button-container:hover {
+    background-color: darken(var(--active-button), 10%);
+}
+
+#button-container i {
+    margin-right: 10px;
+    font-size: 20px;
+}
+
+#button-container .label-1 {
+    font-size: 16px;
+}
+
+/* For Details */
+#instruction-container {
+    width: 88%;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    margin: 20px 10px;
+}
+
+.instruction-label {
+    display: flex;
+    align-items: center;
+    padding: 10px 10px;
+    font-size: 16px;
+    color: var(--text-color);
+    cursor: pointer;
+}
+
+.instruction-label i {
+    margin-right: 10px;
+    font-size: 20px;
+    color: var(--icon-color);
+}
+
+.instruction-detail {
+    padding: 10px;
+}
+
+.instruction-detail li {
+    font-size: 12px;
+    color: #1682FD;
+    margin-bottom: 5px;
+    white-space: nowrap;
+}
+
+.instruction-detail ul {
+    overflow-x: hidden;
+    position: relative;
+    padding: 0;
+}
+
+.instruction-detail ul:hover {
+    overflow-x: auto; 
+}
+
+.instruction-detail ul::-webkit-scrollbar {
+    display: none; 
+}
+
+.instruction-detail ul:hover::-webkit-scrollbar {
+    display: block; 
+    width: 2px;
+}
+
+.instruction-detail ul::-webkit-scrollbar-track {
+    background-color: transparent; 
+}
+
+.instruction-detail ul::-webkit-scrollbar-thumb {
+    background-color: #ccc; 
+    border-radius: 10px; 
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid var(--border-color);
+    margin: 5px 12px;
+    width: 88%;
+    align-self: center;
+}
+
+.instruction-container .label-2 {
+    font-size: 16px;
+}
+
+/* Hover Effects */
+.button-container:hover,
+.instruction-label:hover {
+    background-color: var(--hover-background);
+}
+
+
+
+
+@media only screen and (max-width: 580px) {
+    #container {
+        grid-template-columns: 1fr;
+        grid-template-rows: 0.2fr 6fr 1fr 6fr;
+        grid-template-areas:
+            "header"
+            "sidebar"
+            "nav"
+            "main"           
+    }
+}

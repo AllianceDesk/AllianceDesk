@@ -26,12 +26,12 @@
 <body>
     @if (ViewBag.IsLoginOrRegister == true)
     {
-       @Html.Partial("General_Header") 
+       @* @Html.Partial("General_Header")  *@
     }
     else
     {
         @* @Html.Partial("General_Header") *@
-        @Html.Partial("User_Header")
+        @* @Html.Partial("User_Header") *@
         @* @Html.Partial("Agent_Admin_Header") *@
         @*  @Html.Partial("User_Sidebar") *@
         @* @Html.Partial("Agent_Sidebar") *@
@@ -41,10 +41,10 @@
     <div>
         @if (ViewBag.IsLoginOrRegister != true)
         {
-            <main role="main" class="main">
-                @Html.Partial("Admin_Sidebar")
+            @* <main role="main" class="main"> *@
+                @* @Html.Partial("Admin_Sidebar") *@
                 @RenderBody()
-            </main>
+           @*  </main> *@
         } else
         {
             <main role="main">
