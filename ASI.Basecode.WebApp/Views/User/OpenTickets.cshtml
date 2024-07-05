@@ -10,6 +10,7 @@
 
 @section styles {
     <link rel="stylesheet" href="~/css/user_open_tickets.css" />
+
 }
 
 <div id="container">
@@ -42,11 +43,30 @@
     </header>
 
     <nav>
-        Navbar
+        <div id="buttonContainer">
+            <input class="btn btn-primary activeButton" type="button" value="Open">
+            <input class="btn btn-primary inactiveButton" type="button" value="In Progress">
+            <input class="btn btn-primary inactiveButton" type="button" value="Resolved">
+            <input class="btn btn-primary inactiveButton" type="button" value="Close">
+        </div> 
+        
+        
+
+        <div id="dropdownContainer">
+            <button id="dropdownButton">Select Option<i class="bx bx-chevron-down bx-xs bx-fw" style="color: #808080;"></i></button>
+            <div id="dropdownContent">
+                <a href="#" id="dateOption">Date</a>
+                <br />
+                <a href="#" id="categoryOption">Category</a>
+            </div>
+        </div>
     </nav>
 
     <main>
-        Main
+        <div id="card_content">
+
+        </div>
+        
     </main>
 
     <div id="sidebar">
@@ -101,19 +121,54 @@
 
 <script>
 
-        document.addEventListener('DOMContentLoaded', function () {
-            var dpIcon = document.querySelector('.dpicn');
-            var dropdownMenu = document.getElementById('dropdownMenu');
+    document.addEventListener('DOMContentLoaded', function () {
+        var dpIcon = document.querySelector('.dpicn');
+        var dropdownMenu = document.getElementById('dropdownMenu');
 
-            dpIcon.addEventListener('click', function (event) {
-                event.stopPropagation(); // Prevents event from bubbling up and immediately closing dropdown
+        dpIcon.addEventListener('click', function (event) {
+            event.stopPropagation(); 
 
-                if (dropdownMenu.style.display === 'block') {
-                    dropdownMenu.style.display = 'none'; // Close dropdown if already open
-                } else {
-                    dropdownMenu.style.display = 'block'; // Open dropdown if closed
-                }
+            if (dropdownMenu.style.display === 'block') {
+                dropdownMenu.style.display = 'none'; 
+            } else {
+                dropdownMenu.style.display = 'block'; 
+            }
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var button = document.getElementById('dropdownButton');
+        var content = document.getElementById('dropdownContent');
+
+        button.addEventListener('click', function (event) {
+            event.stopPropagation();
+
+            if (content.style.display === 'block') {
+                content.style.display = 'none';
+            } else {
+                content.style.display = 'block';
+            }
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var buttons = document.querySelectorAll('#buttonContainer input[type="button"]');
+
+        buttons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                // Remove activeButton class from all buttons
+                buttons.forEach(function (btn) {
+                    btn.classList.remove('activeButton');
+                    btn.classList.add('inactiveButton');
+                });
+
+                // Add activeButton class to the clicked button
+                this.classList.remove('inactiveButton');
+                this.classList.add('activeButton');
             });
-        }); // Ensure this closing brace was missing in your provided code
+        });
+    });
+
+    
 
 </script>

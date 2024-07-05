@@ -33,7 +33,7 @@ body {
     height: 100vh;
     width: 100%;
     grid-template-columns: 0.2fr 7fr;
-    grid-template-rows: 0.3fr 0.8fr 11fr;
+    grid-template-rows: 0.3fr 1.1fr 10fr;
     grid-template-areas:
         "header header"
         "sidebar nav"
@@ -143,10 +143,90 @@ header {
 /*Nav Designs*/
 
 nav {
-    background-color: #405D72;
+    background-color: whitesmoke;
     grid-area: nav;
+    display: flex;
+    flex-direction: row;
+    padding-left: 5em;
+    padding-right: 5em;
+    justify-content: space-between;
     /*border-radius: var(--main-radius);*/
     /*padding-top: var(--main-padding);*/
+}
+
+#buttonContainer {
+    gap: 0.7em;
+    display: flex;
+    flex-direction: row;
+}
+
+.activeButton {
+    background-color: var(--active-button);
+    height: 1em;
+    border-radius: 25px;
+    padding-bottom: 23px;
+    margin-top: 1.5em;
+    border: none;
+    font-size: 12px;
+    outline: none;
+    box-shadow: none;
+}
+
+.activeButton:hover {
+    background-color: var(--hover-background);
+    color: #808080;
+}
+
+.inactiveButton {
+    background-color: white;
+    color: #808080;
+    outline: none;
+    height: 1em;
+    border-radius: 25px;
+    padding-bottom: 23px;
+    margin-top: 1.5em;
+    border: none;
+    font-size: 12px;
+    outline: none;
+    box-shadow: none;
+}
+
+.inactiveButton:hover {
+    background-color: var(--active-button);
+    color: white;
+}
+
+#dropdownButton {
+    background-color: white;
+    color: #808080;
+    height: 2em;
+    width: 10em;
+    padding-bottom: 25px;
+    margin-top: 1.3em;
+    font-size: 12px;
+    outline: none;
+    border: none;
+    border: 1px solid #ccc;
+}
+
+#dropdownContent {
+    display: none;
+    position: absolute;
+    top: 10.2em;
+    right: 12px;
+    transform: translateX(-57%);
+    background-color: white;
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.1);
+    z-index: 1000;
+    width: 9.9em;
+    border-radius: var(--main-radius);
+    padding: 5px;
+    border: 1px solid #ccc;
+    font-size: 12px;
+}
+
+#dropdownContent a {
+    color: #808080;
 }
 
 /*Main Designs*/
@@ -181,6 +261,8 @@ button {
 button:hover {
     background-color: #E68369;
 }
+
+
 
 /*Sidebar Designs*/
 
@@ -343,4 +425,14 @@ hr {
             "nav"
             "main"           
     }
+}
+
+.activeButton:focus, .activeButton.focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.activeButton:active {
+    color: white;
+    background-color: var(--active-button)!important;
 }
