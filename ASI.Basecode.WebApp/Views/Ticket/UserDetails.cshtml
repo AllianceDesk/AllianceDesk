@@ -4,97 +4,100 @@
     ViewData["Title"] = "Ticket Details";
 }
 
-<h1>Ticket Details</h1>
+<div class="container text-center">
+    <h1>Ticket Details</h1>
 
-<div>
-    <h4>TicketViewModel</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dt class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dt>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class="col-sm-2">
-            Assigned Agent/Team
-        </dt>
-        <dd class="col-sm-10">
-            @if (!string.IsNullOrEmpty(Model.AgentName))
-            {
-                @Html.DisplayFor(model => model.AgentName)
-            }
-            else
-            {
-                @Html.DisplayFor(model => model.TeamName)
-            }
-        </dd> 
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DateCreated)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DateCreated)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Priority)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Priority)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Category)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Category)
-        </dd>
-    </dl>
-</div>
-<div>
-    @Html.ActionLink("Edit", "UserEdit", new { id = Model.TicketId }) |
-    <a asp-action="UserTickets">Back to List</a>
-</div>
+    <div>
+        <h4>TicketViewModel</h4>
+        <hr />
+        <dl class="row justify-content-center">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Title)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Title)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Description)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Description)
+            </dd>
+            <dt class="col-sm-2">
+                Assigned Agent/Team
+            </dt>
+            <dd class="col-sm-10">
+                @if (!string.IsNullOrEmpty(Model.AgentName))
+                {
+                    @Html.DisplayFor(model => model.AgentName)
+                }
+                else
+                {
+                    @Html.DisplayFor(model => model.TeamName)
+                }
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.DateCreated)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.DateCreated)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Priority)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Priority)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Status)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Status)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Category)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Category)
+            </dd>
+        </dl>
+    </div>
+    <div>
+        @Html.ActionLink("Edit", "UserEdit", new { id = Model.TicketId }) |
+        <a asp-action="UserTickets">Back to List</a>
+    </div>
 
-<div style="margin-top: 20px;">
-    <h2>Messages</h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Sent By</th>
-                <th>Message</th>
-                <th>Date Sent</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var message in Model.TicketMessages)
-            {
+    <div style="margin-top: 20px;">
+        <h2>Messages</h2>
+        <table class="table">
+            <thead>
                 <tr>
-                    <td>@Html.DisplayFor(modelItem => message.SentByName)</td>
-                    <td>@Html.DisplayFor(modelItem => message.Message)</td>
-                    <td>@Html.DisplayFor(modelItem => message.PostedAt)</td>
+                    <th>Sent By</th>
+                    <th>Message</th>
+                    <th>Date Sent</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var message in Model.TicketMessages)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => message.SentByName)</td>
+                        <td>@Html.DisplayFor(modelItem => message.Message)</td>
+                        <td>@Html.DisplayFor(modelItem => message.PostedAt)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
 
-    <h3>Add a new message</h3>
-    <form asp-action="AddMessage" method="post">
-        <div class="form-group">
-            <label asp-for="NewMessageBody"></label>
-            <textarea asp-for="NewMessageBody" class="form-control"></textarea>
-            <span asp-validation-for="NewMessageBody" class="text-danger"></span>
-        </div>
-        <button type="submit" class="btn btn-primary">Add Message</button>
-    </form>
+        <h3>Add a new message</h3>
+        <form asp-action="PostMessage" asp-route-id="@Model.TicketId" method="post">
+            <div class="form-group">
+                <input type="hidden" name="TicketId" value="@Model.TicketId" />
+                <label asp-for="NewMessageBody"></label>
+                <textarea asp-for="NewMessageBody" class="form-control"></textarea>
+                <span asp-validation-for="NewMessageBody" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Message</button>
+        </form>
+    </div>
 </div>

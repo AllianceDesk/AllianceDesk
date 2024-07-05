@@ -294,8 +294,23 @@ namespace ASI.Basecode.WebApp.Controllers
 
             return RedirectToAction(nameof(UserTickets));
         }
+        
+        [HttpPost("/User/Tickets/{id}/Message")]
+        public IActionResult PostMessage(string id, TicketViewModel model)
+        {
+            var message = new TicketMessageViewModel
+            {
+                SentById = "857949FE-EC30-4C0B-A514-EB0FD9262738", // Replace with User.Identity.Name when authentication is implemented
+                Message = model.NewMessageBody,
+                PostedAt = DateTime.Now,
+                TicketId = id
+            };
+           
+            _ticketService.AddMessage(message);
 
-       
+            return RedirectToAction(nameof(UserDetails), new { id = message.TicketId });
+        }
+
         #endregion
     }
 }

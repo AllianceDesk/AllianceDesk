@@ -180,6 +180,7 @@ namespace ASI.Basecode.Services.Services
             }
 
             TicketMessage newMessage = new TicketMessage();
+            newMessage.MessageId = Guid.NewGuid();
             newMessage.TicketId = Guid.Parse(message.TicketId);
             newMessage.MessageBody = message.Message;
             newMessage.UserId = Guid.Parse(message.SentById);
