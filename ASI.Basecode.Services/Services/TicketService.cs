@@ -16,15 +16,30 @@ namespace ASI.Basecode.Services.Services
         private readonly ICategoryRepository _categoryRepository;
         private readonly ITicketPriorityRepository _priorityRepository;
         private readonly ITicketStatusRepository _statusRepository;
+        private readonly ITicketActivityRepository _ticketActivityRepository;
+        private readonly ITicketActivityOperationRepository _ticketActivityOperationRepository;
+        private readonly ITicketMessageRepository _ticketMessageRepository;
         private readonly IMapper _mapper;
 
-        public TicketService(ITicketRepository ticketRepository, IUserRepository userRepository, ICategoryRepository categoryRepository, ITicketPriorityRepository ticketPriorityRepository, ITicketStatusRepository ticketStatusRepository, IMapper mapper)
+        public TicketService(
+            ITicketRepository ticketRepository, 
+            IUserRepository userRepository, 
+            ICategoryRepository categoryRepository, 
+            ITicketPriorityRepository ticketPriorityRepository,
+            ITicketStatusRepository ticketStatusRepository,
+            ITicketActivityRepository ticketActivityRepository,
+            ITicketActivityOperationRepository ticketActivityOperationRepository,
+            ITicketMessageRepository ticketMessageRepository,
+            IMapper mapper)
         {
             _ticketRepository = ticketRepository;
             _userRepository = userRepository;
             _categoryRepository = categoryRepository;
             _priorityRepository = ticketPriorityRepository;
             _statusRepository = ticketStatusRepository;
+            _ticketActivityRepository = ticketActivityRepository;
+            _ticketActivityOperationRepository = ticketActivityOperationRepository;
+            _ticketMessageRepository = ticketMessageRepository;
             _mapper = mapper;
         }
 
@@ -77,8 +92,13 @@ namespace ASI.Basecode.Services.Services
             existingTicket.Title = ticket.Title;
             existingTicket.Description = ticket.Description;
             existingTicket.CategoryId = Convert.ToByte(ticket.CategoryId);
-            existingTicket.PriorityId = Convert.ToByte(ticket.PriorityId);           
-            existingTicket.AssignedAgent = Guid.Parse(ticket.AgentId);
+            existingTicket.PriorityId = Convert.ToByte(ticket.PriorityId);
+            
+            if (ticket.AgentId != null)
+            {
+                existingTicket.AssignedAgent = Guid.Parse(ticket.AgentId);
+            }
+           
             // Add updated time
             
             _ticketRepository.Update(existingTicket);
@@ -151,5 +171,74 @@ namespace ASI.Basecode.Services.Services
         {
             return _statusRepository.RetrieveAll().Where(s => s.StatusId == id).FirstOrDefault();
         }
+
+        public void AddMessage(TicketMessageViewModel message)
+        {
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message), "TicketMessageViewModel cannot be null.");
+            }
+
+            TicketMessage newMessage = new TicketMessage();
+            newMessage.TicketId = Guid.Parse(message.TicketId);
+            newMessage.MessageBody = message.Message;
+            newMessage.UserId = Guid.Parse(message.SentById);
+            newMessage.PostedAt = DateTime.Now;
+
+            _ticketMessageRepository.Add(newMessage);
+        }
+
+        public void AddHistory(TicketActivityViewModel activity)
+        {
+            if (activity == null)
+            {
+                throw new ArgumentNullException(nameof(activity), "TicketActivityViewModel cannot be null.");
+            }
+
+            TicketActivity newActivity = new TicketActivity();
+            newActivity.TicketId = Guid.Parse(activity.TicketId);
+            newActivity.OperationId = activity.OperationId;
+            newActivity.ModifiedBy = Guid.Parse(activity.ModifiedBy);
+            newActivity.ModifiedAt = activity.ModifiedAt;
+            newActivity.OldValue = "Old Value";
+            newActivity.NewValue = "New Value";
+
+            _ticketActivityRepository.Add(newActivity);
+        }
+
+        public IEnumerable<TicketActivityViewModel> GetHistory(string id)
+        {
+            var activities = _ticketActivityRepository.RetrieveAll()
+                                    .Where(s => s.TicketId.ToString() == id)
+                                    .Select(activity => new TicketActivityViewModel
+                                    {
+                                        HistoryId = activity.HistoryId.ToString(),
+                                        TicketId = activity.TicketId.ToString(),
+                                        ModifiedBy = activity.ModifiedBy.ToString(),
+                                        ModifiedByName = _userRepository.GetUsers().FirstOrDefault(u => u.UserId == activity.ModifiedBy).Name,
+                                        ModifiedAt = activity.ModifiedAt,
+                                        OperationName = _ticketActivityOperationRepository.RetrieveAll().FirstOrDefault(o => o.OperationId == activity.OperationId).Name,
+                                        OperationId = activity.OperationId,
+                                    });
+
+            return activities;
+        }
+
+        public IEnumerable<TicketMessageViewModel> GetMessages(string id)
+        {
+
+           var messages = _ticketMessageRepository.RetrieveAll()
+                                    .Where(s => s.TicketId.ToString() == id)
+                                    .Select(message => new TicketMessageViewModel
+                                    {
+                                        MessageId = message.MessageId.ToString(),
+                                        TicketId = message.TicketId.ToString(),
+                                        Message = message.MessageBody,
+                                        SentById = message.UserId.ToString(),
+                                        SentByName = _userRepository.GetUsers().FirstOrDefault(u => u.UserId == message.UserId).Name,
+                                        PostedAt = message.PostedAt,
+                                    });
+
+            return messages;}
     }
 }

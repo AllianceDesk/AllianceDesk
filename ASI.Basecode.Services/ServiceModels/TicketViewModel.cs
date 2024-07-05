@@ -51,5 +51,11 @@ namespace ASI.Basecode.Services.ServiceModels
         public string CreatorName { get; set; }
 
         public string TeamName { get; set; }
+
+        public IEnumerable<TicketActivityViewModel> TicketActivities { get; set; }
+
+        public IEnumerable<TicketMessageViewModel> TicketMessages { get; set; }
+
+        public string NewMessageBody { get; set; }
     }
 }

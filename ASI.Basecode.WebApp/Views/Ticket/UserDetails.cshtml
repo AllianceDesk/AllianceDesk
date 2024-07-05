@@ -4,7 +4,7 @@
     ViewData["Title"] = "Ticket Details";
 }
 
-<h1>UserDetails</h1>
+<h1>Ticket Details</h1>
 
 <div>
     <h4>TicketViewModel</h4>
@@ -64,4 +64,37 @@
 <div>
     @Html.ActionLink("Edit", "UserEdit", new { id = Model.TicketId }) |
     <a asp-action="UserTickets">Back to List</a>
+</div>
+
+<div style="margin-top: 20px;">
+    <h2>Messages</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Sent By</th>
+                <th>Message</th>
+                <th>Date Sent</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var message in Model.TicketMessages)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => message.SentByName)</td>
+                    <td>@Html.DisplayFor(modelItem => message.Message)</td>
+                    <td>@Html.DisplayFor(modelItem => message.PostedAt)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h3>Add a new message</h3>
+    <form asp-action="AddMessage" method="post">
+        <div class="form-group">
+            <label asp-for="NewMessageBody"></label>
+            <textarea asp-for="NewMessageBody" class="form-control"></textarea>
+            <span asp-validation-for="NewMessageBody" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Message</button>
+    </form>
 </div>

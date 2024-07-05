@@ -5,6 +5,15 @@ namespace ASI.Basecode.Data.Models
 {
     public partial class TicketActivityOperation
     {
+
+        /*
+         operation_id	name
+        1	Update
+        2	Assign
+        3	Reassign
+        4	Close
+        5	Reopen
+         */
         public TicketActivityOperation()
         {
             TicketActivities = new HashSet<TicketActivity>();

@@ -62,6 +62,8 @@ namespace ASI.Basecode.WebApp.Controllers
                 return NotFound();
             }
 
+            ticket.TicketActivities = _ticketService.GetHistory(id);
+
             return View(ticket);
         }
 
@@ -104,6 +106,30 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction(nameof(AdminDetails), new { id = ticket.TicketId });
         }
 
+        #endregion
+
+        #region Agent Methods
+
+        [Route("/Agent/Tickets")]
+        public IActionResult AgentTickets()
+        {
+            string agent = "3850590f-e5e1-468b-a9a2-420074E9073f"; // Replace with User.Identity.Name when authentication is implemented
+            string agent2 = "aba6bb10-e42d-4714-907b-445f494e1dff";
+
+            var tickets = _ticketService.RetrieveAll();
+
+            var agentTickets = tickets.Where(t => t.AgentId == agent).ToList();
+
+
+            if (agentTickets.Count == 0)
+            {
+                Console.WriteLine("No tickets found for user");
+                return NotFound();
+            }
+
+            return View(agentTickets);
+
+        }
         #endregion
 
         #region User Methods
@@ -183,6 +209,8 @@ namespace ASI.Basecode.WebApp.Controllers
         {
             var ticket = _ticketService.GetById(id);
 
+            ticket.TicketMessages = _ticketService.GetMessages(id);
+
             if (ticket == null)
             {
                 return NotFound(); // Handle ticket not found scenario
@@ -236,7 +264,18 @@ namespace ASI.Basecode.WebApp.Controllers
         public IActionResult PostUserEdit(TicketViewModel ticket)
         {
 
-            _ticketService.Update(ticket); 
+            _ticketService.Update(ticket);
+            
+            TicketActivityViewModel activity = new TicketActivityViewModel();
+            activity.TicketId = ticket.TicketId;
+            activity.OperationId = 1;
+            activity.ModifiedAt = DateTime.Now;
+
+            // Replace with User.Identity.Name when authentication is implemented
+            activity.ModifiedBy = "857949FE-EC30-4C0B-A514-EB0FD9262738";
+
+            _ticketService.AddHistory(activity);
+
             return RedirectToAction(nameof(UserDetails), new { id = ticket.TicketId });
         }
 

@@ -7,10 +7,9 @@ using System.Threading.Tasks;
 
 namespace ASI.Basecode.Data.Interfaces
 {
-    public interface ITicketMessageRepository
+    public interface ITicketActivityRepository
     {
-            IEnumerable<TicketMessage> RetrieveAll();
-
-            void Add(TicketMessage ticketMessage);        
+        void Add(TicketActivity ticketActivity);
+        IEnumerable<TicketActivity> RetrieveAll();
     }
 }
