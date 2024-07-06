@@ -162,38 +162,49 @@
 
     var dataFromDatabase = [
         { image: '/img/profile-logo.png', name: 'Golanginya', date: '5 min ago', question: 'How to patch KDE on FreeBSD?', details: 'Lorem ipsum dolor sit met, consectetur..', link: '#' },
+        { image: '/img/profile-logo.png', name: 'Golanginya', date: '5 min ago', question: 'How to patch KDE on FreeBSD?', details: 'Lorem ipsum dolor sit met, consectetur..', link: '#' },
+        { image: '/img/profile-logo.png', name: 'Golanginya', date: '5 min ago', question: 'How to patch KDE on FreeBSD?', details: 'Lorem ipsum dolor sit met, consectetur..', link: '#' },
+        { image: '/img/profile-logo.png', name: 'Golanginya', date: '5 min ago', question: 'How to patch KDE on FreeBSD?', details: 'Lorem ipsum dolor sit met, consectetur..', link: '#' },
+        { image: '/img/profile-logo.png', name: 'Golanginya', date: '5 min ago', question: 'How to patch KDE on FreeBSD?', details: 'Lorem ipsum dolor sit met, consectetur..', link: '#' },
+        { image: '/img/profile-logo.png', name: 'Golanginya', date: '5 min ago', question: 'How to patch KDE on FreeBSD?', details: 'Lorem ipsum dolor sit met, consectetur..', link: '#' },
+        { image: '/img/profile-logo.png', name: 'Golanginya', date: '5 min ago', question: 'How to patch KDE on FreeBSD?', details: 'Lorem ipsum dolor sit met, consectetur..', link: '#' },
     ];
 
     var cardContent = document.getElementById('card_content');
 
     dataFromDatabase.forEach(function (item) {
+        
+        
+        var container = document.createElement('div');
+        container.className = 'ticket-container';
+
         var link = document.createElement('a');
         link.href = item.link;
         link.className = 'ticket-link';
 
-        var container = document.createElement('div');
-        container.className = 'ticket-container';
+        var topContainer = document.createElement('div');
+        topContainer.className = 'top-container';
+        link.appendChild(topContainer);
 
         var image = document.createElement('img');
         image.className = 'image';
         image.src = item.image;
-        image.onload = function () {
-            console.log('Image loaded successfully');
-        };
-        image.onerror = function () {
-            console.error('Error loading image:', image.src);
-        };
-        link.appendChild(image);
+        image.alt = 'image';       
+        topContainer.appendChild(image);
+
+        var nameDateContainer = document.createElement('div');
+        nameDateContainer.className = 'nameDateContainer';
+        topContainer.appendChild(nameDateContainer);
 
         var name = document.createElement('h5');
         name.className = 'name';
         name.textContent = item.name;
-        link.appendChild(name);
+        nameDateContainer.appendChild(name);
 
         var date = document.createElement('p');
         date.className = 'date';
         date.textContent = item.date;
-        link.appendChild(date);
+        nameDateContainer.appendChild(date);
 
         var question = document.createElement('h2');
         question.className = 'question';
@@ -206,10 +217,10 @@
         link.appendChild(details);
 
         var dropdownContainer = document.createElement('div');
-        dropdownContainer.classList.add('btn-group');
+        dropdownContainer.classList.add('btn-group', 'option');
 
         var dropdownToggle = document.createElement('button');
-        dropdownToggle.classList.add('btn', 'btn-danger');
+        dropdownToggle.classList.add('btn', 'icon-button');
         dropdownToggle.type = 'button';
         dropdownToggle.id = 'dropdownMenuButton';
         dropdownToggle.setAttribute('data-bs-toggle', 'dropdown');
@@ -217,23 +228,23 @@
         dropdownContainer.appendChild(dropdownToggle);
 
         var icon = document.createElement('i');
-        icon.classList.add('bx', 'bx-dots-vertical-rounded', 'bx-xs', 'icon-ticket');
+        icon.classList.add('bx', 'bx-dots-vertical-rounded', 'bx-sm', 'icon-ticket');
         icon.style.color = '#808080';
         dropdownToggle.appendChild(icon);
 
         var dropdownMenu = document.createElement('ul');
-        dropdownMenu.classList.add('dropdown-menu');
+        dropdownMenu.classList.add('dropdown-menu', 'menu');
         dropdownContainer.appendChild(dropdownMenu);
 
         var options = [
-            { text: 'Edit', iconClass: 'bx bx-edit bx-xs' },
-            { text: 'Delete', iconClass: 'bx bx-trash bx-xs' }
+            { text: 'Edit', iconClass: 'bx bx-edit bx-xs bx-fw' },
+            { text: 'Delete', iconClass: 'bx bx-trash bx-xs bx-fw' }
         ];
 
         options.forEach(function (option) {
             var listItem = document.createElement('li');
             var linkItem = document.createElement('a');
-            linkItem.classList.add('dropdown-item');
+            linkItem.classList.add('dropdown-item', 'item');
             linkItem.href = '#';
 
             // Create icon
@@ -250,13 +261,9 @@
             dropdownMenu.appendChild(listItem);
         });
 
-        container.appendChild(image);
-        container.appendChild(name);
-        container.appendChild(date);
-        container.appendChild(question);
-        container.appendChild(details);        
-        container.appendChild(dropdownContainer);
         container.appendChild(link);
+        container.appendChild(dropdownContainer);
+        
 
         cardContent.appendChild(container);
     });

@@ -137,21 +137,26 @@ header {
     color: var(--active-button-text);
 }
 
-
-
-
-
-/*Nav Designs*/
-nav {
-    background-color: whitesmoke;
-    grid-area: nav;
-    display: flex;
-    flex-direction: row;
-    padding-left: 5em;
-    padding-right: 5em;
-    justify-content: space-between;
-    gap: 0.7em;
+.button:active, .button:focus, .button:focus-visible {
+    border: none;
+    outline: none!important;
+    box-shadow: none!important;
 }
+
+
+
+
+    /*Nav Designs*/
+    nav {
+        background-color: whitesmoke;
+        grid-area: nav;
+        display: flex;
+        flex-direction: row;
+        padding-left: 5em;
+        padding-right: 5.9em;
+        justify-content: space-between;
+        gap: 0.7em;
+    }
 
 #buttonContainer {
     gap: 0.7em;
@@ -212,7 +217,14 @@ nav {
     outline: none;
     font-size: 12px;
     margin-top: 1.4em;
+    border: 0.5px solid #808080;
 }
+
+    .nav-select:active, .nav-select:focus, .nav-select:focus-visible {
+        box-shadow: none !important;
+        outline: none !important;
+        border: 0.5px solid #808080;
+    }
 
 
 
@@ -224,49 +236,78 @@ main {
     grid-area: main;
     padding-left: 5em;
     padding-right: 5em;
+    gap: 2em;
     overflow-y: auto;
+}
+
+#card_content {
+    border-radius: 5px;   
 }
 
 .ticket-container {
     display: flex;
-    margin: 12px 0;
+    flex-direction: row;
+    margin: 1em 0;
     border-radius: 5px;
-    background-color: #FFE5E5;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: background-color 0.3s, box-shadow 0.3s;
     justify-content: space-between;
-    height: 70px;
     padding: 15px;
+    background-color: white;
 }
 
-.notification-link {
-    padding: 4px 0px 0px 20px;
+.ticket-link {
     text-decoration: none;
-    color: #000000;
-    background-color: var(--inactive-button);
-    height: 30px;
-    width: 100px;
-    align-self: center;
-    border-radius: 15px;
 }
 
-.notification_title {
-    cursor: default;
-    align-content: center;
-    padding: 12px 0 0 0;
+.top-container{
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
 }
 
-.notification-link:hover {
-    background-color: #e0e0e0;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    text-decoration: none;
-    color: var(--active-button);
+.image {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    cursor: pointer;
 }
 
-.card-content {
-    overflow-y: auto;
-    height: calc(83vh - 70px);
-    top: 150px;
+.name {
+    color: #2F3645;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.date {
+    color: #808080;
+    font-size: 12px;
+}
+
+.question {
+    margin-top: 0.8em;
+    font-weight: 600;
+    font-size: 18px;
+    color: #2F3645;
+}
+
+.details {
+    color: #2F3645;
+    font-size: 12px;
+    font-weight: 400;
+    margin-top: 1em;
+}
+
+.option {
+    height: 2em;
+    width: 2em;
+}
+
+.icon-button, icon-button:focus, icon-button:active, icon-button:focus-visible {
+    width: 0.5em;    
+    padding: 0;
+    outline: none !important;
+    box-shadow: none !important;
+    border: none !important;
 }
 
 
