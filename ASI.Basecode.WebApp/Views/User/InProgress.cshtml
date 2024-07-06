@@ -5,11 +5,11 @@
 }
 
 @{
-    ViewData["Title"] = "User Page";
+    ViewData["Title"] = "In Progress Tickets";
 }
 
 @section styles {
-    <link rel="stylesheet" href="~/css/user_open_tickets.css" />
+    <link rel="stylesheet" href="~/css/user_inProgress_tickets.css" />
 
 }
 
@@ -22,45 +22,44 @@
         <div class="header-buttons">
             <button type="button" class="btn button"><i class='bx bx-plus-circle bx-xs bx-fw uh' style="align-self:center;"></i> Create Ticket </button>
             <i class='bx bx-bell bx-sm icon' style="color: #45474B; cursor: pointer;"></i>
-            <i class='bx bx-cog bx-sm icon' style="color: #45474B; cursor: pointer;"></i>                        
-            
+            <i class='bx bx-cog bx-sm icon' style="color: #45474B; cursor: pointer;"></i>
+
             <a class="profile" href="#">
                 <img src="~/img/profile-logo.png" class="dpicn hover-pointer" alt="dp">
             </a>
 
             <ul class="dropdown" id="dropdownMenu">
                 <li>
-                    
+
                     <a class="dropdown-item" href="#"><i class="bx bx-user bx-xs bx-fw" style="color: #3D3B40;"></i> Profile</a>
                 </li>
                 <li>
-                    
+
                     <a class="dropdown-item" asp-action="SignOutUser" asp-controller="Account"><i class="bx bx-log-out bx-xs bx-fw" style="color: #3D3B40;"></i> Logout</a>
                 </li>
             </ul>
-           
+
         </div>
     </header>
 
     <nav>
         <div id="buttonContainer">
-            <a asp-controller="User" asp-action="OpenTickets"><input class="btn btn-primary activeButton" type="button" value="Open"></a>
-            <a asp-controller="User" asp-action="InProgress"><input class="btn btn-primary inactiveButton" type="button" value="In Progress"></a>
+            <a asp-controller="User" asp-action="OpenTickets"><input class="btn btn-primary inactiveButton" type="button" value="Open"></a>
+            <a asp-controller="User" asp-action="InProgress"><input class="btn btn-primary activeButton" type="button" value="In Progress"></a>
             <a asp-controller="User" asp-action="Resolved"><input class="btn btn-primary inactiveButton" type="button" value="Resolved"></a>
             <a asp-controller="User" asp-action="CloseTickets"><input class="btn btn-primary inactiveButton" type="button" value="Close"></a>
-        </div> 
-        
+        </div>
+
         <select class="form-select nav-select" id="floatingSelect" aria-label="Floating label select example">
             <option selected>Date</option>
-            <option value="1">Category</option>           
-        </select>           
+            <option value="1">Category</option>
+        </select>
     </nav>
 
     <main>
         <div id="card_content">
-
         </div>
-          
+
     </main>
 
     <div id="sidebar">
@@ -120,17 +119,17 @@
         var dropdownMenu = document.getElementById('dropdownMenu');
 
         dpIcon.addEventListener('click', function (event) {
-            event.stopPropagation(); 
+            event.stopPropagation();
 
             if (dropdownMenu.style.display === 'block') {
-                dropdownMenu.style.display = 'none'; 
+                dropdownMenu.style.display = 'none';
             } else {
-                dropdownMenu.style.display = 'block'; 
+                dropdownMenu.style.display = 'block';
             }
         });
     });
 
-    
+
 
     document.addEventListener('DOMContentLoaded', function () {
         var buttonContainer = document.getElementById('buttonContainer');
@@ -153,20 +152,20 @@
 
 
     var dataFromDatabase = [
-        { image: '/img/profile-logo.png', name: 'Golanginya', date: '5 min ago', question: 'How to patch KDE on FreeBSD?', details: 'Lorem ipsum dolor sit met, consectetur..', link: '#' },
-        { image: '/img/profile-logo.png', name: 'Golanginya', date: '5 min ago', question: 'How to patch KDE on FreeBSD?', details: 'Lorem ipsum dolor sit met, consectetur..', link: '#' },
-        { image: '/img/profile-logo.png', name: 'Golanginya', date: '5 min ago', question: 'How to patch KDE on FreeBSD?', details: 'Lorem ipsum dolor sit met, consectetur..', link: '#' },
-        { image: '/img/profile-logo.png', name: 'Golanginya', date: '5 min ago', question: 'How to patch KDE on FreeBSD?', details: 'Lorem ipsum dolor sit met, consectetur..', link: '#' },
-        { image: '/img/profile-logo.png', name: 'Golanginya', date: '5 min ago', question: 'How to patch KDE on FreeBSD?', details: 'Lorem ipsum dolor sit met, consectetur..', link: '#' },
-        { image: '/img/profile-logo.png', name: 'Golanginya', date: '5 min ago', question: 'How to patch KDE on FreeBSD?', details: 'Lorem ipsum dolor sit met, consectetur..', link: '#' },
-        { image: '/img/profile-logo.png', name: 'Golanginya', date: '5 min ago', question: 'How to patch KDE on FreeBSD?', details: 'Lorem ipsum dolor sit met, consectetur..', link: '#' },
+        { image: '/img/profile-logo.png', name: 'Golanginya', date: '5 min ago', question: 'How to patch KDE on FreeBSD?', details: 'Lorem ipsum dolor sit met, consectetur..', link: '#', agentProfile: '/img/profile-logo.png', agentName: 'AizhanMaratovna', agentDate: '5 min ago' },
+        { image: '/img/profile-logo.png', name: 'Golanginya', date: '5 min ago', question: 'How to patch KDE on FreeBSD?', details: 'Lorem ipsum dolor sit met, consectetur..', link: '#', agentProfile: '/img/profile-logo.png', agentName: 'AizhanMaratovna', agentDate: '5 min ago' },
+        { image: '/img/profile-logo.png', name: 'Golanginya', date: '5 min ago', question: 'How to patch KDE on FreeBSD?', details: 'Lorem ipsum dolor sit met, consectetur..', link: '#', agentProfile: '/img/profile-logo.png', agentName: 'AizhanMaratovna', agentDate: '5 min ago' },
+        { image: '/img/profile-logo.png', name: 'Golanginya', date: '5 min ago', question: 'How to patch KDE on FreeBSD?', details: 'Lorem ipsum dolor sit met, consectetur..', link: '#', agentProfile: '/img/profile-logo.png', agentName: 'AizhanMaratovna', agentDate: '5 min ago' },
+        { image: '/img/profile-logo.png', name: 'Golanginya', date: '5 min ago', question: 'How to patch KDE on FreeBSD?', details: 'Lorem ipsum dolor sit met, consectetur..', link: '#', agentProfile: '/img/profile-logo.png', agentName: 'AizhanMaratovna', agentDate: '5 min ago' },
+        { image: '/img/profile-logo.png', name: 'Golanginya', date: '5 min ago', question: 'How to patch KDE on FreeBSD?', details: 'Lorem ipsum dolor sit met, consectetur..', link: '#', agentProfile: '/img/profile-logo.png', agentName: 'AizhanMaratovna', agentDate: '5 min ago' },
+        { image: '/img/profile-logo.png', name: 'Golanginya', date: '5 min ago', question: 'How to patch KDE on FreeBSD?', details: 'Lorem ipsum dolor sit met, consectetur..', link: '#', agentProfile: '/img/profile-logo.png', agentName: 'AizhanMaratovna', agentDate: '5 min ago' },
     ];
 
     var cardContent = document.getElementById('card_content');
 
     dataFromDatabase.forEach(function (item) {
-        
-        
+
+
         var container = document.createElement('div');
         container.className = 'ticket-container';
 
@@ -181,7 +180,7 @@
         var image = document.createElement('img');
         image.className = 'image';
         image.src = item.image;
-        image.alt = 'image';       
+        image.alt = 'image';
         topContainer.appendChild(image);
 
         var nameDateContainer = document.createElement('div');
@@ -208,56 +207,38 @@
         details.textContent = item.details;
         link.appendChild(details);
 
-        var dropdownContainer = document.createElement('div');
-        dropdownContainer.classList.add('btn-group', 'option');
+        var agentContainer = document.createElement('div');
+        agentContainer.className = 'agent-container';
+        link.appendChild(agentContainer);
 
-        var dropdownToggle = document.createElement('button');
-        dropdownToggle.classList.add('btn', 'icon-button');
-        dropdownToggle.type = 'button';
-        dropdownToggle.id = 'dropdownMenuButton';
-        dropdownToggle.setAttribute('data-bs-toggle', 'dropdown');
-        dropdownToggle.setAttribute('aria-expanded', 'false');
-        dropdownContainer.appendChild(dropdownToggle);
+        var agentImage = document.createElement('img');
+        agentImage.className = 'agent-image';
+        agentImage.src = item.agentProfile
+        agentImage.alt = 'image';
+        agentContainer.appendChild(agentImage);
 
-        var icon = document.createElement('i');
-        icon.classList.add('bx', 'bx-dots-vertical-rounded', 'bx-sm', 'icon-ticket');
-        icon.style.color = '#808080';
-        dropdownToggle.appendChild(icon);
+        var agentNameDateContainer = document.createElement('div');
+        agentNameDateContainer.className = 'agent-name-date-container';
+        agentContainer.appendChild(agentNameDateContainer);
 
-        var dropdownMenu = document.createElement('ul');
-        dropdownMenu.classList.add('dropdown-menu', 'menu');
-        dropdownContainer.appendChild(dropdownMenu);
+        var agentName = document.createElement('h5');
+        agentName.className = 'agent-name';
+        agentName.textContent = item.agentName;
+        agentNameDateContainer.appendChild(agentName);
 
-        var options = [
-            { text: 'Edit', iconClass: 'bx bx-edit bx-xs bx-fw' },
-            { text: 'Delete', iconClass: 'bx bx-trash bx-xs bx-fw' }
-        ];
+        var agentDate = document.createElement('p');
+        agentDate.className = 'agent-date';
+        agentDate.textContent = item.agentDate;
+        agentNameDateContainer.appendChild(agentDate);
 
-        options.forEach(function (option) {
-            var listItem = document.createElement('li');
-            var linkItem = document.createElement('a');
-            linkItem.classList.add('dropdown-item', 'item');
-            linkItem.href = '#';
+        var assignedAgent = document.createElement('div');
+        assignedAgent.className = 'assign-agent';
+        assignedAgent.textContent = 'Assigned agent';
+        agentContainer.appendChild(assignedAgent);
 
-            // Create icon
-            var itemIcon = document.createElement('i');
-            option.iconClass.split(' ').forEach(cls => itemIcon.classList.add(cls));
-            itemIcon.style.color = '#808080';
-            linkItem.appendChild(itemIcon);
-
-            // Create text
-            var textNode = document.createTextNode(option.text);
-            linkItem.appendChild(textNode);
-
-            listItem.appendChild(linkItem);
-            dropdownMenu.appendChild(listItem);
-        });
-
-        container.appendChild(link);
-        container.appendChild(dropdownContainer);
-        
-
+        container.appendChild(link);        
         cardContent.appendChild(container);
     });
 
 </script>
+

@@ -266,7 +266,21 @@ main {
     gap: 1em;
 }
 
+.agent-container {
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+    margin-top: 2em;
+}
+
 .image {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.agent-image {
     height: 40px;
     width: 40px;
     border-radius: 50%;
@@ -279,9 +293,31 @@ main {
     font-weight: 500;
 }
 
+.agent-name {
+    color: #2F3645;
+    font-size: 14px;
+    font-weight: 500;
+}
+
 .date {
     color: #808080;
     font-size: 12px;
+}
+
+.agent-date {
+    color: #808080;
+    font-size: 12px;
+}
+
+
+.assign-agent {
+    color: #3818D9;
+    border: 1px solid #9B86BD;
+    border-radius: 10px;
+    padding: 0.5em;
+    font-size: 12px;
+    height: 2.5em;
+    background-color: rgba(226, 187, 233, 0.3);
 }
 
 .question {
@@ -298,20 +334,25 @@ main {
     margin-top: 1em;
 }
 
+.agent-details {
+    color: #2F3645;
+    font-size: 12px;
+    font-weight: 400;
+    margin-top: 1em;
+}
+
 .option {
     height: 2em;
     width: 2em;
 }
 
 .icon-button, icon-button:focus, icon-button:active, icon-button:focus-visible {
-    width: 0.5em;    
+    width: 0.5em;
     padding: 0;
     outline: none !important;
     box-shadow: none !important;
     border: none !important;
 }
-
-
 
 
 
