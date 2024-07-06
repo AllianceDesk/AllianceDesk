@@ -1,5 +1,6 @@
 ﻿@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
+/*General Designs*/
 :root {
     --main-radius: 5px;
     --main-padding: 5px;
@@ -19,7 +20,6 @@
     box-sizing: border-box;
 }
 
-
 body {
     margin: 0;
     padding: 0 !important;
@@ -28,29 +28,30 @@ body {
     overflow: hidden;
 }
 
+
+
+
+
+/*Parent Container Designs*/
 #container {
     display: grid;
     height: 100vh;
     width: 100%;
     grid-template-columns: 0.2fr 7fr;
-    grid-template-rows: 0.3fr 1.1fr 10fr;
+    grid-template-rows: 0.3fr 0.5fr 5fr;
     grid-template-areas:
         "header header"
         "sidebar nav"
         "sidebar main";
-    /*grid-gap: 0.2rem;*/
     font-family: "Poppins", sans-serif;
-    /*font-weight: 800;
-    text-transform: uppercase;*/
-    /*font-size: 12px;
-    color: black;
-    text-align: center;*/
     overflow: hidden;
-    overflow-y: auto;
 }
 
-/*Header Designs*/
 
+
+
+
+/*Header Designs*/
 header {
     background-color: var(--header-color);
     grid-area: header;
@@ -59,8 +60,6 @@ header {
     padding: 0;
     overflow: visible;
     border-bottom: 2px solid rgba(0, 0, 0, 0.3);
-    /*border-radius: var(--main-radius);*/
-    /*padding-top: var(--main-padding);*/
 }
 
 .header-buttons {
@@ -74,7 +73,7 @@ header {
 }
 
 .logo {
-    margin-left: 1em;
+    margin-left: 1.4em;
     margin-bottom: 0.3em;
 }
 
@@ -140,8 +139,9 @@ header {
 
 
 
-/*Nav Designs*/
 
+
+/*Nav Designs*/
 nav {
     background-color: whitesmoke;
     grid-area: nav;
@@ -150,14 +150,23 @@ nav {
     padding-left: 5em;
     padding-right: 5em;
     justify-content: space-between;
-    /*border-radius: var(--main-radius);*/
-    /*padding-top: var(--main-padding);*/
+    gap: 0.7em;
 }
 
 #buttonContainer {
     gap: 0.7em;
     display: flex;
     flex-direction: row;
+}
+
+.activeButton:focus, .activeButton.focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.activeButton:active {
+    color: white;
+    background-color: var(--active-button) !important;
 }
 
 .activeButton {
@@ -196,90 +205,87 @@ nav {
     color: white;
 }
 
-#dropdownButton {
-    background-color: white;
-    color: #808080;
-    height: 2em;
-    width: 10em;
-    padding-bottom: 25px;
-    margin-top: 1.3em;
-    font-size: 12px;
+.nav-select {
+    width: 9em;
+    height: 2.5em;
+    box-shadow: none;
     outline: none;
-    border: none;
-    border: 1px solid #ccc;
-}
-
-#dropdownContent {
-    display: none;
-    position: absolute;
-    top: 10.2em;
-    right: 12px;
-    transform: translateX(-57%);
-    background-color: white;
-    box-shadow: 0px 8px 16px rgba(0,0,0,0.1);
-    z-index: 1000;
-    width: 9.9em;
-    border-radius: var(--main-radius);
-    padding: 5px;
-    border: 1px solid #ccc;
     font-size: 12px;
+    margin-top: 1.4em;
 }
 
-#dropdownContent a {
-    color: #808080;
-}
+
+
+
 
 /*Main Designs*/
-
 main {
-    background-color: #758694;
+    background-color: whitesmoke;
     grid-area: main;
-    /*border-radius: var(--main-radius);*/
-    /*padding-top: var(--main-padding);*/
+    padding-left: 5em;
+    padding-right: 5em;
+    overflow-y: auto;
 }
 
-.form-container {
+.ticket-container {
     display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    width: 80%;
+    margin: 12px 0;
+    border-radius: 5px;
+    background-color: #FFE5E5;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, box-shadow 0.3s;
+    justify-content: space-between;
+    height: 70px;
+    padding: 15px;
 }
 
-input[type="text"], button {
-    padding: 0.5rem;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: var(--main-radius);
+.notification-link {
+    padding: 4px 0px 0px 20px;
+    text-decoration: none;
+    color: #000000;
+    background-color: var(--inactive-button);
+    height: 30px;
+    width: 100px;
+    align-self: center;
+    border-radius: 15px;
 }
 
-button {
-    background-color: #405D72;
-    color: white;
-    cursor: pointer;
+.notification_title {
+    cursor: default;
+    align-content: center;
+    padding: 12px 0 0 0;
 }
 
-button:hover {
-    background-color: #E68369;
+.notification-link:hover {
+    background-color: #e0e0e0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    color: var(--active-button);
 }
+
+.card-content {
+    overflow-y: auto;
+    height: calc(83vh - 70px);
+    top: 150px;
+}
+
+
 
 
 
 /*Sidebar Designs*/
-
 #sidebar {
     background-color: var(--sidebar-color);
     grid-area: sidebar;
     display: flex;
     flex-direction: column;
     align-items: center;
-    /*border-radius: var(--main-radius);*/
-    /*padding-top: var(--main-padding);*/
 }
 
-/* For Search Bar */
 #search-container {
     position: relative;
     width: 88%;
+    height: 2.5em;
     margin-top: 15px;
     background-color: var(--sidebar-color);
     border-radius: 5px;
@@ -287,8 +293,9 @@ button:hover {
 }
 
 #search-input {
-    width: 85%;
-    margin-left: 2em;
+    width: 80%;
+    margin-left: 2.3em;
+    margin-top: 0.5em;
     border: none;
     
     outline: none;
@@ -305,7 +312,6 @@ button:hover {
     color: var(--icon-color);
 }
 
-/* For Tickets Navigator */
 #button-container {
     display: flex;
     align-items: center;
@@ -332,7 +338,6 @@ button:hover {
     font-size: 16px;
 }
 
-/* For Details */
 #instruction-container {
     width: 88%;
     border: 1px solid var(--border-color);
@@ -406,7 +411,6 @@ hr {
     font-size: 16px;
 }
 
-/* Hover Effects */
 .button-container:hover,
 .instruction-label:hover {
     background-color: var(--hover-background);
@@ -415,24 +419,23 @@ hr {
 
 
 
+
+/*Responsive Designs*/
 @media only screen and (max-width: 580px) {
     #container {
         grid-template-columns: 1fr;
-        grid-template-rows: 0.2fr 6fr 1fr 6fr;
+        grid-template-rows: 0.2fr 4fr 1fr 10fr;
         grid-template-areas:
             "header"
             "sidebar"
             "nav"
-            "main"           
+            "main";
+        overflow-y: auto;
     }
+
+    /*#sidebar {
+        overflow-y: auto;
+    }*/
 }
 
-.activeButton:focus, .activeButton.focus {
-    outline: none !important;
-    box-shadow: none !important;
-}
 
-.activeButton:active {
-    color: white;
-    background-color: var(--active-button)!important;
-}
