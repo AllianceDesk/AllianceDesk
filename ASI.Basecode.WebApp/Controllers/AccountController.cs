@@ -86,7 +86,7 @@ namespace ASI.Basecode.WebApp.Controllers
 
             //User user = null;
             User user = new() { UserId = Guid.NewGuid(), Username = "0", Password = "Password" };
-            
+
             await this._signInManager.SignInAsync(user);
             this._session.SetString("UserName", model.UserId);
 
@@ -132,7 +132,11 @@ namespace ASI.Basecode.WebApp.Controllers
             }
             catch(Exception ex)
             {
-                TempData["ErrorMessage"] = Resources.Messages.Errors.ServerError;
+                // Log the error for debugging purposes
+                _logger.LogError(ex, "An unexpected error occurred during registration.");
+
+                // Handle unexpected server errors
+                TempData["ErrorMessage"] = "An unexpected error occurred. Please try again later.";
             }
             return View();
         }

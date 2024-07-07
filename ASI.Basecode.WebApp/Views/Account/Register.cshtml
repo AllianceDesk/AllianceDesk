@@ -10,13 +10,13 @@
 
 <div class="login-container">
    
-    <form method="post" action="/Account/Login" id="loginForm">
+    <form method="post" action="/Account/Register" id="loginForm">
         <h2 class="text-center font-weight-bold">Alliance Help Desk</h2>
         <p>Alliance Help Desk: Your Dedicated Partner in Seamless Support Solutions</p>
         <div class="form-outline">
             <label class="form-label" style="font-size: 10px;" for="form2Example22">Username</label>
             <input type="username" id="form2Example22" class="form-control"
-                   asp-for="UserName" placeholder="Enter Email" />
+                   asp-for="UserName" placeholder="Enter Username" />
             <span asp-validation-for="UserName" class="text-danger"></span>
         </div>
         <div class="form-outline">

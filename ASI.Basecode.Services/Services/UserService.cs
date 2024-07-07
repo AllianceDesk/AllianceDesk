@@ -38,9 +38,12 @@ namespace ASI.Basecode.Services.Services
         public void AddUser(UserViewModel model)
         {
             var user = new User();
-            if (!_repository.UserExists(model.UserId))
+            if (!_repository.UserExists(model.Email))
             {
                 _mapper.Map(model, user);
+                user.UserId = Guid.NewGuid();
+                user.Username = model.UserName;
+                user.Email = model.Email;
                 user.Password = PasswordManager.EncryptPassword(model.Password);
                 /*user.CreatedTime = DateTime.Now;
                 user.UpdatedTime = DateTime.Now;
