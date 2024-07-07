@@ -1,4 +1,5 @@
-﻿using ASI.Basecode.Services.ServiceModels;
+﻿using ASI.Basecode.Data.Models;
+using ASI.Basecode.Services.ServiceModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,6 @@ namespace ASI.Basecode.Services.Interfaces
     {
         IEnumerable<ArticleViewModel> RetrieveAll();
         void Add(ArticleViewModel article);
+        IEnumerable<Category> GetCategories();
     }
 }

@@ -59,7 +59,23 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpGet ("/KnowledgeBase/Add-Article")]
         public IActionResult Create()
         {
+            var categories = _articleService.GetCategories()
+                                   .Select(c => new SelectListItem
+                                   {
+                                       Value = c.CategoryId.ToString(),
+                                       Text = c.CategoryName
+                                   })
+                                   .ToList();
+            ViewBag.Categories = new SelectList(categories, "Value", "Text");
+
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult PostCreate(ArticleViewModel articleViewModel)
+        {
+            _articleService.Add(articleViewModel);
+            return RedirectToAction("Index");
         }
 
     }

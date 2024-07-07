@@ -65,5 +65,10 @@ namespace ASI.Basecode.Services.Services
             _articleRepository.AddArticle(newArticle);
         }
 
+        public IEnumerable<Category> GetCategories()
+        {
+            return _categoryRepository.RetrieveAll();
+        }
+
     }
 }
