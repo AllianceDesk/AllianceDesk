@@ -7,6 +7,7 @@ using AutoMapper;
 using System;
 using System.IO;
 using System.Linq;
+using System.Net.Sockets;
 using static ASI.Basecode.Resources.Constants.Enums;
 
 namespace ASI.Basecode.Services.Services
@@ -14,12 +15,14 @@ namespace ASI.Basecode.Services.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _repository;
+        private readonly IUserRoleRepository _userRoleRepository;
         private readonly IMapper _mapper;
 
-        public UserService(IUserRepository repository, IMapper mapper)
+        public UserService(IUserRepository repository, IMapper mapper, IUserRoleRepository userRoleRepository)
         {
             _mapper = mapper;
             _repository = repository;
+            _userRoleRepository = userRoleRepository;
         }
 
         public LoginResult AuthenticateUser(string userId, string password, ref User user)
@@ -43,7 +46,7 @@ namespace ASI.Basecode.Services.Services
                 user.UpdatedTime = DateTime.Now;
                 user.CreatedBy = System.Environment.UserName;
                 user.UpdatedBy = System.Environment.UserName;*/
-
+                user.RoleId = Convert.ToByte(user.RoleId);
                 _repository.AddUser(user);
             }
             else
