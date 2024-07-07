@@ -35,58 +35,46 @@
 
     <div class="article-navigation">
         <div class="sections">
-            <h4 class="article-list">Article List</h4>
-            <h4 class="favorites">My Favorites</h4>
+            <a asp-action="Index" class="article-list @(ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active-link" : "")">Article List</a>
+            <a asp-action="Favorites" class="favorites @(ViewContext.RouteData.Values["Action"].ToString() == "Favorites" ? "active-link" : "")">My Favorites</a>
         </div>
         <div class="search-filter">
+            <form>
+                <div class="search">
+                    <i class='bx bx-search' style='color:#5f5f5f'></i>
+                    <input class="search-input" type="search" placeholder="Search">
+                </div>
+            </form>
             <button class="filter-btn">
                 <i class='bx bx-filter-alt' style='color:#5f5f5f'></i>Filter
             </button>
         </div>
     </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Title)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Body)
-                </th>
-                <th>
-                    Category
-                </th>
-                <th>
-                    Last Edited
-                </th>
-            </tr>
-        </thead>
-        <tbody>
+    <ul class="articles">
+        <li>
             @foreach (var item in Model)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Body)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Title)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CategoryNavigation)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.DateUpdated)
-                    </td>
-                    <td>
-                        @Html.ActionLink("Edit", "Edit", new { Id = item.ArticleId }) |
-                        @Html.ActionLink("Details", "Details", new { Id = item.ArticleId }) |
-                        @Html.ActionLink("Delete", "Delete", new { Id = item.ArticleId })
-                    </td>
-                </tr>
+                <div>
+                    @Html.DisplayFor(modelItem => item.Body)
+                </div>
+                <h4>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </h4>
+                <h6>
+                    @Html.DisplayFor(modelItem => item.CategoryNavigation)
+                </h6>
+                <h5>
+                    @Html.DisplayFor(modelItem => item.DateUpdated)
+                </h5>
+@*                 <td>
+                    @Html.ActionLink("Edit", "Edit", new { Id = item.ArticleId }) |
+                    @Html.ActionLink("Details", "Details", new { Id = item.ArticleId }) |
+                    @Html.ActionLink("Delete", "Delete", new { Id = item.ArticleId })
+                </td> *@
             }
-        </tbody>
-    </table>
+        </li>
+    </ul>
 </div>
 
 
@@ -131,6 +119,24 @@
                 if (!$(event.target).closest('.addArt-dropdown').length) {
                     $('.dropdown-content').hide();
                 }
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            // Add active class to the current link on page load
+            var currentAction = '@(ViewContext.RouteData.Values["Action"].ToString())';
+            $('.sections a').each(function () {
+                if ($(this).attr('asp-action') === currentAction) {
+                    $(this).addClass('active');
+                }
+            });
+
+            // Toggle active class on click
+            $('.sections a').on('click', function () {
+                $('.sections a').removeClass('active');
+                $(this).addClass('active');
             });
         });
     </script>
