@@ -1,0 +1,116 @@
+﻿body {
+    background-color: #E8E8E8;
+}
+
+.content {
+    position: absolute;
+    height: calc(100vh - 70px);
+    width: calc(100vw - 250px);
+    left: 250px;
+    top: 70px;
+    padding: 40px;
+}
+
+.header-container{
+    display: flex;
+    justify-content: space-between;
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+.addarticle-container{
+    display:flex;
+}
+
+.addArticleBtn {
+    margin-right: 1px;
+    padding: 10px 20px 10px 20px;
+    background-color: #E21818;
+    border-radius: 5px 0px 0px 5px;
+    text-decoration: none;
+    color: white;
+    max-height: 48px;
+}
+
+.addArticleBtn:hover{
+    background-color: #B41717;
+    text-decoration: none;
+    color: white;
+}
+
+.dp-logo {
+    margin-left: 1px;
+    padding: 12px 20px 12px 20px;
+    background-color: #E21818;
+    border-radius: 0px 5px 5px 0px;
+    text-decoration: none;
+    outline: none;
+    border: none;
+}
+
+    .dp-logo:hover, .dp-logo:focus {
+        background-color: #B41717;
+        text-decoration: none;
+        outline: none;
+        border: none;
+    }
+
+.addArt-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    position: absolute;
+    margin-top: 5px;
+    right: 0;
+    display: none; /* Hidden by default */
+    background-color: white;
+    min-width: 182.775px;
+    box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.25);
+    z-index: 1000; /* Make sure it’s on top of other content */
+    padding: 10px; /* Add some padding for better visibility */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Display the dropdown content on hover */
+.addArt-dropdown:hover .dropdown-content:hover {
+    display: block;
+}
+
+.dropdown-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+    .dropdown-list li {
+        display: flex;
+        align-items: center;
+        padding: 10px 0;
+    }
+
+        .dropdown-list li i {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+
+        .dropdown-list li a {
+            text-decoration: none;
+            color: #000000;
+            font-weight: 400; /* Set font weight to normal */
+        }
+
+        .dropdown-list li:hover {
+            background-color: #f0f0f0;
+        }
+
+.article-navigation{
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+
+
+

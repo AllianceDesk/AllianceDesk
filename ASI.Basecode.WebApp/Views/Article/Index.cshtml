@@ -1,75 +1,93 @@
 ﻿@model IEnumerable<ASI.Basecode.Services.ServiceModels.ArticleViewModel>
 
 @section styles {
-    <link rel="stylesheet" href="~/css/knowledgebase/index.css" />
     <link rel="stylesheet" href="~/css/style.css" />
+    <link rel="stylesheet" href="~/css/KnowledgeBase/Index.css" />
     <script src="https://kit.fontawesome.com/1e457ac318.js" crossorigin="anonymous"></script>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
 }
 
-<div class="header-container">
-    <h1 class="page-title">Knowledge Base</h1>
-    <a asp-action="Create" class="addArticleBtn">Add Article</a>
-    <div class="addArt-dropdown">
-        <button class="dp-logo">
-            <i class="fa-solid fa-angle-down"></i>
-        </button>
-        <div class="dropdown-content">
-            <ul>
-                <li>
-                    <i class="fa-solid fa-gear"></i>
-                    <a href="#">Document</a>
-                    <
-                </li>
-                <li>
-                    <i class="fa-solid fa-right-from-bracket"></i>
-                    <a href="#">PDF</a>
-                </li>
-            </ul>
+<div class="content">
+    <div class="header-container">
+        <h1 class="page-title">Knowledge Base</h1>
+        <div class="addarticle-container">
+            <a asp-action="Create" class="addArticleBtn">Add Article</a>
+            <div class="addArt-dropdown">
+                <button class="dp-logo">
+                    <i class="fa-solid fa-angle-down" style="color: white;"></i>
+                </button>
+                <div class="dropdown-content">
+                    <ul class="dropdown-list">
+                        <li>
+                            <i class='bx bxs-file-doc'></i>
+                            <a href="#">Document</a>
+                        </li>
+                        <li>
+                            <i class='bx bxs-file-pdf'></i>
+                            <a href="#">PDF</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Body)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CategoryNavigation)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DateUpdated)
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+
+    <div class="article-navigation">
+        <div class="sections">
+            <h4 class="article-list">Article List</h4>
+            <h4 class="favorites">My Favorites</h4>
+        </div>
+        <div class="search-filter">
+            <button class="filter-btn">
+                <i class='bx bx-filter-alt' style='color:#5f5f5f'></i>Filter
+            </button>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Body)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CategoryNavigation)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DateUpdated)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { Id = item.ArticleId }) |
-                    @Html.ActionLink("Details", "Details", new { Id = item.ArticleId }) |
-                    @Html.ActionLink("Delete", "Delete", new { Id = item.ArticleId })
-                </td>
+                <th>
+                    @Html.DisplayNameFor(model => model.Title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Body)
+                </th>
+                <th>
+                    Category
+                </th>
+                <th>
+                    Last Edited
+                </th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Body)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CategoryNavigation)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DateUpdated)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { Id = item.ArticleId }) |
+                        @Html.ActionLink("Details", "Details", new { Id = item.ArticleId }) |
+                        @Html.ActionLink("Delete", "Delete", new { Id = item.ArticleId })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
 
 <div class="modal fade" id="deleteModal">
@@ -94,6 +112,29 @@
 </div>
 
 @section Scripts {
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Script for dropdown functionality -->
+    <script>
+        $(document).ready(function () {
+            // Hide dropdown content by default
+            $('.dropdown-content').hide();
+
+            // Toggle visibility of dropdown content on .dp-logo click
+            $('.dp-logo').on('click', function () {
+                $('.dropdown-content').toggle();
+            });
+
+            // Close the dropdown if the user clicks outside of it
+            $(document).on('click', function (event) {
+                if (!$(event.target).closest('.addArt-dropdown').length) {
+                    $('.dropdown-content').hide();
+                }
+            });
+        });
+    </script>
+
     <script>
         var itemId;
         function displayDeleteModal(id) {

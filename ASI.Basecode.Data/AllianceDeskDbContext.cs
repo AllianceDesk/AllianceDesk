@@ -68,7 +68,7 @@ namespace ASI.Basecode.Data
 
                 entity.Property(e => e.UpdatedBy).HasColumnName("updated_by");
 
-                entity.HasOne(d => d.CategoryNavigation)
+                entity.HasOne(d => d.Category)
                     .WithMany(p => p.Articles)
                     .HasForeignKey(d => d.CategoryId)
                     .HasConstraintName("FK_Article_Category");
