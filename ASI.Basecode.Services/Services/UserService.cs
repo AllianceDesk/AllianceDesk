@@ -25,11 +25,11 @@ namespace ASI.Basecode.Services.Services
             _userRoleRepository = userRoleRepository;
         }
 
-        public LoginResult AuthenticateUser(string userId, string password, ref User user)
+        public LoginResult AuthenticateUser(string userName, string password, ref User user)
         {
             user = new User();
             var passwordKey = PasswordManager.EncryptPassword(password);
-            user = _repository.GetUsers().Where(x => x.UserId.ToString() == userId &&
+            user = _repository.GetUsers().Where(x => x.Username == userName &&
                                                      x.Password == passwordKey).FirstOrDefault();
 
             return user != null ? LoginResult.Success : LoginResult.Failed;
