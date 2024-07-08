@@ -20,7 +20,7 @@
         </div>
 
         <div class="header-buttons">
-            <button type="button" class="btn button"><i class='bx bx-plus-circle bx-xs bx-fw uh' style="align-self:center;"></i> Create Ticket </button>
+            <button type="button" class="btn button" data-bs-toggle="modal" data-bs-target="#createTicket"><i class='bx bx-plus-circle bx-xs bx-fw uh' style="align-self:center;"></i> Create Ticket </button>
             <i class='bx bx-bell bx-sm icon' style="color: #45474B; cursor: pointer;"></i>
             <i class='bx bx-cog bx-sm icon' style="color: #45474B; cursor: pointer;"></i>
 
@@ -58,6 +58,48 @@
 
     <main>
         <div id="card_content">
+
+        </div>
+
+        <div class="modal fade" id="createTicket" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content p-3">
+                    <div id="main_card">
+
+                        <div class="top_modal d-flex justify-content-between align-items-center mb-3">
+                            <h3>New Ticket</h3>
+                            <button type="button" class="btn" data-bs-dismiss="modal"><i class='bx bx-x bx-sm icon' style="color: #45474B; cursor: pointer;"></i></button>
+                        </div>
+
+                        <input type="text" class="form-control mb-3" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2">
+
+                        <div class="input-group mb-3">
+                            <select class="form-select" id="inputGroupSelect04" aria-label="Example select with button addon">
+                                <option disabled selected>Choose Categories</option>
+                                <option value="1">One</option>
+                                <option value="2">Two</option>
+                                <option value="3">Three</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <select class="form-select" id="inputGroupSelect04" aria-label="Example select with button addon">
+                                <option disabled selected>Priority</option>
+                                <option value="1">One</option>
+                                <option value="2">Two</option>
+                                <option value="3">Three</option>
+                            </select>
+                        </div>
+
+                        <textarea class="form-control mb-3" id="largeTextField" rows="10" cols="50" placeholder="Description"></textarea>
+
+                        <div class="button_card mb-3 d-flex justify-content-between">
+                            <button type="button" class="btn attachment custom-button" style="background-color: #7E7E7E; color: white;"><i class='bx bx-image-add bx-xs bx-fw uh' style="align-self:center;"></i> Add Attachment </button>
+                            <button type="button" class="btn attachment custom-button" style="background-color: #E21818; color: white;"><i class='bx bxl-telegram bx-xs bx-fw uh' style="align-self:center;"></i> Submit </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </main>
