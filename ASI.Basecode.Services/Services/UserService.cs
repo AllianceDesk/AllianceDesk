@@ -7,6 +7,7 @@ using AutoMapper;
 using System;
 using System.IO;
 using System.Linq;
+using System.Net.Sockets;
 using static ASI.Basecode.Resources.Constants.Enums;
 
 namespace ASI.Basecode.Services.Services
@@ -14,19 +15,21 @@ namespace ASI.Basecode.Services.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _repository;
+        private readonly IUserRoleRepository _userRoleRepository;
         private readonly IMapper _mapper;
 
-        public UserService(IUserRepository repository, IMapper mapper)
+        public UserService(IUserRepository repository, IMapper mapper, IUserRoleRepository userRoleRepository)
         {
             _mapper = mapper;
             _repository = repository;
+            _userRoleRepository = userRoleRepository;
         }
 
-        public LoginResult AuthenticateUser(string userId, string password, ref User user)
+        public LoginResult AuthenticateUser(string userName, string password, ref User user)
         {
             user = new User();
             var passwordKey = PasswordManager.EncryptPassword(password);
-            user = _repository.GetUsers().Where(x => x.UserId.ToString() == userId &&
+            user = _repository.GetUsers().Where(x => x.Username == userName &&
                                                      x.Password == passwordKey).FirstOrDefault();
 
             return user != null ? LoginResult.Success : LoginResult.Failed;
@@ -35,15 +38,18 @@ namespace ASI.Basecode.Services.Services
         public void AddUser(UserViewModel model)
         {
             var user = new User();
-            if (!_repository.UserExists(model.UserId))
+            if (!_repository.UserExists(model.Email))
             {
                 _mapper.Map(model, user);
+                user.UserId = Guid.NewGuid();
+                user.Username = model.UserName;
+                user.Email = model.Email;
                 user.Password = PasswordManager.EncryptPassword(model.Password);
                 /*user.CreatedTime = DateTime.Now;
                 user.UpdatedTime = DateTime.Now;
                 user.CreatedBy = System.Environment.UserName;
                 user.UpdatedBy = System.Environment.UserName;*/
-
+                user.RoleId = model.RoleId;
                 _repository.AddUser(user);
             }
             else
