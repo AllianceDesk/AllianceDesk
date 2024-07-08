@@ -162,8 +162,16 @@ namespace ASI.Basecode.WebApp.Controllers
             // Pass data to ViewBag
             ViewBag.Statuses = new SelectList(statuses, "Value", "Text");
 
-            
-           return View(userTickets);
+            if (!string.IsNullOrEmpty(status))
+            {
+
+                var statusTickets = userTickets.Where(t => t.StatusId == status).ToList();
+                return View(statusTickets);
+            }
+            else
+            {
+                return View(userTickets);
+            }
             
         }
 
