@@ -123,6 +123,7 @@ namespace ASI.Basecode.WebApp.Controllers
         {
             try
             {
+                model.RoleId = 3;
                 _userService.AddUser(model);
                 return RedirectToAction("Login", "Account");
             }
