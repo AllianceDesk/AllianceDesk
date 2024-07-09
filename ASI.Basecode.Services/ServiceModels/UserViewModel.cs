@@ -28,6 +28,8 @@ namespace ASI.Basecode.Services.ServiceModels
         public string ConfirmPassword { get; set; }
 
         public byte RoleId { get; set; }
+
+        [Required(ErrorMessage = "Team Name is required.")]
         public string TeamName { get; set; }
         public string TeamId { get; set; }
 

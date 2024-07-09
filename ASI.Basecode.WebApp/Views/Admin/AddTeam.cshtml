@@ -1,0 +1,19 @@
+﻿@model ASI.Basecode.Services.ServiceModels.UserViewModel
+
+<form asp-controller="Admin" asp-action="PostTeamAdd" method="post" class="modal-container br-1 bg-white p-y-1 p-x-2">
+    <div class="flex-Row justify-content-between">
+        <h2>Add Team</h2>
+        <i class="text-md fa-regular fa-circle-xmark hover-pointer" data-admin-add-close-btn></i>
+    </div>
+    <div class="modal-input-container">
+        <label class="modal-input relative flex">
+            <span>Team Name</span>
+            <input asp-for="TeamName" class="form-control" type="text" placeholder="John Doe" />
+            <span asp-validation-for="TeamName" class="text-danger"></span>
+        </label>
+    </div>
+    <div class="flex-Row gap-1">
+        <button class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-add-cancel-btn>Cancel</button>
+        <button class="mbtn-primary color-white bg-red align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" type="submit">Save</button>
+    </div>
+</form>

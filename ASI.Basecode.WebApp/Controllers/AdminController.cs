@@ -92,9 +92,19 @@ namespace ASI.Basecode.WebApp.Controllers
         /// <returns> Add User</returns>
         public IActionResult AddTeam(UserViewModel user)
         {
+            return PartialView("AddTeam");
+        }
+
+        [HttpPost("/AddTeam")]
+        /// <summary>
+        /// Post Request for Adding a User
+        /// </summary>
+        /// <returns> View User </returns>
+        public IActionResult PostTeamAdd(UserViewModel user)
+        {
             _userService.AddUser(user);
 
-            return RedirectToAction("ViewUser");
+            return RedirectToAction("AddUser");
         }
     }
 }
