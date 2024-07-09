@@ -11,8 +11,9 @@
 @* <div>
     @Html.AntiForgeryToken()
 </div> *@
-
-<div class="login-container">
+@Html.Partial("General_Header")
+<div>
+    <div class="login-container">
     
     <form method="post" action="/Account/Login" id="loginForm">
         <h2 class="text-center font-weight-bold">Alliance Help Desk</h2>
@@ -36,7 +37,7 @@
     <img src="~/img/login-bg.png"
          alt="logo" />
 </div>
-
+</div>
 @section scripts {
     <script>
         // Check for error message and display Toastr notification

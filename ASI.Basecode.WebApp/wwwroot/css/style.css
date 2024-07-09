@@ -17,7 +17,7 @@ h3,
 h4,
 h5,
 h6 {
-    margin-bottom: 0;
+    margin-bottom: 0 !important;
 }
 
 :root {
@@ -158,8 +158,20 @@ footer {
     padding: 0 0 0 0;
     width: 100%;
     height: 100vh;
-    overflow-y: scroll;
-    overflow-x: hidden;
+}
+
+@media (max-width: 600px) {
+   .main {
+       display: flex;
+       flex-direction: column;
+   }
+}
+
+@media (min-width: 600px) and (max-width: 900px) {
+    .main {
+        display: flex;
+        flex-direction: column;
+    }
 }
 
     .main::-webkit-scrollbar-thumb {
