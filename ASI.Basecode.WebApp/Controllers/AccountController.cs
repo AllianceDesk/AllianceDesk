@@ -85,19 +85,19 @@ namespace ASI.Basecode.WebApp.Controllers
             this._session.SetString("HasSession", "Exist");
 
             //User user = null;
-            User user = new() { UserId = Guid.NewGuid(), Username = "0", Password = "Password" };
-            
-            await this._signInManager.SignInAsync(user);
-            this._session.SetString("UserName", model.UserId);
+            /*            User user = new() { UserId = Guid.NewGuid(), Username = "0", Password = "Password" };
 
-            return RedirectToAction("Index", "Home");
+                        await this._signInManager.SignInAsync(user);
+                        this._session.SetString("UserName", model.UserName);
 
-            /*var loginResult = _userService.AuthenticateUser(model.UserId, model.Password, ref user);
+                        return RedirectToAction("Index", "Home");*/
+            User user = null;
+            var loginResult = _userService.AuthenticateUser(model.UserName, model.Password, ref user);
             if (loginResult == LoginResult.Success)
             {
                 // 認証OK
                 await this._signInManager.SignInAsync(user);
-                this._session.SetString("UserName", user.Name);
+                this._session.SetString("UserName", user.Username);
                 return RedirectToAction("Index", "Home");
             }
             else
@@ -106,7 +106,7 @@ namespace ASI.Basecode.WebApp.Controllers
                 TempData["ErrorMessage"] = "Incorrect UserId or Password";
                 return View();
             }
-            return View();*/
+            return View();
         }
 
         [HttpGet]
@@ -123,6 +123,7 @@ namespace ASI.Basecode.WebApp.Controllers
         {
             try
             {
+                model.RoleId = 3;
                 _userService.AddUser(model);
                 return RedirectToAction("Login", "Account");
             }
@@ -130,7 +131,7 @@ namespace ASI.Basecode.WebApp.Controllers
             {
                 TempData["ErrorMessage"] = ex.Message;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 TempData["ErrorMessage"] = Resources.Messages.Errors.ServerError;
             }
