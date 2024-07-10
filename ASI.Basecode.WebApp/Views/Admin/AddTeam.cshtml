@@ -1,6 +1,6 @@
 ﻿@model ASI.Basecode.Services.ServiceModels.UserViewModel
 
-<div class="hidden modal-container br-1 bg-white p-y-1 p-x-2" data-admin-modal-container>
+<div class="modal-container br-1 bg-white p-y-1 p-x-2" data-admin-modal-container>
     <form asp-controller="Admin" asp-action="PostTeamAdd" method="post" class="modal-container br-1 bg-white p-y-1 p-x-2" data-modal-add-form>
         <div class="flex-Row justify-content-between">
             <h2>Add Team</h2>
@@ -19,31 +19,3 @@
         </div>
     </form>
 </div>
-
-@section scripts {
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            // Close the modal on clicking close button
-            $(document).on('click', '[data-admin-add-close-btn]', function () {
-                $('[data-admin-modal-container]').addClass('hidden');
-            });
-
-            // Close the modal on clicking cancel button
-            $(document).on('click', '[data-admin-add-cancel-btn]', function (e) {
-                e.preventDefault(); // Prevent form submission if button is inside a form
-                $('[data-admin-modal-container]').addClass('hidden');
-            });
-
-            // Prevent modal close on click inside the modal
-            $('[data-modal-add-form]').on('click', function (e) {
-                e.stopPropagation();
-            });
-
-            // Close the modal on clicking outside of it
-            $('[data-admin-modal-container]').on('click', function () {
-                $(this).addClass('hidden');
-            });
-        });
-    </script>
-}

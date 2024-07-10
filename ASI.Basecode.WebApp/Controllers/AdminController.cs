@@ -40,7 +40,21 @@ namespace ASI.Basecode.WebApp.Controllers
         public IActionResult ViewUser()
         {
             ViewBag.IsLoginOrRegister = false;
-            return View();
+            var users = _userService.GetUsers()
+                                        .Select(u => new UserViewModel
+                                        {
+                                            Name = u.Name,
+                                            Email = u.Email,
+                                            RoleId = u.RoleId
+                                        })
+                                        .ToList();
+
+            var viewModel = new UserViewModel
+            {
+                Users = users
+            };
+
+            return View(viewModel);
         }
 
         [HttpGet("/AddUser")]
@@ -73,7 +87,8 @@ namespace ASI.Basecode.WebApp.Controllers
             return PartialView("AddUser");
         }
 
-        [HttpPost("/AddUser")]
+        [HttpPost]
+        [Route("AddUser")]
         /// <summary>
         /// Post Request for Adding a User
         /// </summary>

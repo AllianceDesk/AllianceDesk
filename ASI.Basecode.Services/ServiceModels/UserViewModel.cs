@@ -33,6 +33,7 @@ namespace ASI.Basecode.Services.ServiceModels
         public string TeamName { get; set; }
         public string TeamId { get; set; }
 
-        public IEnumerable<UserViewModel> dataList { get; set; }
+        public List<UserViewModel> Users { get; set; }
+
     }
 }

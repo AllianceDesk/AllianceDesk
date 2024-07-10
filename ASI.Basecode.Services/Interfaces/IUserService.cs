@@ -12,5 +12,6 @@ namespace ASI.Basecode.Services.Interfaces
         void AddTeam(UserViewModel model);
         IEnumerable<Team> GetTeams();
         IEnumerable<UserRole> GetUserRoles();
+        IEnumerable<User> GetUsers();
     }
 }
