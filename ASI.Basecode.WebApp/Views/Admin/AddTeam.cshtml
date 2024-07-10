@@ -1,19 +1,49 @@
 ﻿@model ASI.Basecode.Services.ServiceModels.UserViewModel
 
-<form asp-controller="Admin" asp-action="PostTeamAdd" method="post" class="modal-container br-1 bg-white p-y-1 p-x-2">
-    <div class="flex-Row justify-content-between">
-        <h2>Add Team</h2>
-        <i class="text-md fa-regular fa-circle-xmark hover-pointer" data-admin-add-close-btn></i>
-    </div>
-    <div class="modal-input-container">
-        <label class="modal-input relative flex">
-            <span>Team Name</span>
-            <input asp-for="TeamName" class="form-control" type="text" placeholder="John Doe" />
-            <span asp-validation-for="TeamName" class="text-danger"></span>
-        </label>
-    </div>
-    <div class="flex-Row gap-1">
-        <button class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-add-cancel-btn>Cancel</button>
-        <button class="mbtn-primary color-white bg-red align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" type="submit">Save</button>
-    </div>
-</form>
+<div class="hidden modal-container br-1 bg-white p-y-1 p-x-2" data-admin-modal-container>
+    <form asp-controller="Admin" asp-action="PostTeamAdd" method="post" class="modal-container br-1 bg-white p-y-1 p-x-2" data-modal-add-form>
+        <div class="flex-Row justify-content-between">
+            <h2>Add Team</h2>
+            <i class="text-md fa-regular fa-circle-xmark hover-pointer" data-admin-add-close-btn></i>
+        </div>
+        <div class="modal-input-container">
+            <label class="modal-input relative flex">
+                <span>Team Name</span>
+                <input asp-for="TeamName" class="form-control" type="text" placeholder="unityDesk" />
+                <span asp-validation-for="TeamName" class="text-danger"></span>
+            </label>
+        </div>
+        <div class="flex-Row gap-1">
+            <button class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-add-cancel-btn>Cancel</button>
+            <button class="mbtn-primary color-white bg-red align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" type="submit">Save</button>
+        </div>
+    </form>
+</div>
+
+@section scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Close the modal on clicking close button
+            $(document).on('click', '[data-admin-add-close-btn]', function () {
+                $('[data-admin-modal-container]').addClass('hidden');
+            });
+
+            // Close the modal on clicking cancel button
+            $(document).on('click', '[data-admin-add-cancel-btn]', function (e) {
+                e.preventDefault(); // Prevent form submission if button is inside a form
+                $('[data-admin-modal-container]').addClass('hidden');
+            });
+
+            // Prevent modal close on click inside the modal
+            $('[data-modal-add-form]').on('click', function (e) {
+                e.stopPropagation();
+            });
+
+            // Close the modal on clicking outside of it
+            $('[data-admin-modal-container]').on('click', function () {
+                $(this).addClass('hidden');
+            });
+        });
+    </script>
+}

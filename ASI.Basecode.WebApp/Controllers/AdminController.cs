@@ -85,12 +85,27 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("ViewUser");
         }
 
+        public IActionResult ViewTeams()
+        {
+            ViewBag.IsLoginOrRegister = false;
+            var teams = _userService.GetTeams()
+                                   .Select(t => new SelectListItem
+                                   {
+                                       Value = t.TeamId.ToString(),
+                                       Text = t.TeamName
+                                   })
+                                   .ToList();
+            ViewBag.Teams = new SelectList(teams, "Value", "Text");
+
+            return View();
+        }
+
         [HttpGet("/AddTeam")]
         /// <summary>
         /// Go to the Add a User View
         /// </summary>
         /// <returns> Add User</returns>
-        public IActionResult AddTeam(UserViewModel user)
+        public IActionResult AddTeam()
         {
             return PartialView("AddTeam");
         }
@@ -100,11 +115,11 @@ namespace ASI.Basecode.WebApp.Controllers
         /// Post Request for Adding a User
         /// </summary>
         /// <returns> View User </returns>
-        public IActionResult PostTeamAdd(UserViewModel user)
+        public IActionResult PostTeamAdd(UserViewModel team)
         {
-            _userService.AddUser(user);
+            _userService.AddTeam(team);
 
-            return RedirectToAction("AddUser");
+            return RedirectToAction("ViewTeams");
         }
     }
 }

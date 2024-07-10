@@ -66,7 +66,6 @@ namespace ASI.Basecode.Services.Services
         {
             var team = new Team();
             if (!_teamRepository.TeamExists(model.TeamName)){
-                _mapper.Map(model, team);
                 team.TeamId = Guid.NewGuid();
                 team.TeamName = model.TeamName;
                 _teamRepository.AddTeam(team);

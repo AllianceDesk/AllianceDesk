@@ -23,7 +23,7 @@
         </label>
         <label class="modal-input relative flex">
             <span>Password</span>
-            <input asp-for="Password" class="form-control" type="text" placeholder="Enter password" />
+            <input asp-for="Password" class="form-control" type="password" placeholder="Enter password" />
             <span asp-validation-for="Password" class="text-danger"></span>
         </label>
         <label class="modal-input relative flex">
@@ -37,7 +37,6 @@
             <span>Team</span>
             <select asp-for="TeamId" class="form-control" asp-items="ViewBag.Teams">
                 <option value="">-- Select Team --</option>
-                <option value="0">Add New Team</option>
             </select>
             <span asp-validation-for="TeamId" class="text-danger"></span>
         </label>
@@ -72,16 +71,6 @@
             // Close the modal on clicking outside of it
             $('[data-admin-modal-container]').on('click', function () {
                 $(this).addClass('hidden');
-            });
-
-            // Handle change event on Team dropdown
-            $('[name="TeamId"]').change(function () {
-                if ($(this).val() === '0') { // Check if "Add New Team" is selected
-                    $.get('/AddTeam', function (data) {
-                        // Replace existing modal content with the new partial view content
-                        $('.modal-input-container').html(data);
-                    });
-                }
             });
         });
     </script>
