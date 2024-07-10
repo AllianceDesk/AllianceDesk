@@ -24,8 +24,8 @@
             <div class="view-user-nav">
             <div class="agent-nav pt-4">
                 <ul class="flex-Row gap-2">
-                    <li class="nav-item active" data-nav-item>Agents</li>
-                    <li class="nav-item" data-nav-item>Team</li>
+                    <a asp-action="ViewUser" class="nav-item active" data-nav-item>Agents</a>
+                    <a asp-action="ViewTeams" class="nav-item" data-nav-item>Team</a>
                 </ul>
             </div>
             <div class="flex-Row gap-2 justify-content-center align-center">
@@ -114,7 +114,7 @@
     </div>
 
     <div class="hidden modal-admin bg-modal" data-admin-modal-container>
-@*         <form class="hidden modal-container br-1 bg-white p-y-1 p-x-2" data-modal-edit-form>
+        <form class="hidden modal-container br-1 bg-white p-y-1 p-x-2" data-modal-edit-form>
             <div class="flex-Row justify-content-between">
                 <h2>Edit User</h2>
                 <i class="text-md fa-regular fa-circle-xmark hover-pointer" data-admin-edit-close-btn></i>
@@ -169,7 +169,7 @@
                 <button class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-edit-cancel-btn>Cancel</button>
                 <button class="mbtn-primary color-white bg-red align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-edit-save-btn type="submit">Save</button>
             </div>  
-        </form> *@
+        </form>
 
         <form asp-action="PostUserAdd" class="modal-container br-1 bg-white p-y-1 p-x-2" data-modal-add-form>
             <div class="flex-Row justify-content-between">
@@ -209,7 +209,7 @@
                 </label>
             </div>
             <div class="flex-Row gap-1">
-                <button class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-add-cancel-btn>Cancel</button>
+                <button type="button" class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-add-cancel-btn>Cancel</button>
                 <button type="submit" class=" mbtn-primary color-white bg-red align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-add-save-btn>Save</button>
             </div>
         </form>
@@ -252,6 +252,7 @@
                     }
                 });
             });
+        });
 
             // Close the modal on clicking close button
             $(document).on('click', '[data-admin-add-close-btn]', function () {
@@ -273,7 +274,7 @@
             $('[data-admin-modal-container]').on('click', function () {
                 $(this).addClass('hidden');
             });
-        });
+
     </script>
 
     <script>

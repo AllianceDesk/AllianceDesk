@@ -43,8 +43,34 @@
             </label>
         </div>
         <div class="flex-Row gap-1">
-            <button class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-add-cancel-btn>Cancel</button>
-            <button class="mbtn-primary color-white bg-red align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5">Save</button>
+            <button type="button" class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-add-cancel-btn>Cancel</button>
+            <button type="submit" class="mbtn-primary color-white bg-red align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5">Save</button>
         </div>
     </form>
 </div>
+
+@section scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Close the modal on clicking close button
+        $(document).on('click', '[data-admin-add-close-btn]', function () {
+            $('[data-admin-modal-container]').addClass('hidden');
+        });
+
+        // Close the modal on clicking cancel button
+        $(document).on('click', '[data-admin-add-cancel-btn]', function (e) {
+            e.preventDefault(); // Prevent form submission if button is inside a form
+            $('[data-admin-modal-container]').addClass('hidden');
+        });
+
+        // Prevent modal close on click inside the modal
+        $('[data-modal-add-form]').on('click', function (e) {
+            e.stopPropagation();
+        });
+
+        // Close the modal on clicking outside of it
+        $('[data-admin-modal-container]').on('click', function () {
+            $(this).addClass('hidden');
+        });
+    </script>
+}
