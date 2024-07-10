@@ -1,8 +1,8 @@
-﻿@model ASI.Basecode.Services.ServiceModels.UserViewModel
+@model ASI.Basecode.Services.ServiceModels.UserViewModel
 
 
 @{
-    ViewData["Title"] = "Admin Page";
+    ViewData["Title"] = "Agents";
     var roleMappings = new Dictionary<int, string>
     {
         { 1, "Admin" },
@@ -15,10 +15,13 @@
     <link rel="stylesheet" href="~/css/Admin.css" />
 }
 
-<div class="admin-body p-y-3 relative">
+@Html.Partial("Admin_Header")
+<div class="main">
+    @Html.Partial("Admin_Sidebar")
+    <div class="admin-body p-y-3 relative bg-grey">
     <div style="padding-right: 2rem; border-right: 1.5px solid #9E9E9E;">
         <h1>Agents and Team</h1>
-        <div class="flex-Row flex-between">
+            <div class="view-user-nav">
             <div class="agent-nav pt-4">
                 <ul class="flex-Row gap-2">
                     <li class="nav-item active" data-nav-item>Agents</li>
@@ -26,7 +29,7 @@
                 </ul>
             </div>
             <div class="flex-Row gap-2 justify-content-center align-center">
-                <div class="search-container | flex-Row align-center justify-content-center">
+                <div class="j-search-container | flex-Row align-center justify-content-center">
                     <i class="fa-solid fa-magnifying-glass text-1-5"></i>
                     <input class="bg-transparent" type="text" placeholder="Search" />
                 </div>
@@ -98,7 +101,7 @@
             </div>
             <div>
                 <h4>Recent Activity</h4>
-                <div class="agents-details | margin-1 bg-white flex-Row flex-between p-y-1 p-x-1 align-center">
+                <div class="agents-details | margin-1 bg-white flex-Row flex-between p-y-1 p-x-1 align-center" >
                     <div class="user-img-profile br-50 bg-grey"></div>
                     <div class="flex-col justify-content-center align-center">
                         <p class="fw-semi">Agent Name</p>
@@ -111,7 +114,6 @@
     </div>
 
     <div class="hidden modal-admin bg-modal" data-admin-modal-container>
-
 @*         <form class="hidden modal-container br-1 bg-white p-y-1 p-x-2" data-modal-edit-form>
             <div class="flex-Row justify-content-between">
                 <h2>Edit User</h2>
@@ -272,5 +274,28 @@
                 $(this).addClass('hidden');
             });
         });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var buttons = document.querySelectorAll('[data-admin-btn]');
+
+            buttons.forEach(function (button) {
+                button.addEventListener('click', function () {
+                    if (this.classList.contains('admin-sb-active-button')) {
+                        return;
+                    }
+
+                    buttons.forEach(function (btn) {
+                        btn.classList.remove('admin-sb-active-button');
+                        btn.classList.add('admin-sb-inactive-button');
+                    });
+
+                    this.classList.remove('admin-sb-inactive-button');
+                    this.classList.add('admin-sb-active-button');
+                });
+            });
+        });
+
     </script>
 }

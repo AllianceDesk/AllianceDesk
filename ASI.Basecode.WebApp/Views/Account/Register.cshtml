@@ -7,9 +7,9 @@
 @section styles {
     <link rel="stylesheet" href="~/css/login.css" />
 }
-
-<div class="login-container">
-   
+@Html.Partial("General_Header")
+<div>
+    <div class="login-container">
     <form method="post" action="/Account/Register" id="loginForm">
         <h2 class="text-center font-weight-bold">Alliance Help Desk</h2>
         <p>Alliance Help Desk: Your Dedicated Partner in Seamless Support Solutions</p>
