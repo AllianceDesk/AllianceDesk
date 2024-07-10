@@ -45,6 +45,7 @@ namespace ASI.Basecode.WebApp
             this._services.AddScoped<ITicketPriorityRepository, TicketPriorityRepository>();
             this._services.AddScoped<ITicketStatusRepository, TicketStatusRepository>();
             this._services.AddScoped<IUserRoleRepository, UserRoleRepository>();
+            this._services.AddScoped<ITeamRepository, TeamRepository>();
             this._services.AddSingleton<INotificationRepository, NotificationRepository>();
 
             // Manager Class
