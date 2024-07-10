@@ -1,9 +1,4 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-
+﻿
 @{
     ViewData["Title"] = "In Progress Tickets";
 }
@@ -11,6 +6,19 @@
 @section styles {
     <link rel="stylesheet" href="~/css/user_inProgress_tickets.css" />
 
+}
+
+@{
+    var dataFromDatabase = new List<dynamic>
+    {
+        new { Image = "/img/profile-logo.png", Name = "Golanginya", Date = "5 min ago", Question = "How to patch KDE on FreeBSD?", Details = "Lorem ipsum dolor sit met, consectetur..", Link = "#", AgentProfile = "/img/profile-logo.png", AgentName = "AizhanMaratovna", AgentDate = "5 min ago" },
+        new { Image = "/img/profile-logo.png", Name = "Golanginya", Date = "5 min ago", Question = "How to patch KDE on FreeBSD?", Details = "Lorem ipsum dolor sit met, consectetur..", Link = "#", AgentProfile = "/img/profile-logo.png", AgentName = "AizhanMaratovna", AgentDate = "5 min ago" },
+        new { Image = "/img/profile-logo.png", Name = "Golanginya", Date = "5 min ago", Question = "How to patch KDE on FreeBSD?", Details = "Lorem ipsum dolor sit met, consectetur..", Link = "#", AgentProfile = "/img/profile-logo.png", AgentName = "AizhanMaratovna", AgentDate = "5 min ago" },
+        new { Image = "/img/profile-logo.png", Name = "Golanginya", Date = "5 min ago", Question = "How to patch KDE on FreeBSD?", Details = "Lorem ipsum dolor sit met, consectetur..", Link = "#", AgentProfile = "/img/profile-logo.png", AgentName = "AizhanMaratovna", AgentDate = "5 min ago" },
+        new { Image = "/img/profile-logo.png", Name = "Golanginya", Date = "5 min ago", Question = "How to patch KDE on FreeBSD?", Details = "Lorem ipsum dolor sit met, consectetur..", Link = "#", AgentProfile = "/img/profile-logo.png", AgentName = "AizhanMaratovna", AgentDate = "5 min ago" },
+        new { Image = "/img/profile-logo.png", Name = "Golanginya", Date = "5 min ago", Question = "How to patch KDE on FreeBSD?", Details = "Lorem ipsum dolor sit met, consectetur..", Link = "#", AgentProfile = "/img/profile-logo.png", AgentName = "AizhanMaratovna", AgentDate = "5 min ago" },
+        new { Image = "/img/profile-logo.png", Name = "Golanginya", Date = "5 min ago", Question = "How to patch KDE on FreeBSD?", Details = "Lorem ipsum dolor sit met, consectetur..", Link = "#", AgentProfile = "/img/profile-logo.png", AgentName = "AizhanMaratovna", AgentDate = "5 min ago" },
+    };
 }
 
 <div id="container">
@@ -58,7 +66,30 @@
 
     <main>
         <div id="card_content">
-
+            @foreach (var item in dataFromDatabase)
+            {
+                <div class="ticket-container">
+                    <a href="@item.Link" class="ticket-link">
+                        <div class="top-container">
+                            <img class="image" src="@item.Image" alt="image">
+                            <div class="nameDateContainer">
+                                <h5 class="name">@item.Name</h5>
+                                <p class="date">@item.Date</p>
+                            </div>
+                        </div>
+                        <h2 class="question">@item.Question</h2>
+                        <p class="details">@item.Details</p>
+                        <div class="agent-container">
+                            <img class="agent-image" src="@item.AgentProfile" alt="image">
+                            <div class="agent-name-date-container">
+                                <h5 class="agent-name">@item.AgentName</h5>
+                                <p class="agent-date">@item.AgentDate</p>
+                            </div>
+                            <div class="assign-agent">Assigned agent</div>
+                        </div>
+                    </a>
+                </div>
+            }
         </div>
 
         <div class="modal fade" id="createTicket" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -193,94 +224,7 @@
     });
 
 
-    var dataFromDatabase = [
-        { image: '/img/profile-logo.png', name: 'Golanginya', date: '5 min ago', question: 'How to patch KDE on FreeBSD?', details: 'Lorem ipsum dolor sit met, consectetur..', link: '#', agentProfile: '/img/profile-logo.png', agentName: 'AizhanMaratovna', agentDate: '5 min ago' },
-        { image: '/img/profile-logo.png', name: 'Golanginya', date: '5 min ago', question: 'How to patch KDE on FreeBSD?', details: 'Lorem ipsum dolor sit met, consectetur..', link: '#', agentProfile: '/img/profile-logo.png', agentName: 'AizhanMaratovna', agentDate: '5 min ago' },
-        { image: '/img/profile-logo.png', name: 'Golanginya', date: '5 min ago', question: 'How to patch KDE on FreeBSD?', details: 'Lorem ipsum dolor sit met, consectetur..', link: '#', agentProfile: '/img/profile-logo.png', agentName: 'AizhanMaratovna', agentDate: '5 min ago' },
-        { image: '/img/profile-logo.png', name: 'Golanginya', date: '5 min ago', question: 'How to patch KDE on FreeBSD?', details: 'Lorem ipsum dolor sit met, consectetur..', link: '#', agentProfile: '/img/profile-logo.png', agentName: 'AizhanMaratovna', agentDate: '5 min ago' },
-        { image: '/img/profile-logo.png', name: 'Golanginya', date: '5 min ago', question: 'How to patch KDE on FreeBSD?', details: 'Lorem ipsum dolor sit met, consectetur..', link: '#', agentProfile: '/img/profile-logo.png', agentName: 'AizhanMaratovna', agentDate: '5 min ago' },
-        { image: '/img/profile-logo.png', name: 'Golanginya', date: '5 min ago', question: 'How to patch KDE on FreeBSD?', details: 'Lorem ipsum dolor sit met, consectetur..', link: '#', agentProfile: '/img/profile-logo.png', agentName: 'AizhanMaratovna', agentDate: '5 min ago' },
-        { image: '/img/profile-logo.png', name: 'Golanginya', date: '5 min ago', question: 'How to patch KDE on FreeBSD?', details: 'Lorem ipsum dolor sit met, consectetur..', link: '#', agentProfile: '/img/profile-logo.png', agentName: 'AizhanMaratovna', agentDate: '5 min ago' },
-    ];
-
-    var cardContent = document.getElementById('card_content');
-
-    dataFromDatabase.forEach(function (item) {
-
-
-        var container = document.createElement('div');
-        container.className = 'ticket-container';
-
-        var link = document.createElement('a');
-        link.href = item.link;
-        link.className = 'ticket-link';
-
-        var topContainer = document.createElement('div');
-        topContainer.className = 'top-container';
-        link.appendChild(topContainer);
-
-        var image = document.createElement('img');
-        image.className = 'image';
-        image.src = item.image;
-        image.alt = 'image';
-        topContainer.appendChild(image);
-
-        var nameDateContainer = document.createElement('div');
-        nameDateContainer.className = 'nameDateContainer';
-        topContainer.appendChild(nameDateContainer);
-
-        var name = document.createElement('h5');
-        name.className = 'name';
-        name.textContent = item.name;
-        nameDateContainer.appendChild(name);
-
-        var date = document.createElement('p');
-        date.className = 'date';
-        date.textContent = item.date;
-        nameDateContainer.appendChild(date);
-
-        var question = document.createElement('h2');
-        question.className = 'question';
-        question.textContent = item.question;
-        link.appendChild(question);
-
-        var details = document.createElement('p');
-        details.className = 'details';
-        details.textContent = item.details;
-        link.appendChild(details);
-
-        var agentContainer = document.createElement('div');
-        agentContainer.className = 'agent-container';
-        link.appendChild(agentContainer);
-
-        var agentImage = document.createElement('img');
-        agentImage.className = 'agent-image';
-        agentImage.src = item.agentProfile
-        agentImage.alt = 'image';
-        agentContainer.appendChild(agentImage);
-
-        var agentNameDateContainer = document.createElement('div');
-        agentNameDateContainer.className = 'agent-name-date-container';
-        agentContainer.appendChild(agentNameDateContainer);
-
-        var agentName = document.createElement('h5');
-        agentName.className = 'agent-name';
-        agentName.textContent = item.agentName;
-        agentNameDateContainer.appendChild(agentName);
-
-        var agentDate = document.createElement('p');
-        agentDate.className = 'agent-date';
-        agentDate.textContent = item.agentDate;
-        agentNameDateContainer.appendChild(agentDate);
-
-        var assignedAgent = document.createElement('div');
-        assignedAgent.className = 'assign-agent';
-        assignedAgent.textContent = 'Assigned agent';
-        agentContainer.appendChild(assignedAgent);
-
-        container.appendChild(link);        
-        cardContent.appendChild(container);
-    });
+    
 
 </script>
 
