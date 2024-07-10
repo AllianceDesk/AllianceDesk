@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Content Remove="Views\Shared\_Header - Copy.cshtml" />
+    <Content Remove="Views\User\InProgress.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -57,5 +58,17 @@
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\User\InProgress.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\User\InProgress.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\User\InProgress.cshtml" />
   </ItemGroup>
 </Project>

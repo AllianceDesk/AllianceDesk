@@ -1,0 +1,306 @@
+﻿
+@{
+    ViewData["Title"] = "User Page";
+}
+
+@section styles {
+    <link rel="stylesheet" href="~/css/user_resolved_tickets.css" />
+
+}
+
+@{
+    var dataFromDatabase = new List<dynamic>
+    {
+        new { Image = "/img/profile-logo.png", Name = "Golanginya", Date = "5 min ago", Question = "How to patch KDE on FreeBSD?", Details = "Lorem ipsum dolor sit met, consectetur..", Link = "#", AgentProfile = "/img/profile-logo.png", AgentName = "AizhanMaratovna", AgentDate = "5 min ago", AgentDetails = "Lorem ipsum dolor sit met, consectetur..", TargetModal = "#feedback" },
+        new { Image = "/img/profile-logo.png", Name = "Golanginya", Date = "5 min ago", Question = "How to patch KDE on FreeBSD?", Details = "Lorem ipsum dolor sit met, consectetur..", Link = "#", AgentProfile = "/img/profile-logo.png", AgentName = "AizhanMaratovna", AgentDate = "5 min ago", AgentDetails = "Lorem ipsum dolor sit met, consectetur..", TargetModal = "#feedback" },
+        new { Image = "/img/profile-logo.png", Name = "Golanginya", Date = "5 min ago", Question = "How to patch KDE on FreeBSD?", Details = "Lorem ipsum dolor sit met, consectetur..", Link = "#", AgentProfile = "/img/profile-logo.png", AgentName = "AizhanMaratovna", AgentDate = "5 min ago", AgentDetails = "Lorem ipsum dolor sit met, consectetur..", TargetModal = "#feedback" },
+        new { Image = "/img/profile-logo.png", Name = "Golanginya", Date = "5 min ago", Question = "How to patch KDE on FreeBSD?", Details = "Lorem ipsum dolor sit met, consectetur..", Link = "#", AgentProfile = "/img/profile-logo.png", AgentName = "AizhanMaratovna", AgentDate = "5 min ago", AgentDetails = "Lorem ipsum dolor sit met, consectetur..", TargetModal = "#feedback" },
+        new { Image = "/img/profile-logo.png", Name = "Golanginya", Date = "5 min ago", Question = "How to patch KDE on FreeBSD?", Details = "Lorem ipsum dolor sit met, consectetur..", Link = "#", AgentProfile = "/img/profile-logo.png", AgentName = "AizhanMaratovna", AgentDate = "5 min ago", AgentDetails = "Lorem ipsum dolor sit met, consectetur..", TargetModal = "#feedback" },
+        new { Image = "/img/profile-logo.png", Name = "Golanginya", Date = "5 min ago", Question = "How to patch KDE on FreeBSD?", Details = "Lorem ipsum dolor sit met, consectetur..", Link = "#", AgentProfile = "/img/profile-logo.png", AgentName = "AizhanMaratovna", AgentDate = "5 min ago", AgentDetails = "Lorem ipsum dolor sit met, consectetur..", TargetModal = "#feedback" },
+        new { Image = "/img/profile-logo.png", Name = "Golanginya", Date = "5 min ago", Question = "How to patch KDE on FreeBSD?", Details = "Lorem ipsum dolor sit met, consectetur..", Link = "#", AgentProfile = "/img/profile-logo.png", AgentName = "AizhanMaratovna", AgentDate = "5 min ago", AgentDetails = "Lorem ipsum dolor sit met, consectetur..", TargetModal = "#feedback" },
+    };
+}
+
+<div id="container">
+    <header>
+        <div class="logo">
+            <img src="~/img/alliancedesk-logo.png" style="width: 185px;" alt="logo" onclick="window.location.href = '@Url.Action("Index", "Home")';">
+        </div>
+
+        <div class="header-buttons">
+            <button type="button" class="btn button" data-bs-toggle="modal" data-bs-target="#createTicket"><i class='bx bx-plus-circle bx-xs bx-fw uh' style="align-self:center;"></i> Create Ticket </button>
+            <i class='bx bx-bell bx-sm icon' style="color: #45474B; cursor: pointer;"></i>
+            <i class='bx bx-cog bx-sm icon' style="color: #45474B; cursor: pointer;"></i>
+
+            <a class="profile" href="#">
+                <img src="~/img/profile-logo.png" class="dpicn hover-pointer" alt="dp">
+            </a>
+
+            <ul class="dropdown" id="dropdownMenu">
+                <li>
+
+                    <a class="dropdown-item" href="#"><i class="bx bx-user bx-xs bx-fw" style="color: #3D3B40;"></i> Profile</a>
+                </li>
+                <li>
+
+                    <a class="dropdown-item" asp-action="SignOutUser" asp-controller="Account"><i class="bx bx-log-out bx-xs bx-fw" style="color: #3D3B40;"></i> Logout</a>
+                </li>
+            </ul>
+
+        </div>
+    </header>
+
+    <nav>
+        <div id="buttonContainer">
+            <a asp-controller="User" asp-action="OpenTickets"><input class="btn btn-primary inactiveButton" type="button" value="Open"></a>
+            <a asp-controller="User" asp-action="InProgress"><input class="btn btn-primary inactiveButton" type="button" value="In Progress"></a>
+            <a asp-controller="User" asp-action="Resolved"><input class="btn btn-primary activeButton" type="button" value="Resolved"></a>
+            <a asp-controller="User" asp-action="CloseTickets"><input class="btn btn-primary inactiveButton" type="button" value="Close"></a>
+        </div>
+
+        <select class="form-select nav-select" id="floatingSelect" aria-label="Floating label select example">
+            <option selected>Date</option>
+            <option value="1">Category</option>
+        </select>
+    </nav>
+
+    <main>
+        <div id="card_content">
+            @foreach (var item in dataFromDatabase)
+            {
+                <div class="ticket-container">
+                    <a href="@item.Link" class="ticket-link">
+                        <div class="top-container">
+                            <img class="image" src="@item.Image" alt="image">
+                            <div class="nameDateContainer">
+                                <h5 class="name">@item.Name</h5>
+                                <p class="date">@item.Date</p>
+                            </div>
+                        </div>
+                        <h2 class="question">@item.Question</h2>
+                        <p class="details">@item.Details</p>
+                        <div class="agent-container">
+                            <img class="agent-image" src="@item.AgentProfile" alt="image">
+                            <div class="agent-name-date-container">
+                                <h5 class="agent-name">@item.AgentName</h5>
+                                <p class="agent-date">@item.AgentDate</p>
+                            </div>
+                            <div class="assign-agent">Assigned agent</div>
+                        </div>
+                        <p class="agent-details">@item.AgentDetails</p>
+                        <button class="btn feedback" type="button" data-bs-toggle="modal" data-bs-target="@item.TargetModal">
+                            <i class="bx bx-user-voice bx-xs bx-fw feedbackIcon"></i>
+                            Feedback
+                        </button>
+                    </a>
+                    <div class="btn-group option">
+                        <button class="btn icon-button" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bx bx-dots-vertical-rounded bx-sm icon-ticket" style="color: #808080;"></i>
+                        </button>
+                        <ul class="dropdown-menu menu">
+                            <li>
+                                <a class="dropdown-item item" href="#">
+                                    <i class="bx bx-log-in-circle bx-xs bx-fw" style="color: #808080;"></i>
+                                    Move to close
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item item" href="#">
+                                    <i class="bx bx-trash bx-xs bx-fw" style="color: #808080;"></i>
+                                    Delete
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="modal fade" id="createTicket" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content p-3">
+                    <div id="main_card">
+
+                        <div class="top_modal d-flex justify-content-between align-items-center mb-3">
+                            <h3>New Ticket</h3>
+                            <button type="button" class="btn" data-bs-dismiss="modal"><i class='bx bx-x bx-sm icon' style="color: #45474B; cursor: pointer;"></i></button>
+                        </div>
+
+                        <input type="text" class="form-control mb-3" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2">
+
+                        <div class="input-group mb-3">
+                            <select class="form-select" id="inputGroupSelect04" aria-label="Example select with button addon">
+                                <option disabled selected>Choose Categories</option>
+                                <option value="1">One</option>
+                                <option value="2">Two</option>
+                                <option value="3">Three</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <select class="form-select" id="inputGroupSelect04" aria-label="Example select with button addon">
+                                <option disabled selected>Priority</option>
+                                <option value="1">One</option>
+                                <option value="2">Two</option>
+                                <option value="3">Three</option>
+                            </select>
+                        </div>
+
+                        <textarea class="form-control mb-3" id="largeTextField" rows="10" cols="50" placeholder="Description"></textarea>
+
+                        <div class="button_card mb-3 d-flex justify-content-between">
+                            <button type="button" class="btn attachment custom-button" style="background-color: #7E7E7E; color: white;"><i class='bx bx-image-add bx-xs bx-fw uh' style="align-self:center;"></i> Add Attachment </button>
+                            <button type="button" class="btn attachment custom-button" style="background-color: #E21818; color: white;"><i class='bx bxl-telegram bx-xs bx-fw uh' style="align-self:center;"></i> Submit </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="feedback" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content p-3">
+                    <div id="main_card">
+
+                        <div class="top_modal d-flex justify-content-between align-items-center mb-3">
+                            <h3>Feedback</h3>
+                            <button type="button" class="btn" data-bs-dismiss="modal"><i class='bx bx-x bx-sm icon' style="color: #45474B; cursor: pointer;"></i></button>
+                        </div>
+                       
+                        <textarea class="form-control mb-3" id="largeTextField" rows="10" cols="50" placeholder="Description"></textarea>
+                        <h6 class="mb-3">How satisfied are you with our help? [5 as the highest]</h6>
+
+
+                        <div class="d-flex justify-content-between">                            
+
+                            <div class="rating mb-3 d-flex">
+                                <div class="d-flex flex-column mx-2">
+                                    <input type="radio" id="star5" name="rating" value="5" />
+                                    <label for="star5" title="5 stars">5</label>
+                                </div>
+
+                                <div class="d-flex flex-column mx-2">
+                                    <input type="radio" id="star4" name="rating" value="4" />
+                                    <label for="star4" title="4 stars">4</label>
+                                </div>
+
+                                <div class="d-flex flex-column mx-2">
+                                    <input type="radio" id="star3" name="rating" value="3" />
+                                    <label for="star3" title="3 stars">3</label>
+                                </div>
+
+                                <div class="d-flex flex-column mx-2">
+                                    <input type="radio" id="star2" name="rating" value="2" />
+                                    <label for="star2" title="2 stars">2</label>
+                                </div>
+
+                                <div class="d-flex flex-column mx-2">
+                                    <input type="radio" id="star1" name="rating" value="1" />
+                                    <label for="star1" title="1 star"> 1</label>
+                                </div>
+                            </div>
+                           
+                        </div>
+
+                        <div class="button_card mb-3 d-flex justify-content-between">                          
+                            <button type="button" class="btn attachment custom-button" style="background-color: #E21818; color: white;"><i class='bx bxl-telegram bx-xs bx-fw uh' style="align-self:center;"></i> Submit </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <div id="sidebar">
+
+        <div id="search-container">
+            <i class='bx bx-search'></i>
+            <input type="text" id="search-input" placeholder="Search Tickets">
+        </div>
+
+        <div id="button-container">
+            <i class='bx bx-list-ul'></i>
+            <span class="label-1">Tickets</span>
+        </div>
+
+        <div id="instruction-container">
+
+            <div class="instruction-label">
+                <i class='bx bx-star'></i>
+                <span class="label-2">Instructions</span>
+            </div>
+
+            <hr />
+
+            <div class="instruction-detail">
+                <ul>
+                    <li>&#8226; Click the 'Create Ticket'</li>
+                    <li>&#8226; Enter the necessary details</li>
+                    <li>&#8226; Submit if done</li>
+                </ul>
+            </div>
+
+            <div class="instruction-label">
+                <i class='bx bx-link'></i>
+                <span class="label-2">Contacts</span>
+            </div>
+
+            <hr />
+
+            <div class="instruction-detail">
+                <ul>
+                    <li>&#8226; abellalance2@gmail.com</li>
+                    <li>&#8226; jethrocenas@gmail.com</li>
+                    <li>&#8226; rehamdee.camama@g.msuiit.edu.ph</li>
+                </ul>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var dpIcon = document.querySelector('.dpicn');
+        var dropdownMenu = document.getElementById('dropdownMenu');
+
+        dpIcon.addEventListener('click', function (event) {
+            event.stopPropagation();
+
+            if (dropdownMenu.style.display === 'block') {
+                dropdownMenu.style.display = 'none';
+            } else {
+                dropdownMenu.style.display = 'block';
+            }
+        });
+    });
+
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var buttonContainer = document.getElementById('buttonContainer');
+        var buttons = buttonContainer.querySelectorAll('input[type="button"]');
+
+        buttons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                // Remove activeButton class from all buttons
+                buttons.forEach(function (btn) {
+                    btn.classList.remove('activeButton');
+                    btn.classList.add('inactiveButton');
+                });
+
+                // Add activeButton class to the clicked button
+                this.classList.remove('inactiveButton');
+                this.classList.add('activeButton');
+            });
+        });
+    });
+
+
+   
+
+</script>

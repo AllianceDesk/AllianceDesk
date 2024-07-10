@@ -45,7 +45,7 @@ body {
 
 
 /* Initially hide the dropdown */
-.dropdown {
+/*.dropdown {
     display: none;
     position: absolute;
     top: 100%;
@@ -54,20 +54,20 @@ body {
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
     z-index: 1;
 }
-
+*/
     /* Style the dropdown list */
-    .dropdown ul {
+    /*.dropdown ul {
         list-style: none;
         padding: 0;
         margin: 0;
-    }
+    }*/
 
-        .dropdown ul li {
+        /*.dropdown ul li {
             padding: 10px;
         }
-
+*/
             /* Style the links in the dropdown */
-            .dropdown ul li a {
+           /* .dropdown ul li a {
                 text-decoration: none;
                 color: #333;
             }
@@ -83,4 +83,4 @@ body {
 
 .w-1000px {
     width: 1000px;
-}
+}*/
