@@ -24,32 +24,19 @@
     @RenderSection("Styles", required: false)
 </head>
 <body>
+
+    <div>
+          @RenderBody()
+    </div>
     @if (ViewBag.IsLoginOrRegister == true)
     {
-       @Html.Partial("General_Header")
-
-        <footer class="border-top footer text-muted">
+        <footer class="border-top text-muted p-y-1 flex-Row justify-content-center align-items-center">
             <div class="container">
                 @Copyright
             </div>
         </footer>
     }
-    else
-    {
-        @* @Html.Partial("General_Header") *@
-        @Html.Partial("User_Header")
-        @* @Html.Partial("Agent_Admin_Header") *@
-        @*  @Html.Partial("User_Sidebar") *@
-        @* @Html.Partial("Agent_Sidebar") *@
-        @Html.Partial("Admin_Sidebar")
 
-    }
-    <div>
-        <main role="main">
-            @RenderBody()
-        </main>
-    </div>
-   
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

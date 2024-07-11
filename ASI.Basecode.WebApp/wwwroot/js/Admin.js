@@ -1,7 +1,7 @@
 ﻿const adminBody = document.querySelector(".admin-body");
 const agentsContainer = document.querySelector(".agents-container");
 const editDetails = document.querySelector('[data-admin-edit-details]');
-const agentsList = document.querySelectorAll(".agents")
+const agentsList = document.querySelectorAll("[data-viewuser-agent]")
 const modalContainer = document.querySelector("[data-admin-modal-container]")
 const deleteModalContainer = document.querySelector("[data-admin-delete-modal-container]")
 
@@ -36,6 +36,7 @@ const adminDelForm = document.querySelector("[data-admin-delete-modal]")
 adminDelBtn.addEventListener("click", () => {
     console.log("clicking open btn", modalContainer, adminEditBtn)
     deleteModalContainer.classList.remove("hidden")
+    adminDelForm.classList.remove("hidden")
 })
 
 
