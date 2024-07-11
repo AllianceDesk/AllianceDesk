@@ -54,6 +54,13 @@ namespace ASI.Basecode.WebApp.Controllers
             ViewBag.IsLoginOrRegister = false;
             return View();
         }
+
         
+        public IActionResult ViewTickets()
+        {
+            ViewBag.IsLoginOrRegister = false;
+            return View();
+        }
+
     }
 }

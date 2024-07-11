@@ -311,7 +311,20 @@ main {
     border: none !important;
 }
 
+.closebtn1 {
+    padding: 0;
+}
 
+.status1 {
+    font-size: 12px;
+    background-color: green;
+    padding-left: 1em;
+    color: white;
+}
+
+.ticket-modal1 {
+    padding: 1em;
+}
 
 
 

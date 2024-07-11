@@ -354,7 +354,20 @@ main {
     border: none !important;
 }
 
+.closebtn{
+    padding: 0;
+}
 
+.status {
+    font-size: 12px;
+    background-color: green;
+    padding-left: 1em;
+    color: white;
+}
+
+.ticket-modal {
+    padding: 1em;
+}
 
 /*Sidebar Designs*/
 #sidebar {

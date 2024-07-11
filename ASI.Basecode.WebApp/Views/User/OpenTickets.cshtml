@@ -22,7 +22,7 @@
 
     var options = new List<dynamic>
     {
-        new { Text = "Edit", IconClass = "bx bx-edit bx-xs bx-fw", TargetModal = "#editTicket", Action = (Action)null },
+        new { Text = "Edit", IconClass = "bx bx-edit bx-xs bx-fw", TargetModal = "#editTicket", Action = (string)null },
         new { Text = "Delete", IconClass = "bx bx-trash bx-xs bx-fw", TargetModal = (string)null, Action = "deleteTicket" }
     };
 }
@@ -75,7 +75,7 @@
             @foreach (var item in dataFromDatabase)
             {
                 <div class="ticket-container">
-                    <a href="@item.Link" class="ticket-link">
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#viewTicket" class="ticket-link">
                         <div class="top-container">
                             <img class="image" src="@item.Image" alt="image">
                             <div class="nameDateContainer">
@@ -95,7 +95,15 @@
                             {
                                 <li>
                                     <a class="dropdown-item item" href="#"
-                                    @(option.TargetModal != null ? $"data-bs-toggle=\"modal\" data-bs-target=\"{option.TargetModal}\"" : "")>
+                                    @if (option.TargetModal != null)
+                                    {
+                                        @:data-bs-toggle="modal"
+                                        @:data-bs-target="@option.TargetModal"
+                                    }
+                                    @if (option.Action != null)
+                                    {
+                                        @:onclick="@($"{option.Action}()")"
+                                    }>
                                         <i class="@option.IconClass" style="color: #808080;"></i>
                                         @option.Text
                                     </a>
@@ -189,6 +197,30 @@
             </div>
         </div>
 
+        <div class="modal fade" id="viewTicket" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="ticket-modal1">
+                        <div class="top_modal d-flex justify-content-between align-items-center mb-3">
+                            <h3>View Ticket</h3>
+                            <button type="button" class="btn closebtn1" data-bs-dismiss="modal"><i class='bx bx-x bx-sm icon' style="color: #45474B; cursor: pointer;"></i></button>
+                        </div>
+
+                        <div class="top-container">
+                            <img class="image" src="/img/profile-logo.png" alt="image">
+                            <div class="nameDateContainer">
+                                <h5 class="name">Golanginya</h5>
+                                <p class="date">5 min ago</p>
+                            </div>
+                        </div>
+                        <h2 class="question">How to patch KDE on FreeBSD?</h2>
+                        <p class="details">Lorem ipsum dolor sit met, consectetur..</p>                        
+                    </div>
+
+                    <p class="status1">Open status</p>
+                </div>
+            </div>
+        </div>
           
     </main>
 
