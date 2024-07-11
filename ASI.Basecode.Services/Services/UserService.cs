@@ -1,10 +1,12 @@
 ﻿using ASI.Basecode.Data.Interfaces;
 using ASI.Basecode.Data.Models;
+using ASI.Basecode.Data.Repositories;
 using ASI.Basecode.Services.Interfaces;
 using ASI.Basecode.Services.Manager;
 using ASI.Basecode.Services.ServiceModels;
 using AutoMapper;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
@@ -16,13 +18,15 @@ namespace ASI.Basecode.Services.Services
     {
         private readonly IUserRepository _repository;
         private readonly IUserRoleRepository _userRoleRepository;
+        private readonly ITeamRepository _teamRepository;
         private readonly IMapper _mapper;
 
-        public UserService(IUserRepository repository, IMapper mapper, IUserRoleRepository userRoleRepository)
+        public UserService(IUserRepository repository, IMapper mapper, IUserRoleRepository userRoleRepository, ITeamRepository teamRepository)
         {
             _mapper = mapper;
             _repository = repository;
             _userRoleRepository = userRoleRepository;
+            _teamRepository = teamRepository;
         }
 
         public LoginResult AuthenticateUser(string userName, string password, ref User user)
@@ -56,6 +60,30 @@ namespace ASI.Basecode.Services.Services
             {
                 throw new InvalidDataException(Resources.Messages.Errors.UserExists);
             }
+        }
+
+        public void AddTeam(UserViewModel model)
+        {
+            var team = new Team();
+            if (!_teamRepository.TeamExists(model.TeamName)){
+                team.TeamId = Guid.NewGuid();
+                team.TeamName = model.TeamName;
+                _teamRepository.AddTeam(team);
+            }
+        }
+        public IEnumerable<Team> GetTeams()
+        {
+            return _teamRepository.RetrieveAll();
+        }
+
+        public IEnumerable<UserRole> GetUserRoles()
+        {
+            return _userRoleRepository.RetrieveAll();
+        }
+
+        public IEnumerable<User> GetUsers()
+        {
+            return _repository.GetUsers().Where(u => u.RoleId == 2);
         }
     }
 }
