@@ -1,6 +1,8 @@
 ﻿using ASI.Basecode.Data;
 using ASI.Basecode.Resources.Constants;
+using ASI.Basecode.Services.Interfaces;
 using ASI.Basecode.Services.Manager;
+using ASI.Basecode.Services.Services;
 using ASI.Basecode.WebApp.Authentication;
 using ASI.Basecode.WebApp.Extensions.Configuration;
 using ASI.Basecode.WebApp.Models;
@@ -101,6 +103,10 @@ namespace ASI.Basecode.WebApp
             {
                 options.Cookie.Name = Const.Issuer;
             });
+
+            // Add HttpContextAccessor and SessionHelper services
+            services.AddHttpContextAccessor();
+            services.AddScoped<ISessionHelper, SessionHelper>();
 
             // DI Services AutoMapper(Add Profile)
             this.ConfigureAutoMapper();

@@ -58,7 +58,7 @@
             <ul class="agents-container bg-white">
                 @foreach (var item in Model.Users)
                 {
-                    <div class="agents | flex-Row flex-between p-y-1 p-x-1 align-center" data-agents-1>
+                        <div class="agents | flex-Row flex-between p-y-1 p-x-1 align-center" data-viewuser-agent data-agents-1>
                         <div class="user-img-profile br-50 bg-red"></div>
                         <div class="flex-col justify-content-center align-center">
                             <p class="fw-semi text-1-5">@Html.DisplayFor(modelItem => item.Name)</p>
@@ -112,107 +112,68 @@
             </div>
         </div>
     </div>
-
+     
     <div class="hidden modal-admin bg-modal" data-admin-modal-container>
         <form class="hidden modal-container br-1 bg-white p-y-1 p-x-2" data-modal-edit-form>
-            <div class="flex-Row justify-content-between">
-                <h2>Edit User</h2>
-                <i class="text-md fa-regular fa-circle-xmark hover-pointer" data-admin-edit-close-btn></i>
-            </div>
-            <div class="agents-details | margin-1 bg-white flex-Row gap-2 flex-between p-y-1 p-x-1 align-center">
-                <div class="flex-Row gap-1">
-                    <div class="user-img-profile br-50 bg-grey"></div>
-                    <div class="flex-col justify-content-center align-center">
-                        <p class="fw-semi">Agent Name</p>
-                        <p class="text-sm">agentemail@gmail.com</p>
+                <div class="flex-Row justify-content-between">
+                    <h2>Edit User</h2>
+                    <i class="text-md fa-regular fa-circle-xmark hover-pointer" data-admin-edit-close-btn></i>
+                </div>
+                <div class="agents-details | margin-1 bg-white flex-Row gap-2 flex-between p-y-1 p-x-1 align-center">
+                    <div class="flex-Row gap-1">
+                        <div class="user-img-profile br-50 bg-grey"></div>
+                        <div class="flex-col justify-content-center align-center">
+                            <p class="fw-semi">Agent Name</p>
+                            <p class="text-sm">agentemail@gmail.com</p>
+                        </div>
+                    </div>
+                    <div class="delete-btn fw-semi cursor-pointer" data-admin-delete-btn>
+                        DELETE ACCOUNT
                     </div>
                 </div>
-                <div class="delete-btn fw-semi cursor-pointer" data-admin-delete-btn>
-                    DELETE ACCOUNT 
+                <div class="modal-input-container">
+                    <label class="modal-input relative flex">
+                        <span>First Name</span>
+                        <input type="text" placeholder="John" />
+                    </label>
+                    <label class="modal-input relative flex">
+                        <span>Last Name</span>
+                        <input type="text" placeholder="Doe" />
+                    </label>
+                    <label class="modal-input relative flex">
+                        <span>Email</span>
+                        <input type="text" placeholder="johndoe@gmail.com" />
+                    </label>
+                    <label class="modal-input relative flex">
+                        <span>Contact Number</span>
+                        <input type="text" placeholder="+123456789" />
+                    </label>
+                    <label class="modal-input relative flex">
+                        <select>
+                            <option value="none" selected disabled>Role</option>
+                            <option value="agent">Agent</option>
+                            <option value="admin">Admin</option>
+                            <option value="manager">Manager</option>
+                        </select>
+                    </label>
+                    <label class="modal-input relative flex">
+                        <select>
+                            <option value="none" selected disabled>Team</option>
+                            <option value="team1">Team 1</option>
+                            <option value="team2">Team 2</option>
+                            <option value="team3">Team 3</option>
+                        </select>
+                    </label>
                 </div>
-            </div>
-            <div class="modal-input-container">
-                <label class="modal-input relative flex">
-                    <span>First Name</span>
-                    <input type="text" placeholder="John" />
-                </label>
-                <label class="modal-input relative flex">
-                    <span>Last Name</span>
-                    <input type="text" placeholder="Doe" />
-                </label>
-                <label class="modal-input relative flex">
-                    <span>Email</span>
-                    <input type="text" placeholder="johndoe@gmail.com" />
-                </label>
-                <label class="modal-input relative flex">
-                    <span>Contact Number</span>
-                    <input type="text" placeholder="+123456789" />
-                </label>
-                <label class="modal-input relative flex">
-                    <select>
-                        <option value="none" selected disabled>Role</option>
-                        <option value="agent">Agent</option>
-                        <option value="admin">Admin</option>
-                        <option value="manager">Manager</option>
-                    </select>
-                </label>
-                <label class="modal-input relative flex">
-                    <select>
-                        <option value="none" selected disabled>Team</option>
-                        <option value="team1">Team 1</option>
-                        <option value="team2">Team 2</option>
-                        <option value="team3">Team 3</option>
-                    </select>
-                </label>
-            </div>
-            <div class="flex-Row gap-1">
-                <button class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-edit-cancel-btn>Cancel</button>
-                <button class="mbtn-primary color-white bg-red align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-edit-save-btn type="submit">Save</button>
-            </div>  
-        </form>
+                <div class="flex-Row gap-1">
+                    <button class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-edit-cancel-btn>Cancel</button>
+                    <button class="mbtn-primary color-white bg-red align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-edit-save-btn type="submit">Save</button>
+                </div>
+         </form>
 
-        <form asp-action="PostUserAdd" class="modal-container br-1 bg-white p-y-1 p-x-2" data-modal-add-form>
-            <div class="flex-Row justify-content-between">
-                <h2>Add User</h2>
-                <i class="text-md fa-regular fa-circle-xmark hover-pointer" data-admin-add-close-btn></i>
+            <div class="hidden modal-container br-1 bg-white p-y-1 p-x-2" data-modal-add-form>
+                <!-- Add User Form Content Will Be Loaded Here -->
             </div>
-            <div class="modal-input-container">
-                <label class="modal-input relative flex">
-                    <span>Name</span>
-                    <input asp-for="Name" class="form-control" type="text" placeholder="John Doe" />
-                    <span asp-validation-for="Name" class="text-danger"></span>
-                </label>
-                <label class="modal-input relative flex">
-                    <span>Username</span>
-                    <input asp-for="UserName" class="form-control" type="text" placeholder="johndoe" />
-                    <span asp-validation-for="UserName" class="text-danger"></span>
-                </label>
-                <label class="modal-input relative flex">
-                    <span>Email</span>
-                    <input asp-for="Email" class="form-control" type="text" placeholder="johndoe@email.com" />
-                    <span asp-validation-for="Email" class="text-danger"></span>
-                </label>
-                <label class="modal-input relative flex">
-                    <span>Password</span>
-                    <input asp-for="Password" class="form-control" type="password" placeholder="Enter password" />
-                    <span asp-validation-for="Password" class="text-danger"></span>
-                </label>
-                <label class="modal-input relative flex">
-                    <span>Role</span>
-                    <select asp-for="RoleId" class="form-control" asp-items="ViewBag.UserRoles"></select>
-                    <span asp-validation-for="RoleId" class="text-danger"></span>
-                </label>
-                <label class="modal-input relative flex">
-                    <span>Team</span>
-                    <select asp-for="TeamId" class="form-control" asp-items="ViewBag.Teams"></select>
-                    <span asp-validation-for="TeamId" class="text-danger"></span>
-                </label>
-            </div>
-            <div class="flex-Row gap-1">
-                <button type="button" class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-add-cancel-btn>Cancel</button>
-                <button type="submit" class=" mbtn-primary color-white bg-red align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-add-save-btn>Save</button>
-            </div>
-        </form>
 
     </div>
 
@@ -233,70 +194,54 @@
 </div>
 
 @section scripts {
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            // Open modal on button click
-            $('[data-admin-add-btn]').on('click', function() {
-                $.ajax({
-                    url: '/AddUser',
-                    type: 'GET',
-                    success: function(data) {
-                        // Populate the modal with the data returned from AddUser action
-                        $('[data-modal-add-form]').html(data);
-                        // Open the modal
-                        $('[data-admin-modal-container]').removeClass('hidden');
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error fetching AddUser view:', status, error);
-                    }
-                });
-            });
-        });
 
-            // Close the modal on clicking close button
-            $(document).on('click', '[data-admin-add-close-btn]', function () {
-                $('[data-admin-modal-container]').addClass('hidden');
-            });
-
-            // Close the modal on clicking cancel button
-            $(document).on('click', '[data-admin-add-cancel-btn]', function (e) {
-                e.preventDefault(); // Prevent form submission if button is inside a form
-                $('[data-admin-modal-container]').addClass('hidden');
-            });
-
-            // Prevent modal close on click inside the modal
-            $('[data-modal-add-form]').on('click', function (e) {
-                e.stopPropagation();
-            });
-
-            // Close the modal on clicking outside of it
-            $('[data-admin-modal-container]').on('click', function () {
-                $(this).addClass('hidden');
-            });
-
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var buttons = document.querySelectorAll('[data-admin-btn]');
-
-            buttons.forEach(function (button) {
-                button.addEventListener('click', function () {
-                    if (this.classList.contains('admin-sb-active-button')) {
-                        return;
-                    }
-
-                    buttons.forEach(function (btn) {
-                        btn.classList.remove('admin-sb-active-button');
-                        btn.classList.add('admin-sb-inactive-button');
+        <script>
+            $(document).ready(function () {
+                // Open modal on button click
+                $('[data-admin-add-btn]').on('click', function () {
+                    $.ajax({
+                        url: '/AddUser',
+                        type: 'GET',
+                        success: function (data) {
+                            // Populate the modal with the data returned from AddUser action
+                            $('[data-modal-add-form]').html(data).closest('.modal-admin').removeClass('hidden');
+                            $('[data-modal-add-form]').removeClass('hidden');
+                       
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error fetching AddUser view:', status, error);
+                        }
                     });
+                });
 
-                    this.classList.remove('admin-sb-inactive-button');
-                    this.classList.add('admin-sb-active-button');
+                // Handle form submission
+                $(document).on('submit', '[data-modal-add-form] form', function (e) {
+                    e.preventDefault();
+                    var form = $(this);
+                    $.ajax({
+                        url: form.attr('action'),
+                        type: 'POST',
+                        data: form.serialize(),
+                        success: function (response) {
+                            // Handle successful form submission, such as closing the modal and updating the list
+                            alert('User added successfully');
+                            $('[data-modal-add-form]').closest('.modal-admin').addClass('hidden');
+                            $('[data-modal-add-form]').addClass('hidden');
+                            // You may also want to update the user list here
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error submitting form:', status, error);
+                        }
+                    });
+                });
+
+                // Close modal
+                $(document).on('click', '[data-admin-add-close-btn], [data-admin-add-cancel-btn]', function () {
+                    $('[data-modal-add-form]').closest('.modal-admin').addClass('hidden');
+                    $('[data-modal-add-form]').addClass('hidden');
                 });
             });
-        });
+        </script>
+ 
 
-    </script>
 }

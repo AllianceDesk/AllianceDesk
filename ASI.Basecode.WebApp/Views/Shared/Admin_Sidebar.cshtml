@@ -20,8 +20,16 @@
     {
         <a asp-controller="Admin" asp-action="ViewUser" data-admin-btn class=" admin-sb-inactive-button margin-0"><i class='bx bx-group bx-sm as' style="align-self:center;"></i> <p>Teams</p> </a>
     }
+    @if (ViewBag.AdminSidebar == "KnowledgeBase")
+    {
+        <a asp-controller="Article" asp-action="Index" data-admin-btn class=" admin-sb-active-button margin-0"><i class='bx bx-group bx-sm as' style="align-self:center;"></i> <p>Knowledge Base</p> </a>
+    }
+    else
+    {
+        <a asp-controller="Article" asp-action="Index" data-admin-btn class=" admin-sb-inactive-button margin-0"><i class='bx bx-group bx-sm as' style="align-self:center;"></i> <p>Knowledge Base</p> </a>
+    }
     
-    <a data-admin-btn class=" admin-sb-inactive-button margin-0"><i class='bx bx-detail bx-sm as' style="align-self:center;"></i> <p>Knowledge Base</p> </a>
+
     <a data-admin-btn class=" admin-sb-inactive-button margin-0"><i class='bx bx-objects-vertical-bottom bx-sm as' style="align-self:center;"></i> <p>Analytics</p> </a>
     
         

@@ -18,6 +18,7 @@ using System.Linq;
 using System.IO;
 using System.Threading.Tasks;
 using static ASI.Basecode.Resources.Constants.Enums;
+using System.Security.Claims;
 
 namespace ASI.Basecode.WebApp.Controllers
 {
@@ -85,7 +86,7 @@ namespace ASI.Basecode.WebApp.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl)
         {
-            this._session.SetString("HasSession", "Exist");
+            HttpContext.Session.SetString("HasSession", "Exist");
 
             //User user = null;
             /*            User user = new() { UserId = Guid.NewGuid(), Username = "0", Password = "Password" };
@@ -99,8 +100,10 @@ namespace ASI.Basecode.WebApp.Controllers
             if (loginResult == LoginResult.Success)
             {
                 // 認証OK
+
                 await this._signInManager.SignInAsync(user);
-                this._session.SetString("UserName", user.Username);
+                HttpContext.Session.SetString("UserName", user.Username);
+                HttpContext.Session.SetString("UserId", user.UserId.ToString());
                 return RedirectToAction("Index", "Home");
             }
             else

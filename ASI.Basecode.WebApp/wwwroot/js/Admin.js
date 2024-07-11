@@ -8,6 +8,7 @@ const deleteModalContainer = document.querySelector("[data-admin-delete-modal-co
 const navItems = document.querySelectorAll("[data-nav-item]")
 
 
+
 /* BTNS */
 
 const adminEditCloseBtn = document.querySelector("[data-admin-edit-close-btn]")
@@ -60,7 +61,7 @@ adminDelSaveBtn.addEventListener("click", () => {
 
 /* ADD */
 
-adminAddForm.addEventListener("submit", (e) => {
+/*adminAddForm.addEventListener("submit", (e) => {
     e.preventDefault();
 })
 
@@ -84,10 +85,12 @@ adminAddCloseBtn.addEventListener("click", () => {
 })
 
 adminAddSaveBtn.addEventListener("click", () => {
-    console.log("clicking save btn", modalContainer)
-    modalContainer.classList.add("hidden")
-    adminAddForm.classList.add("hidden")
-})
+    console.log("clicking save btn", modalContainer);
+    modalContainer.classList.add("hidden");
+    adminAddForm.classList.add("hidden");
+   
+});*/
+
 
 /* EDIT */
 adminEditForm.addEventListener("submit", (e) => {
@@ -121,6 +124,7 @@ adminEditSaveBtn.addEventListener("click", () => {
 
 agentsList.forEach(agent => {
     agent.addEventListener("click", () => {
+        console.log("agent clicked");
         if (agent.classList.contains("selected-agent")) {
             adminBody.classList.remove("edit-active");
             agent.classList.remove("selected-agent");
