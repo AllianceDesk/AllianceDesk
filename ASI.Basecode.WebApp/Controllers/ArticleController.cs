@@ -48,6 +48,7 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpGet ("/KnowledgeBase")]
         public IActionResult Index()
         {
+            ViewBag.AdminSidebar = "Index";
             var data = _articleService.RetrieveAll();
             return View(data);
         }
@@ -59,6 +60,7 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpGet ("/KnowledgeBase/Add-Article")]
         public IActionResult Create()
         {
+            ViewBag.AdminSidebar = "Index";
             var categories = _articleService.GetCategories()
                                    .Select(c => new SelectListItem
                                    {

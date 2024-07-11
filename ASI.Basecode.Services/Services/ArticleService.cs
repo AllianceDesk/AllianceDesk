@@ -17,12 +17,14 @@ namespace ASI.Basecode.Services.Services
         private readonly IMapper mapper;
         private readonly IArticleRepository _articleRepository;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly ISessionHelper _sessionHelper;
 
-        public ArticleService (IMapper mapper, IArticleRepository articleRepository, ICategoryRepository categoryRepository)
+        public ArticleService (IMapper mapper, IArticleRepository articleRepository, ICategoryRepository categoryRepository, ISessionHelper sessionHelper)
         {
             this.mapper = mapper;
             _articleRepository = articleRepository;
             _categoryRepository = categoryRepository;
+            _sessionHelper = sessionHelper;
         }
         public IEnumerable<ArticleViewModel> RetrieveAll()
         {
@@ -56,8 +58,8 @@ namespace ASI.Basecode.Services.Services
             newArticle.DateUpdated = DateTime.Now;
 
             // This is a temporary value for CreatedBy, replace when user authentication is implemented
-            newArticle.CreatedBy = Guid.Parse("c9876543-b21d-43e5-a345-556642441234");
-            newArticle.UpdatedBy = Guid.Parse("c9876543-b21d-43e5-a345-556642441234");
+            newArticle.CreatedBy = _sessionHelper.GetUserIdFromSession();
+            newArticle.UpdatedBy = _sessionHelper.GetUserIdFromSession();
 
             newArticle.CategoryId = Convert.ToByte(article.CategoryId);
 
