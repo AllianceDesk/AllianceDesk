@@ -36,6 +36,7 @@ namespace ASI.Basecode.WebApp
             this._services.TryAddSingleton<TokenValidationParametersFactory>();
             this._services.AddScoped<IUserService, UserService>();
             this._services.AddScoped<ITicketService, TicketService>();
+            this._services.AddScoped<IArticleService, ArticleService>();
             this._services.AddSingleton<INotificationService, NotificationService>();
             
             // Repositories
@@ -46,6 +47,7 @@ namespace ASI.Basecode.WebApp
             this._services.AddScoped<ITicketStatusRepository, TicketStatusRepository>();
             this._services.AddScoped<IUserRoleRepository, UserRoleRepository>();
             this._services.AddScoped<ITeamRepository, TeamRepository>();
+            this._services.AddScoped<IArticleRepository, ArticleRepository>();
             this._services.AddSingleton<INotificationRepository, NotificationRepository>();
 
             // Manager Class
