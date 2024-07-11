@@ -13,5 +13,6 @@ namespace ASI.Basecode.Services.Interfaces
         IEnumerable<ArticleViewModel> RetrieveAll();
         void Add(ArticleViewModel article);
         IEnumerable<Category> GetCategories();
+        IEnumerable<Article> GetArticles();
     }
 }

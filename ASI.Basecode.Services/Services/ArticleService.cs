@@ -29,14 +29,13 @@ namespace ASI.Basecode.Services.Services
         public IEnumerable<ArticleViewModel> RetrieveAll()
         {
 
-
-
             var data = _articleRepository.RetrieveAll().Select(s => new ArticleViewModel
             { 
                 ArticleId = s.ArticleId.ToString(),
                 Title = s.Title,
                 Body = s.Body,
                 CategoryNavigation = _categoryRepository.RetrieveAll().Where(c => c.CategoryId == s.CategoryId).FirstOrDefault().CategoryName,
+                DateUpdated = s.DateUpdated.ToString(),
                 
             });
 
@@ -57,7 +56,6 @@ namespace ASI.Basecode.Services.Services
             newArticle.DateCreated = DateTime.Now;
             newArticle.DateUpdated = DateTime.Now;
 
-            // This is a temporary value for CreatedBy, replace when user authentication is implemented
             newArticle.CreatedBy = _sessionHelper.GetUserIdFromSession();
             newArticle.UpdatedBy = _sessionHelper.GetUserIdFromSession();
 
@@ -70,6 +68,11 @@ namespace ASI.Basecode.Services.Services
         public IEnumerable<Category> GetCategories()
         {
             return _categoryRepository.RetrieveAll();
+        }
+
+        public IEnumerable<Article> GetArticles()
+        {
+            return _articleRepository.RetrieveAll();
         }
 
     }
