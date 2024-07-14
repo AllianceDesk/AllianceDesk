@@ -122,7 +122,7 @@ adminEditSaveBtn.addEventListener("click", () => {
     adminEditForm.classList.add("hidden")
 })
 
-agentsList.forEach(agent => {
+/*agentsList.forEach(agent => {
     agent.addEventListener("click", () => {
         console.log("agent clicked");
         if (agent.classList.contains("selected-agent")) {
@@ -136,7 +136,7 @@ agentsList.forEach(agent => {
         adminBody.classList.add("edit-active");
         editDetails.classList.remove("hidden");
     })
-})
+})*/
 
 
 navItems.forEach(navItem => {

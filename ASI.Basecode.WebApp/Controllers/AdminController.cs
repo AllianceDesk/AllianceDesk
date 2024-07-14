@@ -49,7 +49,8 @@ namespace ASI.Basecode.WebApp.Controllers
                                         {
                                             Name = u.Name,
                                             Email = u.Email,
-                                            RoleId = u.RoleId
+                                            RoleId = u.RoleId,
+                                            UserId = u.UserId.ToString(),
                                         })
                                         .ToList();
 
@@ -118,6 +119,30 @@ namespace ASI.Basecode.WebApp.Controllers
             ViewBag.AdminSidebar = "Tickets";
             return this.View();
         }
+
+        [HttpGet]
+        [Route("UserDetails")]
+        /// <summary>
+        /// Go to the User Details View
+        /// </summary>
+        /// <returns> User Details</returns>
+        /// 
+        public IActionResult UserDetails(string UserId)
+        {
+            var data = _userService.GetUsers().Where(x => x.UserId.ToString() == UserId).FirstOrDefault();
+            var team = _userService.GetTeams().Where(t => t.TeamId.Equals(data.TeamId)).FirstOrDefault();
+
+            var userModel = new UserViewModel
+            {
+                Name = data.Name,
+                Email = data.Email,
+                RoleId = data.RoleId,
+                TeamName = team.TeamName,
+            };
+
+            return PartialView("UserDetails", userModel);
+        }
+
         [HttpGet("/AddUser")]
         /// <summary>
         /// Go to the Add a User View

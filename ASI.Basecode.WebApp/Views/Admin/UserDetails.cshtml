@@ -1,0 +1,52 @@
+﻿@model ASI.Basecode.Services.ServiceModels.UserViewModel
+
+@{
+    var roleMappings = new Dictionary<int, string>
+    {
+        { 1, "Admin" },
+        { 2, "Agent" },
+        { 3, "User" }
+    };
+}
+
+@section styles {
+    <link rel="stylesheet" href="~/css/functionalities.css" />
+    <link rel="stylesheet" href="~/css/Admin.css" />
+}
+
+<div class="p-x-1" data-admin-edit-details>
+    <div class="flex-Row  align-center justify-content-between p-y-2 border-b-2">
+        <h2>Detail</h2>
+        <u class="fa-solid fa-pen-to-square text-1-5 cursor-pointer color-inactive" data-admin-edit-btn></u>
+    </div>
+    <div class="flex p-t-1">
+        <div class="agents-details | margin-1 bg-white flex-Row flex-between p-y-1 p-x-1 align-center">
+            <div class="user-img-profile br-50 bg-grey"></div>
+            <div class="flex-col justify-content-center align-center">
+                <p class="fw-semi">@Html.DisplayFor(model => model.Name)</p>
+                <p class="text-sm">@Html.DisplayFor(model => model.Email)</p>
+            </div>
+            <div class="role-container role-agent fw-semi text-0-5">@roleMappings[Model.RoleId]</div>
+        </div>
+        <div>
+            <h4>Team</h4>
+            <div class="agents-details | margin-1 bg-white flex-Row flex-between p-y-1 p-x-1 align-center">
+                <div class="user-img-profile br-50 bg-grey"></div>
+                <div class="flex-col justify-content-center align-center">
+                    <p class="fw-semi">@Html.DisplayFor(model => model.TeamName)</p>
+                </div>
+            </div>
+        </div>
+        <div>
+            <h4>Recent Activity</h4>
+            <div class="agents-details | margin-1 bg-white flex-Row flex-between p-y-1 p-x-1 align-center">
+                <div class="user-img-profile br-50 bg-grey"></div>
+                <div class="flex-col justify-content-center align-center">
+                    <p class="fw-semi">Agent Name</p>
+                    <p class="text-sm">agentemail@gmail.com</p>
+                </div>
+                <div class="role-container role-agent fw-semi text-0-5">Agent</div>
+            </div>
+        </div>
+    </div>
+</div>
