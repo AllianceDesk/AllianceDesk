@@ -188,6 +188,26 @@
                         }
                     });
                 });
+
+                $(document).on('submit', '[data-modal-edit-form] form', function (e) {
+                    e.preventDefault();
+                    var form = $(this);
+                    $.ajax({
+                        url: '/UserEdit',
+                        type: 'POST',
+                        data: form.serialize(),
+                        success: function (response) {
+                            // Handle successful form submission, such as closing the modal and updating the list
+                            alert('User updated successfully');
+                            $('[data-modal-edit-form]').closest('.modal-container').addClass('hidden');
+                            $('[data-modal-edit-form]').addClass('hidden');
+                            // You may also want to update the user list here
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error submitting form:', status, error);
+                        }
+                    });
+                });
             });
         </script>
     }

@@ -2,6 +2,7 @@
 
 <div class="modal-container br-1 bg-white p-y-1 p-x-2" data-modal-edit-form>
     <form asp-action="PostUserUpdate" class="modal-container br-1 bg-white p-y-1 p-x-2">
+        @Html.HiddenFor(model => model.UserId) <!-- Add this line to include the hidden field for UserId -->
         <div class="flex-Row justify-content-between">
             <h2>Edit User</h2>
             <i class="text-md fa-regular fa-circle-xmark hover-pointer" data-admin-edit-close-btn></i>
@@ -21,24 +22,33 @@
         <div class="modal-input-container">
             <label class="modal-input relative flex">
                 <span>Full Name</span>
-                <input type="text" placeholder="@Html.DisplayFor(model => model.Name)" />
+                <input asp-for="Name" type="text" placeholder="@Html.DisplayFor(model => model.Name)" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </label>
+            <label class="modal-input relative flex">
+                <span>UserName</span>
+                <input asp-for="UserName" type="text" placeholder="@Html.DisplayFor(model => model.UserName)" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
             </label>
             <label class="modal-input relative flex">
                 <span>Email</span>
-                <input asp-for="Email" type="text" placeholder="@Html.DisplayFor(model => model.Email) />
+                <input asp-for="Email" type="text" placeholder="@Html.DisplayFor(model => model.Email)" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </label>
+            <label class="modal-input relative flex">
+                <span>Password</span>
+                <input asp-for="Password" type="text" placeholder="@Html.DisplayFor(model => model.Password)" />
+                <span asp-validation-for="Password" class="text-danger"></span>
             </label>
             <label class="modal-input relative flex">
                 <select asp-for="RoleId" class="form-control" asp-items="ViewBag.UserRoles">
-                    <option value="">-- Select Role --</option>
                 </select>
+                <span asp-validation-for="RoleId" class="text-danger"></span>
             </label>
             <label class="modal-input relative flex">
-                <select>
-                    <option value="none" selected disabled>Team</option>
-                    <option value="team1">Team 1</option>
-                    <option value="team2">Team 2</option>
-                    <option value="team3">Team 3</option>
+                <select asp-for="TeamId" class="form-control" asp-items="ViewBag.Teams">
                 </select>
+                <span asp-validation-for="TeamId" class="text-danger"></span>
             </label>
         </div>
         <div class="flex-Row gap-1">
@@ -47,4 +57,3 @@
         </div>
     </form>
 </div>
-

@@ -196,19 +196,24 @@ namespace ASI.Basecode.WebApp.Controllers
         /// 
         public IActionResult UserEdit(string UserId)
         {
-            var data = _userService.GetUsers().Where(x => x.UserId.ToString() == UserId).FirstOrDefault();
-            var team = _userService.GetTeams().Where(t => t.TeamId.Equals(data.TeamId)).FirstOrDefault();
-            var userrole = _userService.GetUserRoles().Where(r => r.RoleId.Equals(data.RoleId)).FirstOrDefault();
+            // Fetch user data
+            var user = _userService.GetUsers().FirstOrDefault(x => x.UserId.ToString() == UserId);
+            if (user == null)
+            {
+                return NotFound();
+            }
 
             var userModel = new UserViewModel
             {
-                UserName = data.Username,
-                Name = data.Name,
-                Email = data.Email,
-                Password = PasswordManager.DecryptPassword(data.Password),
-                RoleId = data.RoleId,
-                TeamName = team.TeamName,
-                RoleName = userrole.RoleName,
+                UserId = user.UserId.ToString(),
+                UserName = user.Username,
+                Name = user.Name,
+                Email = user.Email,
+                Password = PasswordManager.DecryptPassword(user.Password),
+                RoleId = user.RoleId,
+                TeamId = user.TeamId.ToString(),
+                RoleName = _userService.GetUserRoles().FirstOrDefault(r => r.RoleId == user.RoleId)?.RoleName,
+                TeamName = _userService.GetTeams().FirstOrDefault(t => t.TeamId == user.TeamId)?.TeamName
             };
 
             var teams = _userService.GetTeams()
@@ -228,13 +233,24 @@ namespace ASI.Basecode.WebApp.Controllers
                                    .ToList();
 
             // Pass data to ViewBag
-            ViewBag.Teams = new SelectList(teams, "Value", "Text");
-            ViewBag.UserRoles = new SelectList(userRoles, "Value", "Text");
+            ViewBag.Teams = new SelectList(teams, "Value", "Text", userModel.TeamId);
+            ViewBag.UserRoles = new SelectList(userRoles, "Value", "Text", userModel.RoleId);
 
             return PartialView("UserEdit", userModel);
         }
 
+        [HttpPost]
+        [Route("UserEdit")]
+        /// <summary>
+        /// Post Request for Adding a User
+        /// </summary>
+        /// <returns> View User </returns>
+        public IActionResult PostUserEdit(UserViewModel user)
+        {
+            _userService.UpdateUser(user);
 
+            return RedirectToAction("ViewUser");
+        }
 
         public IActionResult ViewTeams()
         {
