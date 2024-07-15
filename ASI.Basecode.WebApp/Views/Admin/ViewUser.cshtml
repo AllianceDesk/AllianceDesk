@@ -1,6 +1,5 @@
 @model ASI.Basecode.Services.ServiceModels.UserViewModel
 
-
 @{
     ViewData["Title"] = "Agents";
     var roleMappings = new Dictionary<int, string>
@@ -19,284 +18,239 @@
 <div class="main">
     @Html.Partial("Admin_Sidebar")
     <div class="admin-body p-y-3 relative bg-grey">
-    <div style="padding-right: 2rem; border-right: 1.5px solid #9E9E9E;">
-        <h1>Agents and Team</h1>
+        <div style="padding-right: 2rem; border-right: 1.5px solid #9E9E9E;">
+            <h1>Agents and Team</h1>
             <div class="view-user-nav">
-            <div class="agent-nav pt-4">
-                <ul class="flex-Row gap-2">
-                    <a asp-action="ViewUser" class="nav-item active" data-nav-item>Agents</a>
-                    <a asp-action="ViewTeams" class="nav-item" data-nav-item>Team</a>
+                <div class="agent-nav pt-4">
+                    <ul class="flex-Row gap-2">
+                        <a asp-action="ViewUser" class="nav-item active" data-nav-item>Agents</a>
+                        <a asp-action="ViewTeams" class="nav-item" data-nav-item>Team</a>
+                    </ul>
+                </div>
+                <div class="flex-Row gap-2 justify-content-center align-center">
+                    <div class="j-search-container | flex-Row align-center justify-content-center">
+                        <i class="fa-solid fa-magnifying-glass text-1-5"></i>
+                        <input class="bg-transparent" type="text" placeholder="Search" />
+                    </div>
+                    <button class="mbtn-primary flex-Row gap-1 color-white bg-red align-center justify-content-center border-0 p-x-1 br-1-5" data-admin-add-btn>
+                        <i class="fa-solid fa-user-plus"></i>
+                        <p class="br-1-5 p-y-1">Add</p>
+                    </button>
+                </div>
+            </div>
+            <div class="flex-Row flex-between p-y-1 p-x-1 border-b-2 text-1-5 mb-3">
+                <div class="flex-Row align-center gap-1 fw-semi">
+                    <i class="fa-regular fa-user"></i>
+                    <p>Profile</p>
+                </div>
+                <div class="flex-Row align-center gap-1 fw-semi">
+                    <i class="fa-regular fa-address-card"></i>
+                    <p>Name</p>
+                </div>
+                <div class="flex-Row align-center gap-1 fw-semi">
+                    <i class="fa-solid fa-user-tie"></i>
+                    <p>Role</p>
+                </div>
+            </div>
+            @if (Model != null && Model.Users != null && Model.Users.Any())
+            {
+                <ul class="agents-container bg-white">
+                    @foreach (var item in Model.Users)
+                    {
+                        <li class="agents | flex-Row flex-between p-y-1 p-x-1 align-center" data-viewuser-agent data-agents-1 data-user-id="@item.UserId">
+                            <div class="user-img-profile br-50 bg-red"></div>
+                            <div class="flex-col justify-content-center align-center">
+                                <p class="fw-semi text-1-5">@Html.DisplayFor(modelItem => item.Name)</p>
+                                <p>@Html.DisplayFor(modelItem => item.Email)</p>
+                            </div>
+                            <div class="role-container role-agent fw-semi text-0-5">@roleMappings[item.RoleId]</div>
+                        </li>
+                    }
                 </ul>
+            }
+            else
+            {
+                <p>No agents available.</p>
+            }
+        </div>
+        <div class="p-x-1 hidden" data-admin-edit-details>
+            <!-- User Details Content Will Be Loaded Here -->
+        </div>
+        <div class="hidden modal-admin bg-modal" data-admin-modal-container>
+            <div class="hidden modal-container br-1 bg-white p-y-1 p-x-2" data-modal-edit-form>
+                <!-- Edit User Form Content Will Be Loaded Here -->
             </div>
-            <div class="flex-Row gap-2 justify-content-center align-center">
-                <div class="j-search-container | flex-Row align-center justify-content-center">
-                    <i class="fa-solid fa-magnifying-glass text-1-5"></i>
-                    <input class="bg-transparent" type="text" placeholder="Search" />
-                </div>
-                <button class="mbtn-primary flex-Row gap-1 color-white bg-red align-center justify-content-center border-0 p-x-1 br-1-5" data-admin-add-btn>
-                    <i class="fa-solid fa-user-plus"></i>
-                    <p class="br-1-5 p-y-1">Add</p>
-                </button>
+            <div class="hidden modal-container br-1 bg-white p-y-1 p-x-2" data-modal-add-form>
+                <!-- Add User Form Content Will Be Loaded Here -->
             </div>
         </div>
-        <div class="flex-Row flex-between p-y-1 p-x-1 border-b-2 text-1-5 mb-3">
-            <div class="flex-Row align-center gap-1 fw-semi">
-                <i class="fa-regular fa-user"></i>
-                <p>Profile</p>
-            </div>
-            <div class="flex-Row align-center gap-1 fw-semi">
-                <i class="fa-regular fa-address-card"></i>
-                <p>Name</p>
-            </div>
-            <div class="flex-Row align-center gap-1 fw-semi">
-                <i class="fa-solid fa-user-tie"></i>
-                <p>Role</p>
-            </div>
-        </div>
-        @if (Model != null && Model.Users != null && Model.Users.Any())
-        {
-            <ul class="agents-container bg-white">
-                @foreach (var item in Model.Users)
-                {
-                    <div class="agents | flex-Row flex-between p-y-1 p-x-1 align-center" data-agents-1>
-                        <div class="user-img-profile br-50 bg-red"></div>
-                        <div class="flex-col justify-content-center align-center">
-                            <p class="fw-semi text-1-5">@Html.DisplayFor(modelItem => item.Name)</p>
-                            <p>@Html.DisplayFor(modelItem => item.Email)</p>
-                        </div>
-                        <div class="role-container role-agent fw-semi text-0-5">@roleMappings[item.RoleId]</div>
-                    </div>
-                }
-            </ul>
-        }
-        else
-        {
-            <p>No agents available.</p>
-        }
-    </div>
-    <div class="p-x-1 hidden" data-admin-edit-details>
-        <div class="flex-Row  align-center justify-content-between p-y-2 border-b-2">
-           <h2>Detail</h2>
-            <u class="fa-solid fa-pen-to-square text-1-5 cursor-pointer color-inactive" data-admin-edit-btn></u>
-        </div>
-        <div class="flex p-t-1">
-            <div class="agents-details | margin-1 bg-white flex-Row flex-between p-y-1 p-x-1 align-center">
-                <div class="user-img-profile br-50 bg-grey"></div>
-                <div class="flex-col justify-content-center align-center">
-                    <p class="fw-semi">Agent Name</p>
-                    <p class="text-sm">agentemail@gmail.com</p>
-                </div>
-                <div class="role-container role-agent fw-semi text-0-5">Agent</div>
-            </div>
-            <div>
-                <h4>Team</h4>
-                <div class="agents-details | margin-1 bg-white flex-Row flex-between p-y-1 p-x-1 align-center">
-                    <div class="user-img-profile br-50 bg-grey"></div>
-                    <div class="flex-col justify-content-center align-center">
-                        <p class="fw-semi">Agent Name</p>
-                        <p class="text-sm">agentemail@gmail.com</p>
-                    </div>
-                    <div class="role-container role-agent fw-semi text-0-5">Agent</div>
-                </div>
-            </div>
-            <div>
-                <h4>Recent Activity</h4>
-                <div class="agents-details | margin-1 bg-white flex-Row flex-between p-y-1 p-x-1 align-center" >
-                    <div class="user-img-profile br-50 bg-grey"></div>
-                    <div class="flex-col justify-content-center align-center">
-                        <p class="fw-semi">Agent Name</p>
-                        <p class="text-sm">agentemail@gmail.com</p>
-                    </div>
-                    <div class="role-container role-agent fw-semi text-0-5">Agent</div>
-                </div>
-            </div>
+
+        <div class="hidden bg-modal delete-modal-container" data-admin-delete-modal-container>
+            <!-- Delete User Content Will Be Loaded Here -->
         </div>
     </div>
+    }
 
-    <div class="hidden modal-admin bg-modal" data-admin-modal-container>
-        <form class="hidden modal-container br-1 bg-white p-y-1 p-x-2" data-modal-edit-form>
-            <div class="flex-Row justify-content-between">
-                <h2>Edit User</h2>
-                <i class="text-md fa-regular fa-circle-xmark hover-pointer" data-admin-edit-close-btn></i>
-            </div>
-            <div class="agents-details | margin-1 bg-white flex-Row gap-2 flex-between p-y-1 p-x-1 align-center">
-                <div class="flex-Row gap-1">
-                    <div class="user-img-profile br-50 bg-grey"></div>
-                    <div class="flex-col justify-content-center align-center">
-                        <p class="fw-semi">Agent Name</p>
-                        <p class="text-sm">agentemail@gmail.com</p>
-                    </div>
-                </div>
-                <div class="delete-btn fw-semi cursor-pointer" data-admin-delete-btn>
-                    DELETE ACCOUNT 
-                </div>
-            </div>
-            <div class="modal-input-container">
-                <label class="modal-input relative flex">
-                    <span>First Name</span>
-                    <input type="text" placeholder="John" />
-                </label>
-                <label class="modal-input relative flex">
-                    <span>Last Name</span>
-                    <input type="text" placeholder="Doe" />
-                </label>
-                <label class="modal-input relative flex">
-                    <span>Email</span>
-                    <input type="text" placeholder="johndoe@gmail.com" />
-                </label>
-                <label class="modal-input relative flex">
-                    <span>Contact Number</span>
-                    <input type="text" placeholder="+123456789" />
-                </label>
-                <label class="modal-input relative flex">
-                    <select>
-                        <option value="none" selected disabled>Role</option>
-                        <option value="agent">Agent</option>
-                        <option value="admin">Admin</option>
-                        <option value="manager">Manager</option>
-                    </select>
-                </label>
-                <label class="modal-input relative flex">
-                    <select>
-                        <option value="none" selected disabled>Team</option>
-                        <option value="team1">Team 1</option>
-                        <option value="team2">Team 2</option>
-                        <option value="team3">Team 3</option>
-                    </select>
-                </label>
-            </div>
-            <div class="flex-Row gap-1">
-                <button class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-edit-cancel-btn>Cancel</button>
-                <button class="mbtn-primary color-white bg-red align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-edit-save-btn type="submit">Save</button>
-            </div>  
-        </form>
-
-        <form asp-action="PostUserAdd" class="modal-container br-1 bg-white p-y-1 p-x-2" data-modal-add-form>
-            <div class="flex-Row justify-content-between">
-                <h2>Add User</h2>
-                <i class="text-md fa-regular fa-circle-xmark hover-pointer" data-admin-add-close-btn></i>
-            </div>
-            <div class="modal-input-container">
-                <label class="modal-input relative flex">
-                    <span>Name</span>
-                    <input asp-for="Name" class="form-control" type="text" placeholder="John Doe" />
-                    <span asp-validation-for="Name" class="text-danger"></span>
-                </label>
-                <label class="modal-input relative flex">
-                    <span>Username</span>
-                    <input asp-for="UserName" class="form-control" type="text" placeholder="johndoe" />
-                    <span asp-validation-for="UserName" class="text-danger"></span>
-                </label>
-                <label class="modal-input relative flex">
-                    <span>Email</span>
-                    <input asp-for="Email" class="form-control" type="text" placeholder="johndoe@email.com" />
-                    <span asp-validation-for="Email" class="text-danger"></span>
-                </label>
-                <label class="modal-input relative flex">
-                    <span>Password</span>
-                    <input asp-for="Password" class="form-control" type="password" placeholder="Enter password" />
-                    <span asp-validation-for="Password" class="text-danger"></span>
-                </label>
-                <label class="modal-input relative flex">
-                    <span>Role</span>
-                    <select asp-for="RoleId" class="form-control" asp-items="ViewBag.UserRoles"></select>
-                    <span asp-validation-for="RoleId" class="text-danger"></span>
-                </label>
-                <label class="modal-input relative flex">
-                    <span>Team</span>
-                    <select asp-for="TeamId" class="form-control" asp-items="ViewBag.Teams"></select>
-                    <span asp-validation-for="TeamId" class="text-danger"></span>
-                </label>
-            </div>
-            <div class="flex-Row gap-1">
-                <button type="button" class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-add-cancel-btn>Cancel</button>
-                <button type="submit" class=" mbtn-primary color-white bg-red align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-add-save-btn>Save</button>
-            </div>
-        </form>
-
-    </div>
-
-    <div class="hidden bg-modal delete-modal-container" data-admin-delete-modal-container>
-        <div class="delete-modal flex flex-col gap-1 justify-content-center align-items-center" data-admin-delete-modal>
-            <i class="text-md fa-regular fa-circle-xmark hover-pointer align-self-end" data-admin-delete-close-btn></i>
-            <div class="flex-between flex-col align-items-center justify-content-center">
-                <i class="fa-solid fa-circle-exclamation color-error text-3"></i>
-                <h1>Are you sure?</h1>
-                <p>Do you really want to delete this user? This process cannot be undone</p>
-            </div>
-            <div class="flex-Row gap-2">
-                <button class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-delete-cancel-btn>Cancel</button>
-                <button class=" mbtn-primary color-white bg-red align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-delete-save-btn>Save</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-@section scripts {
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            // Open modal on button click
-            $('[data-admin-add-btn]').on('click', function() {
-                $.ajax({
-                    url: '/AddUser',
-                    type: 'GET',
-                    success: function(data) {
-                        // Populate the modal with the data returned from AddUser action
-                        $('[data-modal-add-form]').html(data);
-                        // Open the modal
-                        $('[data-admin-modal-container]').removeClass('hidden');
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error fetching AddUser view:', status, error);
-                    }
-                });
-            });
-        });
-
-            // Close the modal on clicking close button
-            $(document).on('click', '[data-admin-add-close-btn]', function () {
-                $('[data-admin-modal-container]').addClass('hidden');
-            });
-
-            // Close the modal on clicking cancel button
-            $(document).on('click', '[data-admin-add-cancel-btn]', function (e) {
-                e.preventDefault(); // Prevent form submission if button is inside a form
-                $('[data-admin-modal-container]').addClass('hidden');
-            });
-
-            // Prevent modal close on click inside the modal
-            $('[data-modal-add-form]').on('click', function (e) {
-                e.stopPropagation();
-            });
-
-            // Close the modal on clicking outside of it
-            $('[data-admin-modal-container]').on('click', function () {
-                $(this).addClass('hidden');
-            });
-
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var buttons = document.querySelectorAll('[data-admin-btn]');
-
-            buttons.forEach(function (button) {
-                button.addEventListener('click', function () {
-                    if (this.classList.contains('admin-sb-active-button')) {
-                        return;
-                    }
-
-                    buttons.forEach(function (btn) {
-                        btn.classList.remove('admin-sb-active-button');
-                        btn.classList.add('admin-sb-inactive-button');
+    @section scripts {
+        <script>
+            $(document).ready(function () {
+                // Open modal on button click
+                $('[data-admin-add-btn]').on('click', function () {
+                    $.ajax({
+                        url: '/AddUser',
+                        type: 'GET',
+                        success: function (data) {
+                            // Populate the modal with the data returned from AddUser action
+                            $('[data-modal-add-form]').html(data).closest('.modal-admin').removeClass('hidden');
+                            $('[data-modal-add-form]').removeClass('hidden');
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error fetching AddUser view:', status, error);
+                        }
                     });
+                });
 
-                    this.classList.remove('admin-sb-inactive-button');
-                    this.classList.add('admin-sb-active-button');
+                // Handle form submission
+                $(document).on('submit', '[data-modal-add-form] form', function (e) {
+                    e.preventDefault();
+                    var form = $(this);
+                    $.ajax({
+                        url: form.attr('action'),
+                        type: 'POST',
+                        data: form.serialize(),
+                        success: function (response) {
+                            // Handle successful form submission, such as closing the modal and updating the list
+                            alert('User added successfully');
+                            $('[data-modal-add-form]').closest('.modal-admin').addClass('hidden');
+                            $('[data-modal-add-form]').addClass('hidden');
+                            // You may also want to update the user list here
+                            window.location.reload(); // Reload the page to reflect changes
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error submitting form:', status, error);
+                        }
+                    });
+                });
+
+                // Close modal
+                $(document).on('click', '[data-admin-add-close-btn], [data-admin-add-cancel-btn]', function () {
+                    $('[data-modal-add-form]').closest('.modal-admin').addClass('hidden');
+                    $('[data-modal-add-form]').addClass('hidden');
+                });
+
+                // Close the modal on clicking outside of it
+                $('[data-admin-modal-container]').on('click', function () {
+                    $(this).addClass('hidden');
+                });
+
+                // Show user details on list item click
+                $(document).on('click', '[data-viewuser-agent]', function () {
+                    var userId = $(this).data('user-id');
+                    $.ajax({
+                        url: '/UserDetails',
+                        type: 'GET',
+                        data: { UserId: userId },
+                        success: function (response) {
+                            $('[data-admin-edit-details]').html(response).removeClass('hidden');
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error fetching user details:', status, error);
+                        }
+                    });
+                });
+
+                // Show user edit details on edit button click
+                $(document).on('click', '[data-admin-edit-btn]', function () {
+                    var userId = $(this).data('user-id');
+                    console.log('Edit button clicked. UserId:', userId);
+
+                    $.ajax({
+                        url: '/UserEdit',
+                        type: 'GET',
+                        data: { UserId: userId },
+                        success: function (response) {
+                            console.log('AJAX request successful');
+                            $('[data-admin-edit-details]').html(response).removeClass('hidden');
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error fetching user details:', status, error);
+                        }
+                    });
+                });
+
+                //POST req for submitting form when user details are edited
+                $(document).on('submit', '[data-modal-edit-form] form', function (e) {
+                    e.preventDefault();
+                    var form = $(this);
+                    $.ajax({
+                        url: '/UserEdit',
+                        type: 'POST',
+                        data: form.serialize(),
+                        success: function (response) {
+                            // Handle successful form submission, such as closing the modal and updating the list
+                            alert('User updated successfully');
+                            $('[data-modal-edit-form]').closest('.modal-container').addClass('hidden');
+                            $('[data-modal-edit-form]').addClass('hidden');
+                            // You may also want to update the user list here
+                            window.location.reload(); // Reload the page to reflect changes
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error submitting form:', status, error);
+                        }
+                    });
+                });
+
+                // Delete User GET request
+                $(document).on('click', '[data-admin-delete-btn]', function () {
+                    var userId = $('[data-modal-edit-form] input[name="UserId"]').val();
+                    console.log('Delete button clicked. UserId:', userId);
+
+                    $.ajax({
+                        url: '/UserDelete',
+                        type: 'GET',
+                        data: { UserId: userId },
+                        success: function (response) {
+                            console.log('AJAX request successful');
+                            $('[data-admin-delete-modal-container]').html(response).removeClass('hidden');
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error deleting user:', status, error);
+                        }
+                    });
+                });
+
+                // Handle closing the modal
+                $(document).on('click', '[data-admin-edit-close-btn], [data-admin-delete-cancel-btn]', function () {
+                    $('[data-modal-edit-form]').closest('.modal-container').addClass('hidden');
+                });
+
+                //POST request for deleting a user
+                $(document).on('click', '[data-admin-delete-save-btn]', function (e) {
+                    e.preventDefault();
+
+                    var userId = $('[data-admin-delete-modal-container] input[name="UserId"]').val();
+
+                    $.ajax({
+                        url: '/UserDelete',
+                        type: 'POST',
+                        data: { UserId: userId },
+                        success: function (response) {
+                            // Handle successful deletion
+                            alert('User deleted successfully');
+                            $('[data-admin-delete-modal-container]').addClass('hidden');
+                            // You may also want to update the user list here
+                            window.location.reload(); // Reload the page to reflect changes
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error deleting user:', status, error);
+                        }
+                    });
+                });
+
+                // Handle closing the modal
+                $(document).on('click', '[data-admin-delete-close-btn], [data-admin-delete-cancel-btn]', function () {
+                    $('[data-admin-delete-modal-container]').addClass('hidden');
                 });
             });
-        });
-
-    </script>
-}
+        </script>
+    }
