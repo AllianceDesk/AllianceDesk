@@ -114,7 +114,7 @@ namespace ASI.Basecode.WebApp.Controllers
 
         #endregion
 
-        #region
+        #region Agent Methods
 
         [HttpGet("/Agent/Tickets")]
         public IActionResult AgentTickets()
@@ -170,6 +170,7 @@ namespace ASI.Basecode.WebApp.Controllers
 
             var tickets = _ticketService.RetrieveAll();
 
+            
             var userTickets = tickets.Where(t => t.CreatorId == user).ToList();
 
 
@@ -187,8 +188,27 @@ namespace ASI.Basecode.WebApp.Controllers
                                    })
                                    .ToList();
 
+            var categories = _ticketService.GetCategories()
+                                  .Select(c => new SelectListItem
+                                  {
+                                      Value = c.CategoryId.ToString(),
+                                      Text = c.CategoryName
+                                  })
+                                  .ToList();
+
+            var priorities = _ticketService.GetPriorities()
+                                           .Select(p => new SelectListItem
+                                           {
+                                               Value = p.PriorityId.ToString(),
+                                               Text = p.PriorityName
+                                           })
+                                           .ToList();
+
             // Pass data to ViewBag
             ViewBag.Statuses = new SelectList(statuses, "Value", "Text");
+            ViewBag.Categories = new SelectList(categories, "Value", "Text");
+            ViewBag.Priorities = new SelectList(priorities, "Value", "Text");
+
 
             if (!string.IsNullOrEmpty(status))
             {
@@ -198,7 +218,12 @@ namespace ASI.Basecode.WebApp.Controllers
             }
             else
             {
-                return View(userTickets);
+                var model = new TicketPageViewModel
+                {
+                    Tickets = userTickets,
+                    Ticket = new TicketViewModel() // Initialize a new ticket for the form
+                };
+                return View(model);
             }
             
         }

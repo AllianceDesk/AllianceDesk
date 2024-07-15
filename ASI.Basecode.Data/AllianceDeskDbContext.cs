@@ -51,8 +51,6 @@ namespace ASI.Basecode.Data
 
                 entity.Property(e => e.Body).HasColumnName("body");
 
-                entity.Property(e => e.Category).HasColumnName("category");
-
                 entity.Property(e => e.CreatedBy).HasColumnName("created_by");
 
                 entity.Property(e => e.DateCreated)

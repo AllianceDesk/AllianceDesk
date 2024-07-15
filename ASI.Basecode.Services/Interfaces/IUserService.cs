@@ -16,5 +16,6 @@ namespace ASI.Basecode.Services.Interfaces
         IEnumerable<Team> GetTeams();
         IEnumerable<UserRole> GetUserRoles();
         IEnumerable<User> GetUsers();
+        IEnumerable<UserViewModel> GetAgents();
     }
 }
