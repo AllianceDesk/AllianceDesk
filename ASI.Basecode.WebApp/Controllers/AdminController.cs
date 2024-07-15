@@ -1,6 +1,6 @@
 ﻿using ASI.Basecode.Services.Interfaces;
 using ASI.Basecode.Services.ServiceModels;
-using ASI.Basecode.Services.Services;
+using ASI.Basecode.Services.Manager;
 using ASI.Basecode.WebApp.Mvc;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -134,6 +134,7 @@ namespace ASI.Basecode.WebApp.Controllers
 
             var userModel = new UserViewModel
             {
+                UserId = UserId,
                 Name = data.Name,
                 Email = data.Email,
                 RoleId = data.RoleId,
@@ -185,6 +186,55 @@ namespace ASI.Basecode.WebApp.Controllers
 
             return RedirectToAction("ViewUser");
         }
+
+        [HttpGet]
+        [Route("UserEdit")]
+        /// <summary>
+        /// Go to the User Details View
+        /// </summary>
+        /// <returns> User Details</returns>
+        /// 
+        public IActionResult UserEdit(string UserId)
+        {
+            var data = _userService.GetUsers().Where(x => x.UserId.ToString() == UserId).FirstOrDefault();
+            var team = _userService.GetTeams().Where(t => t.TeamId.Equals(data.TeamId)).FirstOrDefault();
+            var userrole = _userService.GetUserRoles().Where(r => r.RoleId.Equals(data.RoleId)).FirstOrDefault();
+
+            var userModel = new UserViewModel
+            {
+                UserName = data.Username,
+                Name = data.Name,
+                Email = data.Email,
+                Password = PasswordManager.DecryptPassword(data.Password),
+                RoleId = data.RoleId,
+                TeamName = team.TeamName,
+                RoleName = userrole.RoleName,
+            };
+
+            var teams = _userService.GetTeams()
+                                   .Select(t => new SelectListItem
+                                   {
+                                       Value = t.TeamId.ToString(),
+                                       Text = t.TeamName
+                                   })
+                                   .ToList();
+
+            var userRoles = _userService.GetUserRoles()
+                                   .Select(u => new SelectListItem
+                                   {
+                                       Value = u.RoleId.ToString(),
+                                       Text = u.RoleName
+                                   })
+                                   .ToList();
+
+            // Pass data to ViewBag
+            ViewBag.Teams = new SelectList(teams, "Value", "Text");
+            ViewBag.UserRoles = new SelectList(userRoles, "Value", "Text");
+
+            return PartialView("UserEdit", userModel);
+        }
+
+
 
         public IActionResult ViewTeams()
         {
