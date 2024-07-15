@@ -61,6 +61,29 @@ namespace ASI.Basecode.Services.Services
                 throw new InvalidDataException(Resources.Messages.Errors.UserExists);
             }
         }
+        
+        public void UpdateUser(UserViewModel model)
+        {
+            var existingData = _repository.GetUsers().Where(u => u.UserId.ToString() == model.UserId).FirstOrDefault();
+            if (existingData != null)
+            {
+                _mapper.Map(model, existingData);
+                existingData.Name = model.UserName;
+                existingData.Username = model.UserName;
+                existingData.Password = PasswordManager.EncryptPassword(model.Password);
+                existingData.Email = model.Email;
+                existingData.RoleId = model.RoleId;
+                existingData.TeamId = Guid.Parse(model.TeamId);
+
+                _repository.UpdateUser(existingData);
+            }
+            
+        }
+
+        public void DeleteUser(string userId)
+        {
+            _repository.DeleteUser(userId);
+        }
 
         public void AddTeam(UserViewModel model)
         {
@@ -71,6 +94,7 @@ namespace ASI.Basecode.Services.Services
                 _teamRepository.AddTeam(team);
             }
         }
+
         public IEnumerable<Team> GetTeams()
         {
             return _teamRepository.RetrieveAll();

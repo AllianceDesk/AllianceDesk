@@ -1,6 +1,6 @@
 ﻿using ASI.Basecode.Services.Interfaces;
 using ASI.Basecode.Services.ServiceModels;
-using ASI.Basecode.Services.Services;
+using ASI.Basecode.Services.Manager;
 using ASI.Basecode.WebApp.Mvc;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -49,7 +49,8 @@ namespace ASI.Basecode.WebApp.Controllers
                                         {
                                             Name = u.Name,
                                             Email = u.Email,
-                                            RoleId = u.RoleId
+                                            RoleId = u.RoleId,
+                                            UserId = u.UserId.ToString(),
                                         })
                                         .ToList();
 
@@ -118,6 +119,31 @@ namespace ASI.Basecode.WebApp.Controllers
             ViewBag.AdminSidebar = "Tickets";
             return this.View();
         }
+
+        [HttpGet]
+        [Route("UserDetails")]
+        /// <summary>
+        /// Go to the User Details View
+        /// </summary>
+        /// <returns> User Details</returns>
+        /// 
+        public IActionResult UserDetails(string UserId)
+        {
+            var data = _userService.GetUsers().Where(x => x.UserId.ToString() == UserId).FirstOrDefault();
+            var team = _userService.GetTeams().Where(t => t.TeamId.Equals(data.TeamId)).FirstOrDefault();
+
+            var userModel = new UserViewModel
+            {
+                UserId = UserId,
+                Name = data.Name,
+                Email = data.Email,
+                RoleId = data.RoleId,
+                TeamName = team.TeamName,
+            };
+
+            return PartialView("UserDetails", userModel);
+        }
+
         [HttpGet("/AddUser")]
         /// <summary>
         /// Go to the Add a User View
@@ -157,6 +183,100 @@ namespace ASI.Basecode.WebApp.Controllers
         public IActionResult PostUserAdd(UserViewModel user)
         {
             _userService.AddUser(user);
+
+            return RedirectToAction("ViewUser");
+        }
+
+        [HttpGet]
+        [Route("UserEdit")]
+        /// <summary>
+        /// Go to the User Details View
+        /// </summary>
+        /// <returns> User Details</returns>
+        /// 
+        public IActionResult UserEdit(string UserId)
+        {
+            // Fetch user data
+            var user = _userService.GetUsers().FirstOrDefault(x => x.UserId.ToString() == UserId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var userModel = new UserViewModel
+            {
+                UserId = user.UserId.ToString(),
+                UserName = user.Username,
+                Name = user.Name,
+                Email = user.Email,
+                Password = PasswordManager.DecryptPassword(user.Password),
+                RoleId = user.RoleId,
+                TeamId = user.TeamId.ToString(),
+                RoleName = _userService.GetUserRoles().FirstOrDefault(r => r.RoleId == user.RoleId)?.RoleName,
+                TeamName = _userService.GetTeams().FirstOrDefault(t => t.TeamId == user.TeamId)?.TeamName
+            };
+
+            var teams = _userService.GetTeams()
+                                   .Select(t => new SelectListItem
+                                   {
+                                       Value = t.TeamId.ToString(),
+                                       Text = t.TeamName
+                                   })
+                                   .ToList();
+
+            var userRoles = _userService.GetUserRoles()
+                                   .Select(u => new SelectListItem
+                                   {
+                                       Value = u.RoleId.ToString(),
+                                       Text = u.RoleName
+                                   })
+                                   .ToList();
+
+            // Pass data to ViewBag
+            ViewBag.Teams = new SelectList(teams, "Value", "Text", userModel.TeamId);
+            ViewBag.UserRoles = new SelectList(userRoles, "Value", "Text", userModel.RoleId);
+
+            return PartialView("UserEdit", userModel);
+        }
+
+        [HttpPost]
+        [Route("UserEdit")]
+        /// <summary>
+        /// Post Request for Adding a User
+        /// </summary>
+        /// <returns> View User </returns>
+        public IActionResult PostUserEdit(UserViewModel user)
+        {
+            _userService.UpdateUser(user);
+
+            return RedirectToAction("ViewUser");
+        }
+
+        [HttpGet]
+        [Route("UserDelete")]
+        /// <summary>
+        /// Post Request for Adding a User
+        /// </summary>
+        /// <returns> View User </returns>
+        public IActionResult UserDelete(string UserId)
+        {
+            var userToDelete = new UserViewModel
+            {
+                UserId = UserId,
+            };
+
+            return PartialView("UserDelete", userToDelete);
+        }
+
+        [HttpPost]
+        [Route("UserDelete")]
+        /// <summary>
+        /// Post Request for Adding a User
+        /// </summary>
+        /// <returns> View User </returns>
+        public IActionResult PostUserDelete(string UserId)
+        {
+            _userService.DeleteUser(UserId);
 
             return RedirectToAction("ViewUser");
         }
