@@ -83,7 +83,7 @@ namespace ASI.Basecode.Services.Services
 
         public IEnumerable<User> GetUsers()
         {
-            return _repository.GetUsers().Where(u => u.RoleId == 2);
+            return _repository.GetUsers();
         }
     }
 }

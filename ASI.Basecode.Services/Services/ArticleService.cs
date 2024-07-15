@@ -65,6 +65,16 @@ namespace ASI.Basecode.Services.Services
             _articleRepository.AddArticle(newArticle);
         }
 
+        public void Update (ArticleViewModel article)
+        {
+
+        }
+
+        public void Delete(string articleId)
+        {
+            _articleRepository.DeleteArticle(articleId);
+        }
+
         public IEnumerable<Category> GetCategories()
         {
             return _categoryRepository.RetrieveAll();

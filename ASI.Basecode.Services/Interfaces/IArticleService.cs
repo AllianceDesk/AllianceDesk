@@ -12,6 +12,8 @@ namespace ASI.Basecode.Services.Interfaces
     {
         IEnumerable<ArticleViewModel> RetrieveAll();
         void Add(ArticleViewModel article);
+        void Update(ArticleViewModel article);
+        void Delete(ArticleViewModel article);
         IEnumerable<Category> GetCategories();
         IEnumerable<Article> GetArticles();
     }
