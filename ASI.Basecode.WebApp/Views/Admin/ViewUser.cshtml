@@ -83,22 +83,10 @@
             <div class="hidden modal-container br-1 bg-white p-y-1 p-x-2" data-modal-add-form>
                 <!-- Add User Form Content Will Be Loaded Here -->
             </div>
-
         </div>
 
         <div class="hidden bg-modal delete-modal-container" data-admin-delete-modal-container>
-            <div class="delete-modal flex flex-col gap-1 justify-content-center align-items-center" data-admin-delete-modal>
-                <i class="text-md fa-regular fa-circle-xmark hover-pointer align-self-end" data-admin-delete-close-btn></i>
-                <div class="flex-between flex-col align-items-center justify-content-center">
-                    <i class="fa-solid fa-circle-exclamation color-error text-3"></i>
-                    <h1>Are you sure?</h1>
-                    <p>Do you really want to delete this user? This process cannot be undone</p>
-                </div>
-                <div class="flex-Row gap-2">
-                    <button class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-delete-cancel-btn>Cancel</button>
-                    <button class="mbtn-primary color-white bg-red align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-delete-save-btn>Save</button>
-                </div>
-            </div>
+            <!-- Delete User Content Will Be Loaded Here -->
         </div>
     </div>
     }
@@ -136,6 +124,7 @@
                             $('[data-modal-add-form]').closest('.modal-admin').addClass('hidden');
                             $('[data-modal-add-form]').addClass('hidden');
                             // You may also want to update the user list here
+                            window.location.reload(); // Reload the page to reflect changes
                         },
                         error: function (xhr, status, error) {
                             console.error('Error submitting form:', status, error);
@@ -189,6 +178,7 @@
                     });
                 });
 
+                //POST req for submitting form when user details are edited
                 $(document).on('submit', '[data-modal-edit-form] form', function (e) {
                     e.preventDefault();
                     var form = $(this);
@@ -202,11 +192,64 @@
                             $('[data-modal-edit-form]').closest('.modal-container').addClass('hidden');
                             $('[data-modal-edit-form]').addClass('hidden');
                             // You may also want to update the user list here
+                            window.location.reload(); // Reload the page to reflect changes
                         },
                         error: function (xhr, status, error) {
                             console.error('Error submitting form:', status, error);
                         }
                     });
+                });
+
+                // Delete User GET request
+                $(document).on('click', '[data-admin-delete-btn]', function () {
+                    var userId = $('[data-modal-edit-form] input[name="UserId"]').val();
+                    console.log('Delete button clicked. UserId:', userId);
+
+                    $.ajax({
+                        url: '/UserDelete',
+                        type: 'GET',
+                        data: { UserId: userId },
+                        success: function (response) {
+                            console.log('AJAX request successful');
+                            $('[data-admin-delete-modal-container]').html(response).removeClass('hidden');
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error deleting user:', status, error);
+                        }
+                    });
+                });
+
+                // Handle closing the modal
+                $(document).on('click', '[data-admin-edit-close-btn], [data-admin-delete-cancel-btn]', function () {
+                    $('[data-modal-edit-form]').closest('.modal-container').addClass('hidden');
+                });
+
+                //POST request for deleting a user
+                $(document).on('click', '[data-admin-delete-save-btn]', function (e) {
+                    e.preventDefault();
+
+                    var userId = $('[data-admin-delete-modal-container] input[name="UserId"]').val();
+
+                    $.ajax({
+                        url: '/UserDelete',
+                        type: 'POST',
+                        data: { UserId: userId },
+                        success: function (response) {
+                            // Handle successful deletion
+                            alert('User deleted successfully');
+                            $('[data-admin-delete-modal-container]').addClass('hidden');
+                            // You may also want to update the user list here
+                            window.location.reload(); // Reload the page to reflect changes
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error deleting user:', status, error);
+                        }
+                    });
+                });
+
+                // Handle closing the modal
+                $(document).on('click', '[data-admin-delete-close-btn], [data-admin-delete-cancel-btn]', function () {
+                    $('[data-admin-delete-modal-container]').addClass('hidden');
                 });
             });
         </script>

@@ -252,6 +252,35 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("ViewUser");
         }
 
+        [HttpGet]
+        [Route("UserDelete")]
+        /// <summary>
+        /// Post Request for Adding a User
+        /// </summary>
+        /// <returns> View User </returns>
+        public IActionResult UserDelete(string UserId)
+        {
+            var userToDelete = new UserViewModel
+            {
+                UserId = UserId,
+            };
+
+            return PartialView("UserDelete", userToDelete);
+        }
+
+        [HttpPost]
+        [Route("UserDelete")]
+        /// <summary>
+        /// Post Request for Adding a User
+        /// </summary>
+        /// <returns> View User </returns>
+        public IActionResult PostUserDelete(string UserId)
+        {
+            _userService.DeleteUser(UserId);
+
+            return RedirectToAction("ViewUser");
+        }
+
         public IActionResult ViewTeams()
         {
             ViewBag.IsLoginOrRegister = false;
