@@ -16,13 +16,12 @@ namespace ASI.Basecode.Services.Interfaces
         IEnumerable<Category> GetCategories();
         IEnumerable<TicketPriority> GetPriorities();
         IEnumerable<TicketStatus> GetStatuses();
-        
+       
         Category GetCategoryById(byte id);
         TicketPriority GetPriorityById(byte id);
         TicketStatus GetStatusById(byte id);
 
         void AddMessage(TicketMessageViewModel message);
-
         void AddHistory(TicketActivityViewModel activity);
         IEnumerable<TicketActivityViewModel> GetHistory(string id);
         IEnumerable<TicketMessageViewModel> GetMessages(string id);

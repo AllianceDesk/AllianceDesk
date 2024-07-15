@@ -9,14 +9,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Linq;
 using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
-
-
+using System.Collections.Generic;
 
 namespace ASI.Basecode.WebApp.Controllers
 {
@@ -100,6 +94,18 @@ namespace ASI.Basecode.WebApp.Controllers
                 return NotFound();
             }
 
+                       
+            TicketActivityViewModel activity = new TicketActivityViewModel();
+
+            activity.TicketId = ticket.TicketId;
+            activity.OperationId = 2;
+            activity.ModifiedAt = DateTime.Now;
+
+            // Replace with User.Identity.Name when authentication is implemented
+            activity.ModifiedBy = "152B4DEB-7964-4AF6-B4E3-E95F39CF7349";
+
+            _ticketService.AddHistory(activity);
+
             ticket.AgentId = agentId;
             _ticketService.Update(ticket);
 
@@ -108,28 +114,49 @@ namespace ASI.Basecode.WebApp.Controllers
 
         #endregion
 
-        #region Agent Methods
+        #region
 
-        [Route("/Agent/Tickets")]
+        [HttpGet("/Agent/Tickets")]
         public IActionResult AgentTickets()
         {
-            string agent = "3850590f-e5e1-468b-a9a2-420074E9073f"; // Replace with User.Identity.Name when authentication is implemented
+            // Replace with User.Identity.Name when authentication is implemented
+            string agent = "3850590f-e5e1-468b-a9a2-420074e9073f";
             string agent2 = "aba6bb10-e42d-4714-907b-445f494e1dff";
 
             var tickets = _ticketService.RetrieveAll();
 
-            var agentTickets = tickets.Where(t => t.AgentId == agent).ToList();
+            var agentTickets = tickets.Where(t => t.AgentId == agent);
 
+            // TO DO: Find a way to be able to see the date the ticket was assigned to the agent
+            
+            /*var updatedAgentTickets = new List<TicketViewModel>();
 
-            if (agentTickets.Count == 0)
+            foreach (var ticket in agentTickets)
             {
-                Console.WriteLine("No tickets found for user");
-                return NotFound();
-            }
+                var history = _ticketService.GetHistory(ticket.TicketId);
 
+                if (history != null)
+                {
+                    var firstOperation2 = history.FirstOrDefault(s => s.OperationId == 2);
+
+                    if (firstOperation2 != null)
+                    {
+                        // Create a new TicketViewModel with updated DateAssigned
+                        var updatedTicket = new TicketViewModel
+                        {
+                            TicketId = ticket.TicketId,
+                            
+                            DateAssigned = firstOperation2.ModifiedAt
+                        };
+                        updatedAgentTickets.Add(updatedTicket);
+                    }
+                }
+            }*/
+
+            // Return the view with the updated agentTickets
             return View(agentTickets);
-
         }
+
         #endregion
 
         #region User Methods
@@ -137,7 +164,8 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpGet("/User/Tickets")]
         public IActionResult UserTickets(string? status)
         {
-            string user = "857949fe-ec30-4c0b-a514-eb0fd9262738"; // Replace with User.Identity.Name when authentication is implemented
+            // Replace with User.Identity.Name when authentication is implemented
+            string user = "857949fe-ec30-4c0b-a514-eb0fd9262738";
             string user2 = "90122701-1c8c-40a4-8936-7717Cfaa9c14";
 
             var tickets = _ticketService.RetrieveAll();

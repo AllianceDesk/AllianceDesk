@@ -1,132 +1,67 @@
-﻿@model IEnumerable<ASI.Basecode.Services.ServiceModels.TicketViewModel>
+﻿@model List<ASI.Basecode.Services.ServiceModels.TicketViewModel>
 
 @{
-    ViewData["Title"] = "AgentTickets";
+    ViewData["Title"] = "Assigned Tickets";
 }
 
-<h1>Tickets</h1>
+<h1>All Assigned Tickets</h1>
 
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.TicketId)
+                Title
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Title)
+                Priority
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                Status
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CategoryId)
+               Category
+            </th>
+             <th>
+                Owner
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PriorityId)
+                Date Created
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StatusId)
+                Date Assigned
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatorId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AgentId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TeamId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DateCreated)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Priority)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Attachment)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FeedbackId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AgentName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatorName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TeamName)
-            </th>
-            <th></th>
+             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.TicketId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CategoryId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PriorityId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StatusId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatorId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AgentId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TeamId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateCreated)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Priority)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Attachment)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FeedbackId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AgentName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatorName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TeamName)
-            </td>
-            <td>
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Priority)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatorName)
+                </td>
+                <td>
+					@Html.DisplayFor(modelItem => item.DateCreated)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateAssigned)
+                </td>
+                <td>
+                    @Html.ActionLink("Details", "Details", new { id = item.TicketId }) |
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

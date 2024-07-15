@@ -57,5 +57,7 @@ namespace ASI.Basecode.Services.ServiceModels
         public IEnumerable<TicketMessageViewModel> TicketMessages { get; set; }
 
         public string NewMessageBody { get; set; }
+
+        public DateTime DateAssigned { get; set; }
     }
 }

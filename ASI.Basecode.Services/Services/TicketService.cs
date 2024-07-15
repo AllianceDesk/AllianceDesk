@@ -22,9 +22,9 @@ namespace ASI.Basecode.Services.Services
         private readonly IMapper _mapper;
 
         public TicketService(
-            ITicketRepository ticketRepository, 
-            IUserRepository userRepository, 
-            ICategoryRepository categoryRepository, 
+            ITicketRepository ticketRepository,
+            IUserRepository userRepository,
+            ICategoryRepository categoryRepository,
             ITicketPriorityRepository ticketPriorityRepository,
             ITicketStatusRepository ticketStatusRepository,
             ITicketActivityRepository ticketActivityRepository,
@@ -64,7 +64,7 @@ namespace ASI.Basecode.Services.Services
 
             return data;
         }
-        
+
         public void Add(TicketViewModel ticket)
         {
             if (ticket == null)
@@ -77,7 +77,7 @@ namespace ASI.Basecode.Services.Services
             newTicket.Title = ticket.Title;
             newTicket.Description = ticket.Description;
             newTicket.DateCreated = DateTime.Now;
-            newTicket.CreatedBy = Guid.Parse(ticket.CreatorId); 
+            newTicket.CreatedBy = Guid.Parse(ticket.CreatorId);
             newTicket.StatusId = 1;
             newTicket.PriorityId = Convert.ToByte(ticket.PriorityId);
             newTicket.CategoryId = Convert.ToByte(ticket.CategoryId);
@@ -93,14 +93,12 @@ namespace ASI.Basecode.Services.Services
             existingTicket.Description = ticket.Description;
             existingTicket.CategoryId = Convert.ToByte(ticket.CategoryId);
             existingTicket.PriorityId = Convert.ToByte(ticket.PriorityId);
-            
+
             if (ticket.AgentId != null)
             {
                 existingTicket.AssignedAgent = Guid.Parse(ticket.AgentId);
             }
-           
-            // Add updated time
-            
+
             _ticketRepository.Update(existingTicket);
         }
 
@@ -108,7 +106,7 @@ namespace ASI.Basecode.Services.Services
         {
             _ticketRepository.Delete(id);
         }
-        
+
         public TicketViewModel GetById(string id)
         {
             var ticket = _ticketRepository.RetrieveAll().Where(s => s.TicketId.ToString() == id).FirstOrDefault();
@@ -132,10 +130,7 @@ namespace ASI.Basecode.Services.Services
                 AgentName = _userRepository.GetUsers().FirstOrDefault(u => u.UserId == ticket.AssignedAgent)?.Name,
                 TeamName = null
 
-                // TicketHistory 
-                // Missing properties
                 // Attachments = ticket.Attachments.ToString(),
-                // Messages
                 // Feedback
             };
 
@@ -151,7 +146,7 @@ namespace ASI.Basecode.Services.Services
         {
             return _priorityRepository.RetrieveAll();
         }
-        
+
         public IEnumerable<TicketStatus> GetStatuses()
         {
             return _statusRepository.RetrieveAll();
@@ -189,6 +184,24 @@ namespace ASI.Basecode.Services.Services
             _ticketMessageRepository.Add(newMessage);
         }
 
+        public IEnumerable<TicketMessageViewModel> GetMessages(string id)
+        {
+
+            var messages = _ticketMessageRepository.RetrieveAll()
+                                     .Where(s => s.TicketId.ToString() == id)
+                                     .Select(message => new TicketMessageViewModel
+                                     {
+                                         MessageId = message.MessageId.ToString(),
+                                         TicketId = message.TicketId.ToString(),
+                                         Message = message.MessageBody,
+                                         SentById = message.UserId.ToString(),
+                                         SentByName = _userRepository.GetUsers().FirstOrDefault(u => u.UserId == message.UserId).Name,
+                                         PostedAt = message.PostedAt,
+                                     });
+
+            return messages;
+        }
+
         public void AddHistory(TicketActivityViewModel activity)
         {
             if (activity == null)
@@ -197,12 +210,13 @@ namespace ASI.Basecode.Services.Services
             }
 
             TicketActivity newActivity = new TicketActivity();
+            newActivity.HistoryId = Guid.NewGuid();
             newActivity.TicketId = Guid.Parse(activity.TicketId);
             newActivity.OperationId = activity.OperationId;
             newActivity.ModifiedBy = Guid.Parse(activity.ModifiedBy);
             newActivity.ModifiedAt = activity.ModifiedAt;
-            newActivity.OldValue = "Old Value";
-            newActivity.NewValue = "New Value";
+            newActivity.OldValue = activity.OldValue;
+            newActivity.NewValue = activity.NewValue;
 
             _ticketActivityRepository.Add(newActivity);
         }
@@ -224,22 +238,5 @@ namespace ASI.Basecode.Services.Services
 
             return activities;
         }
-
-        public IEnumerable<TicketMessageViewModel> GetMessages(string id)
-        {
-
-           var messages = _ticketMessageRepository.RetrieveAll()
-                                    .Where(s => s.TicketId.ToString() == id)
-                                    .Select(message => new TicketMessageViewModel
-                                    {
-                                        MessageId = message.MessageId.ToString(),
-                                        TicketId = message.TicketId.ToString(),
-                                        Message = message.MessageBody,
-                                        SentById = message.UserId.ToString(),
-                                        SentByName = _userRepository.GetUsers().FirstOrDefault(u => u.UserId == message.UserId).Name,
-                                        PostedAt = message.PostedAt,
-                                    });
-
-            return messages;}
     }
 }
