@@ -8,7 +8,7 @@ namespace ASI.Basecode.Data.Models
         public Article()
         {
             Favorites = new HashSet<Favorite>();
-        }s
+        }
 
         public Guid ArticleId { get; set; }
         public string Title { get; set; }
