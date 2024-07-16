@@ -37,27 +37,18 @@ namespace ASI.Basecode.WebApp.Controllers
             this._ticketService = ticketService;
         }
 
-
         [HttpGet("Tickets")]
         public IActionResult Tickets(string? status)
         {
             // Replace with User.Identity.Name when authentication is implemented
-            string user = "857949fe-ec30-4c0b-a514-eb0fd9262738";
+            string user = "90122701-1c8c-40a4-8936-7717cfaa9c14";
 
             var tickets = _ticketService.RetrieveAll();
-
 
             var userTickets = tickets
                 .Where(t => t.CreatorId == user)
                 .OrderByDescending(t => t.DateCreated)
                 .ToList();
-
-
-            if (userTickets.Count == 0)
-            {
-                Console.WriteLine("No tickets found for user");
-                return NotFound();
-            }
 
             var statuses = _ticketService.GetStatuses()
                                    .Select(c => new SelectListItem
@@ -68,12 +59,12 @@ namespace ASI.Basecode.WebApp.Controllers
                                    .ToList();
 
             var categories = _ticketService.GetCategories()
-                                  .Select(c => new SelectListItem
-                                  {
-                                      Value = c.CategoryId.ToString(),
-                                      Text = c.CategoryName
-                                  })
-                                  .ToList();
+                                      .Select(c => new SelectListItem
+                                      {
+                                          Value = c.CategoryId.ToString(),
+                                          Text = c.CategoryName
+                                      })
+                                      .ToList();
 
             var priorities = _ticketService.GetPriorities()
                                            .Select(p => new SelectListItem
@@ -88,31 +79,23 @@ namespace ASI.Basecode.WebApp.Controllers
             ViewBag.Categories = new SelectList(categories, "Value", "Text");
             ViewBag.Priorities = new SelectList(priorities, "Value", "Text");
 
-            if (!string.IsNullOrEmpty(status))
+            // Check if userTickets is null or empty
+            if (userTickets == null || userTickets.Count == 0)
             {
-                ViewBag.CurrentStatus = status;
-
-                var model = new TicketPageViewModel
-                {
-                    Tickets = userTickets.Where(t => t.StatusId == status),
-                    Ticket = new TicketViewModel() // Initialize a new ticket for the form
-                };
-
-                return View(model);
-            }
-            else
-            {
-                ViewBag.CurrentStatus = "All";
-
-                var model = new TicketPageViewModel
-                {
-                    Tickets = userTickets,
-                    Ticket = new TicketViewModel() // Initialize a new ticket for the form
-                };
-
-                return View(model);
+                Console.WriteLine("No tickets found for user");
+                // Instead of returning NotFound(), return an empty view or handle it accordingly
+                return View("Views/User/Tickets.cshtml", new TicketPageViewModel());
             }
 
+            ViewBag.CurrentStatus = string.IsNullOrEmpty(status) ? "All" : status;
+
+            var model = new TicketPageViewModel
+            {
+                Tickets = string.IsNullOrEmpty(status) ? userTickets : userTickets.Where(t => t.StatusId == status),
+                Ticket = new TicketViewModel() // Initialize a new ticket for the form
+            };
+
+            return View(model);
         }
 
         [HttpPost("Tickets/Create")]
