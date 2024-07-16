@@ -68,9 +68,9 @@
         </div>
 
         <ul class="articles">
-            <li>
-                @foreach (var item in Model)
-                {
+            @foreach (var item in Model)
+            {
+                <li>
                     <h4>
                         @Html.DisplayFor(modelItem => item.Title)
                     </h4>
@@ -88,8 +88,8 @@
                 @Html.ActionLink("Details", "Details", new { Id = item.ArticleId }) |
                 @Html.ActionLink("Delete", "Delete", new { Id = item.ArticleId })
                 </td> *@
-                }
-            </li>
+                </li>
+            }
         </ul>
     </div>
 

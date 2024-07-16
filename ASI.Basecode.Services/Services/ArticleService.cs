@@ -14,14 +14,14 @@ namespace ASI.Basecode.Services.Services
 {
     public class ArticleService : IArticleService
     {
-        private readonly IMapper mapper;
+        private readonly IMapper _mapper;
         private readonly IArticleRepository _articleRepository;
         private readonly ICategoryRepository _categoryRepository;
         private readonly ISessionHelper _sessionHelper;
 
         public ArticleService (IMapper mapper, IArticleRepository articleRepository, ICategoryRepository categoryRepository, ISessionHelper sessionHelper)
         {
-            this.mapper = mapper;
+            _mapper = mapper;
             _articleRepository = articleRepository;
             _categoryRepository = categoryRepository;
             _sessionHelper = sessionHelper;
@@ -67,7 +67,16 @@ namespace ASI.Basecode.Services.Services
 
         public void Update (ArticleViewModel article)
         {
-
+            var existingData = _articleRepository.RetrieveAll().Where(u => u.ArticleId.ToString() == article.ArticleId).FirstOrDefault();
+            if (existingData != null)
+            {
+                _mapper.Map(article, existingData);
+                existingData.Title = article.Title;
+                existingData.Body = article.Body;
+                existingData.UpdatedBy = _sessionHelper.GetUserIdFromSession();
+                existingData.DateUpdated = DateTime.Now;
+                _articleRepository.UpdateArticle(existingData);
+            }
         }
 
         public void Delete(string articleId)
