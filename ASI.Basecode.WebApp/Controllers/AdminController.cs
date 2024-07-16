@@ -43,13 +43,13 @@ namespace ASI.Basecode.WebApp.Controllers
         /// Returns User View
         /// </summary>
         /// <returns> Home View </returns>
-        [HttpGet]
+        [HttpGet("ViewUser")]
         [AllowAnonymous]
         public ActionResult ViewUser()
         {
             ViewBag.IsLoginOrRegister = false;
             ViewBag.AdminSidebar = "ViewUser";
-            var users = _userService.GetUsers()
+            var users = _userService.GetAllUsers()
                                         .Select(u => new UserViewModel
                                         {
                                             Name = u.Name,
@@ -191,7 +191,7 @@ namespace ASI.Basecode.WebApp.Controllers
             return this.View();
         }
 
-        [HttpGet]
+        [HttpGet("Tickets/Resolved")]
         [AllowAnonymous]
         public ActionResult TicketResolved()
         {
@@ -199,7 +199,7 @@ namespace ASI.Basecode.WebApp.Controllers
             return this.View();
         }
 
-        [HttpGet]
+        [HttpGet("Tickets/Occupied")]
         [AllowAnonymous]
         public ActionResult TicketOccupied()
         {
@@ -207,8 +207,7 @@ namespace ASI.Basecode.WebApp.Controllers
             return this.View();
         }
 
-        [HttpGet]
-        [Route("UserDetails")]
+        [HttpGet("/UserDetails")]
         /// <summary>
         /// Go to the User Details View
         /// </summary>
@@ -216,7 +215,7 @@ namespace ASI.Basecode.WebApp.Controllers
         /// 
         public IActionResult UserDetails(string UserId)
         {
-            var data = _userService.GetUsers().Where(x => x.UserId.ToString() == UserId).FirstOrDefault();
+            var data = _userService.GetAllUsers().Where(x => x.UserId.ToString() == UserId).FirstOrDefault();
             var team = _userService.GetTeams().Where(t => t.TeamId.Equals(data.TeamId)).FirstOrDefault();
 
             var userModel = new UserViewModel
@@ -274,8 +273,7 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("ViewUser");
         }
 
-        [HttpGet]
-        [Route("UserEdit")]
+        [HttpGet("/UserEdit")]
         /// <summary>
         /// Go to the User Details View
         /// </summary>
@@ -284,7 +282,7 @@ namespace ASI.Basecode.WebApp.Controllers
         public IActionResult UserEdit(string UserId)
         {
             // Fetch user data
-            var user = _userService.GetUsers().FirstOrDefault(x => x.UserId.ToString() == UserId);
+            var user = _userService.GetAllUsers().FirstOrDefault(x => x.UserId.ToString() == UserId);
             if (user == null)
             {
                 return NotFound();
@@ -326,8 +324,7 @@ namespace ASI.Basecode.WebApp.Controllers
             return PartialView("UserEdit", userModel);
         }
 
-        [HttpPost]
-        [Route("UserEdit")]
+        [HttpPost("/UserEdit")]
         /// <summary>
         /// Post Request for Adding a User
         /// </summary>
@@ -339,8 +336,7 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("ViewUser");
         }
 
-        [HttpGet]
-        [Route("UserDelete")]
+        [HttpGet("/UserDelete")]
         /// <summary>
         /// Post Request for Adding a User
         /// </summary>
@@ -355,8 +351,7 @@ namespace ASI.Basecode.WebApp.Controllers
             return PartialView("UserDelete", userToDelete);
         }
 
-        [HttpPost]
-        [Route("UserDelete")]
+        [HttpPost("/UserDelete")]
         /// <summary>
         /// Post Request for Adding a User
         /// </summary>
@@ -368,6 +363,7 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("ViewUser");
         }
 
+        [HttpGet("/ViewTeams")]
         public IActionResult ViewTeams()
         {
             ViewBag.IsLoginOrRegister = false;
