@@ -9,81 +9,85 @@
     <link rel="stylesheet" href="~/css/Admin.css" />
 }
 
-<div class="admin-body p-y-3 relative">
-    <div style="padding-right: 2rem; border-right: 1.5px solid #9E9E9E;">
-        <h1>Agents and Team</h1>
-        <div class="flex-Row flex-between">
-            <div class="agent-nav pt-4">
-                <ul class="flex-Row gap-2">
-                    <a asp-action="ViewUser" class="nav-item active" data-nav-item>Agents</a>
-                    <a asp-action="ViewTeams" class="nav-item" data-nav-item>Team</a>
-                </ul>
-            </div>
-            <div class="flex-Row gap-2 justify-content-center align-center">
-                <div class="search-container | flex-Row align-center justify-content-center">
-                    <i class="fa-solid fa-magnifying-glass text-1-5"></i>
-                    <input class="bg-transparent" type="text" placeholder="Search" />
+@Html.Partial("Admin_Header")
+<div class="main">
+    @Html.Partial("Admin_Sidebar")
+    <div class="admin-body p-y-3 bg-grey relative ">
+        <div style="padding-right: 2rem; border-right: 1.5px solid #9E9E9E;">
+            <h1>Agents and Team</h1>
+            <div class="flex-Row flex-between">
+                <div class="agent-nav pt-4">
+                    <ul class="flex-Row gap-2">
+                        <a asp-action="ViewUser" data-admin-btn class="nav-item" data-nav-item>Agents</a>
+                        <a asp-action="ViewTeams" data-admin-btn class="nav-item active-admin-nav" data-nav-item>Team</a>
+                    </ul>
                 </div>
-                <button class="mbtn-primary flex-Row gap-1 color-white bg-red align-center justify-content-center border-0 p-x-1 br-1-5" data-admin-add-btn>
-                    <i class="fa-solid fa-user-plus"></i>
-                    <p class="br-1-5 p-y-1">Add</p>
-                </button>
-            </div>
-        </div>
-        <div class="flex-Row flex-between p-y-1 p-x-1 border-b-2 text-1-5 mb-3">
-            <div class="flex-Row align-center gap-1 fw-semi">
-                <i class="fa-regular fa-address-card"></i>
-                <p>Team Name</p>
-            </div>
-        </div>
-        @if (teams != null && teams.Any())
-        {
-            <ul class="agents-container bg-white">
-                @foreach (var team in teams)
-                {
-                    <div class="agents | flex-Row flex-between p-y-1 p-x-1 align-center" data-agents-1>
-                        <div class="flex-col justify-content-center align-center">
-                            <p class="fw-semi text-1-5">@team.Text</p>
-                        </div>
+                <div class="flex-Row gap-2 justify-content-center align-center">
+                    <div class="j-search-container | flex-Row align-center justify-content-center">
+                        <i class="fa-solid fa-magnifying-glass text-1-5"></i>
+                        <input class="bg-transparent" type="text" placeholder="Search" />
                     </div>
-                }
-            </ul>
-        }
-        else
-        {
-            <p>No teams available.</p>
-        }
-    </div>
-    <div class="hidden modal-container br-1 bg-white p-y-1 p-x-2" data-admin-modal-container>
-        <form asp-action="PostTeamAdd" data-modal-add-form>
-            <div class="flex-Row justify-content-between">
-                <h2>Add Team</h2>
-                <i class="text-md fa-regular fa-circle-xmark hover-pointer" data-admin-add-close-btn></i>
+                    <button class="mbtn-primary flex-Row gap-1 color-white bg-red align-center justify-content-center border-0 p-x-1 br-1-5" data-admin-add-btn>
+                        <i class="fa-solid fa-user-plus"></i>
+                        <p class="br-1-5 p-y-1">Add</p>
+                    </button>
+                </div>
             </div>
-            <div class="modal-input-container">
-                <label class="modal-input relative flex">
-                    <span>Team Name</span>
-                    <input asp-for="TeamName" class="form-control" type="text" placeholder="John Doe" />
-                    <span asp-validation-for="TeamName" class="text-danger"></span>
-                </label>
+            <div class="flex-Row flex-between p-y-1 p-x-1 border-b-2 text-1-5 mb-3">
+                <div class="flex-Row align-center gap-1 fw-semi">
+                    <i class="fa-regular fa-address-card"></i>
+                    <p>Team Name</p>
+                </div>
             </div>
-            <div class="flex-Row gap-1">
-                <button class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-add-cancel-btn>Cancel</button>
-                <button class=" mbtn-primary color-white bg-red align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-add-save-btn>Save</button>
-            </div>
-        </form>
-    </div>
-    <div class="hidden bg-modal delete-modal-container" data-admin-delete-modal-container>
-        <div class="delete-modal flex flex-col gap-1 justify-content-center align-items-center" data-admin-delete-modal>
-            <i class="text-md fa-regular fa-circle-xmark hover-pointer align-self-end" data-admin-delete-close-btn></i>
-            <div class="flex-between flex-col align-items-center justify-content-center">
-                <i class="fa-solid fa-circle-exclamation color-error text-3"></i>
-                <h1>Are you sure?</h1>
-                <p>Do you really want to delete this user? This process cannot be undone</p>
-            </div>
-            <div class="flex-Row gap-2">
-                <button class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-delete-cancel-btn>Cancel</button>
-                <button class=" mbtn-primary color-white bg-red align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-delete-save-btn>Save</button>
+            @if (teams != null && teams.Any())
+            {
+                <ul class="agents-container bg-white">
+                    @foreach (var team in teams)
+                    {
+                        <div class="agents | flex-Row flex-between p-y-1 p-x-1 align-center" data-agents-1>
+                            <div class="flex-col justify-content-center align-center">
+                                <p class="fw-semi text-1-5">@team.Text</p>
+                            </div>
+                        </div>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p>No teams available.</p>
+            }
+        </div>
+        <div class="hidden modal-container br-1 bg-white p-y-1 p-x-2" data-admin-modal-container>
+            <form asp-action="PostTeamAdd" data-modal-add-form>
+                <div class="flex-Row justify-content-between">
+                    <h2>Add Team</h2>
+                    <i class="text-md fa-regular fa-circle-xmark hover-pointer" data-admin-add-close-btn></i>
+                </div>
+                <div class="modal-input-container">
+                    <label class="modal-input relative flex">
+                        <span>Team Name</span>
+                        <input asp-for="TeamName" class="form-control" type="text" placeholder="John Doe" />
+                        <span asp-validation-for="TeamName" class="text-danger"></span>
+                    </label>
+                </div>
+                <div class="flex-Row gap-1">
+                    <button class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-add-cancel-btn>Cancel</button>
+                    <button class=" mbtn-primary color-white bg-red align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-add-save-btn>Save</button>
+                </div>
+            </form>
+        </div>
+        <div class="hidden bg-modal delete-modal-container" data-admin-delete-modal-container>
+            <div class="delete-modal flex flex-col gap-1 justify-content-center align-items-center" data-admin-delete-modal>
+                <i class="text-md fa-regular fa-circle-xmark hover-pointer align-self-end" data-admin-delete-close-btn></i>
+                <div class="flex-between flex-col align-items-center justify-content-center">
+                    <i class="fa-solid fa-circle-exclamation color-error text-3"></i>
+                    <h1>Are you sure?</h1>
+                    <p>Do you really want to delete this user? This process cannot be undone</p>
+                </div>
+                <div class="flex-Row gap-2">
+                    <button class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-delete-cancel-btn>Cancel</button>
+                    <button class=" mbtn-primary color-white bg-red align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-delete-save-btn>Save</button>
+                </div>
             </div>
         </div>
     </div>

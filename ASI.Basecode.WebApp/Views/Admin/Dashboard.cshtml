@@ -1,0 +1,129 @@
+﻿@model ASI.Basecode.Services.ServiceModels.UserViewModel
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+@section styles {
+    <link rel="stylesheet" href="~/css/functionalities.css" />
+    <link rel="stylesheet" href="~/css/Admin.css" />
+}
+
+@Html.Partial("Admin_Header")
+<div class="main">
+    @Html.Partial("Admin_Sidebar")
+    <div class="admin-body p-y-3 relative bg-grey mx-auto">
+       <h2>Welcome Back, _Username_!</h2>
+       <div class="flex flex-col gap-2">
+           <p class="fw-semi text-1-5">Top Performing Agents of the Day</p>
+           <div class="flex-Row gap-1">
+                @for (int i = 0; i < 4; i++)
+                {
+                    <div class="bg-White flex flex-col align-items-center gap-1 p-y-2 p-x-1 w-25">
+                        <div class="p-x-2 p-y-2 br-50 bg-grey"></div>
+                        <div class="flex flex-col align-items-center">
+                            <p>John Doe</p>
+                            <p class="text-xsm">Team 1</p>
+                        </div>
+                        <div class="flex flex-col align-items-center">
+                            <p class="text-red">@i</p>
+                            <p class="text-xsm">Team Resolved</p>
+                        </div>
+                    </div>
+                }
+           </div>
+       </div>
+        <div class="admin-dashboard-grid">
+            <div class="bg-White p-x-1 p-y-1 br-1 ">
+               <p>Ticket Volume this Week</p>
+               <div>
+                    <canvas id="myChart"></canvas>
+               </div>
+           </div>
+            <div class="bg-White p-x-1 p-y-1 br-1 ">
+                <div class="flex-Row gap-1 align-items-center fw-semi">
+                    <i class="fa-regular fa-star"></i>
+                    <p>Must-read posts</p>
+               </div>
+                <ul class="admin-dashboard-links">
+                    <li class="text-sm">How to change password</l>
+                    <li class="text-sm">Wrong Account Number</li>
+               </ul>
+                <div class="flex-Row gap-1 align-items-center fw-semi">
+                    <i class="fa-solid fa-link"></i>
+                    <p>Featured links</p>
+                </div>
+                <ul class="admin-dashboard-links">
+                    <li class="text-sm">Add Users</li>
+                    <li class="text-sm">Assign Tickets</l>
+                    <li class="text-sm">Settings</li>
+                </ul>
+           </div>
+       </div>
+    </div>
+</div>
+
+
+@section scripts {
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('myChart').getContext('2d');
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Monday', 'Tuesday', 'Wednesday', 'Thhursday', 'Friday', 'Saturday', 'Sunday'],
+                datasets: [{
+                    data: [12, 19, 3, 5, 2, 3, 7],
+                    label: "Ticket Volume",
+                    borderWidth: 1,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            const swiper = new Swiper('.swiper', {
+                // Optional parameters
+                loop: true,
+                grabCursor: true,
+                spaceBetween: true,
+                // If we need pagination
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                    dynamicBullets: true
+                },
+                // Navigation arrows
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+
+                breakpoints: {
+                    0: {
+                        slidesPerView: 1
+                    },
+                    620: {
+                        slidesPerView: 2
+                    },
+                    1024: {
+                        slidesPerView: 3
+                    }
+                }
+            });
+        });
+    </script>
+}

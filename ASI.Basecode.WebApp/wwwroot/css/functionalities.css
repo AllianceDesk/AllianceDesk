@@ -176,7 +176,13 @@ p {
     margin-block: 1rem;
 }
 
+
+
 /* TEXT */
+
+.text-xsm {
+    font-size: 0.5rem;
+}
 
 .text-sm {
     font-size: 0.7rem;
@@ -199,6 +205,10 @@ p {
 
 .fw-semi {
     font-weight: 500;
+}
+
+.text-red {
+    color: #E21818;
 }
 
 /* BORDER */
@@ -273,4 +283,26 @@ p {
 /* SHADOW */
 .ctr-shadow {
     box-shadow: 0 5px 5px -5px grey;
+}
+
+/* ANALYTICS */
+
+.admin-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.admin-grid-2 {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: 30% calc(70% - 2rem);
+    gap: 2rem;
+}
+
+
+.admin-grid-2-overallmetrics {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: calc(70% - 2rem) 30%;
+    gap: 2rem;
 }

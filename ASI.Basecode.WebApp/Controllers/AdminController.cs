@@ -94,6 +94,30 @@ namespace ASI.Basecode.WebApp.Controllers
             return this.View();
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult AnalyticsTeamMetric()
+        {
+            ViewBag.AdminSidebar = "Analytics";
+            return this.View();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult AnalyticsOverallMetrics()
+        {
+            ViewBag.AdminSidebar = "Analytics";
+            return this.View();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult AgentMetric()
+        {
+            ViewBag.AdminSidebar = "Analytics";
+            return this.View();
+        }
+
 
         [HttpGet]
         [AllowAnonymous]
@@ -118,6 +142,16 @@ namespace ASI.Basecode.WebApp.Controllers
             ViewBag.AdminSidebar = "Tickets";
             return this.View();
         }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult Dashboard()
+        {
+            ViewBag.AdminSidebar = "Overview";
+            return this.View();
+        }
+
+
         [HttpGet("/AddUser")]
         /// <summary>
         /// Go to the Add a User View
@@ -172,7 +206,7 @@ namespace ASI.Basecode.WebApp.Controllers
                                    })
                                    .ToList();
             ViewBag.Teams = new SelectList(teams, "Value", "Text");
-
+            ViewBag.AdminSidebar = "ViewUser";
             return View();
         }
 

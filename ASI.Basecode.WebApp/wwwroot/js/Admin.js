@@ -1,17 +1,15 @@
-﻿const adminBody = document.querySelector(".admin-body");
+﻿/*const adminBody = document.querySelector(".admin-body");
 const agentsContainer = document.querySelector(".agents-container");
 const editDetails = document.querySelector('[data-admin-edit-details]');
 const agentsList = document.querySelectorAll("[data-viewuser-agent]")
 const modalContainer = document.querySelector("[data-admin-modal-container]")
 const deleteModalContainer = document.querySelector("[data-admin-delete-modal-container]")
 
-const navItems = document.querySelectorAll("[data-nav-item]")
-
-
+const navItems = document.querySelectorAll("[data-nav-item]")*/
 
 /* BTNS */
 
-const adminEditCloseBtn = document.querySelector("[data-admin-edit-close-btn]")
+/*const adminEditCloseBtn = document.querySelector("[data-admin-edit-close-btn]")
 const adminEditCancelBtn = document.querySelector("[data-admin-edit-cancel-btn]")
 const adminEditSaveBtn = document.querySelector("[data-admin-edit-save-btn]")
 
@@ -31,10 +29,10 @@ const adminAddForm = document.querySelector("[data-modal-add-form]")
 
 const adminDelBtn = document.querySelector("[data-admin-delete-btn]")
 const adminDelForm = document.querySelector("[data-admin-delete-modal]")
-
+*/
 /* DELETE */
 
-adminDelBtn.addEventListener("click", () => {
+/*adminDelBtn.addEventListener("click", () => {
     console.log("clicking open btn", modalContainer, adminEditBtn)
     deleteModalContainer.classList.remove("hidden")
     adminDelForm.classList.remove("hidden")
@@ -57,7 +55,7 @@ adminDelSaveBtn.addEventListener("click", () => {
     console.log("clicking save btn", modalContainer)
     deleteModalContainer.classList.add("hidden")
     adminDelForm.classList.add("hidden")
-})
+})*/
 
 /* ADD */
 
@@ -93,7 +91,7 @@ adminAddSaveBtn.addEventListener("click", () => {
 
 
 /* EDIT */
-adminEditForm.addEventListener("submit", (e) => {
+/*adminEditForm.addEventListener("submit", (e) => {
     e.preventDefault();
 })
 
@@ -144,4 +142,4 @@ navItems.forEach(navItem => {
         navItems.forEach(a => a.classList.remove("active"));
         navItem.classList.add("active");
     })
-})
+})*/

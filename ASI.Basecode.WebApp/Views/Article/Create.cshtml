@@ -12,43 +12,46 @@
 @{
     ViewData["Title"] = "Add Article";
 }
-
-<div class="content">
-    <div class="header-container">
-        <h1 class="page-title">Knowledge Base</h1>
+@Html.Partial("Admin_Header")
+<div class="main">
+    @Html.Partial("Admin_Sidebar")
+    <div class="admin-body p-y-3 relative bg-grey">
+        <div class="header-container">
+            <h1 class="page-title">Knowledge Base</h1>
+        </div>
+        <form asp-action="PostCreate">
+            <div class="toolbar">
+                <h4 class="title">Create a New Article</h4>
+                <div class="buttons">
+                    <button type="submit" class="save-btn">
+                        <i class='bx bx-save' undefined></i>Save
+                    </button>
+                    <button class="savedraft-btn">
+                        <i class='bx bx-edit'></i>Save as Draft
+                    </button>
+                    <button class="cancel-btn">
+                        <i class='bx bx-x-circle'></i>Cancel
+                    </button>
+                </div>
+            </div>
+            <div class="article-content">
+                <div class="form-group">
+                    <label asp-for="Title" class="article-title"></label>
+                    <input asp-for="Title" class="articletitle-input" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CategoryId" class="control-label">Category</label>
+                    <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.Categories"></select>
+                    <span asp-validation-for="CategoryId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <textarea asp-for="Body" class="articlebody-input"></textarea>
+                    <span asp-validation-for="Body" class="text-danger"></span>
+                </div>
+            </div>
+        </form>
     </div>
-    <form asp-action="PostCreate">
-        <div class="toolbar">
-            <h4 class="title">Create a New Article</h4>
-            <div class="buttons">
-                <button type="submit" class="save-btn">
-                    <i class='bx bx-save' undefined></i>Save
-                </button>
-                <button class="savedraft-btn">
-                    <i class='bx bx-edit'></i>Save as Draft
-                </button>
-                <button class="cancel-btn">
-                    <i class='bx bx-x-circle'></i>Cancel
-                </button>
-            </div>
-        </div>
-        <div class="article-content">
-            <div class="form-group">
-                <label asp-for="Title" class="article-title"></label>
-                <input asp-for="Title" class="articletitle-input" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CategoryId" class="control-label">Category</label>
-                <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.Categories"></select>
-                <span asp-validation-for="CategoryId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <textarea asp-for="Body" class="articlebody-input"></textarea>
-                <span asp-validation-for="Body" class="text-danger"></span>
-            </div>
-        </div>
-    </form>
 </div>
 
 

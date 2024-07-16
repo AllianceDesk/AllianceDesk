@@ -170,7 +170,7 @@
 
 /*ADMIN NAV BAR*/
 
-.nav-item.active {
+.nav-item.active-admin-nav {
     padding-bottom: 0.5rem;
     font-weight: 500;
     color: #202020;
@@ -229,7 +229,8 @@
         text-decoration: none;
     }
 
-a[data-admin-btn] {
+a[data-admin-btn],
+a[data-a-btn] {
     text-decoration: none; 
 }
 
@@ -296,3 +297,26 @@ a[data-admin-btn] {
         padding: 3px 0 3px 0;
     }
 }
+
+
+
+/* DASHBOARD */
+
+.admin-dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 250px;
+    grid-column-gap: 2rem;
+    margin-top: 2rem;
+}
+
+.admin-dashboard-links li {
+    list-style-type: circle;
+    color: #1682FD;
+    margin-left: 2rem;
+}
+
+.admin-dashboard-links li:hover {
+    font-weight: 600;
+    cursor: pointer;
+}
+

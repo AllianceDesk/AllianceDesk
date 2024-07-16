@@ -2,7 +2,7 @@
 
 
 @{
-    ViewData["Title"] = "Agents";
+    ViewData["Title"] = "Admin";
     var roleMappings = new Dictionary<int, string>
     {
         { 1, "Admin" },
@@ -24,8 +24,8 @@
             <div class="view-user-nav">
             <div class="agent-nav pt-4">
                 <ul class="flex-Row gap-2">
-                    <a asp-action="ViewUser" class="nav-item active" data-nav-item>Agents</a>
-                    <a asp-action="ViewTeams" class="nav-item" data-nav-item>Team</a>
+                    <a asp-action="ViewUser" data-admin-btn class="nav-item active-admin-nav" data-nav-item>Agents</a>
+                    <a asp-action="ViewTeams" data-admin-btn class="nav-item" data-nav-item>Team</a>
                 </ul>
             </div>
             <div class="flex-Row gap-2 justify-content-center align-center">

@@ -1,0 +1,150 @@
+﻿@{
+    ViewData["Title"] = "Tickets";
+    Layout = "_Layout";
+}
+@section styles {
+    <link rel="stylesheet" href="~/css/functionalities.css" />
+    <link rel="stylesheet" href="~/css/Admin.css" />
+}
+
+@Html.Partial("Admin_Header")
+<div class="main">
+    @Html.Partial("Admin_Sidebar")
+    <div class="admin-body p-y-3 relative bg-grey">
+        <h2>Analytics</h2>
+        <div class="view-user-nav">
+            <div class="agent-nav pt-4">
+                <ul class="flex-Row gap-2">
+                    <a asp-action="AnalyticsOverallMetrics" asp-controller="Admin" class="nav-item active-admin-nav " data-ticketsall-nav-item data-status="unresolved">Overall Metrics</a>
+                    <a asp-action="AnalyticsTeamMetric" asp-controller="Admin" class="nav-item " data-ticketsall-nav-item data-status="resolved">Team Metric</a>
+                    <li class="nav-item" data-ticketsall-nav-item data-status="resolved">Agent Metrics</li>
+                </ul>
+            </div>
+           
+        </div>
+        <div class="j-search-container | flex-Row align-center justify-content-center">
+            <i class="fa-solid fa-magnifying-glass text-1-5"></i>
+            <input class="bg-transparent" type="text" placeholder="Search" />
+        </div>
+        <div class="admin-grid-3 | flex-Row gap-2 justify-content-center align-center">
+            
+            <div class="bg-White  p-x-0-5 p-y-0-5 br-1-5">
+                <p>Ticket by Status this Week</p>
+                <canvas id="pieChartStatus"></canvas>
+            </div>
+         
+            </div>
+        </div>
+        <div class="admin-grid-2-overallmetrics">
+            
+            <div class="bg-White  p-x-0-5 p-y-0-5 br-1-5">
+                <canvas id="LineTicketVolumeMetric"></canvas>
+            </div>
+            <div class="bg-White p-x-0-5 p-y-0-5 br-1-5 h-100 flex flex-col gap-1">
+                <p>User Activity</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts {
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('LineTicketVolumeMetric').getContext('2d');
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+                datasets: [{
+                    data: [12, 19, 3, 5, 2, 3, 7],
+                    label: "Ticket Volume",
+                    borderWidth: 1,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        const pieChartStatus = document.getElementById('pieChartStatus').getContext('2d');
+        new Chart(pieChartStatus, {
+            type: 'doughnut',
+            data: {
+                labels: ['Open', 'Resolved', 'In Progress', 'Closed'],
+                datasets: [{
+                    data: [10, 20, 15, 5], // Replace with your actual data
+                    backgroundColor: ['#40A6D8', '#6DB971', '#E68F36', '#DA5D5B']
+                }]
+            }
+        });
+
+        const pieChartCategory = document.getElementById('pieChartCategory').getContext('2d');
+        new Chart(pieChartCategory, {
+            type: 'doughnut',
+            data: {
+                labels: ['Technical', 'Billing', 'General Inquiry', 'Others'],
+                datasets: [{
+                    data: [15, 10, 20, 5], // Replace with your actual data
+                    backgroundColor: ['#40A6D8', '#E68F36', '#6DB971', '#DA5D5B']
+                }]
+            }
+        });
+
+        const pieChartPriority = document.getElementById('pieChartPriority').getContext('2d');
+        new Chart(pieChartPriority, {
+            type: 'doughnut',
+            data: {
+                labels: ['Low', 'High', 'Medium', 'Urgent'],
+                datasets: [{
+                    data: [5, 15, 10, 20], // Replace with your actual data
+                    backgroundColor: ['#40A6D8', '#6DB971', '#E68F36', '#DA5D5B']
+                }]
+            }
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            const swiper = new Swiper('.swiper', {
+                // Optional parameters
+                loop: true,
+                grabCursor: true,
+                spaceBetween: true,
+                // If we need pagination
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                    dynamicBullets: true
+                },
+                // Navigation arrows
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+
+                breakpoints: {
+                    0: {
+                        slidesPerView: 1
+                    },
+                    620: {
+                        slidesPerView: 2
+                    },
+                    1024: {
+                        slidesPerView: 3
+                    }
+                }
+            });
+        });
+    </script>
+}
