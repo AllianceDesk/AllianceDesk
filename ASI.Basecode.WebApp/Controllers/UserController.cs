@@ -55,12 +55,13 @@ namespace ASI.Basecode.WebApp.Controllers
             return View();
         }
 
-        
-        public IActionResult ViewTickets()
+        public IActionResult UserLayout()
         {
             ViewBag.IsLoginOrRegister = false;
             return View();
         }
+
+
 
     }
 }

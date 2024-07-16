@@ -4,7 +4,7 @@
 }
 
 @section styles {
-    <link rel="stylesheet" href="~/css/user_inProgress_tickets.css" />
+    <link rel="stylesheet" href="~/css/User/user_inProgress_tickets.css" />
 
 }
 
@@ -29,7 +29,7 @@
 
         <div class="header-buttons">
             <button type="button" class="btn button" data-bs-toggle="modal" data-bs-target="#createTicket"><i class='bx bx-plus-circle bx-xs bx-fw uh' style="align-self:center;"></i> Create Ticket </button>
-            <i class='bx bx-bell bx-sm icon' style="color: #45474B; cursor: pointer;"></i>
+            <a asp-action="Index" asp-controller="Notification"><i class='bx bx-bell bx-sm icon' style="color: #45474B; cursor: pointer;"></i></a>
             <i class='bx bx-cog bx-sm icon' style="color: #45474B; cursor: pointer;"></i>
 
             <a class="profile" href="#">

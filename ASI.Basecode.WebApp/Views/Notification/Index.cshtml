@@ -7,64 +7,72 @@
     <link rel="stylesheet" href="~/css/notification.css" />
 }
 
-<div class="card-body">
-    <div class="top-content">
-        <h3>Notifications</h3>
-        <i class='bx bx-x'></i>
+@{
+    var dataFromDatabase = new List<dynamic>
+        {
+            new { Name = "Notification 1", Link = "#" },
+            new { Name = "Notification 2", Link = "#" },
+            new { Name = "Notification 3", Link = "#" },
+            new { Name = "Notification 4", Link = "#" },
+            new { Name = "Notification 5", Link = "#" },
+            new { Name = "Notification 6", Link = "#" },
+            new { Name = "Notification 7", Link = "#" },
+            new { Name = "Notification 8", Link = "#" },
+            new { Name = "Notification 9", Link = "#" },
+            new { Name = "Notification 10", Link = "#" },
+            new { Name = "Notification 11", Link = "#" },
+            new { Name = "Notification 12", Link = "#" },
+            new { Name = "Notification 13", Link = "#" },
+            new { Name = "Notification 14", Link = "#" },
+        };
+}
+
+<div id="container">
+    <header>
+
+    </header>
+
+    <nav>
+
+    </nav>
+
+    <main>
+        <div class="card-body">
+            <div class="top-content">
+                <h3>Notifications</h3>
+                <i class='bx bx-x'></i>
+            </div>
+
+            <div class="card-content" id="card_content">
+                @foreach (var item in dataFromDatabase)
+                {
+                    <div class="notification-container">
+                        <h6 class="notification_title">@item.Name</h6>
+                        <a href="@item.Link" class="notification-link" data-bs-toggle="modal" data-bs-target="#viewNotification">Preview</a>
+                    </div>
+                }
+            </div>
+
+        </div>
+
+        <div class="modal fade" id="viewNotification" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content p-3">
+                    <div id="main_createcard">
+
+                        <div class="top_modal d-flex justify-content-between align-items-center mb-3">
+                            <h3>Notification 1</h3>
+                            <button type="button" class="btn" data-bs-dismiss="modal"><i class='bx bx-x bx-sm icon' style="color: #45474B; cursor: pointer;"></i></button>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="sidebar">
+        
     </div>
-
-    <div class="card-content" id="card_content">
-
-    </div>
-
+    
 </div>
-
-<script>
-
-    // Simulate data from an object (replace with actual database data)
-    var dataFromDatabase = [
-        { name: 'Notification 1', link: '#' },
-        { name: 'Notification 2', link: '#' },
-        { name: 'Notification 3', link: '#' },
-        { name: 'Notification 4', link: '#' },
-        { name: 'Notification 5', link: '#' },
-        { name: 'Notification 6', link: '#' },
-        { name: 'Notification 7', link: '#' },
-        { name: 'Notification 8', link: '#' },
-        { name: 'Notification 9', link: '#' },
-        { name: 'Notification 10', link: '#' },
-        { name: 'Notification 11', link: '#' },
-        { name: 'Notification 12', link: '#' },
-        { name: 'Notification 13', link: '#' },
-        { name: 'Notification 14', link: '#' },
-    ];
-
-    // Get the card-content div
-    var cardContent = document.getElementById('card_content');
-
-    // Iterate over the data and create a div and 'a' tag for each item
-    dataFromDatabase.forEach(function (item) {
-        // Create a new 'div' element for the container
-        var container = document.createElement('div');
-        container.className = 'notification-container';
-
-        var title = document.createElement('h6');
-        title.className = 'notification_title';
-        title.textContent = item.name;
-
-        // Create a new 'a' element
-        var link = document.createElement('a');
-        link.href = item.link;
-        link.textContent = 'Preview';
-        link.className = 'notification-link'; // Add a class for styling
-
-        // Append the 'a' element to the container
-        container.appendChild(title);
-        container.appendChild(link);
-
-        // Append the container to the card-content div
-        cardContent.appendChild(container);
-    });
-            
-
-</script>

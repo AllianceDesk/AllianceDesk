@@ -2,18 +2,24 @@
 
 @inject IHttpContextAccessor HttpContextAccessor
 
-<nav class="sidebar">
-    <div class="search-container">
+@section styles {
+    <link rel="stylesheet" href="~/css/User/user_sidebar.css" />
+
+}
+<div id="sidebar">
+
+    <div id="search-container">
         <i class='bx bx-search'></i>
-        <input type="text" class="search-input" placeholder="Search Tickets">        
+        <input type="text" id="search-input" placeholder="Search Tickets">
     </div>
 
-    <div class="button-container">
+    <div id="button-container">
         <i class='bx bx-list-ul'></i>
         <span class="label-1">Tickets</span>
     </div>
 
-    <div class="instruction-container">
+    <div id="instruction-container">
+
         <div class="instruction-label">
             <i class='bx bx-star'></i>
             <span class="label-2">Instructions</span>
@@ -43,6 +49,7 @@
                 <li>&#8226; rehamdee.camama@g.msuiit.edu.ph</li>
             </ul>
         </div>
+
     </div>
 
-</nav>
+</div>

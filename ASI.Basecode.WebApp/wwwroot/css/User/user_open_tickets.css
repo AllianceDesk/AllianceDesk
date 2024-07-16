@@ -279,7 +279,7 @@ main {
     font-weight: 500;
 }
 
-.date {
+.date, .email {
     color: #808080;
     font-size: 12px;
 }
