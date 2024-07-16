@@ -70,7 +70,7 @@ namespace ASI.Basecode.WebApp.Controllers
 
             return View(viewModel);
         }
- 
+ 
         [HttpGet("/UserDetails")]
         /// <summary>
         /// Go to the User Details View
