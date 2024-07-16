@@ -10,13 +10,16 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Linq;
+using ASI.Basecode.Data.Models;
 
 namespace ASI.Basecode.WebApp.Controllers
 {
+    [Route("Admin")]
     public class AdminController : ControllerBase<AdminController>
     {
         private readonly IUserService _userService;
-
+        private readonly ITicketService _ticketService;
+        
         /// <summary>
         /// Constructor
         /// </summary>
@@ -29,9 +32,11 @@ namespace ASI.Basecode.WebApp.Controllers
                               ILoggerFactory loggerFactory,
                               IConfiguration configuration,
                               IUserService userService,
+                              ITicketService ticketService,
                               IMapper mapper = null) : base(httpContextAccessor, loggerFactory, configuration, mapper)
         {
             this._userService = userService;
+            this._ticketService = ticketService;
         }
 
         /// <summary>
@@ -68,35 +73,117 @@ namespace ASI.Basecode.WebApp.Controllers
         /// <returns> Tickets View </returns>
         [HttpGet]
         [AllowAnonymous]
-        [Route("TicketsAll/{id?}")]
-        public ActionResult TicketsAll(string? id)
+        [Route("Tickets/{id?}")]
+        public ActionResult Tickets(string? id, string? status)
         {
             ViewBag.IsLoginOrRegister = false;
             ViewBag.AdminSidebar = "Tickets";
 
+            if(status != null)
+            {
+                ViewBag.ShowStatus = status;
+
+                if(status == "Resolved")
+                {
+                    var resolvedTickets = _ticketService.RetrieveAll()
+                        .Where(t => t.StatusId == "4" || t.StatusId == "5")
+                        .OrderByDescending(t => t.DateCreated);
+                    return View("/Views/Admin/Tickets.cshtml", resolvedTickets);
+                }
+
+                var unresolvedTickets = _ticketService.RetrieveAll()
+                    .Where(t => t.StatusId == "1" || t.StatusId == "2" || t.StatusId == "3")
+                    .OrderByDescending(t => t.DateCreated);
+
+                return View("/Views/Admin/Tickets.cshtml", unresolvedTickets);
+            } 
+
             if (id != null)
             {
-                // Handle the case where an ID is provided
-                ViewBag.TicketId = id;
-                return this.View("/Views/Admin/TicketDetail.cshtml");
+
+                var ticket = _ticketService.RetrieveAll()
+                    .Where(t => t.TicketId.ToString() == id)
+                    .FirstOrDefault();
+
+                TicketViewModel ticketViewModel = new TicketViewModel
+                {
+                    TicketId = ticket.TicketId,
+                    Title = ticket.Title,
+                    Description = ticket.Description,
+                    StatusId = ticket.StatusId,
+                    Status = ticket.Status,
+                    CategoryId = ticket.CategoryId,
+                    Category = ticket.Category,
+                    PriorityId = ticket.PriorityId,
+                    Priority = ticket.Priority,
+                    CreatorId = ticket.CreatorId,
+                    DateCreated = ticket.DateCreated,
+                    TicketActivities = ticket.TicketActivities
+                };
+
+                return this.View("/Views/Admin/TicketDetail.cshtml", ticketViewModel);
             }
             else
             {
+                var tickets = _ticketService.RetrieveAll()
+                    .OrderByDescending(t => t.DateCreated);
+
                 // Handle the case where no ID is provided
-                return this.View("/Views/Admin/TicketsAll.cshtml");
+                return this.View("/Views/Admin/Tickets.cshtml", tickets);
             }
         }
 
-        [HttpGet]
+        [HttpGet("Tickets/Assignment")]
         [AllowAnonymous]
-        public ActionResult TicketAssignment()
+        public ActionResult TicketAssignment(string id)
         {
+            var ticket = _ticketService.RetrieveAll()
+                .Where(t => t.TicketId.ToString() == id)
+                .FirstOrDefault();
+
+            var tickets = _ticketService.RetrieveAll();
+
+            // Retrieve all agents (assuming RoleId 2 corresponds to agents)
+            var agents = _userService.GetAgents().ToList();
+
+            foreach (var agent in agents) {
+                if(agent.TeamId != null)
+                {
+                    agent.TeamName = _userService.GetTeams().Where(t => t.TeamId.ToString() == agent.TeamId).FirstOrDefault().TeamName;
+                }
+            }
+            
+            var assignedTicketCounts = agents
+                .Select(agent => new
+                {
+                    Agent = agent,
+                    TicketCount = tickets.Count(t => t.AgentId.ToString() == agent.UserId.ToString())
+                })
+                .OrderByDescending(agent => agent.TicketCount)
+                .ToList();
+
+            var model = new AgentAssignmentViewModel
+            {
+                TicketId = ticket.TicketId,
+                Title = ticket.Title,
+                CreatedAt = ticket.DateCreated,
+                Description = ticket.Description,
+                Agents = agents,
+                AssignedTicketCounts = assignedTicketCounts
+                    .Select(agent => new AgentTicketCountViewModel
+                    {
+                        Agent = agent.Agent,
+                        TicketCount = agent.TicketCount
+                    })
+                    .ToList()
+            };
+            
             ViewBag.AdminSidebar = "Tickets";
-            return this.View();
+            return View(model);
         }
 
 
-        [HttpGet]
+        [HttpGet("Tickets/Reassignment")]
         [AllowAnonymous]
         public ActionResult TicketReassignment()
         {

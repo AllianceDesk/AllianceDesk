@@ -116,7 +116,7 @@ namespace ASI.Basecode.WebApp.Controllers
 
         }
 
-        [HttpPost("Ticket/Create")]
+        [HttpPost("Tickets/Create")]
         public IActionResult TicketCreate(TicketViewModel ticket)
         {
             // Replace with User.Identity.Name when authentication is implemented
@@ -126,7 +126,7 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("Tickets");
         }
 
-        [HttpPost("Ticket/{id}/Delete")]
+        [HttpPost("Tickets/{id}/Delete")]
         public IActionResult TicketDelete(string id)
         {
 
@@ -142,7 +142,7 @@ namespace ASI.Basecode.WebApp.Controllers
         }
 
 
-        [HttpGet("Ticket/{id}/Edit")]
+        [HttpGet("Tickets/{id}/Edit")]
         public IActionResult TicketEdit(string id)
         {
             var ticket = _ticketService.GetById(id);
@@ -182,7 +182,7 @@ namespace ASI.Basecode.WebApp.Controllers
         }
 
         
-        [HttpPost("Ticket/{id}/Edit"), ActionName("TicketEdit")]
+        [HttpPost("Tickets/{id}/Edit"), ActionName("TicketEdit")]
         public IActionResult TicketEditPost(string id, TicketPageViewModel model)
         {
             var ticket = _ticketService.GetById(id); // Ensure this matches with the ID being passed

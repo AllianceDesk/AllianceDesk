@@ -325,7 +325,7 @@
         var modal = document.querySelector('#editTicket');
 
         // Fetch ticket details via AJAX
-        fetch(`/User/Ticket/${ticketId}/Edit`)
+        fetch(`/User/Tickets/${ticketId}/Edit`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -333,8 +333,6 @@
                 return response.json();
             })
             .then(data => {
-
-
                 console.log('Fetched data:', data);
 
                 // Populate modal fields with fetched data
@@ -343,7 +341,7 @@
                 modal.querySelector('#Ticket_CategoryId').value = data.categoryId;
                 modal.querySelector('#Ticket_PriorityId').value = data.priorityId;
                 modal.querySelector('#Ticket_Description').value = data.description;
-                modal.querySelector('form').action = `/User/Ticket/${ticketId}/Edit`;
+                modal.querySelector('form').action = `/User/Tickets/${ticketId}/Edit`;
                 // Show the modal after data is loaded
                 var modalInstance = new bootstrap.Modal(modal);
                 modalInstance.show();
@@ -353,7 +351,7 @@
 
     function userDelete(ticketId) {
         var form = document.querySelector('#deleteTicketForm');
-        form.action = `/User/Ticket/${ticketId}/Delete`;
+        form.action = `/User/Tickets/${ticketId}/Delete`;
         form.querySelector('#deleteTicketId').value = ticketId;
         var modalInstance = new bootstrap.Modal(document.querySelector('#deleteTicket'));
         modalInstance.show();
