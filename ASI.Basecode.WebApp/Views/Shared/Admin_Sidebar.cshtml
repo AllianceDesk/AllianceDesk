@@ -1,14 +1,28 @@
 ﻿@using Microsoft.AspNetCore.Http
 
 @inject IHttpContextAccessor HttpContextAccessor
+@section styles {
+    <link rel="stylesheet" href="~/css/Admin.css" />
+}
+<nav class="admin-sidebar flex flex-col gap-1">   
 
-<nav class="sidebar">   
-
-    <button type="button" class="btn active-button flag"><i class='bx bx-grid-alt bx-sm as' style="align-self:center;"></i> Overview </button>
-    <button type="button" class="btn inactive-button flag"><i class='bx bx-purchase-tag-alt bx-sm as' style="align-self:center;"></i> Tickets </button>
-    <button type="button" class="btn inactive-button flag"><i class='bx bx-group bx-sm as' style="align-self:center;"></i> Teams </button>
-    <button type="button" class="btn inactive-button flag"><i class='bx bx-detail bx-sm as' style="align-self:center;"></i> Knowledge Base </button>
-    <button type="button" class="btn inactive-button flag"><i class='bx bx-objects-vertical-bottom bx-sm as' style="align-self:center;"></i> Analytics </button>
+    <a data-admin-btn class=" admin-sb-inactive-button margin-0"><i class='bx bx-grid-alt bx-sm as' style="align-self:center;"></i>  <p>Overview</p> </a>
+    @if (ViewBag.AdminSidebar == "Tickets") {
+        <a asp-controller="Admin" asp-action="TicketsAll" data-admin-btn class=" admin-sb-active-button margin-0"><i class='bx bx-purchase-tag-alt bx-sm as' style="align-self:center;"></i> <p>Tickets</p> </a>
+    } else {
+        <a asp-controller="Admin" asp-action="TicketsAll" data-admin-btn class=" admin-sb-inactive-button margin-0"><i class='bx bx-purchase-tag-alt bx-sm as' style="align-self:center;"></i> <p>Tickets</p> </a>
+    } 
+    @if (ViewBag.AdminSidebar == "ViewUser")
+    {
+        <a asp-controller="Admin" asp-action="ViewUser" data-admin-btn class=" admin-sb-active-button margin-0"><i class='bx bx-group bx-sm as' style="align-self:center;"></i> <p>Teams</p> </a>
+    }
+    else
+    {
+        <a asp-controller="Admin" asp-action="ViewUser" data-admin-btn class=" admin-sb-inactive-button margin-0"><i class='bx bx-group bx-sm as' style="align-self:center;"></i> <p>Teams</p> </a>
+    }
+    
+    <a data-admin-btn class=" admin-sb-inactive-button margin-0"><i class='bx bx-detail bx-sm as' style="align-self:center;"></i> <p>Knowledge Base</p> </a>
+    <a data-admin-btn class=" admin-sb-inactive-button margin-0"><i class='bx bx-objects-vertical-bottom bx-sm as' style="align-self:center;"></i> <p>Analytics</p> </a>
     
         
     
@@ -16,27 +30,27 @@
 
 <script>
     // Function to handle toggle button active-inactive states
-    document.addEventListener('DOMContentLoaded', function () {
-        var buttons = document.querySelectorAll('.flag');
+        document.addEventListener('DOMContentLoaded', function () {
+        var buttons = document.querySelectorAll('[data-admin-btn]');
 
         buttons.forEach(function (button) {
             button.addEventListener('click', function () {
-                if (this.classList.contains('active-button')) {
+                if (this.classList.contains('admin-sb-active-button')) {
                     // If the button is already active, do nothing (toggle off)
                     return;
                 }
 
                 // Remove active state from all buttons
                 buttons.forEach(function (btn) {
-                    btn.classList.remove('active-button');
-                    btn.classList.add('inactive-button');
+                    btn.classList.remove('admin-sb-active-button');
+                    btn.classList.add('admin-sb-inactive-button');
                 });
 
                 // Set this button as active
-                this.classList.remove('inactive-button');
-                this.classList.add('active-button');
+                this.classList.remove('admin-sb-inactive-button');
+                this.classList.add('admin-sb-active-button');
             });
         });
-    });
+    }); 
 
 </script>

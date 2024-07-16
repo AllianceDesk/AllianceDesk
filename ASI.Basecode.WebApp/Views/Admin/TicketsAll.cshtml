@@ -1,0 +1,96 @@
+﻿@{
+    ViewData["Title"] = "Tickets";
+    Layout = "_Layout";
+}
+@section styles {
+    <link rel="stylesheet" href="~/css/functionalities.css" />
+    <link rel="stylesheet" href="~/css/Admin.css" />
+}
+
+@Html.Partial("Admin_Header")
+<div class="main">
+    @Html.Partial("Admin_Sidebar")
+    <div class="admin-body p-y-3 relative bg-grey">
+        <h2>Tickets</h2>
+        <div class="view-user-nav">
+            <div class="agent-nav pt-4">
+                <ul class="flex-Row gap-2">
+                    <li class="nav-item active" data-ticketsall-nav-item data-status="unresolved">Unresolved</li>
+                    <li class="nav-item" data-ticketsall-nav-item data-status="resolved">Resolved</li>
+                </ul>
+            </div>
+            <div class="flex-Row gap-2 justify-content-center align-center">
+                <div class="j-search-container | flex-Row align-center justify-content-center">
+                    <i class="fa-solid fa-magnifying-glass text-1-5"></i>
+                    <input class="bg-transparent" type="text" placeholder="Search" />
+                </div>
+                <button class="mbtn-primary flex-Row gap-1 color-black bg-btn-grey align-center justify-content-center border-0 p-x-1 br-1-5" data-admin-add-btn>
+                    <i class="fa-solid fa-filter"></i>
+                    <p class="br-1-5 p-y-1">Filter</p>
+                </button>
+            </div>
+        </div>
+        <div class="bg-white flex flex-col gap-0-5" data-admin-tickets-container></div>
+    </div>
+</div>
+
+<script>
+    const adminTicketsContainer = document.querySelector("[data-admin-tickets-container]");
+    const ticketAllNavItems = document.querySelectorAll("[data-ticketsall-nav-item]");
+
+    const ticketsData = [
+        {
+            id: "ticket-1",
+            title: "Issue Num 1",
+            resolved: false,
+            description: "Life seasons open have. Air have of. Lights fill after let third darkness replenish fruitful let. Wherein set image. Creepeth said above gathered bring.",
+            Date: "20th Oct"
+        },
+        {
+            id: "ticket-2",
+            title: "Issue Num 2",
+            resolved: true,
+            description: "Life seasons open have. Air have of. Lights fill after let third darkness replenish fruitful let. Wherein set image. Creepeth said above gathered bring.",
+            Date: "20th Jan"
+        }
+    ];
+
+    const renderTickets = (filter) => {
+        adminTicketsContainer.innerHTML = '';
+        ticketsData
+            .filter(ticket => (filter === 'unresolved' ? !ticket.resolved : ticket.resolved))
+            .forEach(ticket => {
+                const ticketElement = document.createElement('div');
+                ticketElement.className = 'admin-ticket agents | cursor-pointer ctr-shadow p-y-1 p-x-1 flex flex-col gap-1';
+                ticketElement.setAttribute('id', ticket.id);
+
+                ticketElement.innerHTML = `
+                        <div class="flex-Row justify-content-between">
+                            <p class="text-1-5 fw-semi">${ticket.title}</p>
+                            <p class="text-1-5 fw-semi">${ticket.Date}</p>
+                        </div>
+                        <p>${ticket.description}</p>
+                        <div class="flex-Row gap-1">
+                            <div class="role-container role-agent fw-semi text-0-5">Agent</div>
+                            <div class="role-container role-agent fw-semi text-0-5">Agent</div>
+                        </div>
+                    `;
+
+                ticketElement.addEventListener('click', () => {
+                    window.location.href = `/TicketsAll/${ticket.id}`;
+                });
+
+                adminTicketsContainer.appendChild(ticketElement);
+            });
+    };
+
+    ticketAllNavItems.forEach(navItem => {
+        navItem.addEventListener("click", () => {
+            ticketAllNavItems.forEach(item => item.classList.remove("active"));
+            navItem.classList.add("active");
+            renderTickets(navItem.getAttribute('data-status'));
+        });
+    });
+
+    renderTickets('unresolved');
+</script>

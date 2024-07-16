@@ -12,7 +12,10 @@
     @Html.AntiForgeryToken()
 </div> *@
 @Html.Partial("General_Header")
-<div class="login-container">
+
+<div>
+    <div class="login-container">
+
     
     <form method="post" action="/Account/Login" id="loginForm">
         <h2 class="text-center font-weight-bold">Alliance Help Desk</h2>
@@ -20,8 +23,8 @@
         <div class="form-outline">
             <label class="form-label" style="font-size: 10px;" for="form2Example11">Username</label>
             <input type="text" id="form2Example11" class="form-control"
-                   asp-for="UserId" placeholder="Enter username" />
-            <span asp-validation-for="UserId" class="text-danger"></span>
+                   asp-for="UserName" placeholder="Enter username" />
+            <span asp-validation-for="UserName" class="text-danger"></span>
         </div>
         <div class="form-outline mb-4">
             <label class="form-label" style="font-size: 10px;" for="form2Example22">@Password</label>
@@ -36,7 +39,7 @@
     <img src="~/img/login-bg.png"
          alt="logo" />
 </div>
-
+</div>
 @section scripts {
     <script>
         // Check for error message and display Toastr notification

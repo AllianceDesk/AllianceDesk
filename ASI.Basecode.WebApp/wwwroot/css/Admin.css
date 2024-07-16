@@ -1,9 +1,9 @@
 .admin-body {
-    min-height: 100vh;
     padding-left: 1.5rem;
     padding-right: 1.5rem;
     margin: auto;
     width: 100%;
+    height: 100%;
 }
 
     .admin-body.edit-active {
@@ -11,30 +11,34 @@
         grid-template-columns: 1fr 20rem;
     }
 
+.view-user-nav {
+    display: flex;
+    justify-content: space-between;
+}
 
 
-.search-container {
+.j-search-container {
     border: 2px solid #9E9E9E;
     border-radius: 1rem;
     padding: 0.6rem 1rem;
 }
 
-.search-container input {
+.j-search-container input {
     border: none;
     padding: 0.5rem 1rem 0.5rem 2rem;
     outline: none; 
 }
 
-    .search-container input:focus {
+    .j-search-container input:focus {
         border: none;
         outline: none;
     }
 
-    .search-container:focus-within {
+    .j-search-container:focus-within {
         border: 2px solid #E21818;
     }
 
-    .search-container:focus-within i {
+    .j-search-container:focus-within i {
         color :#E21818;
     }
 
@@ -54,6 +58,10 @@
     color: #03781D;
     border: 1px solid #6DC580;
     background-color: #F0F9F2;
+}
+
+.agents {
+    background-color: #FFF;
 }
 
 .agents:hover,
@@ -171,4 +179,120 @@
 
 .nav-item {
     color: #9E9E9E;
+}
+
+.admin-sidebar {
+    padding: 1rem;
+}
+.admin-sidebar a {
+    margin: 0;
+}
+
+/* BUTTONS */
+.admin-sb-active-button {
+    background-color: #E21818;
+    color: white;
+}
+
+    .admin-sb-active-button i,
+    .admin-sb-active-button p {
+        color: white;
+    }
+
+    .admin-sb-active-button:hover {
+        background-color: rgba(226,24,24, 0.8);
+        transition: ease-in-out 250ms;
+    }
+
+.admin-sb-inactive-button {
+    background-color: #FAFAFA;
+    color: black;
+}
+
+    .admin-sb-inactive-button:hover {
+        background-color: rgba(226,24,24, 0.6);
+        transition: background-color ease-in-out 350ms;
+    }
+
+        .admin-sb-inactive-button:hover p,
+        .admin-sb-inactive-button:hover i{
+            color: white;
+        }
+
+    .admin-sb-inactive-button,
+    .admin-sb-active-button {
+        padding: 0.5rem 1rem;
+        border-radius: 3px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+a[data-admin-btn] {
+    text-decoration: none; 
+}
+
+.admin-ticket {
+    box-shadow: 0 5px 5px -5px grey;
+}
+
+/* TICKET */
+
+.ticket-tag {
+    display: flex;
+    align-items: center;
+}
+
+
+@media (max-width: 600px) {
+    .admin-body {
+        display: flex;
+        flex-direction: column;
+    }
+
+        .admin-body.edit-active {
+            display: flex;
+            flex-direction: column;
+        }
+
+    .view-user-nav {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .j-search-container {
+        padding: 0 0 0 10px;
+    }
+
+    .j-search-container input {
+        padding: 3px 0 3px 0;
+    }
+}
+
+
+/* MEDIA */
+@media (min-width: 600px) and (max-width: 900px) {
+    .admin-body {
+        display: flex;
+        flex-direction: column;
+    }
+
+        .admin-body.edit-active {
+            display: flex;
+            flex-direction: column;
+        }
+
+    .view-user-nav {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .j-search-container {
+        padding: 0 0 0 10px;
+    }
+
+    .j-search-container input {
+        padding: 3px 0 3px 0;
+    }
 }

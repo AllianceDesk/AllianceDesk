@@ -46,7 +46,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="Views\User\CreateModal.cshtml">
+
+	  <Content Update="Views\User\CreateModal.cshtml"></Content>
+
+    <Content Update="Views\Admin\TicketReassignment.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="Views\Admin\TicketsAll.cshtml">
+
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
