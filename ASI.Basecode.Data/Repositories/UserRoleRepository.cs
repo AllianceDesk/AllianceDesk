@@ -12,7 +12,7 @@ namespace ASI.Basecode.Data.Repositories
     public class UserRoleRepository : BaseRepository, IUserRoleRepository
     {
 
-        public UserRoleRepository (IUnitOfWork unitOfWork) : base(unitOfWork)
+        public UserRoleRepository(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
 
         }

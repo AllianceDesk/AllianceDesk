@@ -11,7 +11,7 @@ namespace ASI.Basecode.Data.Repositories
 {
     public class UserRepository : BaseRepository, IUserRepository
     {
-        public UserRepository(IUnitOfWork unitOfWork) : base(unitOfWork) 
+        public UserRepository(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
 
         }

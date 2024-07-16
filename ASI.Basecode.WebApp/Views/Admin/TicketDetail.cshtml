@@ -1,4 +1,6 @@
-﻿@{
+﻿@model ASI.Basecode.Services.ServiceModels.TicketViewModel
+
+@{
     ViewData["Title"] = "Tickets";
     Layout = "_Layout"; 
 }
@@ -13,29 +15,25 @@
     <div class="admin-body p-y-3 relative bg-grey flex flex-col gap-1">
         <div class="view-user-nav">
             <div class="flex-Row justify-content-between align-items-center gap-1">
-                <a asp-controller="Admin" asp-action="TicketsAll" asp-route-id=""><i class="fa-solid fa-arrow-left"></i></a>
-                <h2>Ticket#123</h2>
+                <a asp-controller="Admin" asp-action="Tickets" asp-route-id=""><i class="fa-solid fa-arrow-left"></i></a>
             </div>
             <div class="flex-Row justify-content-between align-items-center gap-1">
                 <a data-admin-btn class="registerBtn color-white" href="#">Update Priority</a>
-                <a asp-controller="Admin" asp-action="TicketAssignment" data-admin-btn class="registerBtn color-white" >Assign Ticket</a>
+                <a asp-controller="Admin" asp-action="TicketAssignment" asp-route-id="@Model.TicketId" class="registerBtn color-white" >Assign Ticket</a>
             </div>
         </div>
         <div class="h-29 p-x-1 p-y-1 br-1 bg-white flex flex-col gap-1">
-            <h2>Title</h2>
+            <h2>@Model.Title</h2>
             <div class="flex-Row justify-content-between w-100">
                 <div class="flex-Row gap-0-5">
-                    <div class="ticket-tag | tag-border bg-btn-grey p-x-1 br-1 text-sm">flag</div>
+                    <div class="ticket-tag | tag-border bg-btn-grey p-x-1 br-1 text-sm">@Model.Category</div>
                     <div class="ticket-tag | tag-border bg-btn-grey p-x-1 br-1 text-sm">flag</div>
                     <div class="ticket-tag | tag-border bg-btn-grey p-x-1 br-1 text-sm">flag</div>
                 </div>
-                <div>flag</div>
+                <div class="ticket-tag | tag-border bg-btn-red p-x-1 br- text-sm">@Model.Priority</div>
             </div>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
-            <button class="registerBtn mbtn-primary align-self-start">Open</button>
-            <form class="w-100" action="/" method="post">
-                <input class=" border-reply br-1 px-3 p-y-0-5  w-100" placeholder="Add a Reply" />
-            </form>
+            <p>@Model.Description</p>
+            <button class="registerBtn mbtn-primary align-self-start">@Model.Status</button>
         </div>
     </div>
 </div>
