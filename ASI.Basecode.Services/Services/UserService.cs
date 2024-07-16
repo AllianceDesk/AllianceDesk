@@ -61,6 +61,29 @@ namespace ASI.Basecode.Services.Services
                 throw new InvalidDataException(Resources.Messages.Errors.UserExists);
             }
         }
+        
+        public void UpdateUser(UserViewModel model)
+        {
+            var existingData = _repository.GetUsers().Where(u => u.UserId.ToString() == model.UserId).FirstOrDefault();
+            if (existingData != null)
+            {
+                _mapper.Map(model, existingData);
+                existingData.Name = model.UserName;
+                existingData.Username = model.UserName;
+                existingData.Password = PasswordManager.EncryptPassword(model.Password);
+                existingData.Email = model.Email;
+                existingData.RoleId = model.RoleId;
+                existingData.TeamId = Guid.Parse(model.TeamId);
+
+                _repository.UpdateUser(existingData);
+            }
+            
+        }
+
+        public void DeleteUser(string userId)
+        {
+            _repository.DeleteUser(userId);
+        }
 
         public void AddTeam(UserViewModel model)
         {
@@ -71,6 +94,7 @@ namespace ASI.Basecode.Services.Services
                 _teamRepository.AddTeam(team);
             }
         }
+
         public IEnumerable<Team> GetTeams()
         {
             return _teamRepository.RetrieveAll();
@@ -83,7 +107,26 @@ namespace ASI.Basecode.Services.Services
 
         public IEnumerable<User> GetUsers()
         {
-            return _repository.GetUsers().Where(u => u.RoleId == 2);
+            return _repository.GetUsers().Where(u => u.RoleId == 3);
+        }
+
+        public User GetUserById(string id)
+        {
+            User user = _repository.GetUsers().Where(x => x.UserId.ToString() == id).FirstOrDefault();
+
+            if (user !=  null)
+            {
+                return user;
+            }
+        
+            return null;
+        }
+
+        public IEnumerable<UserViewModel> GetAgents()
+        {
+            var agents = _repository.GetUsers().Where(x => x.RoleId == 2).ToList();
+
+            return _mapper.Map<IEnumerable<UserViewModel>>(agents);
         }
     }
 }

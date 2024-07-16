@@ -20,7 +20,7 @@ namespace ASI.Basecode.Services.ServiceModels
         [Required(ErrorMessage = "Email is required.")]
         public string Email { get; set; }
 
-        [Required(ErrorMessage = "Password is required.")]
+       [Required(ErrorMessage = "Password is required.")]
         public string Password { get; set; }
 
         [Required(ErrorMessage = "Confirmation Password is required.")]
@@ -28,6 +28,7 @@ namespace ASI.Basecode.Services.ServiceModels
         public string ConfirmPassword { get; set; }
 
         public byte RoleId { get; set; }
+        public string RoleName { get; set; }
 
         [Required(ErrorMessage = "Team Name is required.")]
         public string TeamName { get; set; }

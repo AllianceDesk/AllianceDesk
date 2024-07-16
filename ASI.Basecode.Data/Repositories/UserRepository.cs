@@ -11,7 +11,7 @@ namespace ASI.Basecode.Data.Repositories
 {
     public class UserRepository : BaseRepository, IUserRepository
     {
-        public UserRepository(IUnitOfWork unitOfWork) : base(unitOfWork) 
+        public UserRepository(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
 
         }
@@ -30,6 +30,22 @@ namespace ASI.Basecode.Data.Repositories
         {
             this.GetDbSet<User>().Add(user);
             UnitOfWork.SaveChanges();
+        }
+
+        public void UpdateUser(User user) 
+        {
+            this.GetDbSet<User>().Update(user);
+            UnitOfWork.SaveChanges();
+        }
+
+        public void DeleteUser(string userId)
+        {
+            var deleteUser = this.GetDbSet<User>().Where(u => u.UserId.ToString() == userId).FirstOrDefault();
+            if (deleteUser != null)
+            {
+                this.GetDbSet<User>().Remove(deleteUser);
+                UnitOfWork.SaveChanges();
+            }
         }
 
     }
