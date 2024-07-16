@@ -15,6 +15,9 @@ namespace ASI.Basecode.Services.ServiceModels
         public string Description { get; set; }
         public List<UserViewModel> Agents { get; set; } // Assuming User is your user model
         public List<AgentTicketCountViewModel> AssignedTicketCounts { get; set; }
+
+        //For submitting the form
+        public string SelectedAgentId { get; set; }
     }
 
     public class AgentTicketCountViewModel
