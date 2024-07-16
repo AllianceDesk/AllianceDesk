@@ -20,6 +20,7 @@ namespace ASI.Basecode.Services.Services
         private readonly ITicketActivityRepository _ticketActivityRepository;
         private readonly ITicketActivityOperationRepository _ticketActivityOperationRepository;
         private readonly ITicketMessageRepository _ticketMessageRepository;
+        private readonly ISessionHelper _sessionHelper;
         private readonly IMapper _mapper;
 
         public TicketService(
@@ -31,7 +32,8 @@ namespace ASI.Basecode.Services.Services
             ITicketActivityRepository ticketActivityRepository,
             ITicketActivityOperationRepository ticketActivityOperationRepository,
             ITicketMessageRepository ticketMessageRepository,
-            IMapper mapper)
+            IMapper mapper,
+            ISessionHelper sessionHelper)
         {
             _ticketRepository = ticketRepository;
             _userRepository = userRepository;
@@ -42,6 +44,7 @@ namespace ASI.Basecode.Services.Services
             _ticketActivityOperationRepository = ticketActivityOperationRepository;
             _ticketMessageRepository = ticketMessageRepository;
             _mapper = mapper;
+            _sessionHelper = sessionHelper;
         }
 
         public IEnumerable<TicketViewModel> RetrieveAll()
@@ -78,7 +81,7 @@ namespace ASI.Basecode.Services.Services
             newTicket.Title = ticket.Title;
             newTicket.Description = ticket.Description;
             newTicket.DateCreated = DateTime.Now;
-            newTicket.CreatedBy = Guid.Parse(ticket.CreatorId);
+            newTicket.CreatedBy = _sessionHelper.GetUserIdFromSession();
             newTicket.StatusId = 1;
             newTicket.PriorityId = Convert.ToByte(ticket.PriorityId);
             newTicket.CategoryId = Convert.ToByte(ticket.CategoryId);

@@ -18,6 +18,7 @@ namespace ASI.Basecode.WebApp.Controllers
     {
         private readonly IUserService _userService;
         private readonly ITicketService _ticketService;
+        private readonly ISessionHelper _sessionHelper;
         /// <summary>
         /// Constructor
         /// </summary>
@@ -31,22 +32,24 @@ namespace ASI.Basecode.WebApp.Controllers
                               IConfiguration configuration,
                               IUserService userService,
                               ITicketService ticketService,
+                              ISessionHelper sessionHelper,
                               IMapper mapper = null) : base(httpContextAccessor, loggerFactory, configuration, mapper)
         {
             this._userService = userService;
             this._ticketService = ticketService;
+            _sessionHelper = sessionHelper;
         }
 
         [HttpGet("Tickets")]
         public IActionResult Tickets(string? status)
         {
-            // Replace with User.Identity.Name when authentication is implemented
-            string user = "90122701-1c8c-40a4-8936-7717cfaa9c14";
+/*            // Replace with User.Identity.Name when authentication is implemented
+            string user = "90122701-1c8c-40a4-8936-7717cfaa9c14";*/
 
             var tickets = _ticketService.RetrieveAll();
 
             var userTickets = tickets
-                .Where(t => t.CreatorId == user)
+                .Where(t => t.CreatorId == _sessionHelper.GetUserIdFromSession().ToString())
                 .OrderByDescending(t => t.DateCreated)
                 .ToList();
 
@@ -102,7 +105,7 @@ namespace ASI.Basecode.WebApp.Controllers
         public IActionResult TicketCreate(TicketViewModel ticket)
         {
             // Replace with User.Identity.Name when authentication is implemented
-            ticket.CreatorId = "857949FE-EC30-4C0B-A514-EB0FD9262738";
+            /*ticket.CreatorId = "857949FE-EC30-4C0B-A514-EB0FD9262738";*/
             _ticketService.Add(ticket);
 
             return RedirectToAction("Tickets");
