@@ -23,8 +23,8 @@
             <div class="view-user-nav">
                 <div class="agent-nav pt-4">
                     <ul class="flex-Row gap-2">
-                        <a asp-action="ViewUser" class="nav-item active" data-nav-item>Agents</a>
-                        <a asp-action="ViewTeams" class="nav-item" data-nav-item>Team</a>
+                        <a asp-action="User" class="nav-item active" data-nav-item>Agents</a>
+                        <a asp-action="Teams" class="nav-item" data-nav-item>Team</a>
                     </ul>
                 </div>
                 <div class="flex-Row gap-2 justify-content-center align-center">
@@ -147,7 +147,7 @@
                 $(document).on('click', '[data-viewuser-agent]', function () {
                     var userId = $(this).data('user-id');
                     $.ajax({
-                        url: '/UserDetails',
+                        url: 'Admin/UserDetails',
                         type: 'GET',
                         data: { UserId: userId },
                         success: function (response) {
