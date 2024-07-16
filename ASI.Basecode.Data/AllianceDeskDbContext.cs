@@ -37,6 +37,7 @@ namespace ASI.Basecode.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
                 optionsBuilder.UseSqlServer("Addr=localhost;database=AllianceDeskDb;Integrated Security=False;Trusted_Connection=True");
             }
         }
@@ -50,6 +51,8 @@ namespace ASI.Basecode.Data
                     .HasColumnName("article_id");
 
                 entity.Property(e => e.Body).HasColumnName("body");
+
+                entity.Property(e => e.CategoryId).HasColumnName("category_id");
 
                 entity.Property(e => e.CreatedBy).HasColumnName("created_by");
 
@@ -126,7 +129,7 @@ namespace ASI.Basecode.Data
 
             modelBuilder.Entity<Favorite>(entity =>
             {
-                entity.HasIndex(e => new { e.UserId, e.ArticleId }, "UQ__Favorite__A57D58687B5D9372")
+                entity.HasIndex(e => new { e.UserId, e.ArticleId }, "UQ__Favorite__A57D5868EAFBBBBC")
                     .IsUnique();
 
                 entity.Property(e => e.FavoriteId)
@@ -266,7 +269,7 @@ namespace ASI.Basecode.Data
             modelBuilder.Entity<TicketActivity>(entity =>
             {
                 entity.HasKey(e => e.HistoryId)
-                    .HasName("PK__TicketActivity");
+                    .HasName("PK__TicketAc__096AA2E93474478F");
 
                 entity.Property(e => e.HistoryId)
                     .ValueGeneratedNever()
@@ -308,7 +311,7 @@ namespace ASI.Basecode.Data
             modelBuilder.Entity<TicketActivityOperation>(entity =>
             {
                 entity.HasKey(e => e.OperationId)
-                    .HasName("PK__TicketActivityOperation");
+                    .HasName("PK__TicketAc__9DE171232DB6403F");
 
                 entity.Property(e => e.OperationId).HasColumnName("operation_id");
 
@@ -320,7 +323,7 @@ namespace ASI.Basecode.Data
             modelBuilder.Entity<TicketMessage>(entity =>
             {
                 entity.HasKey(e => e.MessageId)
-                    .HasName("PK__TicketMessage");
+                    .HasName("PK__TicketMe__0BBF6EE658C0E533");
 
                 entity.Property(e => e.MessageId)
                     .ValueGeneratedNever()
@@ -354,7 +357,7 @@ namespace ASI.Basecode.Data
             modelBuilder.Entity<TicketPriority>(entity =>
             {
                 entity.HasKey(e => e.PriorityId)
-                    .HasName("PK_TicketPriority");
+                    .HasName("PK__TicketPr__EE32578592BE6068");
 
                 entity.Property(e => e.PriorityId).HasColumnName("priority_id");
 
@@ -367,7 +370,7 @@ namespace ASI.Basecode.Data
             modelBuilder.Entity<TicketStatus>(entity =>
             {
                 entity.HasKey(e => e.StatusId)
-                    .HasName("PK_TicketStatus");
+                    .HasName("PK__TicketSt__3683B531485BB229");
 
                 entity.Property(e => e.StatusId).HasColumnName("status_id");
 
@@ -422,7 +425,7 @@ namespace ASI.Basecode.Data
             modelBuilder.Entity<UserPreference>(entity =>
             {
                 entity.HasKey(e => e.PreferenceId)
-                    .HasName("PK_UserPreference");
+                    .HasName("PK__UserPref__FB41DBCFDEDFA562");
 
                 entity.Property(e => e.PreferenceId)
                     .ValueGeneratedNever()
@@ -446,7 +449,7 @@ namespace ASI.Basecode.Data
             modelBuilder.Entity<UserRole>(entity =>
             {
                 entity.HasKey(e => e.RoleId)
-                    .HasName("PK_UserRole");
+                    .HasName("PK__UserRole__760965CC2F6617A6");
 
                 entity.Property(e => e.RoleId).HasColumnName("role_id");
 
