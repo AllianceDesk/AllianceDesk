@@ -9,12 +9,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Linq;
 using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
-
-
+using System.Collections.Generic;
 
 namespace ASI.Basecode.WebApp.Controllers
 {
@@ -22,6 +18,7 @@ namespace ASI.Basecode.WebApp.Controllers
     {
 
         private readonly ITicketService _ticketService;
+        private readonly IUserService _userService;
 
         /// <summary>
         /// Constructor
@@ -31,210 +28,94 @@ namespace ASI.Basecode.WebApp.Controllers
         /// <param name="configuration"></param>
         /// <param name="localizer"></param>
         /// <param name="mapper"></param>
-        public TicketController(ITicketService ticketService,
+        public TicketController(ITicketService ticketService, IUserService userService,
             IHttpContextAccessor httpContextAccessor,
                               ILoggerFactory loggerFactory,
                               IConfiguration configuration,
                               IMapper mapper = null) : base(httpContextAccessor, loggerFactory, configuration, mapper)
         {
             _ticketService = ticketService;
+            _userService = userService;
         }
 
-        #region Admin Methods
-        [HttpGet("/Admin/Tickets")]
-        public IActionResult AdminTickets()
+        #region Agent Methods
+
+        [HttpGet("/Agent/Tickets")]
+        public IActionResult AgentTickets()
         {
-            var data = _ticketService.RetrieveAll();
-            return View(data);
+            // Replace with User.Identity.Name when authentication is implemented
+            string agent = "3850590f-e5e1-468b-a9a2-420074e9073f";
+            string agent2 = "aba6bb10-e42d-4714-907b-445f494e1dff";
+
+            var tickets = _ticketService.RetrieveAll();
+
+            var agentTickets = tickets.Where(t => t.AgentId == agent);
+
+            // TO DO: Find a way to be able to see the date the ticket was assigned to the agent
+            
+            /*var updatedAgentTickets = new List<TicketViewModel>();
+
+            foreach (var ticket in agentTickets)
+            {
+                var history = _ticketService.GetHistory(ticket.TicketId);
+
+                if (history != null)
+                {
+                    var firstOperation2 = history.FirstOrDefault(s => s.OperationId == 2);
+
+                    if (firstOperation2 != null)
+                    {
+                        // Create a new TicketViewModel with updated DateAssigned
+                        var updatedTicket = new TicketViewModel
+                        {
+                            TicketId = ticket.TicketId,
+                            
+                            DateAssigned = firstOperation2.ModifiedAt
+                        };
+                        updatedAgentTickets.Add(updatedTicket);
+                    }
+                }
+            }*/
+
+            // Return the view with the updated agentTickets
+            return View(agentTickets);
         }
 
         #endregion
 
         #region User Methods
 
-        [HttpGet("/User/Tickets")]
-        public IActionResult UserTickets()
+        [HttpGet("/User/Tickets/{id}")]
+        public IActionResult UserDetails(string id)
         {
-            var data = _ticketService.RetrieveAll();
-            return View(data);
-        }
+            var ticket = _ticketService.GetById(id);
 
-
-        [HttpGet("/User/Tickets/Create")]
-        /// <summary>
-        /// Go to the Create a Ticket View
-        /// </summary>
-        /// <returns></returns>
-        public IActionResult UserCreate()
-        {
-            var categories = _ticketService.GetCategories()
-                                   .Select(c => new SelectListItem
-                                   {
-                                       Value = c.CategoryId.ToString(),
-                                       Text = c.CategoryName
-                                   })
-                                   .ToList();
-
-            var priorities = _ticketService.GetPriorities()
-                                           .Select(p => new SelectListItem
-                                           {
-                                               Value = p.PriorityId.ToString(),
-                                               Text = p.PriorityName
-                                           })
-                                           .ToList();
-
-            // Pass data to ViewBag
-            ViewBag.Categories = new SelectList(categories, "Value", "Text");
-            ViewBag.Priorities = new SelectList(priorities, "Value", "Text");
-
-            return View();
-        }
-
-        [HttpPost("/User/Tickets/Create")]
-        public IActionResult PostUserCreate(TicketViewModel ticket)
-        {
-            _ticketService.Add(ticket);
-
-            return RedirectToAction(nameof(UserTickets));
-        }
-        #endregion
-
-
-        /*#region GET Methods        
-        /// <summary>
-        /// Return the Index View with a list of Tickets
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        
-        public IActionResult Index()
-        {
-            var data = _ticketService.RetrieveAll();
-            return View(data);
-        }
-
-        
-
-        /// <summary>
-        /// Get the Full Details of a Ticket using the Ticket ID
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <returns></returns>
-        [HttpGet]
-        public IActionResult Details(string id)
-        {
-            *//*var ticket = _ticketService.RetrieveAll().FirstOrDefault(x => x.Id.Equals(id));
+            ticket.TicketMessages = _ticketService.GetMessages(id);
 
             if (ticket == null)
             {
-                return NotFound();
+                return NotFound(); // Handle ticket not found scenario
             }
 
-
-            TicketPriority priority = _ticketService.GetPriorityById(ticket.PriorityId);
-
-            TicketStatus status = _ticketService.GetStatusById(ticket.StatusId);
-
-            ticket.StatusName = status.Name;
-            ticket.PriorityName = priority.Name;*//*
-
-            return View(null);
+            return View(ticket);
         }
 
-
-        /// <summary>
-        /// Go to the Edit View of a Ticket
-        /// </summary>
-        /// <param name="Id">The identifier.</param>
-        /// <returns></returns>
-        [HttpGet]
-        public IActionResult Edit(string Id)
+        [HttpPost("/User/Tickets/{id}/Message")]
+        public IActionResult PostMessage(string id, TicketViewModel model)
         {
-            var data = _ticketService.RetrieveAll().Where(x => x.Id.Equals(Id)).FirstOrDefault();
-
-            if (data == null)
+            var message = new TicketMessageViewModel
             {
-                return NotFound();
-            }
+                SentById = "857949FE-EC30-4C0B-A514-EB0FD9262738", // Replace with User.Identity.Name when authentication is implemented
+                Message = model.NewMessageBody,
+                PostedAt = DateTime.Now,
+                TicketId = id
+            };
+           
+            _ticketService.AddMessage(message);
 
-            return View(data);
-        }
-
-        /// <summary>
-        /// Go to the Delete View of a Ticket
-        /// </summary>
-        /// <param name="Id">The identifier.</param>
-        /// <returns></returns>
-        [HttpGet]
-        public IActionResult Delete(string Id)
-        {
-            var data = _ticketService.RetrieveAll().Where(x => x.Id.Equals(Id)).FirstOrDefault();
-
-            if (data == null)
-            {
-                return NotFound();
-            }
-
-            return View(data);
+            return RedirectToAction(nameof(UserDetails), new { id = message.TicketId });
         }
 
         #endregion
-
-        #region POST METHODS        
-        /// <summary>
-        /// Posts the Creation of a Ticket.
-        /// </summary>
-        /// <param name="ticket">The ticket.</param>
-        /// <param name="attachments">The attachments.</param>
-        /// <returns></returns>
-       
-
-        /// <summary>
-        /// Posts the changes or updates of a Ticket.
-        /// </summary>
-        /// <param name="ticket">The ticket.</param>
-        /// <returns></returns>
-        [HttpPost]
-        public IActionResult PostUpdate(TicketViewModel ticket)
-        {
-            _ticketService.Update(ticket);
-
-            // Add a check if the ticket was successfully updated
-
-            return RedirectToAction("Index");
-        }
-
-        /// <summary>
-        /// Posts the deletion of a Ticket.
-        /// </summary>
-        /// <param name="Id">The identifier.</param>
-        /// <returns></returns>
-        [HttpPost]
-        public IActionResult PostDelete(string Id)
-        {
-            _ticketService.Delete(Id);
-
-            // Add a check if the ticket was successfully deleted
-
-            return RedirectToAction("Index");
-        }
-
-        #endregion
-
-        /// <summary>
-        /// Determines whether [is image file] [the specified file].
-        /// </summary>
-        /// <param name="file">The file.</param>
-        /// <returns>
-        ///   <c>true</c> if [is image file] [the specified file]; otherwise, <c>false</c>.
-        /// </returns>
-        private bool IsImageFile(IFormFile file)
-        {
-            if (file == null)
-                return false;
-
-            string[] allowedImageTypes = { "image/jpeg", "image/png", "image/gif" };
-            return allowedImageTypes.Contains(file.ContentType);
-        }*/
     }
 }

@@ -26,6 +26,14 @@ namespace ASI.Basecode.Services.ServiceModels
         
         public string StatusId { get; set; }
 
+        public string CreatorId { get; set; }
+        
+        public string AgentId { get; set; }
+
+        public string TeamId { get; set; }
+
+        public DateTime DateCreated { get; set; }
+
         public List<Attachment> Attachments { get; set; } = new List<Attachment>();
 
         public string Priority { get; set; }
@@ -36,8 +44,20 @@ namespace ASI.Basecode.Services.ServiceModels
 
         public string Attachment { get; set; }
 
-        public string CreatedBy { get; set; }
-
         public string FeedbackId { get; set; }
+
+        public string AgentName { get; set; }
+
+        public string CreatorName { get; set; }
+
+        public string TeamName { get; set; }
+
+        public IEnumerable<TicketActivityViewModel> TicketActivities { get; set; }
+
+        public IEnumerable<TicketMessageViewModel> TicketMessages { get; set; }
+
+        public string NewMessageBody { get; set; }
+
+        public DateTime DateAssigned { get; set; }
     }
 }

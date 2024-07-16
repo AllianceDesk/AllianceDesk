@@ -9,6 +9,7 @@ using ASI.Basecode.WebApp.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Routing.Constraints;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -158,6 +159,7 @@ namespace ASI.Basecode.WebApp
 
             this._app.UseAuthentication();
             this._app.UseAuthorization();
+
         }
     }
 }
