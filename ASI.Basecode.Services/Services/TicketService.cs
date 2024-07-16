@@ -6,6 +6,7 @@ using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 
 namespace ASI.Basecode.Services.Services
 {
@@ -237,6 +238,15 @@ namespace ASI.Basecode.Services.Services
                                     });
 
             return activities;
+        }
+
+        public void AssignAgent(string ticketId, string userId)
+        {
+            var existingTicket = _ticketRepository.RetrieveAll().Where(s => s.TicketId.ToString() == ticketId).FirstOrDefault();
+
+            existingTicket.AssignedAgent = Guid.Parse(userId);
+            existingTicket.StatusId = 2;
+            _ticketRepository.Update(existingTicket);
         }
     }
 }
