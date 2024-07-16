@@ -43,7 +43,6 @@ namespace ASI.Basecode.WebApp.Controllers
         {
             // Replace with User.Identity.Name when authentication is implemented
             string user = "857949fe-ec30-4c0b-a514-eb0fd9262738";
-            string user2 = "90122701-1c8c-40a4-8936-7717Cfaa9c14";
 
             var tickets = _ticketService.RetrieveAll();
 
