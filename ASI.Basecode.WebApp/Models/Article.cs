@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ASI.Basecode.Data.Models
+namespace ASI.Basecode.WebApp.Models
 {
     public partial class Article
     {
         public Article()
         {
             Favorites = new HashSet<Favorite>();
-        }s
+        }
 
         public Guid ArticleId { get; set; }
         public string Title { get; set; }

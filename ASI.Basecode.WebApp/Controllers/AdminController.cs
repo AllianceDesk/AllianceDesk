@@ -216,17 +216,30 @@ namespace ASI.Basecode.WebApp.Controllers
         public IActionResult UserDetails(string UserId)
         {
             var data = _userService.GetAllUsers().Where(x => x.UserId.ToString() == UserId).FirstOrDefault();
-            var team = _userService.GetTeams().Where(t => t.TeamId.Equals(data.TeamId)).FirstOrDefault();
-
-            var userModel = new UserViewModel
+            UserViewModel userModel;
+            if (data.TeamId != null)
             {
-                UserId = UserId,
-                Name = data.Name,
-                Email = data.Email,
-                RoleId = data.RoleId,
-                TeamName = team.TeamName,
-            };
-
+                var team = _userService.GetTeams().Where(t => t.TeamId.Equals(data.TeamId)).FirstOrDefault();
+                
+                userModel = new UserViewModel
+                {
+                    UserId = UserId,
+                    Name = data.Name,
+                    Email = data.Email,
+                    RoleId = data.RoleId,
+                    TeamName = team.TeamName,
+                };
+            }
+            else
+            {
+                userModel = new UserViewModel
+                {
+                    UserId = UserId,
+                    Name = data.Name,
+                    Email = data.Email,
+                    RoleId = data.RoleId,
+                };
+            }
             return PartialView("UserDetails", userModel);
         }
 
@@ -296,9 +309,9 @@ namespace ASI.Basecode.WebApp.Controllers
                 Email = user.Email,
                 Password = PasswordManager.DecryptPassword(user.Password),
                 RoleId = user.RoleId,
-                TeamId = user.TeamId.ToString(),
+                TeamId = user.TeamId?.ToString() ?? string.Empty,
                 RoleName = _userService.GetUserRoles().FirstOrDefault(r => r.RoleId == user.RoleId)?.RoleName,
-                TeamName = _userService.GetTeams().FirstOrDefault(t => t.TeamId == user.TeamId)?.TeamName
+                TeamName = _userService.GetTeams().FirstOrDefault(t => t.TeamId == user.TeamId)?.TeamName ?? "No Team"
             };
 
             var teams = _userService.GetTeams()
