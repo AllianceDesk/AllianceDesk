@@ -10,6 +10,15 @@
 
 @{
     ViewData["Title"] = "Knowledge Base";
+    var categoryMappings = new Dictionary<int, string>
+    {
+        { 1, "Technical" },
+        { 2, "Billing" },
+        { 3, "General Question" },
+        { 4, "Account Management" },
+        { 5, "Customer Support" },
+        { 6, "Others" }
+    };
 }
 
 @Html.Partial("Admin_Header")
@@ -62,12 +71,12 @@
             <li>
                 @foreach (var item in Model)
                 {
-                    <div>
-                        @Html.DisplayFor(modelItem => item.Body)
-                    </div>
                     <h4>
                         @Html.DisplayFor(modelItem => item.Title)
                     </h4>
+                    <div>
+                        @Html.DisplayFor(modelItem => item.Body)
+                    </div>
                     <h6>
                         @Html.DisplayFor(modelItem => item.CategoryNavigation)
                     </h6>
