@@ -63,7 +63,7 @@ namespace ASI.Basecode.Services.Services
             newNotificaiton.Body = model.Body;
             newNotificaiton.DateCreated = DateTime.Now;
             newNotificaiton.RecipientId = Guid.Parse(model.RecipientId);
-/*            newNotificaiton.Status = 1;*/
+            newNotificaiton.Status = true;
 
             _notificationRepository.Add(newNotificaiton);
         }
@@ -72,10 +72,15 @@ namespace ASI.Basecode.Services.Services
         /// A method to update the matched data
         /// </summary>
         /// <param name="model"></param>
-        public void Update(NotificationServiceModel model)
+
+        public void Delete (string notificationId)
         {
-            
-            /*_notificationRepository.Update(existingData);*/
+            var _existingData = _notificationRepository.RetrieveAll().Where(d => d.NotificationId.ToString() == notificationId).FirstOrDefault();
+            if (_existingData != null)
+            {
+                _existingData.Status = false;
+                _notificationRepository.Update(_existingData);
+            }
         }
 
     }
