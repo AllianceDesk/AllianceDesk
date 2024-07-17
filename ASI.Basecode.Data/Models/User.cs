@@ -12,6 +12,7 @@ namespace ASI.Basecode.Data.Models
             Attachments = new HashSet<Attachment>();
             Favorites = new HashSet<Favorite>();
             Feedbacks = new HashSet<Feedback>();
+            Notifications = new HashSet<Notification>();
             TicketActivities = new HashSet<TicketActivity>();
             TicketAssignedAgentNavigations = new HashSet<Ticket>();
             TicketCreatedByNavigations = new HashSet<Ticket>();
@@ -26,6 +27,7 @@ namespace ASI.Basecode.Data.Models
         public string Password { get; set; }
         public byte RoleId { get; set; }
         public Guid? TeamId { get; set; }
+        public bool? Status { get; set; }
 
         public virtual UserRole Role { get; set; }
         public virtual Team Team { get; set; }
@@ -34,6 +36,7 @@ namespace ASI.Basecode.Data.Models
         public virtual ICollection<Attachment> Attachments { get; set; }
         public virtual ICollection<Favorite> Favorites { get; set; }
         public virtual ICollection<Feedback> Feedbacks { get; set; }
+        public virtual ICollection<Notification> Notifications { get; set; }
         public virtual ICollection<TicketActivity> TicketActivities { get; set; }
         public virtual ICollection<Ticket> TicketAssignedAgentNavigations { get; set; }
         public virtual ICollection<Ticket> TicketCreatedByNavigations { get; set; }
