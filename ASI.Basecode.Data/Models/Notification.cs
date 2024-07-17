@@ -11,6 +11,7 @@ namespace ASI.Basecode.Data.Models
         public Guid TicketId { get; set; }
         public Guid RecipientId { get; set; }
         public DateTime? DateCreated { get; set; }
+        public bool Status { get; set; }
 
         public virtual User Recipient { get; set; }
         public virtual Ticket Ticket { get; set; }

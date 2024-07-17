@@ -27,7 +27,7 @@ namespace ASI.Basecode.Data.Models
         public string Password { get; set; }
         public byte RoleId { get; set; }
         public Guid? TeamId { get; set; }
-        public bool? Status { get; set; }
+        public bool Status { get; set; }
 
         public virtual UserRole Role { get; set; }
         public virtual Team Team { get; set; }

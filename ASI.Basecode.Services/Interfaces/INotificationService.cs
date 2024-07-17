@@ -15,6 +15,6 @@ namespace ASI.Basecode.Services.Interfaces
         IEnumerable<NotificationServiceModel> RetrieveAll();
         void Add(NotificationServiceModel model);
         void Update(NotificationServiceModel model);
-        void Delete(int id);
+/*        void Delete(int id);*/
     }
 }
