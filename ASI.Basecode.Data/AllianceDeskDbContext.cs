@@ -22,6 +22,7 @@ namespace ASI.Basecode.Data
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Favorite> Favorites { get; set; }
         public virtual DbSet<Feedback> Feedbacks { get; set; }
+        public virtual DbSet<Notification> Notifications { get; set; }
         public virtual DbSet<Team> Teams { get; set; }
         public virtual DbSet<Ticket> Tickets { get; set; }
         public virtual DbSet<TicketActivity> TicketActivities { get; set; }
@@ -182,6 +183,40 @@ namespace ASI.Basecode.Data
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Feedback_User");
+            });
+
+            modelBuilder.Entity<Notification>(entity =>
+            {
+                entity.HasIndex(e => new { e.RecipientId, e.TicketId }, "UQ__Notifica__57532FB04A8EB1F1")
+                    .IsUnique();
+
+                entity.Property(e => e.NotificationId)
+                    .ValueGeneratedNever()
+                    .HasColumnName("notification_id");
+
+                entity.Property(e => e.Body).HasColumnName("body");
+
+                entity.Property(e => e.DateCreated)
+                    .HasColumnType("datetime")
+                    .HasColumnName("date_created");
+
+                entity.Property(e => e.RecipientId).HasColumnName("recipient_id");
+
+                entity.Property(e => e.TicketId).HasColumnName("ticket_id");
+
+                entity.Property(e => e.Title).HasColumnName("title");
+
+                entity.HasOne(d => d.Recipient)
+                    .WithMany(p => p.Notifications)
+                    .HasForeignKey(d => d.RecipientId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Notification_Recipient");
+
+                entity.HasOne(d => d.Ticket)
+                    .WithMany(p => p.Notifications)
+                    .HasForeignKey(d => d.TicketId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Notification_Ticket");
             });
 
             modelBuilder.Entity<Team>(entity =>
@@ -402,6 +437,11 @@ namespace ASI.Basecode.Data
                     .HasColumnName("password");
 
                 entity.Property(e => e.RoleId).HasColumnName("role_id");
+
+                entity.Property(e => e.Status)
+                    .IsRequired()
+                    .HasColumnName("status")
+                    .HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.TeamId).HasColumnName("team_id");
 

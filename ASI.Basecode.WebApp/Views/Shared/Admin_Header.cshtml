@@ -18,7 +18,7 @@
                 <img src="~/img/profile-logo.png" class="dpicn hover-pointer" alt="dp">           
             </div>
 
-            <div class="dropdown">
+            <div class="dropdown" id="dropdownMenu">
                 <ul>                    
                     <li>
                         <i class="bx bx-user bx-xs bx-fw" style="color: #3D3B40;"></i>
@@ -34,3 +34,20 @@
         </div>
     </div>
 </header>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var dpIcon = document.querySelector('.dpicn');
+        var dropdownMenu = document.getElementById('dropdownMenu');
+
+        dpIcon.addEventListener('click', function (event) {
+            event.stopPropagation();
+
+            if (dropdownMenu.style.display === 'block') {
+                dropdownMenu.style.display = 'none';
+            } else {
+                dropdownMenu.style.display = 'block';
+            }
+        });
+    });
+</script>

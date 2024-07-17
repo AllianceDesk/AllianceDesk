@@ -1,0 +1,41 @@
+﻿@section styles {
+    <link rel="stylesheet" href="~/css/user_tickets.css" />
+
+}
+
+<div class="modal fade" id="edit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="ticket-modal1">
+
+                <div class="top_modal d-flex justify-content-between align-items-center mb-4">
+                    <h3>Edit Article</h3>
+                    <button type="button" class="btn closebtn1" data-bs-dismiss="modal"><i class='bx bx-x bx-sm icon' style="color: #45474B; cursor: pointer;"></i></button>
+                </div>
+
+                <div class="top-container">
+                    
+                    <div class="nameDateContainer w-100">                        
+                        <input type="text" class="form-control mb-3 w-100" id="title" placeholder="Title">
+                        <p class="email mb-4" style="font-size:12px;">Last Edited by: Lance Mathew Abella</p>                        
+                    </div>
+                    
+
+                </div>
+                
+                <hr class="mb-3" style="border-top: 2px solid #ccc; width: 98%;"/>
+                
+                <div class="mb-3">
+                    <textarea class="form-control" id="content" rows="6" placeholder="Content here"></textarea>
+                </div>
+
+                <div class="button_card mb-3 d-flex justify-content-between">
+                    <button type="button" class="btn attachment custom-button" style="background-color: #E21818; color: white;"><i class='bx bxl-telegram bx-xs bx-fw uh' style="align-self:center; transform: scale(1);"></i> Save </button>
+                </div>
+                
+           </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("DeleteModal")
