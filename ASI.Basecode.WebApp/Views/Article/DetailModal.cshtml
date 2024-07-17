@@ -1,0 +1,60 @@
+﻿@section styles {
+    <link rel="stylesheet" href="~/css/user_tickets.css" />
+
+}
+
+<div class="modal fade" id="detail" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="ticket-modal1">
+
+                <div class="top_modal d-flex justify-content-between align-items-center mb-4">                   
+                    <button type="button" class="btn closebtn1" data-bs-dismiss="modal"><i class='bx bx-left-arrow-alt bx-sm icon' style="color: #45474B; cursor: pointer;"></i></button>
+                </div>
+
+                <div class="top-container mb-3 d-flex justify-content-between">
+                    
+                    <div class="nameDateContainer" style="margin-right: 5em;">
+                        <h5 class="name">Change Password</h5>
+                        <p class="email mb-4" style="font-size:12px;">Last Edited by: Lance Mathew Abella</p>
+                    </div>
+                    <div class="btn-group d-flex justify-content-end" style="height: 3.5em; width: 25em; font-size: 10px;">
+                        <button type="button" class="btn btn-danger me-1" data-bs-toggle="modal" data-bs-target="#edit"> <i class='bx bxs-edit bx-xs bx-fw' style="color: white; cursor: pointer;"></i> Edit Article</button>
+                        
+                        <button type="button" class="btn btn-danger" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class='bx bx-dots-horizontal-rounded bx-sm icon' style="color: white; cursor: pointer;"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Download</a></li>
+                            <li><a class="dropdown-item" href="#">Add to my Favorites</a></li>
+                            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete">Delete</a></li>
+                        </ul>
+                    </div>
+
+                </div>
+                
+                <hr class="mb-4"/>
+
+                <h4 class="mb-2" style="margin-left: 0.5em;">Change Password</h4>
+                <div style="padding: 1em;">
+                    <p class="article_details" style="overflow-y: auto; height: 20em; font-size: 14px;">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                    </p>
+                </div>
+                
+           </div>
+        </div>
+    </div>
+</div>
+@Html.Partial("EditModal")
+@Html.Partial("DeleteModal")

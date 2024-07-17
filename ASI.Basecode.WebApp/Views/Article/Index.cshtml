@@ -2,9 +2,7 @@
 
 @section styles {
     <link rel="stylesheet" href="~/css/KnowledgeBase/Index.css" />
-    <script src="https://kit.fontawesome.com/1e457ac318.js" crossorigin="anonymous"></script>
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-
+       
 }
 
 @{
@@ -26,7 +24,8 @@
             <img src="~/img/alliancedesk-logo.png" style="width: 185px;" alt="logo" onclick="window.location.href = '@Url.Action("Index", "Home")';">
         </div>
 
-        <div class="header-buttons">            
+        <div class="header-buttons">
+            
             <a asp-action="Index" asp-controller="Notification"><i class='bx bx-bell bx-sm icon' style="color: #45474B; cursor: pointer;"></i></a>
             <i class='bx bx-cog bx-sm icon' style="color: #45474B; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#settings"></i>
 
@@ -48,117 +47,104 @@
         </div>
     </header>
 
-    <nav>
-        
-    </nav>
-
-    <main>
-       
-
-        @Html.Partial("SettingsModal")
-
-    </main>
-
     <div id="sidebar">
 
-        <button type="button" class="btn active-button "><i class='bx bx-grid-alt bx-sm as' style="align-self:center;"></i> Overview </button>
-        <button type="button" class="btn inactive-button"><i class='bx bx-purchase-tag-alt bx-sm as' style="align-self:center;"></i> Tickets </button>
-        <button type="button" class="btn inactive-button"><i class='bx bx-group bx-sm as' style="align-self:center;"></i> Teams </button>
-        <button type="button" class="btn inactive-button"><i class='bx bx-detail bx-sm as' style="align-self:center;"></i> Knowledge Base </button>
-        <button type="button" class="btn inactive-button"><i class='bx bx-objects-vertical-bottom bx-sm as' style="align-self:center;"></i> Analytics </button>
+        <a data-admin-btn class="inactive-button"><i class='bx bx-grid-alt bx-sm as' style="align-self:center;"></i>  <p>Overview</p> </a>
+       
+        <a asp-controller="Admin" asp-action="Tickets" data-admin-btn class="inactive-button"><i class='bx bx-purchase-tag-alt bx-sm as' style="align-self:center;"></i> <p>Tickets</p> </a>
+       
+        <a asp-controller="Admin" asp-action="ViewUser" data-admin-btn class="inactive-button"><i class='bx bx-group bx-sm as' style="align-self:center;"></i> <p>Teams</p> </a>
+
+        <a asp-controller="Article" asp-action="Index" data-admin-btn class="active-button"><i class='bx bx-group bx-sm as' style="align-self:center;"></i> <p>Knowledge Base</p> </a>
+
+        <a data-admin-btn class="inactive-button"><i class='bx bx-objects-vertical-bottom bx-sm as' style="align-self:center;"></i> <p>Analytics</p> </a>
 
     </div>
 
+    <nav>
+
+        <div class="nav_one mb-3">
+
+            <h3>Knowledge Base</h3>
+
+            <div class="add_button">
+
+                <div class="btn-group">
+                    <button type="button" class="btn btn-danger me-1" data-bs-toggle="modal" data-bs-target="#create">Add Article</button>
+                    <button type="button" class="btn btn-danger dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="visually-hidden">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Document</a></li>
+                        <li><a class="dropdown-item" href="#">PDF</a></li>                        
+                    </ul>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="nav_two">
+
+            <a class="fav_link" href="#">My Favorites <span class="badge">4</span></a>
+
+            <div class="filter_button">
+
+                <form>
+                    <div class="input-group">
+                        <button class="btn btn-outline-secondary" type="button" id="button-search" style="background-color: whitesmoke; border: 1px solid #ccc;"><i class='bx bx-search bx-xs bx-fw' style="color: #45474B; cursor: pointer;"></i></button>
+                        <input type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="button-search" style="background-color: whitesmoke; border: 1px solid #ccc;">
+                    </div>
+                </form>
+
+                <button type="button" class="btn fbtn"><i class='bx bx-filter-alt bx-xs bx-fw' style="color: #45474B; cursor: pointer;"></i>Filter</button>
+
+            </div>
+
+        </div>
+
+        @Html.Partial("CreateModal")
+        
+    </nav>
+    
+    <main>
+        <a href="#" class="link_card">
+            <div class="article_card" data-bs-toggle="modal" data-bs-target="#detail">
+                <div class="article_top mb-4">
+                    <h5>Change Password</h5>
+                    <p>20th Oct</p>
+                </div>
+
+                <p class="mb-3" style="font-size: 14px;">Life seasons open have. Air have of. Lights fill after let third darkness replenish fruitful let. Wherein set image. Creepeth said above gathered bring.</p>
+
+                <h6 class="article_category">Technical</h6>
+            </div>
+        </a>
+        @Html.Partial("DetailModal")
+    </main>
+    
 </div>
 
+@Html.Partial("SettingsModal")
 
 
-@section Scripts {
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var dpIcon = document.querySelector('.dpicn');
+        var dropdownMenu = document.getElementById('dropdownMenu');
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        dpIcon.addEventListener('click', function (event) {
+            event.stopPropagation();
 
-    <!-- Script for dropdown functionality -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var dpIcon = document.querySelector('.dpicn');
-            var dropdownMenu = document.getElementById('dropdownMenu');
-
-            dpIcon.addEventListener('click', function (event) {
-                event.stopPropagation();
-
-                if (dropdownMenu.style.display === 'block') {
-                    dropdownMenu.style.display = 'none';
-                } else {
-                    dropdownMenu.style.display = 'block';
-                }
-            });
+            if (dropdownMenu.style.display === 'block') {
+                dropdownMenu.style.display = 'none';
+            } else {
+                dropdownMenu.style.display = 'block';
+            }
         });
+    });
+</script>
 
-        $(document).ready(function () {
-            // Hide dropdown content by default
-            $('.dropdown-content').hide();
 
-            // Toggle visibility of dropdown content on .dp-logo click
-            $('.dp-logo').on('click', function () {
-                $('.dropdown-content').toggle();
-            });
 
-            // Close the dropdown if the user clicks outside of it
-            $(document).on('click', function (event) {
-                if (!$(event.target).closest('.addArt-dropdown').length) {
-                    $('.dropdown-content').hide();
-                }
-            });
-        });
-    </script>
 
-    <script>
-        $(document).ready(function () {
-            // Add active class to the current link on page load
-            var currentAction = '@(ViewContext.RouteData.Values["Action"].ToString())';
-            $('.sections a').each(function () {
-                if ($(this).attr('asp-action') === currentAction) {
-                    $(this).addClass('active');
-                }
-            });
-
-            // Toggle active class on click
-            $('.sections a').on('click', function () {
-                $('.sections a').removeClass('active');
-                $(this).addClass('active');
-            });
-        });
-    </script>
-
-    <script>
-        var itemId;
-        function displayDeleteModal(id) {
-            itemId = id;
-            $('#deleteModal').modal('show');
-        }
-        $('#confirmDeleteBtn').on('click', function () {
-            $.ajax({
-                url: '@Url.Action("PostDelete", "SampleCrud")',
-                type: 'POST',
-                data: {id: itemId},
-                success: function (result) {
-                    sessionStorage.setItem("DeleteSuccess", "Deleted Successfully");
-                    window.location.href = '@Url.Action("Index", "SampleCrud")';
-                }
-            })
-        })
-
-    </script>
-
-    <script>
-        var createMessage = '@TempData["CreateMessage"]';
-        var deleteMessage = sessionStorage.getItem("DeleteSuccess");
-
-        if (createMessage) {
-            toastr.success(createMessage);
-        } else if (deleteMessage) {
-            toastr.success(deleteMessage);
-            sessionStorage.removeItem("DeleteSuccess");
-        }
-    </script>
-}
