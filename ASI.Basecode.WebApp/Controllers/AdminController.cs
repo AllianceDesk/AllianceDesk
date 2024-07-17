@@ -43,7 +43,7 @@ namespace ASI.Basecode.WebApp.Controllers
         /// Returns User View
         /// </summary>
         /// <returns> Home View </returns>
-        [HttpGet]
+        [HttpGet("View/User")]
         [AllowAnonymous]
         public ActionResult ViewUser()
         {
@@ -182,7 +182,7 @@ namespace ASI.Basecode.WebApp.Controllers
             return View(model);
         }
 
-        [HttpGet]
+        [HttpGet("Analytics/TeamMetric")]
         [AllowAnonymous]
         public ActionResult AnalyticsTeamMetric()
         {
@@ -190,7 +190,7 @@ namespace ASI.Basecode.WebApp.Controllers
             return this.View();
         }
 
-        [HttpGet]
+        [HttpGet("Analytics/OverallMetrics")]
         [AllowAnonymous]
         public ActionResult AnalyticsOverallMetrics()
         {
@@ -198,7 +198,7 @@ namespace ASI.Basecode.WebApp.Controllers
             return this.View();
         }
 
-        [HttpGet]
+        [HttpGet("Analytics/AgentMetric")]
         [AllowAnonymous]
         public ActionResult AgentMetric()
         {
@@ -223,7 +223,7 @@ namespace ASI.Basecode.WebApp.Controllers
             return this.View();
         }
 
-        [HttpGet]
+        [HttpGet("Tickets/TicketOccupied")]
         [AllowAnonymous]
         public ActionResult TicketOccupied()
         {
@@ -256,7 +256,7 @@ namespace ASI.Basecode.WebApp.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet("home/dashboard")]
         [AllowAnonymous]
         public ActionResult Dashboard()
         {

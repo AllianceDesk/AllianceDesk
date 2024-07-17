@@ -1,0 +1,48 @@
+﻿@model ASI.Basecode.Services.ServiceModels.TicketViewModel
+
+@{
+    ViewData["Title"] = "Tickets";
+    Layout = "_Layout";
+}
+@section styles {
+    <link rel="stylesheet" href="~/css/functionalities.css" />
+    <link rel="stylesheet" href="~/css/Agent.css" />
+}
+
+@Html.Partial("Admin_Header")
+<div class="main">
+    @Html.Partial("Admin_Sidebar")
+    <div class="admin-body p-y-3 relative bg-grey flex flex-col gap-1">
+        <h1>Assigned Tickets</h1>
+        <div>
+            <div class="j-search-container | flex-Row align-center justify-content-center">
+                <i class="fa-solid fa-magnifying-glass text-1-5"></i>
+                <input class="bg-transparent" type="text" placeholder="Search" />
+            </div>
+            <div>
+                <div>Icon</div>
+                <p>Filter</p>
+            </div>
+        </div>
+        <div class="agent-asgn-tix">
+            <div class="asgn-tix-item">
+                <p class="font-weight-bold">Ticket</p>
+                <p class="font-weight-bold">Category</p>
+                <p class="font-weight-bold">Priority</p>
+                <p class="font-weight-bold">Status</p>
+            </div>
+            <div class="asgn-tix-item">
+                <p>How to change my password? </p>
+                <p>Technical</p>
+                <p>Low</p>
+                <p>Closed</p>
+            </div>
+            <div class="asgn-tix-item">
+                <p>How to change my password? </p>
+                <p>Technical</p>
+                <p>Low</p>
+                <p>Closed</p>
+            </div>
+        </div>
+    </div>
+</div>

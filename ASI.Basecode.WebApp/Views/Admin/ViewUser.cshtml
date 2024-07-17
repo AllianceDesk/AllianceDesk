@@ -145,6 +145,7 @@
 
                 // Show user details on list item click
                 $(document).on('click', '[data-viewuser-agent]', function () {
+                    console.log("whats happening")
                     var userId = $(this).data('user-id');
                     $.ajax({
                         url: '/UserDetails',

@@ -306,3 +306,11 @@ p {
     grid-template-columns: calc(70% - 2rem) 30%;
     gap: 2rem;
 }
+
+/* OVERFLOW */
+
+.overflow-h {
+    overflow: hidden;
+}
+
+
