@@ -4,67 +4,180 @@
     ViewData["Title"] = "Notification";
 }
 @section styles {
-    <link rel="stylesheet" href="~/css/notification.css" />
+    <link rel="stylesheet" href="~/css/notification.css" /> 
+     @* <link rel="stylesheet" href="~/css/user_tickets.css" /> *@
 }
 
-<div class="card-body">
-    <div class="top-content">
-        <h3>Notifications</h3>
-        <i class='bx bx-x'></i>
+@{
+    var dataFromDatabase = new List<dynamic>
+        {
+            new { Name = "Notification 1", Link = "#" },
+            new { Name = "Notification 2", Link = "#" },
+            new { Name = "Notification 3", Link = "#" },
+            new { Name = "Notification 4", Link = "#" },
+            new { Name = "Notification 5", Link = "#" },
+            new { Name = "Notification 6", Link = "#" },
+            new { Name = "Notification 7", Link = "#" },
+            new { Name = "Notification 8", Link = "#" },
+            new { Name = "Notification 9", Link = "#" },
+            new { Name = "Notification 10", Link = "#" },
+            new { Name = "Notification 11", Link = "#" },
+            new { Name = "Notification 12", Link = "#" },
+            new { Name = "Notification 13", Link = "#" },
+            new { Name = "Notification 14", Link = "#" },
+        };
+}
+
+<div id="container">
+    <header>
+        <div class="logo">
+            <img src="~/img/alliancedesk-logo.png" style="width: 185px;" alt="logo" onclick="window.location.href = '@Url.Action("Index", "Home")';">
+        </div>
+
+        <div class="header-buttons">
+            <button type="button" class="btn button" data-bs-toggle="modal" data-bs-target="#createTicket"><i class='bx bx-plus-circle bx-xs bx-fw uh' style="align-self:center;"></i> Create Ticket </button>
+            <a asp-action="Index" asp-controller="Notification"><i class='bx bx-bell bx-sm icon' style="color: #45474B; cursor: pointer;"></i></a>
+            <i class='bx bx-cog bx-sm icon' style="color: #45474B; cursor: pointer;"></i>
+
+            <a class="profile" href="#">
+                <img src="~/img/profile-logo.png" class="dpicn hover-pointer" alt="dp">
+            </a>
+
+            <ul class="dropdown" id="dropdownMenu">
+                <li>
+
+                    <a class="dropdown-item" href="#"><i class="bx bx-user bx-xs bx-fw" style="color: #3D3B40;"></i> Profile</a>
+                </li>
+                <li>
+
+                    <a class="dropdown-item" asp-action="SignOutUser" asp-controller="Account"><i class="bx bx-log-out bx-xs bx-fw" style="color: #3D3B40;"></i> Logout</a>
+                </li>
+            </ul>
+
+        </div>
+    </header>
+    <div id="sidebar">
+
+        <div id="search-container">
+            <i class='bx bx-search'></i>
+            <input type="text" id="search-input" placeholder="Search Tickets">
+        </div>
+
+        <div id="button-container">
+            <i class='bx bx-list-ul'></i>
+            <span class="label-1">Tickets</span>
+        </div>
+
+        <div id="instruction-container">
+
+            <div class="instruction-label">
+                <i class='bx bx-star'></i>
+                <span class="label-2">Instructions</span>
+            </div>
+
+            <hr />
+
+            <div class="instruction-detail">
+                <ul>
+                    <li>&#8226; Click the 'Create Ticket'</li>
+                    <li>&#8226; Enter the necessary details</li>
+                    <li>&#8226; Submit if done</li>
+                </ul>
+            </div>
+
+            <div class="instruction-label">
+                <i class='bx bx-link'></i>
+                <span class="label-2">Contacts</span>
+            </div>
+
+            <hr />
+
+            <div class="instruction-detail">
+                <ul>
+                    <li>&#8226; abellalance2@gmail.com</li>
+                    <li>&#8226; jethrocenas@gmail.com</li>
+                    <li>&#8226; rehamdee.camama@g.msuiit.edu.ph</li>
+                </ul>
+            </div>
+
+        </div>
+
     </div>
+    <main>
+        <div class="card-body">
+            <div class="top-content">
+                <h3>Notifications</h3>
+                <i class='bx bx-x'></i>
+            </div>
 
-    <div class="card-content" id="card_content">
+            <div class="card-content" id="card_content">
+                @foreach (var item in dataFromDatabase)
+                {
+                    <div class="notification-container">
+                        <h6 class="notification_title">@item.Name</h6>
+                        <a href="@item.Link" class="notification-link" data-bs-toggle="modal" data-bs-target="#viewNotification">Preview</a>
+                    </div>
+                }
+            </div>
 
-    </div>
+        </div>
 
+        <div class="modal fade" id="viewNotification" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content p-3">
+                    <div id="main_createcard">
+
+                        <div class="top_modal d-flex justify-content-between align-items-center mb-3">
+                            <h3>Notification 1</h3>
+                            <button type="button" class="btn" data-bs-dismiss="modal"><i class='bx bx-x bx-sm icon' style="color: #45474B; cursor: pointer;"></i></button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <nav>
+
+    </nav>
+   @*  <div class="modal fade" id="createTicket" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content p-3">
+                <div id="main_createcard">
+
+                    <div class="top_modal d-flex justify-content-between align-items-center mb-3">
+                        <h3>New Ticket</h3>
+                        <button type="button" class="btn" data-bs-dismiss="modal"><i class='bx bx-x bx-sm icon' style="color: #45474B; cursor: pointer;"></i></button>
+                    </div>
+
+                    <form asp-controller="User" asp-action="TicketCreate" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group mb-3">
+                            <input asp-for="Ticket.Title" class="form-control" placeholder="Ticket Title" aria-label="Title" />
+                            <span asp-validation-for="Ticket.Title" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <select asp-for="Ticket.CategoryId" class="form-select" asp-items="ViewBag.Categories" id="inputGroupSelect04" aria-label="Category Options"></select>
+                            <span asp-validation-for="Ticket.CategoryId" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <select asp-for="Ticket.PriorityId" class="form-select" asp-items="ViewBag.Priorities" id="inputGroupSelect04" aria-label="Priority Options"></select>
+                            <span asp-validation-for="Ticket.PriorityId" class="text-danger"></span>
+                        </div>
+
+                        <textarea asp-for="Ticket.Description" class="form-control mb-3" id="largeTextField" rows="10" cols="50" placeholder="Description"></textarea>
+                        <span asp-validation-for="Ticket.Description" class="text-danger"></span>
+
+                        <div class="button_card mb-3 d-flex justify-content-between">
+                            <button type="button" class="btn attachment custom-button" style="background-color: #7E7E7E; color: white;"><i class='bx bx-image-add bx-xs bx-fw uh' style="align-self:center;"></i> Add Attachment </button>
+                            <button type="submit" class="btn attachment custom-button" style="background-color: #E21818; color: white;"><i class='bx bxl-telegram bx-xs bx-fw uh' style="align-self:center;"></i> Submit </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div> *@
 </div>
 
-<script>
-
-    // Simulate data from an object (replace with actual database data)
-    var dataFromDatabase = [
-        { name: 'Notification 1', link: '#' },
-        { name: 'Notification 2', link: '#' },
-        { name: 'Notification 3', link: '#' },
-        { name: 'Notification 4', link: '#' },
-        { name: 'Notification 5', link: '#' },
-        { name: 'Notification 6', link: '#' },
-        { name: 'Notification 7', link: '#' },
-        { name: 'Notification 8', link: '#' },
-        { name: 'Notification 9', link: '#' },
-        { name: 'Notification 10', link: '#' },
-        { name: 'Notification 11', link: '#' },
-        { name: 'Notification 12', link: '#' },
-        { name: 'Notification 13', link: '#' },
-        { name: 'Notification 14', link: '#' },
-    ];
-
-    // Get the card-content div
-    var cardContent = document.getElementById('card_content');
-
-    // Iterate over the data and create a div and 'a' tag for each item
-    dataFromDatabase.forEach(function (item) {
-        // Create a new 'div' element for the container
-        var container = document.createElement('div');
-        container.className = 'notification-container';
-
-        var title = document.createElement('h6');
-        title.className = 'notification_title';
-        title.textContent = item.name;
-
-        // Create a new 'a' element
-        var link = document.createElement('a');
-        link.href = item.link;
-        link.textContent = 'Preview';
-        link.className = 'notification-link'; // Add a class for styling
-
-        // Append the 'a' element to the container
-        container.appendChild(title);
-        container.appendChild(link);
-
-        // Append the container to the card-content div
-        cardContent.appendChild(container);
-    });
-            
-
-</script>
