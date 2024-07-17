@@ -36,9 +36,11 @@ namespace ASI.Basecode.Services.Services
         {
             var data = _notificationRepository.RetrieveAll().Select(s => new NotificationServiceModel
             {
-                Id = s.Id,
-                Name = s.Name,
-                Subject = s.Subject,
+                NotificationId = s.NotificationId.ToString(),
+                Title = s.Title,
+                Body = s.Body,
+                DateCreated = s.DateCreated.ToString(),
+
             });
 
             return data;
@@ -50,12 +52,20 @@ namespace ASI.Basecode.Services.Services
         /// <param name="model"></param>
         public void Add(NotificationServiceModel model)
         {
-            var newModel = new NotificationDataModel();
-            _mapper.Map(model, newModel);
-            newModel.CreatedBy = "Lance";
-            newModel.CreatedDate = DateTime.Now;
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model), "ArticleViewModel cannot be null");
+            }
 
-            _notificationRepository.Add(newModel);
+            var newNotificaiton = new Notification();
+            newNotificaiton.NotificationId = Guid.NewGuid();
+            newNotificaiton.Title = model.Title;
+            newNotificaiton.Body = model.Body;
+            newNotificaiton.DateCreated = DateTime.Now;
+            newNotificaiton.RecipientId = Guid.Parse(model.RecipientId);
+/*            newNotificaiton.Status = 1;*/
+
+            _notificationRepository.Add(newNotificaiton);
         }
 
         /// <summary>
@@ -64,20 +74,8 @@ namespace ASI.Basecode.Services.Services
         /// <param name="model"></param>
         public void Update(NotificationServiceModel model)
         {
-            var existingData = _notificationRepository.RetrieveAll().Where(s => s.Id == model.Id).FirstOrDefault();
-            _mapper.Map(model, existingData);
-            existingData.UpdatedBy = "Lance";
-            existingData.UpdatedDate = DateTime.Now;
-            _notificationRepository.Update(existingData);
-        }
-
-        /// <summary>
-        /// A method to delete the matched id
-        /// </summary>
-        /// <param name="id"></param>
-        public void Delete(int id)
-        {
-            _notificationRepository.Delete(id);
+            
+            /*_notificationRepository.Update(existingData);*/
         }
 
     }
