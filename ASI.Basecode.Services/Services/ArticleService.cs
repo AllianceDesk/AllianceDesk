@@ -31,12 +31,11 @@ namespace ASI.Basecode.Services.Services
 
             var data = _articleRepository.RetrieveAll().Select(s => new ArticleViewModel
             { 
-                ArticleId = s.ArticleId.ToString(),
+                ArticleId = s.ArticleId.ToString(), 
                 Title = s.Title,
                 Body = s.Body,
                 CategoryNavigation = _categoryRepository.RetrieveAll().Where(c => c.CategoryId == s.CategoryId).FirstOrDefault().CategoryName,
-                DateUpdated = s.DateUpdated.ToString(),
-                
+                DateUpdated = s.DateUpdated.HasValue ? s.DateUpdated.Value.ToString("MMM dd") : string.Empty,
             });
 
             return data;
@@ -78,11 +77,6 @@ namespace ASI.Basecode.Services.Services
         public IEnumerable<Category> GetCategories()
         {
             return _categoryRepository.RetrieveAll();
-        }
-
-        public IEnumerable<Article> GetArticles()
-        {
-            return _articleRepository.RetrieveAll();
         }
 
     }

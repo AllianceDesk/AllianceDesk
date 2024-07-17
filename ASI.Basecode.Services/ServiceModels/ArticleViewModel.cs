@@ -24,5 +24,7 @@ namespace ASI.Basecode.Services.ServiceModels
         public string UpdatedBy { get; set; }
 
         public string CategoryNavigation { get; set; }
+
+        public IEnumerable<ArticleViewModel> Articles { get; set; }
     }
 }

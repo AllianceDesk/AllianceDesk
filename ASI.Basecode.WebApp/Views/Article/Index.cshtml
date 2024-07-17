@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ASI.Basecode.Services.ServiceModels.ArticleViewModel>
+﻿@model ASI.Basecode.Services.ServiceModels.ArticleViewModel
 
 @section styles {
     <link rel="stylesheet" href="~/css/KnowledgeBase/Index.css" />
@@ -7,15 +7,6 @@
 
 @{
     ViewData["Title"] = "Knowledge Base";
-    var categoryMappings = new Dictionary<int, string>
-    {
-        { 1, "Technical" },
-        { 2, "Billing" },
-        { 3, "General Question" },
-        { 4, "Account Management" },
-        { 5, "Customer Support" },
-        { 6, "Others" }
-    };
 }
 
 <div id="container">
@@ -70,7 +61,7 @@
             <div class="add_button">
 
                 <div class="btn-group">
-                    <button type="button" class="btn btn-danger me-1" data-bs-toggle="modal" data-bs-target="#create">Add Article</button>
+                    <button type="button" class="btn btn-danger me-1" data-bs-toggle="modal" data-bs-target="#create" id="addArticleBtn">Add Article</button>
                     <button type="button" class="btn btn-danger dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
                         <span class="visually-hidden">Toggle Dropdown</span>
                     </button>
@@ -108,18 +99,20 @@
     </nav>
     
     <main>
-        <a href="#" class="link_card">
-            <div class="article_card" data-bs-toggle="modal" data-bs-target="#detail">
-                <div class="article_top mb-4">
-                    <h5>Change Password</h5>
-                    <p>20th Oct</p>
+        @foreach (var item in Model.Articles){
+            <a href="#" class="link_card">
+                <div class="article_card" data-bs-toggle="modal" data-bs-target="#detail">
+                    <div class="article_top mb-4">
+                        <h5>@Html.DisplayFor(modelItem => item.Title)</h5>
+                        <p>@Html.DisplayFor(modelItem => item.DateUpdated)</p>
+                    </div>
+
+                    <p class="mb-3" style="font-size: 14px;">@Html.DisplayFor(modelItem => item.Body)</p>
+
+                    <h6 class="article_category">@Html.DisplayFor(modelItem => item.CategoryNavigation)</h6>
                 </div>
-
-                <p class="mb-3" style="font-size: 14px;">Life seasons open have. Air have of. Lights fill after let third darkness replenish fruitful let. Wherein set image. Creepeth said above gathered bring.</p>
-
-                <h6 class="article_category">Technical</h6>
-            </div>
-        </a>
+            </a>
+        }
         @Html.Partial("DetailModal")
     </main>
     
@@ -142,7 +135,47 @@
                 dropdownMenu.style.display = 'block';
             }
         });
+
+        var addArticleBtn = document.getElementById('addArticleBtn');
+        
+        addArticleBtn.addEventListener('click', function () {
+            //Perform AJAX request here
+            $.ajax({
+                url: '/KnowledgeBase/Add-Article',
+                type: 'GET',
+                success: function (data) {
+                    // Handle success response
+                    // You can update the UI or process data here
+                    console.log('Article added successfully!');
+                },
+                error: function (error) {
+                    // Handle error response
+                    console.error('Error adding article:', error);
+                }
+            });
+        });
+
+        // Handle form submission for article
+        $(document).ready(function () {
+            $('#saveArticleBtn').click(function () {
+                var form = $('#articleForm'); // Select the form by its ID
+                $.ajax({
+                    url: '/KnowledgeBase/Add-Article',
+                    type: 'POST',
+                    data: form.serialize(), // Serialize form data
+                    success: function (response) {
+                        //alert('Article added successfully');
+                        $('#create').modal('hide'); // Hide the modal after successful submission
+                        window.location.reload(); // Reload the page to reflect changes
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error submitting form:', status, error);
+                    }
+                });
+            });
+        });
     });
+
 </script>
 
 
