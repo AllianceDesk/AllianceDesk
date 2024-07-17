@@ -1,37 +1,53 @@
-﻿@using Microsoft.AspNetCore.Http
+﻿﻿@using Microsoft.AspNetCore.Http
 
 @inject IHttpContextAccessor HttpContextAccessor
-<header class="flex-Row">
-    <div class="logosec hover-pointer">
-        <img src="~/img/alliancedesk-logo.png"
-             style="width: 185px;" alt="logo"
-             onclick="window.location.href = '@Url.Action("Index", "Home")';">
+
+@section styles {
+    <link rel="stylesheet" href="~/css/user_tickets.css" />
+}
+
+<header>
+    <div class="logo">
+        <img src="~/img/alliancedesk-logo.png" style="width: 185px;" alt="logo" onclick="window.location.href = '@Url.Action("Index", "Home")';">
     </div>
-    
-    <div class="logosec">
-        <button type="button" class="btn button-hover"><i class='bx bx-plus-circle bx-xs bx-fw uh' style="align-self:center;"></i> Create Ticket </button>
-        <i class='bx bx-bell bx-sm' style="color: #45474B; cursor: pointer;"></i>
-        <i class='bx bx-cog bx-sm' style="color: #45474B; cursor: pointer;"></i>
 
-        <div class="mr-20 hover-pointer" style="position: relative">           
+    <div class="header-buttons">
+        <button type="button" class="btn button" data-bs-toggle="modal" data-bs-target="#createTicket"><i class='bx bx-plus-circle bx-xs bx-fw uh' style="align-self:center;"></i> Create Ticket </button>
+        <a asp-action="Index" asp-controller="Notification"><i class='bx bx-bell bx-sm icon' style="color: #45474B; cursor: pointer;"></i></a>
+        <i class='bx bx-cog bx-sm icon' style="color: #45474B; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#settings"></i>
 
-            <div class="dp">                                
-                <img src="~/img/profile-logo.png" class="dpicn hover-pointer" alt="dp">           
-            </div>
+        <a class="profile" href="#">
+            <img src="~/img/profile-logo.png" class="dpicn hover-pointer" alt="dp">
+        </a>
 
-            <div class="dropdown">
-                <ul>                    
-                    <li>
-                        <i class="bx bx-user bx-xs bx-fw" style="color: #3D3B40;"></i>
-                        <a href="#">Profile</a>
-                    </li>
-                    <li>
-                        <i class="bx bx-log-out bx-xs bx-fw" style="color: #3D3B40;"></i>
-                        <a asp-action="SignOutUser" asp-controller="Account">Logout</a>
-                    </li>
-                </ul>
-            </div>
+        <ul class="dropdown" id="dropdownMenu">
+            <li>
 
-        </div>
+                <a class="dropdown-item" href="#"><i class="bx bx-user bx-xs bx-fw" style="color: #3D3B40;"></i> Profile</a>
+            </li>
+            <li>
+
+                <a class="dropdown-item" asp-action="SignOutUser" asp-controller="Account"><i class="bx bx-log-out bx-xs bx-fw" style="color: #3D3B40;"></i> Logout</a>
+            </li>
+        </ul>
+
     </div>
 </header>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var dpIcon = document.querySelector('.dpicn');
+        var dropdownMenu = document.getElementById('dropdownMenu');
+
+        dpIcon.addEventListener('click', function (event) {
+            event.stopPropagation();
+
+            if (dropdownMenu.style.display === 'block') {
+                dropdownMenu.style.display = 'none';
+            } else {
+                dropdownMenu.style.display = 'block';
+            }
+        });
+    });
+
+</script>

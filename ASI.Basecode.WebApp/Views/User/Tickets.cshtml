@@ -57,8 +57,8 @@
 
         <div class="header-buttons">
             <button type="button" class="btn button" data-bs-toggle="modal" data-bs-target="#createTicket"><i class='bx bx-plus-circle bx-xs bx-fw uh' style="align-self:center;"></i> Create Ticket </button>
-            <i class='bx bx-bell bx-sm icon' style="color: #45474B; cursor: pointer;"></i>
-            <i class='bx bx-cog bx-sm icon' style="color: #45474B; cursor: pointer;"></i>
+            <a asp-action="Index" asp-controller="Notification"><i class='bx bx-bell bx-sm icon' style="color: #45474B; cursor: pointer;"></i></a>
+            <i class='bx bx-cog bx-sm icon' style="color: #45474B; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#settings"></i>
 
             <a class="profile" href="#">
                 <img src="~/img/profile-logo.png" class="dpicn hover-pointer" alt="dp">
@@ -162,12 +162,12 @@
                                 <span asp-validation-for="Ticket.Title" class="text-danger"></span>
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <select asp-for="Ticket.CategoryId" class="form-select" asp-items="ViewBag.Categories" id="inputGroupSelect04" aria-label="Category Options"></select>
                                 <span asp-validation-for="Ticket.CategoryId" class="text-danger"></span>
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <select asp-for="Ticket.PriorityId" class="form-select" asp-items="ViewBag.Priorities" id="inputGroupSelect04" aria-label="Priority Options"></select>
                                 <span asp-validation-for="Ticket.PriorityId" class="text-danger"></span>
                             </div>
@@ -189,6 +189,12 @@
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content p-3">
                     <div id="main_editcard">
+
+                        <div class="top_modal d-flex justify-content-between align-items-center mb-3">
+                            <h3>Edit Ticket</h3>
+                            <button type="button" class="btn" data-bs-dismiss="modal"><i class='bx bx-x bx-sm icon' style="color: #45474B; cursor: pointer;"></i></button>
+                        </div>
+
                         <form asp-action="TicketEdit" method="post">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <input type="hidden" asp-for="Ticket.TicketId" />
@@ -199,12 +205,12 @@
                             </div>
 
                             <div class="form-group">
-                                <select asp-for="Ticket.CategoryId" class="form-select" asp-items="ViewBag.Categories" aria-label="Category Options"></select>
+                                <select asp-for="Ticket.CategoryId" class="form-select mb-3" asp-items="ViewBag.Categories" aria-label="Category Options"></select>
                                 <span asp-validation-for="Ticket.CategoryId" class="text-danger"></span>
                             </div>
 
                             <div class="form-group">
-                                <select asp-for="Ticket.PriorityId" class="form-select" asp-items="ViewBag.Priorities" aria-label="Priority Options"></select>
+                                <select asp-for="Ticket.PriorityId" class="form-select mb-3" asp-items="ViewBag.Priorities" aria-label="Priority Options"></select>
                                 <span asp-validation-for="Ticket.PriorityId" class="text-danger"></span>
                             </div>
 
@@ -268,6 +274,8 @@
                 </div>
             </div>
         </div>
+
+        @Html.Partial("SettingsModal")
 
     </main>
 
