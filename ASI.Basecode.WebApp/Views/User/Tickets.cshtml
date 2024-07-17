@@ -290,10 +290,11 @@
             <i class='bx bx-list-ul'></i>
             <span class="label-1">Tickets</span>
         </div>
+        
 
         <div id="instruction-container">
 
-            <div class="instruction-label">
+            <div class="instruction-label" data-bs-toggle="modal" data-bs-target="#knowledge">
                 <i class='bx bx-star'></i>
                 <span class="label-2">Articles</span>
             </div>
@@ -326,6 +327,8 @@
         </div>
 
     </div>
+
+    @Html.Partial("KnowledgeBaseModal")
 
 </div>
 
