@@ -8,26 +8,6 @@
      @* <link rel="stylesheet" href="~/css/user_tickets.css" /> *@
 }
 
-@{
-    var dataFromDatabase = new List<dynamic>
-        {
-            new { Name = "Notification 1", Link = "#" },
-            new { Name = "Notification 2", Link = "#" },
-            new { Name = "Notification 3", Link = "#" },
-            new { Name = "Notification 4", Link = "#" },
-            new { Name = "Notification 5", Link = "#" },
-            new { Name = "Notification 6", Link = "#" },
-            new { Name = "Notification 7", Link = "#" },
-            new { Name = "Notification 8", Link = "#" },
-            new { Name = "Notification 9", Link = "#" },
-            new { Name = "Notification 10", Link = "#" },
-            new { Name = "Notification 11", Link = "#" },
-            new { Name = "Notification 12", Link = "#" },
-            new { Name = "Notification 13", Link = "#" },
-            new { Name = "Notification 14", Link = "#" },
-        };
-}
-
 <div id="container">
     <header>
         <div class="logo">
@@ -111,11 +91,11 @@
             </div>
 
             <div class="card-content" id="card_content">
-                @foreach (var item in dataFromDatabase)
+                @foreach (var item in Model)
                 {
                     <div class="notification-container">
-                        <h6 class="notification_title">@item.Name</h6>
-                        <a href="@item.Link" class="notification-link" data-bs-toggle="modal" data-bs-target="#viewNotification">Preview</a>
+                        <h6 class="notification_title">@item.Title</h6>
+                        @* <a href="@item.Link" class="notification-link" data-bs-toggle="modal" data-bs-target="#viewNotification">Preview</a> *@
                     </div>
                 }
             </div>

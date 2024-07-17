@@ -40,7 +40,6 @@ namespace ASI.Basecode.Services.Services
                 Title = s.Title,
                 Body = s.Body,
                 DateCreated = s.DateCreated.ToString(),
-
             });
 
             return data;
