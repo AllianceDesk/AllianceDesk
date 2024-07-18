@@ -6,8 +6,7 @@
     string CurrentSearchTerm = ViewBag.SearchTerm ?? "";
     int CurrentPage = ViewBag.CurrentPage;
     int TotalPages = (int) ViewBag.TotalPages;
-
-
+    
     Func<DateTime, string> toRelativeTime = (DateTime dateTime) =>
     {
         var timeSpan = DateTime.Now - dateTime;
