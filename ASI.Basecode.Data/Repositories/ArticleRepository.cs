@@ -33,15 +33,5 @@ namespace ASI.Basecode.Data.Repositories
             UnitOfWork.SaveChanges();
         }
 
-        public void DeleteArticle(string articleId)
-        {
-            var article = this.GetDbSet<Article>().Where(a => a.ArticleId.ToString() == articleId).FirstOrDefault();
-            if (article != null)
-            {
-                this.GetDbSet<Article>().Remove(article);
-                UnitOfWork.SaveChanges();
-            }
-        }
-
     }
 }

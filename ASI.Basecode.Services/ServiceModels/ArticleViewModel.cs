@@ -22,7 +22,7 @@ namespace ASI.Basecode.Services.ServiceModels
         public string CreatedBy { get; set; }
         public string DateUpdated { get; set; }
         public string UpdatedBy { get; set; }
-
+        public bool Status { get; set; }
         public string CategoryNavigation { get; set; }
 
         public IEnumerable<ArticleViewModel> Articles { get; set; }

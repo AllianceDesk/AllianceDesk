@@ -14,28 +14,36 @@ namespace ASI.Basecode.Services.Services
 {
     public class ArticleService : IArticleService
     {
-        private readonly IMapper mapper;
+        private readonly IMapper _mapper;
         private readonly IArticleRepository _articleRepository;
         private readonly ICategoryRepository _categoryRepository;
         private readonly ISessionHelper _sessionHelper;
+        private readonly IUserRepository _userRepository;
 
-        public ArticleService (IMapper mapper, IArticleRepository articleRepository, ICategoryRepository categoryRepository, ISessionHelper sessionHelper)
+        public ArticleService (IMapper mapper, 
+                                IArticleRepository articleRepository, 
+                                ICategoryRepository categoryRepository, 
+                                ISessionHelper sessionHelper,
+                                IUserRepository userRepository)
         {
-            this.mapper = mapper;
+            _mapper = mapper;
             _articleRepository = articleRepository;
             _categoryRepository = categoryRepository;
             _sessionHelper = sessionHelper;
+            _userRepository = userRepository;
         }
         public IEnumerable<ArticleViewModel> RetrieveAll()
         {
 
             var data = _articleRepository.RetrieveAll().Select(s => new ArticleViewModel
-            { 
-                ArticleId = s.ArticleId.ToString(), 
+            {
+                ArticleId = s.ArticleId.ToString(),
                 Title = s.Title,
                 Body = s.Body,
                 CategoryNavigation = _categoryRepository.RetrieveAll().Where(c => c.CategoryId == s.CategoryId).FirstOrDefault().CategoryName,
-                DateUpdated = s.DateUpdated.HasValue ? s.DateUpdated.Value.ToString("MMM dd") : string.Empty,
+                DateUpdated = s.DateUpdated.HasValue ? s.DateUpdated.Value.ToString("MMM dd yyyy") : string.Empty,
+                CreatedBy = _userRepository.GetUsers().Where(c => c.UserId == s.CreatedBy).FirstOrDefault().Username,
+                UpdatedBy = _userRepository.GetUsers().Where(c => c.UserId == s.UpdatedBy).FirstOrDefault().Username,
             });
 
             return data;
@@ -66,12 +74,29 @@ namespace ASI.Basecode.Services.Services
 
         public void Update (ArticleViewModel article)
         {
-
+            var existingData = _articleRepository.RetrieveAll().Where(a => a.ArticleId.ToString() == article.ArticleId).FirstOrDefault();
+            if (existingData != null)
+            {
+                _mapper.Map(article, existingData);
+                existingData.UpdatedBy = _sessionHelper.GetUserIdFromSession();
+                existingData.Title = article.Title;
+                existingData.Body = article.Body;
+                existingData.CategoryId = article.CategoryId;
+                existingData.DateUpdated = DateTime.Now;
+                _articleRepository.UpdateArticle(existingData);
+            }
         }
 
-        public void Delete(string articleId)
+        public void Delete(ArticleViewModel article)
         {
-            _articleRepository.DeleteArticle(articleId);
+            var existingData = _articleRepository.RetrieveAll().Where(a => a.ArticleId.ToString() == article.ArticleId).FirstOrDefault();
+            if (existingData != null)
+            {
+                _mapper.Map (article, existingData);
+                existingData.Status = false;
+                existingData.UpdatedBy = _sessionHelper.GetUserIdFromSession();
+                _articleRepository.UpdateArticle(existingData);
+            }
         }
 
         public IEnumerable<Category> GetCategories()

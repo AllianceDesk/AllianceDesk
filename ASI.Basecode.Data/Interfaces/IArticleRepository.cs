@@ -12,6 +12,5 @@ namespace ASI.Basecode.Data.Interfaces
         IEnumerable<Article> RetrieveAll();
         void AddArticle(Article article);
         void UpdateArticle(Article article);
-        void DeleteArticle(string articleId);
     }
 }
