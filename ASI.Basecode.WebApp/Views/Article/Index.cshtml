@@ -133,6 +133,14 @@
     </div>
 </div>
 
+<div class="modal fade" id="delete">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <!-- The content for Article Edit Modal will be loaded here-->
+        </div>
+    </div>
+</div>
+
 @Html.Partial("SettingsModal")
 
 
@@ -202,6 +210,25 @@
                 success: function (result) {
                     $('#edit .modal-content').html(result);
                     $('#edit').modal('show');
+                    console.log('Article details successfully loaded!');
+                },
+                error: function (error) {
+                    console.error('Error loading article details:', error);
+                }
+            });
+        });
+
+        $(document).on('click', '[data-article-delete-btn]', function () {
+            var articleId = $(this).data('article-id');
+
+            // Perform AJAX request to fetch article details
+            $.ajax({
+                url: '/KnowledgeBase/Article-Delete',
+                type: 'GET',
+                data: { articleId: articleId },
+                success: function (result) {
+                    $('#delete .modal-content').html(result);
+                    $('#delete').modal('show');
                     console.log('Article details successfully loaded!');
                 },
                 error: function (error) {

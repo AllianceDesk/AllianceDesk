@@ -172,7 +172,7 @@ namespace ASI.Basecode.WebApp.Controllers
                 ArticleId= articleData.ArticleId,
             };
 
-            return PartialView("Edit", viewModel);
+            return PartialView("DeleteModal", viewModel);
         }
 
         [HttpPost("/KnowledgeBase/Article-Delete")]
