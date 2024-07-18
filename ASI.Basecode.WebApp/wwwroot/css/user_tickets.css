@@ -410,6 +410,34 @@ main {
         font-size: 16px;
     }
 
+.link_card {
+    text-decoration: none;
+    color: black;
+}
+
+.article_card {
+    display: flex;
+    flex-direction: column;
+    background-color: whitesmoke;
+    padding: 1em;
+    border-radius: 10px;
+}
+
+.article_top {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.article_category {
+    color: #2417BA;
+    border: 1px solid #2417BA;
+    width: 10.5%;
+    padding: 0.5em;
+    border-radius: 10px;
+    background-color: rgba(36, 23, 186, 0.2);
+}
+
 #instruction-container {
     width: 88%;
     border: 1px solid var(--border-color);
