@@ -49,8 +49,21 @@ namespace ASI.Basecode.WebApp.Controllers
         public IActionResult Index()
         {
             ViewBag.AdminSidebar = "Index";
-            var data = _articleService.RetrieveAll();
-            return View(data);
+            var data = _articleService.RetrieveAll()
+                                        .Select(u => new ArticleViewModel
+                                        {
+                                            Title = u.Title,
+                                            Body = u.Body,
+                                            CategoryNavigation = u.CategoryNavigation,
+                                            DateUpdated = u.DateUpdated,
+                                        })
+                                        .ToList();
+
+            var viewModel = new ArticleViewModel
+            {
+                Articles = data
+            };
+            return View(viewModel);
         }
 
         /// <summary>
@@ -58,7 +71,7 @@ namespace ASI.Basecode.WebApp.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet ("/KnowledgeBase/Add-Article")]
-        public IActionResult Create()
+        public IActionResult CreateModal()
         {
             ViewBag.AdminSidebar = "Index";
             var categories = _articleService.GetCategories()
@@ -70,14 +83,21 @@ namespace ASI.Basecode.WebApp.Controllers
                                    .ToList();
             ViewBag.Categories = new SelectList(categories, "Value", "Text");
 
-            return View();
+            return PartialView("CreateModal");
         }
 
-        [HttpPost]
+        [HttpPost("/KnowledgeBase/Add-Article")]
         public IActionResult PostCreate(ArticleViewModel articleViewModel)
         {
             _articleService.Add(articleViewModel);
             return RedirectToAction("Index");
+        }
+
+        [HttpGet ("/KnowledgeBase/{id}")]
+        public IActionResult DetailModal(string articleId)
+        {
+            var articleData = _articleService.GetArticles().Where(a => a.ArticleId.ToString() == articleId).FirstOrDefault();
+            return PartialView("DetailModal");
         }
 
     }

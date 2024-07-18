@@ -1,0 +1,55 @@
+﻿@model ASI.Basecode.Services.ServiceModels.ArticleViewModel
+
+@section styles {
+    <link rel="stylesheet" href="~/css/user_tickets.css" />
+
+}
+
+<div class="modal fade" id="create" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="ticket-modal1">
+
+                <div class="top_modal d-flex justify-content-between align-items-center">                   
+                    <h3>Create A New Article</h3>                    
+                </div>
+
+                <div class="mb-3 d-flex justify-content-end">
+
+                    <button type="submit" class="btn btn-outline-danger me-2" id="saveArticleBtn"><i class='bx bxl-telegram bx-xs bx-fw' style="color: #E21818; cursor: pointer; transform: scale(1); padding-top: 0.06em;"></i> Save</button>
+                    <button type="button" class="btn btn-outline-danger me-2" id="saveArticleDraftBtn"><i class='bx bx-notepad bx-xs bx-fw' style="color: #E21818; cursor: pointer; transform: scale(1); padding-top: 0.06em;"></i>Save as Draft</button>
+                    <button type="button" class="btn btn-outline-danger me-2" data-bs-dismiss="modal"> <i class='bx bx-x bx-xs bx-fw' style="color: #E21818; cursor: pointer; transform: scale(1.4); padding-top: 0.06em;"></i>Cancel</button>
+
+                </div>
+                
+
+                <hr style="border-top: 2px solid #000; width: 98%;" class="mb-3" />
+                <form id="articleForm">
+                    <div class="form-floating mb-3">
+                        <input asp-for="Title" type="text" class="form-control" id="title" placeholder="">
+                        <label for="floatingTextarea">Title</label>
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="CategoryId" class="control-label">Category</label>
+                        <select asp-for="CategoryId" class="form-control">
+                            <option value="1">Technical</option>
+                            <option value="2">Billing</option>
+                            <option value="3">General Questions</option>
+                            <option value="4">Account Management</option>
+                            <option value="5">Customer Support</option>
+                            <option value="6">Others</option>
+                        </select>
+                        <span asp-validation-for="CategoryId" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <textarea asp-for="Body" class="form-control" placeholder="Content here" id="content" rows="10"></textarea>
+                    </div>
+                </form>
+                
+           </div>
+        </div>
+    </div>
+</div>

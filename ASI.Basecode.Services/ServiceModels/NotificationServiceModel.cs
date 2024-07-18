@@ -11,8 +11,11 @@ namespace ASI.Basecode.Services.ServiceModels
     /// </summary>
     public class NotificationServiceModel
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Subject { get; set; }
+        public string NotificationId { get; set; }
+        public string Title { get; set; }
+        public string Body { get; set; }
+        public string TicketId { get; set; }
+        public string DateCreated { get; set; }
+        public string RecipientId { get; set; }
     }
 }

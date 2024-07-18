@@ -147,7 +147,7 @@
                 $(document).on('click', '[data-viewuser-agent]', function () {
                     var userId = $(this).data('user-id');
                     $.ajax({
-                        url: '/UserDetails',
+                        url: 'Admin/UserDetails',
                         type: 'GET',
                         data: { UserId: userId },
                         success: function (response) {

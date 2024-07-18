@@ -105,9 +105,33 @@ namespace ASI.Basecode.Services.Services
             return _userRoleRepository.RetrieveAll();
         }
 
+        public IEnumerable<User> GetAllUsers()
+        {
+            return _repository.GetUsers();
+        }
+
         public IEnumerable<User> GetUsers()
         {
-            return _repository.GetUsers().Where(u => u.RoleId == 2);
+            return _repository.GetUsers().Where(u => u.RoleId == 3);
+        }
+
+        public User GetUserById(string id)
+        {
+            User user = _repository.GetUsers().Where(x => x.UserId.ToString() == id).FirstOrDefault();
+
+            if (user !=  null)
+            {
+                return user;
+            }
+        
+            return null;
+        }
+
+        public IEnumerable<UserViewModel> GetAgents()
+        {
+            var agents = _repository.GetUsers().Where(x => x.RoleId == 2).ToList();
+
+            return _mapper.Map<IEnumerable<UserViewModel>>(agents);
         }
     }
 }

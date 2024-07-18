@@ -1,4 +1,6 @@
-﻿@{
+﻿@model ASI.Basecode.Services.ServiceModels.AgentAssignmentViewModel
+
+@{
     ViewData["Title"] = "Tickets";
     Layout = "_Layout"; 
 }
@@ -14,73 +16,49 @@
         <div class="flex flex-col gap-1">
             <div class="bg-white admin-ticket agents | cursor-pointer ctr-shadow p-y-1 p-x-1 flex flex-col gap-1">
                 <div class="flex-Row justify-content-between">
-                    <p class="text-1-5 fw-semi">Issue with finding order</p>
-                    <p class="text-1-5 fw-semi">20th Oct</p>
+                    <p class="text-1-5 fw-semi">@Model.Title</p>
+                    <p class="text-1-5 fw-semi">@Model.CreatedAt</p>
                 </div>
-                <div class="flex-Row gap-1">
+                @* <div class="flex-Row gap-1">
                     <div class="role-container role-agent fw-semi text-0-5">Agent</div>
                     <div class="role-container role-agent fw-semi text-0-5">Agent</div>
-                </div>
+                </div> *@
             </div>
             <div class="flex-Row justify-content-between align-items-center">
                 <h2>Agents</h2>
                 <button class="registerBtn mbtn-primary align-self-start" data-admin-assign-btn>Assign</button>
             </div>
+
             <div class=" flex flex-col gap-0-5 br-1-5 h-29" data-admin-tickets-container>
-                <div class="agents cursor-pointer br-1-5 flex-Row p-x-0-5 p-y-0-5 justify-content-between align-items-center" data-agent-assignee>
-                    <div class="flex-Row gap-1 align-items-center align-items-center">
-                        <div class="p-y-1 p-x-1 br-50 bg-grey"></div>
-                        <h6 class="H6">Username</h6>
-                        <div class="role-container role-agent fw-semi text-0-5 text-sm">IT SUPPORT</div>
+				@foreach (var item in Model.Agents)
+				{
+
+                    <div class="agents cursor-pointer br-1-5 flex-Row p-x-0-5 p-y-0-5 justify-content-between align-items-center" data-agent-assignee>
+                        <div class="flex-Row gap-1 align-items-center">
+                            <div class="p-y-1 p-x-1 br-50 bg-grey"></div>
+                            <input type="hidden" id="agentName" value="@item.Name" />
+                            <input type="hidden" id="agentId" value="@item.UserId" />
+                            <h6>@item.Name</h6>
+                            @if (item.TeamName != null)
+                            {
+                                <div class="role-container role-agent fw-semi text-0-5 text-sm">@item.TeamName</div>
+                            }
+                        </div>
+                        <div class="flex-Row gap-1">
+                            <p class="text-sm">Number of Tickets: @Model.AssignedTicketCounts.FirstOrDefault(x => x.Agent.UserId == item.UserId)?.TicketCount</p>
+                        </div>
                     </div>
-                    <div class="flex-Row gap-1">
-                        <p class="text-sm">Number of Tickets: 4</p>
-                        <p class="text-sm">Number of Tickets: 15</p>
-                    </div>
-                </div>
-                <div class="agents cursor-pointer br-1-5 flex-Row p-x-0-5 p-y-0-5 justify-content-between align-items-center " data-agent-assignee>
-                    <div class="flex-Row gap-1 align-items-center align-items-center">
-                        <div class="p-y-1 p-x-1 br-50 bg-grey"></div>
-                        <h6 class="H6">Username</h6>
-                        <div class="role-container role-agent fw-semi text-0-5 text-sm">IT SUPPORT</div>
-                    </div>
-                    <div class="flex-Row gap-1">
-                        <p class="text-sm">Number of Tickets: 4</p>
-                        <p class="text-sm">Number of Tickets: 15</p>
-                    </div>
-                </div>
-                <div class="agents cursor-pointer br-1-5 flex-Row p-x-0-5 p-y-0-5 justify-content-between align-items-center " data-agent-assignee>
-                    <div class="flex-Row gap-1 align-items-center align-items-center">
-                        <div class="p-y-1 p-x-1 br-50 bg-grey"></div>
-                        <h6 class="H6">Username</h6>
-                        <div class="role-container role-agent fw-semi text-0-5 text-sm">IT SUPPORT</div>
-                    </div>
-                    <div class="flex-Row gap-1">
-                        <p class="text-sm">Number of Tickets: 4</p>
-                        <p class="text-sm">Number of Tickets: 15</p>
-                    </div>
-                </div>
-                <div class="agents cursor-pointer br-1-5 flex-Row p-x-0-5 p-y-0-5 justify-content-between align-items-center " data-agent-assignee>
-                    <div class="flex-Row gap-1 align-items-center align-items-center">
-                        <div class="p-y-1 p-x-1 br-50 bg-grey"></div>
-                        <h6 class="H6">Username</h6>
-                        <div class="role-container role-agent fw-semi text-0-5 text-sm">IT SUPPORT</div>
-                    </div>
-                    <div class="flex-Row gap-1">
-                        <p class="text-sm">Number of Tickets: 4</p>
-                        <p class="text-sm">Number of Tickets: 15</p>
-                    </div>
-                </div>
+				}
             </div>
         </div>
         <div class="hidden bg-modal delete-modal-container" data-admin-assign-modal-container>
             <div class="delete-modal flex flex-col gap-1 justify-content-center align-items-center" data-admin-assign-modal>
                 <i class="text-md fa-regular fa-circle-xmark hover-pointer align-self-end" data-admin-assign-close-btn></i>
                 <div class="flex-between flex-col align-items-center justify-content-center">
-                    <p class="text-1-5">Do you really want to assign<span class="font-weight-bold">Ticket#123</span><br /> to Agent: <span class="font-weight-bold">username?</span></p>
+                    <p class="text-1-5">Do you really want to assign<span class="font-weight-bold">@Model.Title</span><br /> to Agent: <span class="font-weight-bold" id="agentNameDisplay"></span>?</p>
                 </div>
                 <div class="flex-Row w-100 justify-content-end gap-2">
-                    <button class=" mbtn-primary color-white bg-red align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-assign-save-btn>Asssign</button>
+                    <button class=" mbtn-primary color-white bg-red align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-assign-save-btn>Assign</button>
                     <button class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-assign-cancel-btn>Cancel</button>
                 </div>
             </div>
@@ -101,11 +79,21 @@
         const adminAsgnSaveBtn = document.querySelector("[data-admin-assign-save-btn]")
 
         adminAsgnBtn.addEventListener("click", () => {
-            console.log("clicking open btn", modalContainer, adminEditBtn)
-            assignModalContainer.classList.remove("hidden")
-            adminAsgnForm.classList.remove("hidden")
-        })
 
+            const selectedAgent = document.querySelector(".selected-agent");
+
+            if (!selectedAgent) {
+                alert("Please select an agent to assign the ticket to.");
+                return;
+            }
+
+            console.log("clicking open btn", modalContainer, adminEditBtn);
+
+            const agentName = selectedAgent.querySelector("h6").textContent.trim();
+            document.querySelector("#agentNameDisplay").textContent = agentName;
+            assignModalContainer.classList.remove("hidden");
+            adminAsgnForm.classList.remove("hidden");
+        });
 
         adminAsgnCancelBtn.addEventListener("click", () => {
             console.log("clicking cancel btn", modalContainer)
@@ -120,10 +108,42 @@
         })
 
         adminAsgnSaveBtn.addEventListener("click", () => {
-            console.log("clicking save btn", modalContainer)
-            assignModalContainer.classList.add("hidden")
-            adminAsgnForm.classList.add("hidden")
-        })
+            const selectedAgent = document.querySelector(".selected-agent");
+
+            console.log("clicking save btn", modalContainer);
+
+            const agentId = selectedAgent.querySelector("#agentId").value;
+            const ticketId = '@Model.TicketId';
+
+            console.log(agentId);
+            console.log(ticketId);
+
+            // AJAX POST request with absolute path
+            fetch('/Admin/Tickets/Assignment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ TicketId: ticketId, SelectedAgentId: agentId }),
+            }).then(response => {
+                if (response.ok) {
+                    console.log('Ticket assigned successfully.');
+                    // Optionally handle success actions like updating UI
+                    assignModalContainer.classList.add("hidden");
+                    adminAsgnForm.classList.add("hidden");
+
+                    window.location.href = '/Admin/Tickets/' + ticketId;
+                } else {
+					console.error('Failed to assign ticket.');
+					// Handle error cases
+                }
+            }).catch(error => {
+                console.error('Error assigning ticket:', error);
+            });
+
+            assignModalContainer.classList.add("hidden");
+            adminAsgnForm.classList.add("hidden");
+        });
 
         AssigneeAgents.forEach(agent => {
             agent.addEventListener("click", () => {
@@ -136,5 +156,10 @@
                 agent.classList.add("selected-agent");
             })
         })
+
+        const agentName = document.querySelector("#agentName").value;
+        document.querySelector("#agentNameDisplay").textContent = agentName;
+
+        const agentId = document.querySelector("#agentId").value;
     });
 </script>

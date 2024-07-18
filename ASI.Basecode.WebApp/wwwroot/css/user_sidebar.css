@@ -1,51 +1,32 @@
-
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-
-*{
-    font-family: 'Poppins', sans-serif;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+#sidebar {
+    background-color: var(--sidebar-color);
+    grid-area: sidebar;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-html, body {
-    height: 100%;
-}
-
-:root {
-    /* Colors */
-    --sidebar-color: #FFFFFF;
-    --active-button: #E21818;
-    --active-button-text: #FFFFFF;
-    --text-color: #333333;
-    --border-color: #ccc;
-    --icon-color: #aaa;
-    --hover-background: #f1f1f1;
-}
-
-.sidebar {
-    background: var(--sidebar-color);
-    box-shadow: 3px 0 10px rgba(0, 0, 0, 0.05);
-}
-
-/* For Search Bar */
-.search-container {
+#search-container {
     position: relative;
     width: 88%;
-    margin: 10px;
+    height: 2.5em;
+    margin-top: 15px;
+    background-color: var(--sidebar-color);
+    border-radius: 5px;
+    border: 1px solid #ccc;
 }
 
-.search-input {
-    width: 100%;
-    padding: 10px 15px 10px 40px;
-    border: 1px solid var(--border-color);
-    border-radius: 5px;
+#search-input {
+    width: 80%;
+    margin-left: 2.3em;
+    margin-top: 0.5em;
+    border: none;
     outline: none;
     font-size: 16px;
     color: var(--text-color);
 }
 
-.search-container i {
+#search-container i {
     position: absolute;
     top: 50%;
     left: 15px;
@@ -54,8 +35,7 @@ html, body {
     color: var(--icon-color);
 }
 
-/* For Tickets Navigator */
-.button-container {
+#button-container {
     display: flex;
     align-items: center;
     padding: 10px 15px;
@@ -63,26 +43,25 @@ html, body {
     background-color: var(--active-button);
     border-radius: 5px;
     color: var(--active-button-text);
-    margin: 20px 10px;
+    margin: 15px 10px;
     cursor: pointer;
     transition: background-color 0.3s;
 }
 
-.button-container:hover {
+#button-container:hover {
     background-color: darken(var(--active-button), 10%);
 }
 
-.button-container i {
+#button-container i {
     margin-right: 10px;
     font-size: 20px;
 }
 
-.button-container .label-1 {
+#button-container .label-1 {
     font-size: 16px;
 }
 
-/* For Details */
-.instruction-container {
+#instruction-container {
     width: 88%;
     border: 1px solid var(--border-color);
     border-radius: 5px;
@@ -102,15 +81,11 @@ html, body {
     margin-right: 10px;
     font-size: 20px;
     color: var(--icon-color);
-        
 }
 
 .instruction-detail {
-    
     padding: 10px;
 }
-
-
 
 .instruction-detail li {
     font-size: 12px;
@@ -126,25 +101,25 @@ html, body {
 }
 
 .instruction-detail ul:hover {
-    overflow-x: auto; /* Show horizontal scroll on hover */
+    overflow-x: auto;
 }
 
 .instruction-detail ul::-webkit-scrollbar {
-    display: none; /* Hide scrollbar in WebKit (Chrome, Safari, etc.) */
+    display: none;
 }
 
 .instruction-detail ul:hover::-webkit-scrollbar {
-    display: block; /* Show scrollbar on hover in WebKit */
+    display: block;
     width: 2px;
 }
 
 .instruction-detail ul::-webkit-scrollbar-track {
-    background-color: transparent; /* Track color */
+    background-color: transparent;
 }
 
 .instruction-detail ul::-webkit-scrollbar-thumb {
-    background-color: #ccc; /* Thumb color */
-    border-radius: 10px; /* Thumb border radius */
+    background-color: #ccc;
+    border-radius: 10px;
 }
 
 hr {
@@ -159,7 +134,6 @@ hr {
     font-size: 16px;
 }
 
-/* Hover Effects */
 .button-container:hover,
 .instruction-label:hover {
     background-color: var(--hover-background);

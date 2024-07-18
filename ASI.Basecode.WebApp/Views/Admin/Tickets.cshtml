@@ -1,0 +1,78 @@
+﻿@model IEnumerable<ASI.Basecode.Services.ServiceModels.TicketViewModel>
+
+@{
+    ViewData["Title"] = "Tickets";
+    Layout = "_Layout";
+
+    Func<DateTime, string> toRelativeTime = (DateTime dateTime) =>
+    {
+        var timeSpan = DateTime.Now - dateTime;
+
+        if (timeSpan.TotalSeconds < 60)
+        {
+            return $"{timeSpan.Seconds} seconds ago";
+        }
+        else if (timeSpan.TotalMinutes < 60)
+        {
+            return $"{timeSpan.Minutes} minutes ago";
+        }
+        else if (timeSpan.TotalHours < 24)
+        {
+            return $"{timeSpan.Hours} hours ago";
+        }
+        else
+        {
+            return $"{timeSpan.Days} days ago";
+        }
+    };
+}
+@section styles {
+    <link rel="stylesheet" href="~/css/functionalities.css" />
+    <link rel="stylesheet" href="~/css/Admin.css" />
+}
+
+@Html.Partial("Admin_Header")
+<div class="main">
+    @Html.Partial("Admin_Sidebar")
+    <div class="admin-body p-y-3 relative bg-grey">
+        <h2>Tickets</h2>
+        <div class="view-user-nav">
+            <div class="agent-nav pt-4">
+                <ul class="flex-Row gap-2">
+                    <li class="nav-item @(ViewBag.ShowStatus == null ? "active" : "")">
+                        <a asp-controller="Admin" asp-action="Tickets">All</a>
+                    </li>
+                    <li class="nav-item @(ViewBag.ShowStatus == "Unresolved" ? "active" : "")">
+                        <a asp-controller="Admin" asp-action="Tickets" asp-route-status="Unresolved">Unresolved</a>
+                    </li>
+                    <li class="nav-item @(ViewBag.ShowStatus == "Resolved" ? "active" : "")">
+                        <a asp-controller="Admin" asp-action="Tickets" asp-route-status="Resolved">Resolved</a>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="flex-Row gap-2 justify-content-center align-center">
+                <div class="j-search-container | flex-Row align-center justify-content-center">
+                    <i class="fa-solid fa-magnifying-glass text-1-5"></i>
+                    <input class="bg-transparent" type="text" placeholder="Search" />
+                </div>
+                <button class="mbtn-primary flex-Row gap-1 color-black bg-btn-grey align-center justify-content-center border-0 p-x-1 br-1-5" data-admin-add-btn>
+                    <i class="fa-solid fa-filter"></i>
+                    <p class="br-1-5 p-y-1">Filter</p>
+                </button>
+            </div>
+        </div>
+        <div class="bg-white flex flex-col gap-0-5">
+            @foreach (var item in Model)
+            {
+                <button onclick="window.location.href = '@Url.Action("Tickets", "Admin", new { id = item.TicketId })'" class="admin-ticket agents cursor-pointer ctr-shadow p-y-1 p-x-1 flex flex-col gap-1">
+                    <div class="flex-row justify-content-between">
+                        <p class="text-1-5 fw-semi">@item.Title</p>
+                        <p class="text-1-5 fw-semi">@toRelativeTime(@item.DateCreated)</p>
+                    </div>
+                    <p>@item.Description</p>
+                </button>
+            }
+        </div>
+    </div>
+</div>

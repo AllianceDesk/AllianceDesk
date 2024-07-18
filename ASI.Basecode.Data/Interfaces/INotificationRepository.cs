@@ -10,9 +10,8 @@ namespace ASI.Basecode.Data.Interfaces
     public interface INotificationRepository
     {
 
-        IEnumerable<NotificationDataModel> RetrieveAll();
-        void Add(NotificationDataModel model);
-        void Update(NotificationDataModel model);
-        void Delete(int id);
+        IEnumerable<Notification> RetrieveAll();
+        void Add(Notification notification);
+        void Update(Notification model);
     }
 }

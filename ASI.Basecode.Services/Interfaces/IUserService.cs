@@ -9,11 +9,14 @@ namespace ASI.Basecode.Services.Interfaces
     {
         LoginResult AuthenticateUser(string userid, string password, ref User user);
         void AddUser(UserViewModel model);
+        User GetUserById(string id);
         void AddTeam(UserViewModel model);
         void UpdateUser (UserViewModel model);
         void DeleteUser(string userId);
         IEnumerable<Team> GetTeams();
         IEnumerable<UserRole> GetUserRoles();
         IEnumerable<User> GetUsers();
+        IEnumerable<User> GetAllUsers();
+        IEnumerable<UserViewModel> GetAgents();
     }
 }

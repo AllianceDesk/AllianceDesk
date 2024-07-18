@@ -10,13 +10,18 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Linq;
+using ASI.Basecode.Data.Models;
+using Newtonsoft.Json.Linq;
+using System;
 
 namespace ASI.Basecode.WebApp.Controllers
 {
+    [Route("Admin")]
     public class AdminController : ControllerBase<AdminController>
     {
         private readonly IUserService _userService;
-
+        private readonly ITicketService _ticketService;
+        
         /// <summary>
         /// Constructor
         /// </summary>
@@ -29,22 +34,26 @@ namespace ASI.Basecode.WebApp.Controllers
                               ILoggerFactory loggerFactory,
                               IConfiguration configuration,
                               IUserService userService,
+                              ITicketService ticketService,
                               IMapper mapper = null) : base(httpContextAccessor, loggerFactory, configuration, mapper)
         {
             this._userService = userService;
+            this._ticketService = ticketService;
         }
+
+        #region Users
 
         /// <summary>
         /// Returns User View
         /// </summary>
         /// <returns> Home View </returns>
-        [HttpGet]
+        [HttpGet("ViewUser")]
         [AllowAnonymous]
         public ActionResult ViewUser()
         {
             ViewBag.IsLoginOrRegister = false;
             ViewBag.AdminSidebar = "ViewUser";
-            var users = _userService.GetUsers()
+            var users = _userService.GetAllUsers()
                                         .Select(u => new UserViewModel
                                         {
                                             Name = u.Name,
@@ -62,83 +71,24 @@ namespace ASI.Basecode.WebApp.Controllers
             return View(viewModel);
         }
 
-        /// <summary>
-        /// Returns Tickets View.
-        /// </summary>
-        /// <returns> Tickets View </returns>
-        [HttpGet]
-        [AllowAnonymous]
-        [Route("TicketsAll/{id?}")]
-        public ActionResult TicketsAll(string? id)
-        {
-            ViewBag.IsLoginOrRegister = false;
-            ViewBag.AdminSidebar = "Tickets";
-
-            if (id != null)
-            {
-                // Handle the case where an ID is provided
-                ViewBag.TicketId = id;
-                return this.View("/Views/Admin/TicketDetail.cshtml");
-            }
-            else
-            {
-                // Handle the case where no ID is provided
-                return this.View("/Views/Admin/TicketsAll.cshtml");
-            }
-        }
-
-        [HttpGet]
-        [AllowAnonymous]
-        public ActionResult TicketAssignment()
-        {
-            ViewBag.AdminSidebar = "Tickets";
-            return this.View();
-        }
-
-
-        [HttpGet]
-        [AllowAnonymous]
-        public ActionResult TicketReassignment()
-        {
-            ViewBag.AdminSidebar = "Tickets";
-            return this.View();
-        }
-
-        [HttpGet]
-        [AllowAnonymous]
-        public ActionResult TicketResolved()
-        {
-            ViewBag.AdminSidebar = "Tickets";
-            return this.View();
-        }
-
-        [HttpGet]
-        [AllowAnonymous]
-        public ActionResult TicketOccupied()
-        {
-            ViewBag.AdminSidebar = "Tickets";
-            return this.View();
-        }
-
-        [HttpGet]
-        [Route("UserDetails")]
+        [HttpGet("/UserDetails")]
         /// <summary>
         /// Go to the User Details View
         /// </summary>
         /// <returns> User Details</returns>
         /// 
-        public IActionResult UserDetails(string UserId)
+        public IActionResult UserDetails(string id)
         {
-            var data = _userService.GetUsers().Where(x => x.UserId.ToString() == UserId).FirstOrDefault();
+            var data = _userService.GetAllUsers().Where(x => x.UserId.ToString() == UserId).FirstOrDefault();
             var team = _userService.GetTeams().Where(t => t.TeamId.Equals(data.TeamId)).FirstOrDefault();
 
             var userModel = new UserViewModel
             {
-                UserId = UserId,
+                UserId = id,
                 Name = data.Name,
                 Email = data.Email,
                 RoleId = data.RoleId,
-                TeamName = team.TeamName,
+                TeamName = team?.TeamName // This will be null if team is null
             };
 
             return PartialView("UserDetails", userModel);
@@ -156,7 +106,7 @@ namespace ASI.Basecode.WebApp.Controllers
                                    {
                                        Value = t.TeamId.ToString(),
                                        Text = t.TeamName
-                                   }) 
+                                   })
                                    .ToList();
 
             var userRoles = _userService.GetUserRoles()
@@ -175,7 +125,7 @@ namespace ASI.Basecode.WebApp.Controllers
         }
 
         [HttpPost]
-        [Route("AddUser")]
+        [Route("/AddUser")]
         /// <summary>
         /// Post Request for Adding a User
         /// </summary>
@@ -187,8 +137,7 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("ViewUser");
         }
 
-        [HttpGet]
-        [Route("UserEdit")]
+        [HttpGet("/UserEdit")]
         /// <summary>
         /// Go to the User Details View
         /// </summary>
@@ -197,7 +146,7 @@ namespace ASI.Basecode.WebApp.Controllers
         public IActionResult UserEdit(string UserId)
         {
             // Fetch user data
-            var user = _userService.GetUsers().FirstOrDefault(x => x.UserId.ToString() == UserId);
+            var user = _userService.GetAllUsers().FirstOrDefault(x => x.UserId.ToString() == UserId);
             if (user == null)
             {
                 return NotFound();
@@ -239,8 +188,7 @@ namespace ASI.Basecode.WebApp.Controllers
             return PartialView("UserEdit", userModel);
         }
 
-        [HttpPost]
-        [Route("UserEdit")]
+        [HttpPost("/UserEdit")]
         /// <summary>
         /// Post Request for Adding a User
         /// </summary>
@@ -252,8 +200,7 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("ViewUser");
         }
 
-        [HttpGet]
-        [Route("UserDelete")]
+        [HttpGet("/UserDelete")]
         /// <summary>
         /// Post Request for Adding a User
         /// </summary>
@@ -268,8 +215,7 @@ namespace ASI.Basecode.WebApp.Controllers
             return PartialView("UserDelete", userToDelete);
         }
 
-        [HttpPost]
-        [Route("UserDelete")]
+        [HttpPost("/UserDelete")]
         /// <summary>
         /// Post Request for Adding a User
         /// </summary>
@@ -281,6 +227,7 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("ViewUser");
         }
 
+        [HttpGet("/ViewTeams")]
         public IActionResult ViewTeams()
         {
             ViewBag.IsLoginOrRegister = false;
@@ -317,5 +264,127 @@ namespace ASI.Basecode.WebApp.Controllers
 
             return RedirectToAction("ViewTeams");
         }
+
+        #endregion
+
+        #region Tickets
+        /// <summary>
+        /// Returns Tickets View.
+        /// </summary>
+        /// <returns> Tickets View </returns>
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("Tickets/{id?}")]
+        public ActionResult Tickets(string? id, string? status)
+        {
+            ViewBag.IsLoginOrRegister = false;
+            ViewBag.AdminSidebar = "Tickets";
+
+            if (status != null)
+            {
+                ViewBag.ShowStatus = status;
+
+                if (status == "Resolved")
+                {
+                    var resolvedTickets = _ticketService.RetrieveAll()
+                        .Where(t => t.StatusId == "4" || t.StatusId == "5")
+                        .OrderByDescending(t => t.DateCreated);
+
+                    return View("/Views/Admin/Tickets.cshtml", resolvedTickets);
+                }
+
+                var unresolvedTickets = _ticketService.RetrieveAll()
+                    .Where(t => t.StatusId == "1" || t.StatusId == "2" || t.StatusId == "3")
+                    .OrderByDescending(t => t.DateCreated);
+
+                return View("/Views/Admin/Tickets.cshtml", unresolvedTickets);
+            }
+
+            if (id != null)
+            {
+
+                var ticket = _ticketService.RetrieveAll()
+                    .Where(t => t.TicketId.ToString() == id)
+                    .FirstOrDefault();
+                
+                Console.WriteLine(ticket);
+
+                return this.View("/Views/Admin/TicketDetail.cshtml", ticket);
+            }
+            else
+            {
+                var tickets = _ticketService.RetrieveAll()
+                    .OrderByDescending(t => t.DateCreated);
+
+                // Handle the case where no ID is provided
+                return this.View("/Views/Admin/Tickets.cshtml", tickets);
+            }
+        }
+
+        [HttpGet("Tickets/Assignment")]
+        [AllowAnonymous]
+        public ActionResult TicketAssignment(string id)
+        {
+            var ticket = _ticketService.RetrieveAll()
+                .Where(t => t.TicketId.ToString() == id)
+                .FirstOrDefault();
+
+            var tickets = _ticketService.RetrieveAll();
+
+            // Retrieve all agents (assuming RoleId 2 corresponds to agents)
+
+            var agents = _userService.GetAgents().ToList();
+
+            foreach (var agent in agents)
+            {
+                if (agent.TeamId != null)
+                {
+                    agent.TeamName = _userService.GetTeams().Where(t => t.TeamId.ToString() == agent.TeamId).FirstOrDefault().TeamName;
+                }
+            }
+
+            var currentAgentId = ticket.AgentId.ToString();
+            var availableAgents = agents.Where(agent => agent.UserId != currentAgentId).ToList();
+
+            var assignedTicketCounts = agents
+                .Select(agent => new
+                {
+                    Agent = agent,
+                    TicketCount = tickets.Count(t => t.AgentId.ToString() == agent.UserId.ToString())
+                })
+                .OrderByDescending(agent => agent.TicketCount)
+                .ToList();
+
+            var model = new AgentAssignmentViewModel
+            {
+                TicketId = ticket.TicketId,
+                Title = ticket.Title,
+                CreatedAt = ticket.DateCreated,
+                Description = ticket.Description,
+                Agents = availableAgents,
+                AssignedTicketCounts = assignedTicketCounts
+                    .Select(agent => new AgentTicketCountViewModel
+                    {
+                        Agent = agent.Agent,
+                        TicketCount = agent.TicketCount
+                    })
+                    .ToList()
+            };
+
+            ViewBag.AdminSidebar = "Tickets";
+            return View(model);
+        }
+
+
+        [HttpPost("Tickets/Assignment"), ActionName("TicketAssignment")]
+        [AllowAnonymous]
+        public ActionResult PostTicketAssignment([FromBody] AgentAssignmentViewModel model)
+        {
+            _ticketService.AssignAgent(model.TicketId, model.SelectedAgentId);
+
+
+            return RedirectToAction("Tickets", new { id = model.TicketId });
+        }
+        #endregion
     }
 }
