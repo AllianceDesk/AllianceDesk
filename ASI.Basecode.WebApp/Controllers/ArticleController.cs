@@ -95,7 +95,7 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpGet ("/KnowledgeBase/Article-Details")]
+        [HttpGet ("/KnowledgeBase/Article-Detail")]
         public IActionResult DetailModal(string articleId)
         {
             var articleData = _articleService.RetrieveAll().Where(a => a.ArticleId.ToString() == articleId).FirstOrDefault();
@@ -104,22 +104,13 @@ namespace ASI.Basecode.WebApp.Controllers
                 return NotFound();
             }
 
-            var data = _articleService.RetrieveAll()
-                                        .Where(a => a.Status == true)
-                                        .Select(u => new ArticleViewModel
-                                        {
-                                            ArticleId = articleId,
-                                            Title = u.Title,
-                                            Body = u.Body,
-                                            CategoryNavigation = u.CategoryNavigation,
-                                            DateUpdated = u.DateUpdated,
-                                            UpdatedBy = u.UpdatedBy,
-                                        })
-                                        .ToList();
-
             var viewModel = new ArticleViewModel
             {
-                Articles = data
+                ArticleId = articleId,
+                Title = articleData.Title,
+                Body = articleData.Body,
+                UpdatedBy = articleData.UpdatedBy,
+                DateUpdated = articleData.DateUpdated,
             };
 
             return PartialView("DetailModal", viewModel);
