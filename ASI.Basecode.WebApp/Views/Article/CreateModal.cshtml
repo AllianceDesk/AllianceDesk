@@ -33,13 +33,7 @@
 
                     <div class="form-group mb-3">
                         <label asp-for="CategoryId" class="control-label">Category</label>
-                        <select asp-for="CategoryId" class="form-control">
-                            <option value="1">Technical</option>
-                            <option value="2">Billing</option>
-                            <option value="3">General Questions</option>
-                            <option value="4">Account Management</option>
-                            <option value="5">Customer Support</option>
-                            <option value="6">Others</option>
+                        <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.Categories">
                         </select>
                         <span asp-validation-for="CategoryId" class="text-danger"></span>
                     </div>

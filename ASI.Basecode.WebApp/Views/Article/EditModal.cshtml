@@ -1,4 +1,6 @@
-﻿@section styles {
+﻿@model ASI.Basecode.Services.ServiceModels.ArticleViewModel
+
+@section styles {
     <link rel="stylesheet" href="~/css/user_tickets.css" />
 
 }
@@ -13,29 +15,39 @@
                     <button type="button" class="btn closebtn1" data-bs-dismiss="modal"><i class='bx bx-x bx-sm icon' style="color: #45474B; cursor: pointer;"></i></button>
                 </div>
 
-                <div class="top-container">
-                    
-                    <div class="nameDateContainer w-100">                        
-                        <input type="text" class="form-control mb-3 w-100" id="title" placeholder="Title">
-                        <p class="email mb-4" style="font-size:12px;">Last Edited by: Lance Mathew Abella</p>                        
+                <form id="article-edit-form" asp-action="PostEditModal">
+                    @Html.HiddenFor(model => model.ArticleId) <!-- Add this line to include the hidden field for UserId -->
+                    <div class="top-container">
+                        <div class="nameDateContainer w-100">
+                            <input asp-for="Title" type="text" class="form-control mb-3 w-100" id="title" placeholder="@Html.DisplayFor(model => model.Title)">
+                            <p class="email mb-4" style="font-size:12px;">Last Edited by: @Html.DisplayFor(model => model.CreatedBy)</p>
+                        </div>
+
+
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="CategoryId" class="control-label">Category</label>
+                        <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.Categories">
+                        </select>
+                        <span asp-validation-for="CategoryId" class="text-danger"></span>
                     </div>
                     
+                    <hr class="mb-3" style="border-top: 2px solid #ccc; width: 98%;" />
 
-                </div>
-                
-                <hr class="mb-3" style="border-top: 2px solid #ccc; width: 98%;"/>
-                
-                <div class="mb-3">
-                    <textarea class="form-control" id="content" rows="6" placeholder="Content here"></textarea>
-                </div>
+                    <div class="mb-3">
+                        <textarea asp-for="Body" class="form-control" id="content" rows="6" placeholder="@Html.DisplayFor(model => model.Body)">@Html.DisplayFor(model => model.Body)</textarea>
+                    </div>
 
-                <div class="button_card mb-3 d-flex justify-content-between">
-                    <button type="button" class="btn attachment custom-button" style="background-color: #E21818; color: white;"><i class='bx bxl-telegram bx-xs bx-fw uh' style="align-self:center; transform: scale(1);"></i> Save </button>
-                </div>
-                
+                    <div class="button_card mb-3 d-flex justify-content-between">
+                        <button type="submit" class="btn attachment custom-button" style="background-color: #E21818; color: white;">
+                            <i class='bx bxl-telegram bx-xs bx-fw uh' style="align-self:center; transform: scale(1);" id="data-edit-article-save-btn"></i> Save 
+                            </button>
+                    </div>
+                </form>
            </div>
         </div>
     </div>
 </div>
 
-@Html.Partial("DeleteModal")
+@* @Html.Partial("DeleteModal") *@
