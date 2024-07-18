@@ -24,31 +24,43 @@
                     <div class="role-container role-agent fw-semi text-0-5">Agent</div>
                 </div> *@
             </div>
+            <br></br>
             <div class="flex-Row justify-content-between align-items-center">
                 <h2>Agents</h2>
                 <button class="registerBtn mbtn-primary align-self-start" data-admin-assign-btn>Assign</button>
             </div>
-
+        
             <div class=" flex flex-col gap-0-5 br-1-5 h-29" data-admin-tickets-container>
-				@foreach (var item in Model.Agents)
+                @if (Model.Agents.Count == 0)
 				{
-
-                    <div class="agents cursor-pointer br-1-5 flex-Row p-x-0-5 p-y-0-5 justify-content-between align-items-center" data-agent-assignee>
-                        <div class="flex-Row gap-1 align-items-center">
-                            <div class="p-y-1 p-x-1 br-50 bg-grey"></div>
-                            <input type="hidden" id="agentName" value="@item.Name" />
-                            <input type="hidden" id="agentId" value="@item.UserId" />
-                            <h6>@item.Name</h6>
-                            @if (item.TeamName != null)
-                            {
-                                <div class="role-container role-agent fw-semi text-0-5 text-sm">@item.TeamName</div>
-                            }
-                        </div>
-                        <div class="flex-Row gap-1">
-                            <p class="text-sm">Number of Tickets: @Model.AssignedTicketCounts.FirstOrDefault(x => x.Agent.UserId == item.UserId)?.TicketCount</p>
-                        </div>
+					<div class="flex-Row justify-content-center align-items-center h-100">
+						<p class="text-1-5">
+                        No Agents Available
+                        </p>
                     </div>
-				}
+                }
+                else
+                {
+                    @foreach (var item in Model.Agents)
+                    {
+
+                        <div class="agents cursor-pointer br-1-5 flex-Row p-x-0-5 p-y-0-5 justify-content-between align-items-center" data-agent-assignee>
+                            <div class="flex-Row gap-1 align-items-center">
+                                <div class="p-y-1 p-x-1 br-50 bg-grey"></div>
+                                <input type="hidden" id="agentName" value="@item.Name" />
+                                <input type="hidden" id="agentId" value="@item.UserId" />
+                                <h6>@item.Name</h6>
+                                @if (item.TeamName != null)
+                                {
+                                    <div class="role-container role-agent fw-semi text-0-5 text-sm">@item.TeamName</div>
+                                }
+                            </div>
+                            <div class="flex-Row gap-1">
+                                <p class="text-sm">Number of Tickets: @Model.AssignedTicketCounts.FirstOrDefault(x => x.Agent.UserId == item.UserId)?.TicketCount</p>
+                            </div>
+                        </div>
+                    }
+                }
             </div>
         </div>
         <div class="hidden bg-modal delete-modal-container" data-admin-assign-modal-container>

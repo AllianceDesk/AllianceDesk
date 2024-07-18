@@ -64,6 +64,7 @@ namespace ASI.Basecode.Services.Services
                 Status = _statusRepository.RetrieveAll().Where(st => st.StatusId == s.StatusId).FirstOrDefault().StatusName,
                 AgentName = _userRepository.GetUsers().Where(u => u.UserId == s.AssignedAgent).FirstOrDefault()?.Name,
                 CreatorName = _userRepository.GetUsers().Where(u => u.UserId == s.CreatedBy).FirstOrDefault()?.Name,
+                LatestUpdate = _ticketActivityRepository.RetrieveAll().Where(a => a.TicketId == s.TicketId).OrderByDescending(a => a.ModifiedAt).FirstOrDefault()
             });
 
             return data;
@@ -86,6 +87,16 @@ namespace ASI.Basecode.Services.Services
             newTicket.PriorityId = Convert.ToByte(ticket.PriorityId);
             newTicket.CategoryId = Convert.ToByte(ticket.CategoryId);
             _ticketRepository.Add(newTicket);
+
+            // Add ticket activity
+            TicketActivity newActivity = new TicketActivity();
+            newActivity.HistoryId = Guid.NewGuid();
+            newActivity.TicketId = newTicket.TicketId;
+            newActivity.OperationId = 1;
+            newActivity.ModifiedBy = newTicket.CreatedBy;
+            newActivity.ModifiedAt = DateTime.Now;
+            newActivity.Message = "Ticket created";
+            _ticketActivityRepository.Add(newActivity);
         }
 
         public void Update(TicketViewModel ticket)
@@ -102,8 +113,16 @@ namespace ASI.Basecode.Services.Services
             {
                 existingTicket.AssignedAgent = Guid.Parse(ticket.AgentId);
             }
-
             _ticketRepository.Update(existingTicket);
+
+            // Add ticket activity
+            TicketActivity newActivity = new TicketActivity();
+            newActivity.HistoryId = Guid.NewGuid();
+            newActivity.TicketId = existingTicket.TicketId;
+            newActivity.OperationId = 2;
+            newActivity.ModifiedBy = _sessionHelper.GetUserIdFromSession();
+            newActivity.ModifiedAt = DateTime.Now;
+            newActivity.Message = "Ticket updated";
         }
 
         public void Delete(String id)
@@ -171,7 +190,7 @@ namespace ASI.Basecode.Services.Services
             return _statusRepository.RetrieveAll().Where(s => s.StatusId == id).FirstOrDefault();
         }
 
-        public void AddMessage(TicketMessageViewModel message)
+        public void SendMessage(TicketMessageViewModel message)
         {
             if (message == null)
             {
@@ -204,25 +223,6 @@ namespace ASI.Basecode.Services.Services
                                      });
 
             return messages;
-        }
-
-        public void AddHistory(TicketActivityViewModel activity)
-        {
-            if (activity == null)
-            {
-                throw new ArgumentNullException(nameof(activity), "TicketActivityViewModel cannot be null.");
-            }
-
-            TicketActivity newActivity = new TicketActivity();
-            newActivity.HistoryId = Guid.NewGuid();
-            newActivity.TicketId = Guid.Parse(activity.TicketId);
-            newActivity.OperationId = activity.OperationId;
-            newActivity.ModifiedBy = Guid.Parse(activity.ModifiedBy);
-            newActivity.ModifiedAt = activity.ModifiedAt;
-            newActivity.Message = activity.message;
-            
-
-            _ticketActivityRepository.Add(newActivity);
         }
 
         public IEnumerable<TicketActivityViewModel> GetHistory(string id)

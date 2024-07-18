@@ -1,4 +1,4 @@
-﻿@model ASI.Basecode.Services.ServiceModels.TicketPageViewModel
+﻿@model ASI.Basecode.Services.ServiceModels.UserTicketViewModel
 
 @{
     ViewData["Title"] = "Tickets";
@@ -74,7 +74,6 @@
                     <a class="dropdown-item" asp-action="SignOutUser" asp-controller="Account"><i class="bx bx-log-out bx-xs bx-fw" style="color: #3D3B40;"></i> Logout</a>
                 </li>
             </ul>
-
         </div>
     </header>
 
@@ -102,7 +101,13 @@
                 @foreach (var item in Model.Tickets)
                 {
                     <div class="ticket-container">
-                        <a href="#" data-bs-toggle="modal" data-bs-target="#viewTicket" class="ticket-link">
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#viewTicket" 
+                            class="ticket-link"
+                            data-creator-name="@item.CreatorName"
+                            data-date-created="@item.DateCreated"
+                            data-title="@item.Title"
+                            data-description="@item.Description"
+                            data-latest-update="@((item.LatestUpdate?.Message) ?? "No updates available")">
                             <div class="top-container">
                                 @*  <img class="image" src="@item.Image" alt="image"> *@
                                 <div class="nameDateContainer">
@@ -241,15 +246,15 @@
                         <div class="top-container">
                             <img class="image" src="/img/profile-logo.png" alt="image">
                             <div class="nameDateContainer">
-                                <h5 class="name">Golanginya</h5>
-                                <p class="date">5 min ago</p>
+                                <h5 class="name"></h5>
+                                <p class="date"></p>
                             </div>
                         </div>
-                        <h2 class="question">How to patch KDE on FreeBSD?</h2>
-                        <p class="details">Lorem ipsum dolor sit met, consectetur..</p>
+                        <h2 class="question"></h2>
+                        <p class="details"></p>
                     </div>
 
-                    <p class="status1">Open status</p>
+                    <p class="status1"></p>
                 </div>
             </div>
         </div>
@@ -338,8 +343,40 @@
         createTicketModal.addEventListener('show.bs.modal', function (event) {
             console.log('Create Ticket modal is about to be shown');
         });
+
+        const ticketLinks = document.querySelectorAll('.ticket-link');
+
+        ticketLinks.forEach(link => {
+			link.addEventListener('click', function (event) {
+				var modal = document.querySelector('#viewTicket');
+				var creatorName = link.getAttribute('data-creator-name');
+				var dateCreated = link.getAttribute('data-date-created');
+				var title = link.getAttribute('data-title');
+				var description = link.getAttribute('data-description');
+                var latestUpdate = link.getAttribute('data-latest-update')
+
+				modal.querySelector('.name').textContent = creatorName;
+				modal.querySelector('.date').textContent = dateCreated;
+				modal.querySelector('.question').textContent = title;
+				modal.querySelector('.details').textContent = description;
+                modal.querySelector('.status1').textContent = latestUpdate;
+			});
+		});
+
+        var dpIcon = document.querySelector('.dpicn');
+        var dropdownMenu = document.getElementById('dropdownMenu');
+
+        dpIcon.addEventListener('click', function (event) {
+            event.stopPropagation();
+
+            if (dropdownMenu.style.display === 'block') {
+                dropdownMenu.style.display = 'none';
+            } else {
+                dropdownMenu.style.display = 'block';
+            }
+        });
     });
-        
+      
     function userEdit(ticketId) {
         var modal = document.querySelector('#editTicket');
 
@@ -361,9 +398,25 @@
                 modal.querySelector('#Ticket_PriorityId').value = data.priorityId;
                 modal.querySelector('#Ticket_Description').value = data.description;
                 modal.querySelector('form').action = `/User/Tickets/${ticketId}/Edit`;
+
                 // Show the modal after data is loaded
                 var modalInstance = new bootstrap.Modal(modal);
                 modalInstance.show();
+
+                // Ensure modal dismisses properly
+                modal.querySelector('.btn[data-bs-dismiss="modal"]').addEventListener('click', function () {
+                    modalInstance.hide();
+                });
+
+                // Handle backdrop click to dismiss modal
+                modal.addEventListener('hidden.bs.modal', function () {
+                    // Clear form fields or do any necessary cleanup
+                    modal.querySelector('#Ticket_TicketId').value = '';
+                    modal.querySelector('#Ticket_Title').value = '';
+                    modal.querySelector('#Ticket_CategoryId').value = '';
+                    modal.querySelector('#Ticket_PriorityId').value = '';
+                    modal.querySelector('#Ticket_Description').value = '';
+                });
             })
             .catch(error => console.error('Error fetching or parsing data:', error));
     }
@@ -374,5 +427,14 @@
         form.querySelector('#deleteTicketId').value = ticketId;
         var modalInstance = new bootstrap.Modal(document.querySelector('#deleteTicket'));
         modalInstance.show();
+    }
+
+    function viewTicket(ticketId) {
+        var modal = document.querySelector('#viewTicket');
+
+        fetch(`/User/Ticket/${ticketId}`)
+            .then(
+                response 
+            )
     }
 </script>

@@ -59,5 +59,7 @@ namespace ASI.Basecode.Services.ServiceModels
         public string NewMessageBody { get; set; }
 
         public DateTime DateAssigned { get; set; }
+
+        public TicketActivity LatestUpdate { get; set; }
     }
 }

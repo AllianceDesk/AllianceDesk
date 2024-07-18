@@ -87,12 +87,12 @@ namespace ASI.Basecode.WebApp.Controllers
             {
                 Console.WriteLine("No tickets found for user");
                 // Instead of returning NotFound(), return an empty view or handle it accordingly
-                return View("Views/User/Tickets.cshtml", new TicketPageViewModel());
+                return View("Views/User/Tickets.cshtml", new UserTicketViewModel());
             }
 
             ViewBag.CurrentStatus = string.IsNullOrEmpty(status) ? "All" : status;
 
-            var model = new TicketPageViewModel
+            var model = new UserTicketViewModel
             {
                 Tickets = string.IsNullOrEmpty(status) ? userTickets : userTickets.Where(t => t.StatusId == status),
                 Ticket = new TicketViewModel() // Initialize a new ticket for the form
@@ -104,10 +104,7 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpPost("Tickets/Create")]
         public IActionResult TicketCreate(TicketViewModel ticket)
         {
-            // Replace with User.Identity.Name when authentication is implemented
-            /*ticket.CreatorId = "857949FE-EC30-4C0B-A514-EB0FD9262738";*/
             _ticketService.Add(ticket);
-
             return RedirectToAction("Tickets");
         }
 
@@ -168,7 +165,7 @@ namespace ASI.Basecode.WebApp.Controllers
 
         
         [HttpPost("Tickets/{id}/Edit"), ActionName("TicketEdit")]
-        public IActionResult TicketEditPost(string id, TicketPageViewModel model)
+        public IActionResult TicketEditPost(string id, UserTicketViewModel model)
         {
             var ticket = _ticketService.GetById(id); // Ensure this matches with the ID being passed
             if (ticket == null)
