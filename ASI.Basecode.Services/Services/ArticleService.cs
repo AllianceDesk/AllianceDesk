@@ -35,16 +35,15 @@ namespace ASI.Basecode.Services.Services
         public IEnumerable<ArticleViewModel> RetrieveAll()
         {
 
-            var data = _articleRepository.RetrieveAll().Select(s => new ArticleViewModel
+            var data = _articleRepository.RetrieveAll().Where(a => a.Status == true).Select(s => new ArticleViewModel
             {
                 ArticleId = s.ArticleId.ToString(),
                 Title = s.Title,
                 Body = s.Body,
                 CategoryNavigation = _categoryRepository.RetrieveAll().Where(c => c.CategoryId == s.CategoryId).FirstOrDefault().CategoryName,
                 DateUpdated = s.DateUpdated.HasValue ? s.DateUpdated.Value.ToString("MMM dd yyyy") : string.Empty,
-                CreatedBy = _userRepository.GetUsers().Where(c => c.UserId == s.CreatedBy).FirstOrDefault().Username,
                 UpdatedBy = _userRepository.GetUsers().Where(c => c.UserId == s.UpdatedBy).FirstOrDefault().Username,
-                Status = s.Status,
+                CategoryId = s.CategoryId,
             });
 
             return data;
@@ -94,7 +93,6 @@ namespace ASI.Basecode.Services.Services
             var existingData = _articleRepository.RetrieveAll().Where(a => a.ArticleId.ToString() == article.ArticleId).FirstOrDefault();
             if (existingData != null)
             {
-                _mapper.Map (article, existingData);
                 existingData.Status = false;
                 existingData.UpdatedBy = _sessionHelper.GetUserIdFromSession();
                 _articleRepository.UpdateArticle(existingData);

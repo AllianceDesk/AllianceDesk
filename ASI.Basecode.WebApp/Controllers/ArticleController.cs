@@ -50,7 +50,6 @@ namespace ASI.Basecode.WebApp.Controllers
         {
             ViewBag.AdminSidebar = "Index";
             var data = _articleService.RetrieveAll()
-                                        .Where (a => a.Status == true)
                                         .Select(u => new ArticleViewModel
                                         {
                                             ArticleId = u.ArticleId,
@@ -131,7 +130,8 @@ namespace ASI.Basecode.WebApp.Controllers
                 Title = articleData.Title,
                 Body = articleData.Body,
                 CategoryNavigation = articleData.CategoryNavigation,
-                CreatedBy = articleData.CreatedBy,
+                UpdatedBy = articleData.UpdatedBy,
+                CategoryId = articleData.CategoryId,
             };
 
             var categories = _articleService.GetCategories()
@@ -141,9 +141,9 @@ namespace ASI.Basecode.WebApp.Controllers
                                        Text = c.CategoryName
                                    })
                                    .ToList();
-            ViewBag.Categories = new SelectList(categories, "Value", "Text");
+            ViewBag.Categories = new SelectList(categories, "Value", "Text", viewModel.CategoryId);
 
-            return PartialView("Edit", viewModel);
+            return PartialView("EditModal", viewModel);
         }
 
         [HttpPost("/KnowledgeBase/Article-Edit")]

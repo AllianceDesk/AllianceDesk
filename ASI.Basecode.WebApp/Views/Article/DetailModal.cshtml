@@ -18,7 +18,9 @@
             <p class="email mb-4" style="font-size:12px;">Last Edited by:  @Html.DisplayFor(model => model.UpdatedBy)</p>
         </div>
         <div class="btn-group d-flex justify-content-end" style="height: 3.5em; width: 25em; font-size: 10px;">
-            <button type="button" class="btn btn-danger me-1" data-bs-toggle="modal" data-bs-target="#edit"> <i class='bx bxs-edit bx-xs bx-fw' style="color: white; cursor: pointer;"></i> Edit Article</button>
+            <button type="button" class="btn btn-danger me-1" data-bs-toggle="modal" data-bs-target="#edit" data-article-edit-btn data-article-id="@Model.ArticleId">
+                <i class='bx bxs-edit bx-xs bx-fw' style="color: white; cursor: pointer;"></i> Edit Article
+            </button>
 
             <button type="button" class="btn btn-danger" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class='bx bx-dots-horizontal-rounded bx-sm icon' style="color: white; cursor: pointer;"></i>
@@ -26,7 +28,7 @@
             <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="#">Download</a></li>
                 <li><a class="dropdown-item" href="#">Add to my Favorites</a></li>
-                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete">Delete</a></li>
+                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete" data-article-delete-btn data-article-id="@Model.ArticleId">Delete</a></li>
             </ul>
         </div>
 

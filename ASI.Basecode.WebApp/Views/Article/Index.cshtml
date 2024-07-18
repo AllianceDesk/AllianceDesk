@@ -125,6 +125,14 @@
     </div>
 </div>
 
+<div class="modal fade" id="edit" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- The content for Article Edit Modal will be loaded here-->
+        </div>
+    </div>
+</div>
+
 @Html.Partial("SettingsModal")
 
 
@@ -183,6 +191,24 @@
             });
         });
        
+        $(document).on('click', '[data-article-edit-btn]', function () {
+            var articleId = $(this).data('article-id');
+
+            // Perform AJAX request to fetch article details
+            $.ajax({
+                url: '/KnowledgeBase/Article-Edit',
+                type: 'GET',
+                data: { articleId: articleId },
+                success: function (result) {
+                    $('#edit .modal-content').html(result);
+                    $('#edit').modal('show');
+                    console.log('Article details successfully loaded!');
+                },
+                error: function (error) {
+                    console.error('Error loading article details:', error);
+                }
+            });
+        });
     });
 
 </script>
