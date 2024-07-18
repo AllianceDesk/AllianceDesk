@@ -44,6 +44,7 @@ namespace ASI.Basecode.Services.Services
                 DateUpdated = s.DateUpdated.HasValue ? s.DateUpdated.Value.ToString("MMM dd yyyy") : string.Empty,
                 CreatedBy = _userRepository.GetUsers().Where(c => c.UserId == s.CreatedBy).FirstOrDefault().Username,
                 UpdatedBy = _userRepository.GetUsers().Where(c => c.UserId == s.UpdatedBy).FirstOrDefault().Username,
+                Status = s.Status,
             });
 
             return data;
@@ -62,6 +63,7 @@ namespace ASI.Basecode.Services.Services
             newArticle.Body = article.Body;
             newArticle.DateCreated = DateTime.Now;
             newArticle.DateUpdated = DateTime.Now;
+            newArticle.Status = true;
 
             newArticle.CreatedBy = _sessionHelper.GetUserIdFromSession();
             newArticle.UpdatedBy = _sessionHelper.GetUserIdFromSession();
