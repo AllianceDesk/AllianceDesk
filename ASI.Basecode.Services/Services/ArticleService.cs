@@ -21,9 +21,9 @@ namespace ASI.Basecode.Services.Services
         private readonly IUserRepository _userRepository;
         private readonly IFavoriteRepository _favoriteRepository;
 
-        public ArticleService (IMapper mapper, 
-                                IArticleRepository articleRepository, 
-                                ICategoryRepository categoryRepository, 
+        public ArticleService(IMapper mapper,
+                                IArticleRepository articleRepository,
+                                ICategoryRepository categoryRepository,
                                 ISessionHelper sessionHelper,
                                 IUserRepository userRepository,
                                 IFavoriteRepository favoriteRepository)
@@ -59,7 +59,7 @@ namespace ASI.Basecode.Services.Services
             {
                 throw new ArgumentNullException(nameof(article), "ArticleViewModel cannot be null");
             }
-            
+
             if (articleExist == null)
             {
                 var newArticle = new Article();
@@ -79,7 +79,7 @@ namespace ASI.Basecode.Services.Services
             }
         }
 
-        public void Update (ArticleViewModel article)
+        public void Update(ArticleViewModel article)
         {
             var existingData = _articleRepository.RetrieveAll().Where(a => a.ArticleId.ToString() == article.ArticleId).FirstOrDefault();
             if (existingData != null)
@@ -110,7 +110,7 @@ namespace ASI.Basecode.Services.Services
             return _categoryRepository.RetrieveAll();
         }
 
-        public void AddFavorite (string articleId)
+        public void AddFavorite(string articleId)
         {
             var existingFavorite = _favoriteRepository.RetrieveAll().Any(f => f.ArticleId.ToString() == articleId && f.UserId.ToString() == _sessionHelper.GetUserIdFromSession().ToString());
             if (!existingFavorite)

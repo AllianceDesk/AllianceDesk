@@ -50,7 +50,7 @@ namespace ASI.Basecode.WebApp.Controllers
                 .Where(t => t.CreatorId == _sessionHelper.GetUserIdFromSession().ToString())
                 .OrderByDescending(t => t.DateCreated)
                 .AsEnumerable();
-          
+
             // Replace this later to retrieve from the user preferences
             var pageSize = 5;
 
@@ -77,7 +77,7 @@ namespace ASI.Basecode.WebApp.Controllers
                                                Text = p.PriorityName
                                            })
                                            .ToList();
-            
+
 
             if (!string.IsNullOrEmpty(status) && status != "All")
             {
@@ -181,7 +181,7 @@ namespace ASI.Basecode.WebApp.Controllers
             });
         }
 
-        
+
         [HttpPost("Tickets/{id}/Edit"), ActionName("TicketEdit")]
         public IActionResult TicketEditPost(string id, UserTicketViewModel model)
         {
