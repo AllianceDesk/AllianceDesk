@@ -50,8 +50,10 @@ namespace ASI.Basecode.WebApp.Controllers
         {
             ViewBag.AdminSidebar = "Index";
             var data = _articleService.RetrieveAll()
+                                        .Where (a => a.Status == true)
                                         .Select(u => new ArticleViewModel
                                         {
+                                            ArticleId = u.ArticleId,
                                             Title = u.Title,
                                             Body = u.Body,
                                             CategoryNavigation = u.CategoryNavigation,
@@ -93,11 +95,105 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpGet ("/KnowledgeBase/{id}")]
+        [HttpGet ("/KnowledgeBase/Article-Details")]
         public IActionResult DetailModal(string articleId)
         {
-            var articleData = _articleService.GetArticles().Where(a => a.ArticleId.ToString() == articleId).FirstOrDefault();
-            return PartialView("DetailModal");
+            var articleData = _articleService.RetrieveAll().Where(a => a.ArticleId.ToString() == articleId).FirstOrDefault();
+            if (articleData == null)
+            {
+                return NotFound();
+            }
+
+            var data = _articleService.RetrieveAll()
+                                        .Where(a => a.Status == true)
+                                        .Select(u => new ArticleViewModel
+                                        {
+                                            ArticleId = articleId,
+                                            Title = u.Title,
+                                            Body = u.Body,
+                                            CategoryNavigation = u.CategoryNavigation,
+                                            DateUpdated = u.DateUpdated,
+                                            UpdatedBy = u.UpdatedBy,
+                                        })
+                                        .ToList();
+
+            var viewModel = new ArticleViewModel
+            {
+                Articles = data
+            };
+
+            return PartialView("DetailModal", viewModel);
+        }
+
+        [HttpGet("/KnowledgeBase/Article-Edit")]
+        public IActionResult EditModal(string articleId)
+        {
+            var articleData = _articleService.RetrieveAll().Where(a => a.ArticleId.ToString() == articleId).FirstOrDefault();
+            if (articleData == null)
+            {
+                return NotFound();
+            }
+
+            var viewModel = new ArticleViewModel
+            {
+                ArticleId = articleData.ArticleId,
+                Title = articleData.Title,
+                Body = articleData.Body,
+                CategoryNavigation = articleData.CategoryNavigation,
+                CreatedBy = articleData.CreatedBy,
+            };
+
+            var categories = _articleService.GetCategories()
+                                   .Select(c => new SelectListItem
+                                   {
+                                       Value = c.CategoryId.ToString(),
+                                       Text = c.CategoryName
+                                   })
+                                   .ToList();
+            ViewBag.Categories = new SelectList(categories, "Value", "Text");
+
+            return PartialView("Edit", viewModel);
+        }
+
+        [HttpPost("/KnowledgeBase/Article-Edit")]
+        public IActionResult PostEditModal(ArticleViewModel article)
+        {
+            if (article == null)
+            {
+                return NotFound();
+            }
+            _articleService.Update(article);
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet("/KnowledgeBase/Article-Delete")]
+        public IActionResult DeleteModal(string articleId)
+        {
+            var articleData = _articleService.RetrieveAll().Where(a => a.ArticleId.ToString() == articleId).FirstOrDefault();
+            if (articleData == null)
+            {
+                return NotFound();
+            }
+
+            var viewModel = new ArticleViewModel
+            {
+                ArticleId= articleData.ArticleId,
+            };
+
+            return PartialView("Edit", viewModel);
+        }
+
+        [HttpPost("/KnowledgeBase/Article-Delete")]
+        public IActionResult PostDeleteModal(ArticleViewModel article)
+        {
+            if (article == null)
+            {
+                return NotFound();
+            }
+            _articleService.Delete(article);
+
+            return RedirectToAction("Index");
         }
 
     }
