@@ -123,6 +123,7 @@ namespace ASI.Basecode.Services.Services
             newActivity.ModifiedBy = _sessionHelper.GetUserIdFromSession();
             newActivity.ModifiedAt = DateTime.Now;
             newActivity.Message = "Ticket updated";
+            _ticketActivityRepository.Add(newActivity);
         }
 
         public void Delete(String id)

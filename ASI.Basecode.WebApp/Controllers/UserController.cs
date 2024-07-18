@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System.Linq;
+using System.Drawing.Printing;
 using System;
-using ASI.Basecode.Data.Models;
+using System.Linq;
 
 namespace ASI.Basecode.WebApp.Controllers
 {
@@ -41,17 +41,18 @@ namespace ASI.Basecode.WebApp.Controllers
         }
 
         [HttpGet("Tickets")]
-        public IActionResult Tickets(string? status)
+        public IActionResult Tickets(string? status, int? page)
         {
-/*            // Replace with User.Identity.Name when authentication is implemented
-            string user = "90122701-1c8c-40a4-8936-7717cfaa9c14";*/
 
             var tickets = _ticketService.RetrieveAll();
 
             var userTickets = tickets
                 .Where(t => t.CreatorId == _sessionHelper.GetUserIdFromSession().ToString())
                 .OrderByDescending(t => t.DateCreated)
-                .ToList();
+                .AsEnumerable();
+          
+            // Replace this later to retrieve from the user preferences
+            var pageSize = 10;
 
             var statuses = _ticketService.GetStatuses()
                                    .Select(c => new SelectListItem
@@ -76,26 +77,36 @@ namespace ASI.Basecode.WebApp.Controllers
                                                Text = p.PriorityName
                                            })
                                            .ToList();
+            
+
+            if (!string.IsNullOrEmpty(status) && status != "All")
+            {
+                userTickets = userTickets.Where(t => t.StatusId == status);
+            }
+            
+            var CurrentPage = page ?? 1;
+            var count = userTickets.Count();
+
+
+            if (Math.Ceiling(userTickets.Count() / (double)pageSize) > 1)
+            {
+                userTickets = userTickets.Skip((CurrentPage - 1) * pageSize)
+                                         .Take(pageSize)
+                                         .ToList();
+            }
 
             // Pass data to ViewBag
             ViewBag.Statuses = new SelectList(statuses, "Value", "Text");
             ViewBag.Categories = new SelectList(categories, "Value", "Text");
             ViewBag.Priorities = new SelectList(priorities, "Value", "Text");
-
-            // Check if userTickets is null or empty
-            if (userTickets == null || userTickets.Count == 0)
-            {
-                Console.WriteLine("No tickets found for user");
-                // Instead of returning NotFound(), return an empty view or handle it accordingly
-                return View("Views/User/Tickets.cshtml", new UserTicketViewModel());
-            }
-
             ViewBag.CurrentStatus = string.IsNullOrEmpty(status) ? "All" : status;
+            ViewBag.CurrentPage = CurrentPage;
+            ViewBag.TotalPages = Math.Ceiling(count / (double)pageSize);
 
             var model = new UserTicketViewModel
             {
-                Tickets = string.IsNullOrEmpty(status) ? userTickets : userTickets.Where(t => t.StatusId == status),
-                Ticket = new TicketViewModel() // Initialize a new ticket for the form
+                Tickets = userTickets,
+                Ticket = new TicketViewModel(),
             };
 
             return View(model);

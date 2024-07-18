@@ -314,18 +314,28 @@ main {
     padding: 0;
 }
 
-.status1 {
+.status-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.1em;
+    background-color: green; /* Ensure the background color is the same for the container if needed */
+}
+
+.status1, .statusdate {
     font-size: 12px;
-    background-color: green;
     padding-left: 1em;
     color: white;
+}
+
+.statusdate {
+    padding-left: 0; /* Remove padding from the left to align it to the right */
+    margin-right: 1em;
 }
 
 .ticket-modal1 {
     padding: 1em;
 }
-
-
 
 
 /*Sidebar Designs*/
@@ -543,4 +553,32 @@ hr {
     /*#sidebar {
         overflow-y: auto;
     }*/
+}
+
+/* Pagination Design */
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination-controls .page-item {
+    margin: 0 5px;
+    text-decoration: none;
+}
+
+.pagination-controls .page-link {
+    color: #808080;
+    background-color: #fff;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+}
+
+.pagination-controls .page-item.active .page-link {
+    background-color: #E21818; /* Active button background color */
+    color: #fff; /* Active button text color */
+}
+
+.pagination-controls .page-link:hover {
+    text-decoration: underline;
 }

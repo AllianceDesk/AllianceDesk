@@ -10,5 +10,9 @@ namespace ASI.Basecode.Services.ServiceModels
     {
         public IEnumerable<TicketViewModel> Tickets { get; set; }
         public TicketViewModel Ticket { get; set; }
+        
+        public int CurrentPage { get; set; }
+
+        public int TotalPages { get; set; }
     }
 }

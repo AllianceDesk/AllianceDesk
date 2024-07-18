@@ -1,7 +1,13 @@
-﻿@model ASI.Basecode.Services.ServiceModels.UserTicketViewModel
+﻿@using X.PagedList.Mvc;
+@using X.PagedList;
+
+@model ASI.Basecode.Services.ServiceModels.UserTicketViewModel
 
 @{
     ViewData["Title"] = "Tickets";
+    string CurrentStatus = ViewBag.CurrentStatus ?? "All";
+    int CurrentPage = ViewBag.CurrentPage;
+    int TotalPages = (int) ViewBag.TotalPages;
 
     Func<DateTime, string> toRelativeTime = (DateTime dateTime) =>
     {
@@ -80,11 +86,14 @@
     <nav>
         <div id="buttonContainer">
 
-            <a asp-action="Tickets" class="btn btn-primary @(ViewBag.CurrentStatus == "All" ? "activeButton" : "inactiveButton")">All</a>
+            <a asp-action="Tickets"
+               class="btn btn-primary @(CurrentStatus == "All" ? "activeButton" : "inactiveButton")">
+                All
+            </a>
 
             @foreach (var status in ViewBag.Statuses)
             {
-                <a asp-action="Tickets" asp-route-status="@status.Value" class="btn btn-primary @(status.Value == ViewBag.CurrentStatus ? "activeButton" : "inactiveButton")" >@status.Text</a>
+                <a asp-action="Tickets" asp-route-status="@status.Value" class="btn btn-primary @(status.Value == CurrentStatus ? "activeButton" : "inactiveButton")" >@status.Text</a>
             }
         </div>
 
@@ -107,7 +116,8 @@
                             data-date-created="@item.DateCreated"
                             data-title="@item.Title"
                             data-description="@item.Description"
-                            data-latest-update="@((item.LatestUpdate?.Message) ?? "No updates available")">
+                            data-latest-update="@(item.LatestUpdate.Message)"
+                            data-latest-update-date="@(item.LatestUpdate.ModifiedAt)">
                             <div class="top-container">
                                 @*  <img class="image" src="@item.Image" alt="image"> *@
                                 <div class="nameDateContainer">
@@ -139,9 +149,37 @@
                                     </li>
                                 }
                             </ul>
-                        </div>
+                        </div> 
                     </div>
+ 
                 }
+
+                <div class="pagination-controls">
+                    @if (TotalPages > 1)
+                    {
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination">
+                                <li class="page-item @(CurrentPage == 1 ? "disabled" : "")">
+                                    <a class="page-link" href="@Url.Action("Tickets", new { page = 1, status = CurrentStatus })">&lt;&lt;</a>
+                                </li>
+                                <li class="page-item @(CurrentPage == 1 ? "disabled" : "")">
+                                    <a class="page-link" href="@Url.Action("Tickets", new { page = CurrentPage - 1, status = CurrentStatus })">&lt;</a>
+                                </li>
+
+                                <li class="page-item @(CurrentPage == 1 ? "active" : "")">
+                                    <span class="page-link">@CurrentPage</span>
+                                </li>
+
+                                <li class="page-item @(CurrentPage == TotalPages ? "disabled" : "")">
+                                    <a class="page-link" href="@Url.Action("Tickets", new { page = CurrentPage + 1, status = CurrentStatus })">&gt;</a>
+                                </li>
+                                <li class="page-item @(CurrentPage == TotalPages ? "disabled" : "")">
+                                    <a class="page-link" href="@Url.Action("Tickets", new { page = TotalPages, status = CurrentStatus })">&gt;&gt;</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    }
+                </div>
             </div>
         }
         else
@@ -254,7 +292,10 @@
                         <p class="details"></p>
                     </div>
 
-                    <p class="status1"></p>
+                    <div class="status-container">
+                        <div class="status1"></div>
+                        <div class="statusdate"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -353,14 +394,18 @@
 				var dateCreated = link.getAttribute('data-date-created');
 				var title = link.getAttribute('data-title');
 				var description = link.getAttribute('data-description');
-                var latestUpdate = link.getAttribute('data-latest-update')
+                var latestUpdate = link.getAttribute('data-latest-update');
+                var latestUpdateDate = link.getAttribute('data-latest-update-date');
 
 				modal.querySelector('.name').textContent = creatorName;
 				modal.querySelector('.date').textContent = dateCreated;
 				modal.querySelector('.question').textContent = title;
 				modal.querySelector('.details').textContent = description;
                 modal.querySelector('.status1').textContent = latestUpdate;
-			});
+                modal.querySelector('.statusdate').textContent = latestUpdateDate;
+
+                console.log("Date", latestUpdateDate);
+         	});
 		});
 
         var dpIcon = document.querySelector('.dpicn');
@@ -429,12 +474,4 @@
         modalInstance.show();
     }
 
-    function viewTicket(ticketId) {
-        var modal = document.querySelector('#viewTicket');
-
-        fetch(`/User/Ticket/${ticketId}`)
-            .then(
-                response 
-            )
-    }
-</script>
+ </script>
