@@ -18,7 +18,6 @@ namespace ASI.Basecode.Services.ServiceModels
         public DateTime ModifiedAt { get; set; }
         public byte OperationId { get; set; }
         public string OperationName { get; set; }
-        public string OldValue { get; set; }
-        public string NewValue { get; set; }
+        public string message { get; set; }
     }
 }

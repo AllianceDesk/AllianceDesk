@@ -10,8 +10,7 @@ namespace ASI.Basecode.Data.Models
         public Guid ModifiedBy { get; set; }
         public DateTime ModifiedAt { get; set; }
         public byte OperationId { get; set; }
-        public string OldValue { get; set; }
-        public string NewValue { get; set; }
+        public string Message { get; set; }
 
         public virtual User ModifiedByNavigation { get; set; }
         public virtual TicketActivityOperation Operation { get; set; }

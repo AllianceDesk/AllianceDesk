@@ -219,8 +219,8 @@ namespace ASI.Basecode.Services.Services
             newActivity.OperationId = activity.OperationId;
             newActivity.ModifiedBy = Guid.Parse(activity.ModifiedBy);
             newActivity.ModifiedAt = activity.ModifiedAt;
-            newActivity.OldValue = activity.OldValue;
-            newActivity.NewValue = activity.NewValue;
+            newActivity.Message = activity.message;
+            
 
             _ticketActivityRepository.Add(newActivity);
         }

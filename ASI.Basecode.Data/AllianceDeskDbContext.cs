@@ -132,7 +132,7 @@ namespace ASI.Basecode.Data
 
             modelBuilder.Entity<Favorite>(entity =>
             {
-                entity.HasIndex(e => new { e.UserId, e.ArticleId }, "UQ__Favorite__A57D586814283547")
+                entity.HasIndex(e => new { e.UserId, e.ArticleId }, "UQ__Favorite__A57D586804E30D47")
                     .IsUnique();
 
                 entity.Property(e => e.FavoriteId)
@@ -189,7 +189,7 @@ namespace ASI.Basecode.Data
 
             modelBuilder.Entity<Notification>(entity =>
             {
-                entity.HasIndex(e => new { e.RecipientId, e.TicketId }, "UQ__Notifica__57532FB07239A0F6")
+                entity.HasIndex(e => new { e.RecipientId, e.TicketId }, "UQ__Notifica__57532FB0EC83402D")
                     .IsUnique();
 
                 entity.Property(e => e.NotificationId)
@@ -308,21 +308,19 @@ namespace ASI.Basecode.Data
             modelBuilder.Entity<TicketActivity>(entity =>
             {
                 entity.HasKey(e => e.HistoryId)
-                    .HasName("PK__TicketAc__096AA2E9240A7D31");
+                    .HasName("PK__TicketAc__096AA2E912E16351");
 
                 entity.Property(e => e.HistoryId)
                     .ValueGeneratedNever()
                     .HasColumnName("history_id");
+
+                entity.Property(e => e.Message).HasColumnName("message");
 
                 entity.Property(e => e.ModifiedAt)
                     .HasColumnType("datetime")
                     .HasColumnName("modified_at");
 
                 entity.Property(e => e.ModifiedBy).HasColumnName("modified_by");
-
-                entity.Property(e => e.NewValue).HasColumnName("new_value");
-
-                entity.Property(e => e.OldValue).HasColumnName("old_value");
 
                 entity.Property(e => e.OperationId).HasColumnName("operation_id");
 
@@ -350,7 +348,7 @@ namespace ASI.Basecode.Data
             modelBuilder.Entity<TicketActivityOperation>(entity =>
             {
                 entity.HasKey(e => e.OperationId)
-                    .HasName("PK__TicketAc__9DE17123D06B9442");
+                    .HasName("PK__TicketAc__9DE171232EA2DAE7");
 
                 entity.Property(e => e.OperationId).HasColumnName("operation_id");
 
@@ -362,7 +360,7 @@ namespace ASI.Basecode.Data
             modelBuilder.Entity<TicketMessage>(entity =>
             {
                 entity.HasKey(e => e.MessageId)
-                    .HasName("PK__TicketMe__0BBF6EE6DC524EE4");
+                    .HasName("PK__TicketMe__0BBF6EE6B96005EF");
 
                 entity.Property(e => e.MessageId)
                     .ValueGeneratedNever()
@@ -396,7 +394,7 @@ namespace ASI.Basecode.Data
             modelBuilder.Entity<TicketPriority>(entity =>
             {
                 entity.HasKey(e => e.PriorityId)
-                    .HasName("PK__TicketPr__EE32578573FC8099");
+                    .HasName("PK__TicketPr__EE325785AEFB3AE2");
 
                 entity.Property(e => e.PriorityId).HasColumnName("priority_id");
 
@@ -409,7 +407,7 @@ namespace ASI.Basecode.Data
             modelBuilder.Entity<TicketStatus>(entity =>
             {
                 entity.HasKey(e => e.StatusId)
-                    .HasName("PK__TicketSt__3683B531FC5D4AD2");
+                    .HasName("PK__TicketSt__3683B531A5ECBC2B");
 
                 entity.Property(e => e.StatusId).HasColumnName("status_id");
 
@@ -466,7 +464,7 @@ namespace ASI.Basecode.Data
             modelBuilder.Entity<UserPreference>(entity =>
             {
                 entity.HasKey(e => e.PreferenceId)
-                    .HasName("PK__UserPref__FB41DBCFAAD0D6A9");
+                    .HasName("PK__UserPref__FB41DBCF9F37354F");
 
                 entity.Property(e => e.PreferenceId)
                     .ValueGeneratedNever()
@@ -490,7 +488,7 @@ namespace ASI.Basecode.Data
             modelBuilder.Entity<UserRole>(entity =>
             {
                 entity.HasKey(e => e.RoleId)
-                    .HasName("PK__UserRole__760965CC7BA9F704");
+                    .HasName("PK__UserRole__760965CC0F7DAC34");
 
                 entity.Property(e => e.RoleId).HasColumnName("role_id");
 

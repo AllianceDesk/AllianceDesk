@@ -5,7 +5,7 @@
 }
 
 @{
-    ViewData["Title"] = "Knowledge Base";
+    ViewData["Title"] = "My Favorites";
 }
 
 <div id="container">
@@ -15,7 +15,7 @@
         </div>
 
         <div class="header-buttons">
-            
+
             <a asp-action="Index" asp-controller="Notification"><i class='bx bx-bell bx-sm icon' style="color: #45474B; cursor: pointer;"></i></a>
             <i class='bx bx-cog bx-sm icon' style="color: #45474B; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#settings"></i>
 
@@ -40,9 +40,9 @@
     <div id="sidebar">
 
         <a data-admin-btn class="inactive-button"><i class='bx bx-grid-alt bx-sm as' style="align-self:center;"></i>  <p>Overview</p> </a>
-       
+
         <a asp-controller="Admin" asp-action="Tickets" data-admin-btn class="inactive-button"><i class='bx bx-purchase-tag-alt bx-sm as' style="align-self:center;"></i> <p>Tickets</p> </a>
-       
+
         <a asp-controller="Admin" asp-action="ViewUser" data-admin-btn class="inactive-button"><i class='bx bx-group bx-sm as' style="align-self:center;"></i> <p>Teams</p> </a>
 
         <a asp-controller="Article" asp-action="Index" data-admin-btn class="active-button"><i class='bx bx-group bx-sm as' style="align-self:center;"></i> <p>Knowledge Base</p> </a>
@@ -66,7 +66,7 @@
                     </button>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="#">Document</a></li>
-                        <li><a class="dropdown-item" href="#">PDF</a></li>                        
+                        <li><a class="dropdown-item" href="#">PDF</a></li>
                     </ul>
                 </div>
 
@@ -75,9 +75,10 @@
         </div>
 
         <div class="nav_two">
+
             <div class="d-flex" style="gap:2em;">
-                <a class="active_link" asp-controller="Article" asp-action="Index">Articles</a>
-                <a class="inactive_link" asp-controller="Article" asp-action="MyFavorites">My Favorites <span class="badge">4</span></a>
+                <a class="inactive_link" asp-controller="Article" asp-action="Index">Articles</a>
+                <a class="active_link" asp-controller="Article" asp-action="MyFavorites">My Favorites <span class="badge">4</span></a>
             </div>
 
             <div class="filter_button">
@@ -91,9 +92,10 @@
             </div>
         </div>
     </nav>
-    
+
     <main>
-        @foreach (var item in Model.Articles){
+        @foreach (var item in Model.Articles)
+        {
             <a href="#" class="link_card">
                 <div class="article_card" data-bs-toggle="modal" data-bs-target="#detail" data-article-detail-btn data-article-id="@item.ArticleId">
                     <div class="article_top mb-4">
@@ -108,7 +110,7 @@
             </a>
         }
     </main>
-    
+
 </div>
 
 <div class="modal fade" id="create" tabindex="-1">
@@ -162,7 +164,7 @@
         });
 
         var addArticleBtn = document.getElementById('addArticleBtn');
-        
+
         addArticleBtn.addEventListener('click', function () {
             //Perform AJAX request here
             $.ajax({
@@ -200,7 +202,7 @@
                 }
             });
         });
-       
+
         $(document).on('click', '[data-article-edit-btn]', function () {
             var articleId = $(this).data('article-id');
 
