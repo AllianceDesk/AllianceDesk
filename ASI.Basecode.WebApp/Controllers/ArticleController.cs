@@ -53,7 +53,7 @@ namespace ASI.Basecode.WebApp.Controllers
         /// </summary>
         /// <returns> Article View </returns>
         [HttpGet ("/KnowledgeBase")]
-        public IActionResult Index()
+        public IActionResult Index(string searchString)
         {
             ViewBag.AdminSidebar = "Index";
             var data = _articleService.RetrieveAll()
@@ -66,6 +66,19 @@ namespace ASI.Basecode.WebApp.Controllers
                                             DateUpdated = u.DateUpdated,
                                         })
                                         .ToList();
+            if (!String.IsNullOrEmpty(searchString)){
+                data = _articleService.RetrieveAll()
+                                        .Where(u =>  u.Title == searchString)
+                                        .Select(u => new ArticleViewModel
+                                        {
+                                            ArticleId = u.ArticleId,
+                                            Title = u.Title,
+                                            Body = u.Body,
+                                            CategoryNavigation = u.CategoryNavigation,
+                                            DateUpdated = u.DateUpdated,
+                                        })
+                                        .ToList();
+            }
 
             var viewModel = new ArticleViewModel
             {

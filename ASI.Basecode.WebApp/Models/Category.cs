@@ -1,0 +1,20 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace ASI.Basecode.WebApp.Models
+{
+    public partial class Category
+    {
+        public Category()
+        {
+            Articles = new HashSet<Article>();
+            Tickets = new HashSet<Ticket>();
+        }
+
+        public byte CategoryId { get; set; }
+        public string CategoryName { get; set; }
+
+        public virtual ICollection<Article> Articles { get; set; }
+        public virtual ICollection<Ticket> Tickets { get; set; }
+    }
+}
