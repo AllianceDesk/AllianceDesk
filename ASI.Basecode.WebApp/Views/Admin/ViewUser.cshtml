@@ -165,7 +165,7 @@
                     console.log("whats happening")
                     var userId = $(this).data('user-id');
                     $.ajax({
-                        url: 'Admin/UserDetails',
+                        url: '/UserDetails',
                         type: 'GET',
                         data: { UserId: userId },
                         success: function (response) {

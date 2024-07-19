@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace ASI.Basecode.Services.ServiceModels
 {
-    public class TicketPageViewModel
+    public class AnalyticsViewModel
     {
-        public IEnumerable<TicketViewModel> Tickets { get; set; }
-        public TicketViewModel Ticket { get; set; }
+        public List<AgentTicketCountViewModel> Agents { get; set; }
+
+        public List<TeamTicketCountViewModel> Teams { get; set; }
     }
-}
+} 

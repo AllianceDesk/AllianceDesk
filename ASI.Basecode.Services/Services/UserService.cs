@@ -56,6 +56,7 @@ namespace ASI.Basecode.Services.Services
             {
                 _mapper.Map(model, user);
                 user.UserId = Guid.NewGuid();
+                Console.WriteLine($"Generated UserId: {user.UserId}");
                 user.Username = model.UserName;
                 user.Email = model.Email;
                 user.Password = PasswordManager.EncryptPassword(model.Password);

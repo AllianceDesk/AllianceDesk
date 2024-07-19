@@ -1,8 +1,12 @@
-﻿@model ASI.Basecode.Services.ServiceModels.TicketPageViewModel
+@model ASI.Basecode.Services.ServiceModels.UserTicketViewModel
 
 @{
     ViewData["Title"] = "Tickets";
-
+    string CurrentStatus = ViewBag.CurrentStatus ?? "All";
+    string CurrentSearchTerm = ViewBag.SearchTerm ?? "";
+    int CurrentPage = ViewBag.CurrentPage;
+    int TotalPages = (int) ViewBag.TotalPages;
+    
     Func<DateTime, string> toRelativeTime = (DateTime dateTime) =>
     {
         var timeSpan = DateTime.Now - dateTime;
@@ -74,19 +78,29 @@
                     <a class="dropdown-item" asp-action="SignOutUser" asp-controller="Account"><i class="bx bx-log-out bx-xs bx-fw" style="color: #3D3B40;"></i> Logout</a>
                 </li>
             </ul>
-
         </div>
     </header>
 
     <nav>
         <div id="buttonContainer">
 
-            <a asp-action="Tickets" class="btn btn-primary @(ViewBag.CurrentStatus == "All" ? "activeButton" : "inactiveButton")">All</a>
+            <a asp-action="Tickets"
+               class="btn btn-primary @(CurrentStatus == "All" ? "activeButton" : "inactiveButton")">
+                All
+            </a>
 
             @foreach (var status in ViewBag.Statuses)
             {
-                <a asp-action="Tickets" asp-route-status="@status.Value" class="btn btn-primary @(status.Value == ViewBag.CurrentStatus ? "activeButton" : "inactiveButton")" >@status.Text</a>
+                <a asp-action="Tickets" asp-route-status="@status.Value" class="btn btn-primary @(status.Value == CurrentStatus ? "activeButton" : "inactiveButton")" >@status.Text</a>
             }
+        </div>
+    
+        <div class="flex-Row gap-2 justify-content-center align-center">
+            <div class="j-search-container | flex-Row align-center justify-content-center">
+                <div class="input-group">
+                    <input class="bg-transparent search-input" type="text" placeholder="Search" id="searchTerm" value="@CurrentSearchTerm" />
+                </div>
+            </div>
         </div>
 
         <select class="form-select nav-select" id="floatingSelect" aria-label="Floating label select example">
@@ -96,13 +110,20 @@
     </nav>
 
     <main>
-        @if(Model.Tickets != null)
+        @if (Model.Tickets != null && Model.Tickets.Any())
         {
             <div id="card_content">
                 @foreach (var item in Model.Tickets)
                 {
                     <div class="ticket-container">
-                        <a href="#" data-bs-toggle="modal" data-bs-target="#viewTicket" class="ticket-link">
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#viewTicket" 
+                            class="ticket-link"
+                            data-creator-name="@item.CreatorName"
+                            data-date-created="@item.DateCreated"
+                            data-title="@item.Title"
+                            data-description="@item.Description"
+                            data-latest-update="@(item.LatestUpdate.Message)"
+                            data-latest-update-date="@(item.LatestUpdate.ModifiedAt)">
                             <div class="top-container">
                                 @*  <img class="image" src="@item.Image" alt="image"> *@
                                 <div class="nameDateContainer">
@@ -134,9 +155,37 @@
                                     </li>
                                 }
                             </ul>
-                        </div>
+                        </div> 
                     </div>
+ 
                 }
+
+                <div class="pagination-controls">
+                    @if (TotalPages > 1)
+                    {
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination">
+                                <li class="page-item @(CurrentPage == 1 ? "disabled" : "")">
+                                    <a class="page-link" href="@Url.Action("Tickets", new { page = 1, status = CurrentStatus })">&lt;&lt;</a>
+                                </li>
+                                <li class="page-item @(CurrentPage == 1 ? "disabled" : "")">
+                                    <a class="page-link" href="@Url.Action("Tickets", new { page = CurrentPage - 1, status = CurrentStatus })">&lt;</a>
+                                </li>
+
+                                <li class="page-item @(CurrentPage == 1 ? "active" : "")">
+                                    <span class="page-link">@CurrentPage</span>
+                                </li>
+
+                                <li class="page-item @(CurrentPage == TotalPages ? "disabled" : "")">
+                                    <a class="page-link" href="@Url.Action("Tickets", new { page = CurrentPage + 1, status = CurrentStatus })">&gt;</a>
+                                </li>
+                                <li class="page-item @(CurrentPage == TotalPages ? "disabled" : "")">
+                                    <a class="page-link" href="@Url.Action("Tickets", new { page = TotalPages, status = CurrentStatus })">&gt;&gt;</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    }
+                </div>
             </div>
         }
         else
@@ -241,15 +290,18 @@
                         <div class="top-container">
                             <img class="image" src="/img/profile-logo.png" alt="image">
                             <div class="nameDateContainer">
-                                <h5 class="name">Golanginya</h5>
-                                <p class="date">5 min ago</p>
+                                <h5 class="name"></h5>
+                                <p class="date"></p>
                             </div>
                         </div>
-                        <h2 class="question">How to patch KDE on FreeBSD?</h2>
-                        <p class="details">Lorem ipsum dolor sit met, consectetur..</p>
+                        <h2 class="question"></h2>
+                        <p class="details"></p>
                     </div>
 
-                    <p class="status1">Open status</p>
+                    <div class="status-container">
+                        <div class="status1"></div>
+                        <div class="statusdate"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -338,8 +390,66 @@
         createTicketModal.addEventListener('show.bs.modal', function (event) {
             console.log('Create Ticket modal is about to be shown');
         });
+
+        const ticketLinks = document.querySelectorAll('.ticket-link');
+
+        ticketLinks.forEach(link => {
+			link.addEventListener('click', function (event) {
+				var modal = document.querySelector('#viewTicket');
+				var creatorName = link.getAttribute('data-creator-name');
+				var dateCreated = link.getAttribute('data-date-created');
+				var title = link.getAttribute('data-title');
+				var description = link.getAttribute('data-description');
+                var latestUpdate = link.getAttribute('data-latest-update');
+                var latestUpdateDate = link.getAttribute('data-latest-update-date');
+
+				modal.querySelector('.name').textContent = creatorName;
+				modal.querySelector('.date').textContent = dateCreated;
+				modal.querySelector('.question').textContent = title;
+				modal.querySelector('.details').textContent = description;
+                modal.querySelector('.status1').textContent = latestUpdate;
+                modal.querySelector('.statusdate').textContent = latestUpdateDate;
+
+                console.log("Date", latestUpdateDate);
+         	});
+		});
+
+        var dpIcon = document.querySelector('.dpicn');
+        var dropdownMenu = document.getElementById('dropdownMenu');
+
+        dpIcon.addEventListener('click', function (event) {
+            event.stopPropagation();
+
+            if (dropdownMenu.style.display === 'block') {
+                dropdownMenu.style.display = 'none';
+            } else {
+                dropdownMenu.style.display = 'block';
+            }
+        });
+
+        // Add a keypress event listener to handle search input
+        document.getElementById('searchTerm').addEventListener('keypress', function (event) {
+            if (event.keyCode === 13) {
+                event.preventDefault(); // Prevent form submission
+
+                var searchTerm = this.value;
+                var status = '@CurrentStatus';
+                var url = '@Url.Action("Tickets")';
+
+                // Construct the URL with the appropriate parameters
+                if (status !== 'All') {
+                    url += '?status=' + encodeURIComponent(status);
+                }
+
+                if (searchTerm) {
+                    url += (url.indexOf('?') === -1 ? '?' : '&') + 'searchTerm=' + encodeURIComponent(searchTerm);
+                }
+                
+                location.replace(url);
+            }
+        });
     });
-        
+      
     function userEdit(ticketId) {
         var modal = document.querySelector('#editTicket');
 
@@ -361,9 +471,25 @@
                 modal.querySelector('#Ticket_PriorityId').value = data.priorityId;
                 modal.querySelector('#Ticket_Description').value = data.description;
                 modal.querySelector('form').action = `/User/Tickets/${ticketId}/Edit`;
+
                 // Show the modal after data is loaded
                 var modalInstance = new bootstrap.Modal(modal);
                 modalInstance.show();
+
+                // Ensure modal dismisses properly
+                modal.querySelector('.btn[data-bs-dismiss="modal"]').addEventListener('click', function () {
+                    modalInstance.hide();
+                });
+
+                // Handle backdrop click to dismiss modal
+                modal.addEventListener('hidden.bs.modal', function () {
+                    // Clear form fields or do any necessary cleanup
+                    modal.querySelector('#Ticket_TicketId').value = '';
+                    modal.querySelector('#Ticket_Title').value = '';
+                    modal.querySelector('#Ticket_CategoryId').value = '';
+                    modal.querySelector('#Ticket_PriorityId').value = '';
+                    modal.querySelector('#Ticket_Description').value = '';
+                });
             })
             .catch(error => console.error('Error fetching or parsing data:', error));
     }

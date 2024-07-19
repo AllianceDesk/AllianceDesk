@@ -19,10 +19,4 @@ namespace ASI.Basecode.Services.ServiceModels
         //For submitting the form
         public string SelectedAgentId { get; set; }
     }
-
-    public class AgentTicketCountViewModel
-    {
-        public UserViewModel Agent { get; set; }
-        public int TicketCount { get; set; }
-    }
 }

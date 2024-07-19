@@ -7,9 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System.Linq;
 using System;
-using ASI.Basecode.Data.Models;
+using System.Linq;
 
 namespace ASI.Basecode.WebApp.Controllers
 {
@@ -41,17 +40,18 @@ namespace ASI.Basecode.WebApp.Controllers
         }
 
         [HttpGet("Tickets")]
-        public IActionResult Tickets(string? status)
+        public IActionResult Tickets(string? status, int? page, string? searchTerm)
         {
-/*            // Replace with User.Identity.Name when authentication is implemented
-            string user = "90122701-1c8c-40a4-8936-7717cfaa9c14";*/
 
             var tickets = _ticketService.RetrieveAll();
 
             var userTickets = tickets
                 .Where(t => t.CreatorId == _sessionHelper.GetUserIdFromSession().ToString())
                 .OrderByDescending(t => t.DateCreated)
-                .ToList();
+                .AsEnumerable();
+
+            // Replace this later to retrieve from the user preferences
+            var pageSize = 5;
 
             var statuses = _ticketService.GetStatuses()
                                    .Select(c => new SelectListItem
@@ -77,25 +77,42 @@ namespace ASI.Basecode.WebApp.Controllers
                                            })
                                            .ToList();
 
+
+            if (!string.IsNullOrEmpty(status) && status != "All")
+            {
+                userTickets = userTickets.Where(t => t.StatusId == status);
+            }
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                userTickets = userTickets.Where(t => t.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+                                                     t.Description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
+            }
+
+            var CurrentPage = page ?? 1;
+            var count = userTickets.Count();
+
+
+            if (Math.Ceiling(userTickets.Count() / (double)pageSize) > 1)
+            {
+                userTickets = userTickets.Skip((CurrentPage - 1) * pageSize)
+                                         .Take(pageSize)
+                                         .ToList();
+            }
+
             // Pass data to ViewBag
             ViewBag.Statuses = new SelectList(statuses, "Value", "Text");
             ViewBag.Categories = new SelectList(categories, "Value", "Text");
             ViewBag.Priorities = new SelectList(priorities, "Value", "Text");
-
-            // Check if userTickets is null or empty
-            if (userTickets == null || userTickets.Count == 0)
-            {
-                Console.WriteLine("No tickets found for user");
-                // Instead of returning NotFound(), return an empty view or handle it accordingly
-                return View("Views/User/Tickets.cshtml", new TicketPageViewModel());
-            }
-
             ViewBag.CurrentStatus = string.IsNullOrEmpty(status) ? "All" : status;
+            ViewBag.CurrentPage = CurrentPage;
+            ViewBag.TotalPages = Math.Ceiling(count / (double)pageSize);
+            ViewBag.CurrentSearchTerm = searchTerm;
 
-            var model = new TicketPageViewModel
+            var model = new UserTicketViewModel
             {
-                Tickets = string.IsNullOrEmpty(status) ? userTickets : userTickets.Where(t => t.StatusId == status),
-                Ticket = new TicketViewModel() // Initialize a new ticket for the form
+                Tickets = userTickets,
+                Ticket = new TicketViewModel(),
             };
 
             return View(model);
@@ -104,10 +121,7 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpPost("Tickets/Create")]
         public IActionResult TicketCreate(TicketViewModel ticket)
         {
-            // Replace with User.Identity.Name when authentication is implemented
-            /*ticket.CreatorId = "857949FE-EC30-4C0B-A514-EB0FD9262738";*/
             _ticketService.Add(ticket);
-
             return RedirectToAction("Tickets");
         }
 
@@ -166,9 +180,9 @@ namespace ASI.Basecode.WebApp.Controllers
             });
         }
 
-        
+
         [HttpPost("Tickets/{id}/Edit"), ActionName("TicketEdit")]
-        public IActionResult TicketEditPost(string id, TicketPageViewModel model)
+        public IActionResult TicketEditPost(string id, UserTicketViewModel model)
         {
             var ticket = _ticketService.GetById(id); // Ensure this matches with the ID being passed
             if (ticket == null)

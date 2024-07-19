@@ -39,10 +39,6 @@ namespace ASI.Basecode.Data.Repositories
 
             if (ticketToDelete != null)
             {
-
-                // Delete the TicketHistory table later
-                // Delete the Feedback table later
-                // Delete the TicketMessage table later
                 this.GetDbSet<Ticket>().Remove(ticketToDelete);
                 UnitOfWork.SaveChanges();
             }
