@@ -30,11 +30,11 @@
                 <li><a class="dropdown-item" href="#">Download</a></li>
                 @if (Model.IsFavorite)
                 {
-                    <li><a class="dropdown-item" href="#" data-article-removeFavorites-btn data-article-id="@Model.ArticleId">Remove from my Favorites</a></li>
+                    <li><a class="dropdown-item" href="#" data-article-removefavorites-btn data-article-id="@Model.ArticleId">Remove from my Favorites</a></li>
                 }
                 else
                 {
-                    <li><a class="dropdown-item" href="#" data-article-addFavorites-btn data-article-id="@Model.ArticleId">Add to my Favorites</a></li>
+                    <li><a class="dropdown-item" href="#" data-article-addfavorites-btn data-article-id="@Model.ArticleId">Add to my Favorites</a></li>
                 }
                 
                 <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete" data-article-delete-btn data-article-id="@Model.ArticleId">Delete</a></li>
