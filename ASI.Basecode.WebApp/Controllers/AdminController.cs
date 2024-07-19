@@ -10,9 +10,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Linq;
-using ASI.Basecode.Data.Models;
-using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 
 namespace ASI.Basecode.WebApp.Controllers
 {
@@ -39,6 +38,202 @@ namespace ASI.Basecode.WebApp.Controllers
         {
             this._userService = userService;
             this._ticketService = ticketService;
+        }
+
+        [HttpGet("/Dashboard")]
+        [AllowAnonymous]
+        public ActionResult Dashboard()
+        {
+            ViewBag.AdminSidebar = "Overview";
+            return this.View();
+        }
+
+        [HttpGet("AnalyticsOverallMetrics")]
+        [AllowAnonymous]
+        public IActionResult AnalyticsOverallMetrics()
+        {
+            var tickets = _ticketService.RetrieveAll();
+
+            var categories = _ticketService.GetCategories().ToList();
+            var statuses = _ticketService.GetStatuses().ToList();
+            var priorities = _ticketService.GetPriorities().ToList();
+
+            // Count tickets by category
+            var ticketCountsByCategory = categories.ToDictionary(
+                category => category.CategoryName,
+                category => tickets.Count(t => t.Category == category.CategoryName)
+            );
+
+            // Count tickets by status
+            var ticketCountsByStatus = statuses.ToDictionary(
+                status => status.StatusName,
+                status => tickets.Count(t => t.Status == status.StatusName)
+            );
+
+            var ticketCountsByPriority = priorities.ToDictionary(
+                priority => priority.PriorityName,
+                priority => tickets.Count(t => t.Priority == priority.PriorityName)
+            );
+
+            var model = new OverallTicketCountViewModel
+            {
+                TicketCountsByCategory = ticketCountsByCategory,
+                TicketCountsByStatus = ticketCountsByStatus,
+                TicketCountsByPriority = ticketCountsByPriority,
+                TotalTicketCount = tickets.Count()
+            };
+
+            return View("Views/Admin/AnalyticsOverallMetrics.cshtml", model);
+        }
+
+        [HttpGet("AnalyticsAgentMetric")]
+        [AllowAnonymous]
+        public IActionResult AgentMetric()
+        {
+
+            var tickets = _ticketService.RetrieveAll();
+
+            var agents = _userService.GetAgents().ToList();
+            var teams = _userService.GetTeams().ToList();
+
+            var categories = _ticketService.GetCategories().ToList();
+            var statuses = _ticketService.GetStatuses().ToList();
+            var priorities = _ticketService.GetPriorities().ToList();
+
+            var ticketsByAgent = tickets
+                .GroupBy(t => t.AgentId)
+                .ToDictionary(g => g.Key, g => g.ToList());
+
+
+            var agentTicketCounts = agents.Select(agent =>
+            {
+                var agentTickets = ticketsByAgent.ContainsKey(agent.UserId)
+                    ? ticketsByAgent[agent.UserId]
+                    : new List<TicketViewModel>();
+
+                // Count tickets by category
+                var ticketCountsByCategory = categories.ToDictionary(
+                    category => category.CategoryName,
+                    category => agentTickets.Count(t => t.Category == category.CategoryName)
+                );
+
+                // Count tickets by status
+                var ticketCountsByStatus = statuses.ToDictionary(
+                    status => status.StatusName,
+                    status => agentTickets.Count(t => t.Status == status.StatusName)
+                );
+
+                var ticketCountByPriority = priorities.ToDictionary(
+                    priority => priority.PriorityName,
+                    priority => agentTickets.Count(t => t.Priority == priority.PriorityName)
+                );
+
+                return new AnalyticsAgentMetricViewModel
+                {
+                    Agent = new UserViewModel
+                    {
+                        UserId = agent.UserId,
+                        Name = agent.Name,
+                    },
+
+                    TicketCountsByCategory = ticketCountsByCategory,
+                    TicketCountsByStatus = ticketCountsByStatus,
+                    TicketCountsByPriority = ticketCountByPriority
+                };
+            });
+
+            return View("Views/Admin/AnalyticsAgentMetric.cshtml", agentTicketCounts);
+        }
+
+        [HttpGet("AnalyticsTeamMetric")]
+        [AllowAnonymous]
+        public IActionResult TeamMetrics()
+        {
+            var tickets = _ticketService.RetrieveAll();
+
+            var agents = _userService.GetAgents().ToList();
+            var teams = _userService.GetTeams().ToList();
+
+            var categories = _ticketService.GetCategories().ToList();
+            var statuses = _ticketService.GetStatuses().ToList();
+            var priorities = _ticketService.GetPriorities().ToList();
+
+            var ticketsByAgent = tickets
+                .GroupBy(t => t.AgentId)
+                .ToDictionary(g => g.Key, g => g.ToList());
+ 
+            var agentTicketCounts = agents.Select(agent =>
+            {
+                var agentTickets = ticketsByAgent.ContainsKey(agent.UserId)
+                    ? ticketsByAgent[agent.UserId]
+                    : new List<TicketViewModel>();
+
+                // Count tickets by category
+                var ticketCountsByCategory = categories.ToDictionary(
+                    category => category.CategoryName,
+                    category => agentTickets.Count(t => t.Category == category.CategoryName)
+                );
+
+                // Count tickets by status
+                var ticketCountsByStatus = statuses.ToDictionary(
+                    status => status.StatusName,
+                    status => agentTickets.Count(t => t.Status == status.StatusName)
+                );
+
+                var ticketCountByPriority = priorities.ToDictionary(
+                    priority => priority.PriorityName,
+                    priority => agentTickets.Count(t => t.Priority == priority.PriorityName)
+                );
+
+                return new AnalyticsAgentMetricViewModel
+                {
+                    Agent = new UserViewModel
+                    {
+                        UserId = agent.UserId,
+                        Name = agent.Name,
+                    },
+
+                    TicketCountsByCategory = ticketCountsByCategory,
+                    TicketCountsByStatus = ticketCountsByStatus,
+                    TicketCountsByPriority = ticketCountByPriority
+                };
+            }).ToList();
+
+            var teamTicketCounts = teams.Select(team =>
+            {
+                var teamAgents = agents.Where(a => a.TeamId == team.TeamId.ToString()).ToList();
+
+                var teamTickets = teamAgents
+                    .SelectMany(a => ticketsByAgent.ContainsKey(a.UserId) ? ticketsByAgent[a.UserId] : new List<TicketViewModel>())
+                    .ToList();
+
+                // Count tickets by category
+                var ticketCountsByCategory = categories.ToDictionary(
+                    category => category.CategoryName,
+                    category => teamTickets.Count(t => t.Category == category.CategoryName)
+                );
+
+                // Count tickets by status
+                var ticketCountsByStatus = statuses.ToDictionary(
+                    status => status.StatusName,
+                    status => teamTickets.Count(t => t.Status == status.StatusName)
+                );
+
+                var ticketCountByPriority = priorities.ToDictionary(
+                    priority => priority.PriorityName,
+                    priority => teamTickets.Count(t => t.Priority == priority.PriorityName)
+                );
+
+                return new AnalyticsTeamMetricViewModel
+                {
+                    Team = team,
+                    TicketCountsByCategory = ticketCountsByCategory,
+                    TicketCountsByStatus = ticketCountsByStatus,
+                    TicketCountsByPriority = ticketCountByPriority
+                };
+            });
+            
+            return View("Views/Admin/AnalyticsTeamMetric.cshtml", teamTicketCounts);
         }
 
         #region Users
@@ -92,15 +287,6 @@ namespace ASI.Basecode.WebApp.Controllers
             };
 
             return PartialView("UserDetails", userModel);
-        }
-
-
-        [HttpGet("/dashboard")]
-        [AllowAnonymous]
-        public ActionResult Dashboard()
-        {
-            ViewBag.AdminSidebar = "Overview";
-            return this.View();
         }
 
 
@@ -173,7 +359,7 @@ namespace ASI.Basecode.WebApp.Controllers
                 RoleId = user.RoleId,
                 TeamId = user.TeamId.ToString(),
                 RoleName = _userService.GetUserRoles().FirstOrDefault(r => r.RoleId == user.RoleId)?.RoleName,
-                TeamName = _userService.GetTeams().FirstOrDefault(t => t.TeamId == user.TeamId)?.TeamName
+                TeamName = _userService.GetTeams().FirstOrDefault(t => t.TeamId == user.TeamId.ToString())?.TeamName
             };
 
             var teams = _userService.GetTeams()
@@ -286,7 +472,7 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpGet]
         [AllowAnonymous]
         [Route("Tickets/{id?}")]
-        public ActionResult Tickets(string? id, string? status)
+        public IActionResult Tickets(string? id, string? status)
         {
             ViewBag.IsLoginOrRegister = false;
             ViewBag.AdminSidebar = "Tickets";
@@ -334,7 +520,7 @@ namespace ASI.Basecode.WebApp.Controllers
 
         [HttpGet("Tickets/Assignment")]
         [AllowAnonymous]
-        public ActionResult TicketAssignment(string id)
+        public IActionResult TicketAssignment(string id)
         {
             var ticket = _ticketService.RetrieveAll()
                 .Where(t => t.TicketId.ToString() == id)
@@ -374,10 +560,10 @@ namespace ASI.Basecode.WebApp.Controllers
                 Description = ticket.Description,
                 Agents = availableAgents,
                 AssignedTicketCounts = assignedTicketCounts
-                    .Select(agent => new AgentTicketCountViewModel
+                    .Select(agent => new AnalyticsAgentMetricViewModel
                     {
                         Agent = agent.Agent,
-                        TicketCount = agent.TicketCount
+                        TotalTicketCount = agent.TicketCount
                     })
                     .ToList()
             };
@@ -389,7 +575,7 @@ namespace ASI.Basecode.WebApp.Controllers
 
         [HttpPost("Tickets/Assignment"), ActionName("TicketAssignment")]
         [AllowAnonymous]
-        public ActionResult PostTicketAssignment([FromBody] AgentAssignmentViewModel model)
+        public IActionResult PostTicketAssignment([FromBody] AgentAssignmentViewModel model)
         {
             _ticketService.AssignAgent(model.TicketId, model.SelectedAgentId);
 

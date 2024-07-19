@@ -111,7 +111,7 @@ namespace ASI.Basecode.WebApp.Controllers
                 TicketId = id
             };
            
-            _ticketService.AddMessage(message);
+            _ticketService.SendMessage(message);
 
             return RedirectToAction(nameof(UserDetails), new { id = message.TicketId });
         }

@@ -14,15 +14,9 @@ namespace ASI.Basecode.Services.ServiceModels
         public DateTime CreatedAt { get; set; }
         public string Description { get; set; }
         public List<UserViewModel> Agents { get; set; } // Assuming User is your user model
-        public List<AgentTicketCountViewModel> AssignedTicketCounts { get; set; }
+        public List<AnalyticsAgentMetricViewModel> AssignedTicketCounts { get; set; }
 
         //For submitting the form
         public string SelectedAgentId { get; set; }
-    }
-
-    public class AgentTicketCountViewModel
-    {
-        public UserViewModel Agent { get; set; }
-        public int TicketCount { get; set; }
     }
 }

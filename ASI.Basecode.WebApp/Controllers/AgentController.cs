@@ -239,7 +239,7 @@ namespace ASI.Basecode.WebApp.Controllers
                 RoleId = user.RoleId,
                 TeamId = user.TeamId.ToString(),
                 RoleName = _userService.GetUserRoles().FirstOrDefault(r => r.RoleId == user.RoleId)?.RoleName,
-                TeamName = _userService.GetTeams().FirstOrDefault(t => t.TeamId == user.TeamId)?.TeamName
+                TeamName = _userService.GetTeams().FirstOrDefault(t => t.TeamId == user.TeamId.ToString())?.TeamName
             };
 
             var teams = _userService.GetTeams()

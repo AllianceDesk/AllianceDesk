@@ -21,11 +21,9 @@ namespace ASI.Basecode.Services.Interfaces
         TicketPriority GetPriorityById(byte id);
         TicketStatus GetStatusById(byte id);
 
-        void AddMessage(TicketMessageViewModel message);
-        void AddHistory(TicketActivityViewModel activity);
+        void SendMessage(TicketMessageViewModel message);
         IEnumerable<TicketActivityViewModel> GetHistory(string id);
         IEnumerable<TicketMessageViewModel> GetMessages(string id);
-
         void AssignAgent(string ticketId, string userId);
     }
 }
