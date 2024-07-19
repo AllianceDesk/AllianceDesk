@@ -41,7 +41,7 @@ namespace ASI.Basecode.WebApp.Controllers
         }
 
         [HttpGet("Tickets")]
-        public IActionResult Tickets(string? status, int? page)
+        public IActionResult Tickets(string? status, int? page, string? searchTerm)
         {
 
             var tickets = _ticketService.RetrieveAll();
@@ -83,7 +83,13 @@ namespace ASI.Basecode.WebApp.Controllers
             {
                 userTickets = userTickets.Where(t => t.StatusId == status);
             }
-            
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                userTickets = userTickets.Where(t => t.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+                                                     t.Description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
+            }
+
             var CurrentPage = page ?? 1;
             var count = userTickets.Count();
 
@@ -102,6 +108,7 @@ namespace ASI.Basecode.WebApp.Controllers
             ViewBag.CurrentStatus = string.IsNullOrEmpty(status) ? "All" : status;
             ViewBag.CurrentPage = CurrentPage;
             ViewBag.TotalPages = Math.Ceiling(count / (double)pageSize);
+            ViewBag.SearchTerm = searchTerm;
 
             var model = new UserTicketViewModel
             {

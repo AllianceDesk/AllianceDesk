@@ -6,8 +6,10 @@
 @{
     ViewData["Title"] = "Tickets";
     string CurrentStatus = ViewBag.CurrentStatus ?? "All";
+    string CurrentSearchTerm = ViewBag.SearchTerm ?? "";
     int CurrentPage = ViewBag.CurrentPage;
     int TotalPages = (int) ViewBag.TotalPages;
+
 
     Func<DateTime, string> toRelativeTime = (DateTime dateTime) =>
     {
@@ -96,6 +98,14 @@
                 <a asp-action="Tickets" asp-route-status="@status.Value" class="btn btn-primary @(status.Value == CurrentStatus ? "activeButton" : "inactiveButton")" >@status.Text</a>
             }
         </div>
+    
+        <div class="flex-Row gap-2 justify-content-center align-center">
+            <div class="j-search-container | flex-Row align-center justify-content-center">
+                <div class="input-group">
+                    <input class="bg-transparent search-input" type="text" placeholder="Search" id="searchTerm" value="@CurrentSearchTerm" />
+                </div>
+            </div>
+        </div>
 
         <select class="form-select nav-select" id="floatingSelect" aria-label="Floating label select example">
             <option selected>Date</option>
@@ -104,7 +114,7 @@
     </nav>
 
     <main>
-        @if(Model.Tickets != null)
+        @if (Model.Tickets != null && Model.Tickets.Any())
         {
             <div id="card_content">
                 @foreach (var item in Model.Tickets)
@@ -418,6 +428,28 @@
                 dropdownMenu.style.display = 'none';
             } else {
                 dropdownMenu.style.display = 'block';
+            }
+        });
+
+        // Add a keypress event listener to handle search input
+        document.getElementById('searchTerm').addEventListener('keypress', function (event) {
+            if (event.keyCode === 13) {
+                event.preventDefault(); // Prevent form submission
+
+                var searchTerm = this.value;
+                var status = '@CurrentStatus';
+                var url = '@Url.Action("Tickets")';
+
+                // Construct the URL with the appropriate parameters
+                if (status !== 'All') {
+                    url += '?status=' + encodeURIComponent(status);
+                }
+
+                if (searchTerm) {
+                    url += (url.indexOf('?') === -1 ? '?' : '&') + 'searchTerm=' + encodeURIComponent(searchTerm);
+                }
+                
+                location.replace(url);
             }
         });
     });
