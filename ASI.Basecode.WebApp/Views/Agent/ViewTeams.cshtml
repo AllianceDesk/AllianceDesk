@@ -1,0 +1,126 @@
+﻿@model ASI.Basecode.Services.ServiceModels.UserViewModel
+
+@{
+    ViewData["Title"] = "Teams";
+    var teams = ViewBag.Teams as SelectList;
+}
+@section styles {
+    <link rel="stylesheet" href="~/css/functionalities.css" />
+    <link rel="stylesheet" href="~/css/Admin.css" />
+}
+
+@Html.Partial("Admin_Header")
+<div class="main">
+    @Html.Partial("Admin_Sidebar")
+    <div class="admin-body p-y-3 bg-grey relative">
+        <div style="padding-right: 2rem; border-right: 1.5px solid #9E9E9E;">
+            <h1>Agents and Team</h1>
+            <div class="flex-Row flex-between">
+                <div class="agent-nav pt-4">
+                    <ul class="flex-Row gap-2">
+                        <a asp-action="Teams" data-admin-btn class="nav-item" data-nav-item>Agents</a>
+                        <a asp-action="ViewTeams" data-admin-btn class="nav-item active-admin-nav" data-nav-item>Team</a>
+                    </ul>
+                </div>
+                <div class="flex-Row gap-2 justify-content-center align-center">
+                    <div class="j-search-container | flex-Row align-center justify-content-center">
+                        <i class="fa-solid fa-magnifying-glass text-1-5"></i>
+                        <input class="bg-transparent" type="text" placeholder="Search" />
+                    </div>
+                    <button class="mbtn-primary flex-Row gap-1 color-white bg-red align-center justify-content-center border-0 p-x-1 br-1-5" data-admin-add-btn>
+                        <i class="fa-solid fa-user-plus"></i>
+                        <p class="br-1-5 p-y-1">Add</p>
+                    </button>
+                </div>
+            </div>
+            <div class="flex-Row flex-between p-y-1 p-x-1 border-b-2 text-1-5 mb-3">
+                <div class="flex-Row align-center gap-1 fw-semi">
+                    <i class="fa-regular fa-address-card"></i>
+                    <p>Team Name</p>
+                </div>
+            </div>
+            @if (teams != null && teams.Any())
+            {
+                <div class="agents-container bg-white">
+                    @foreach (var team in teams)
+                    {
+                        <div class="agents | flex-Row flex-between p-y-1 p-x-1 align-center" data-agents-1>
+                            <div class="flex-col justify-content-center align-center">
+                                <p class="fw-semi text-1-5">@team.Text</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p>No teams available.</p>
+            }
+        </div>
+        <div class="hidden modal-admin bg-modal" data-admin-modal-container>
+            <div class="flex flex-col gap-2 br-1 bg-white p-y-1 p-x-2">
+                <form asp-action="PostTeamAddAgent"  method="post" data-modal-add-form>
+                    @Html.AntiForgeryToken()
+                    <div class="flex-Row justify-content-between">
+                        <h2>Add Team</h2>
+                        <i class="text-md fa-regular fa-circle-xmark hover-pointer" data-admin-add-close-btn></i>
+                    </div>
+                    <div>
+                        <label class="modal-input relative flex">
+                            <span>Team Name</span>
+                            <input asp-for="TeamName" type="text" placeholder="John Doe" />
+                            <span asp-validation-for="TeamName" class="text-danger"></span>
+                        </label>
+                    </div>
+                    <div class="flex-Row gap-1">
+                        <button type="button" class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-add-cancel-btn>Cancel</button>
+                        <button type="submit" class="mbtn-primary color-white bg-red align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-add-save-btn>Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        const addBtn = document.querySelector('[data-admin-add-btn]');
+        const cancelBtn = document.querySelector("[data-admin-add-cancel-btn]");
+        const closeBtn = document.querySelector("[data-admin-add-close-btn]");
+        const modalCtnr = document.querySelector("[data-admin-modal-container]");
+
+        addBtn.addEventListener("click", () => {
+            modalCtnr.classList.remove("hidden");
+        });
+
+        cancelBtn.addEventListener("click", () => {
+            modalCtnr.classList.add("hidden");
+        });
+
+        closeBtn.addEventListener("click", () => {
+            modalCtnr.classList.add("hidden");
+        });
+
+        // Handle form submission
+        $(document).on('submit', '[data-modal-add-form]', function (e) {
+            e.preventDefault();
+            var form = $(this);
+            $.ajax({
+                url: form.attr('action'),
+                type: 'POST',
+                data: form.serialize(),
+                success: function (response) {
+                    // Handle successful form submission
+                    alert('User added successfully');
+                    modalCtnr.classList.add("hidden");
+                    // Optionally, update the team list here
+                    window.location.reload(); // Reload the page to reflect changes
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error submitting form:', status, error);
+                }
+            });
+        });
+    </script>
+}

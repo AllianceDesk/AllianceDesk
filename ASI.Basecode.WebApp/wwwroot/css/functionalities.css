@@ -266,8 +266,10 @@ p {
 .color-error {
     color: #F70707;
 }
+
 .hidden {
     display: none !important;
+    transition: display 300ms;
 }
 
 .cursor-pointer {
@@ -305,4 +307,17 @@ p {
     display: grid;
     grid-template-columns: calc(70% - 2rem) 30%;
     gap: 2rem;
+}
+
+/* OVERFLOW */
+
+.overflow-h {
+    overflow: hidden;
+}
+
+
+.asgn-tix-item-2 {
+    display: grid;
+    grid-template-columns: 65% 15% 10% 10%;
+    padding-block: 0.5rem;
 }

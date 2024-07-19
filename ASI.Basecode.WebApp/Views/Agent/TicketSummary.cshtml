@@ -1,0 +1,74 @@
+﻿@model ASI.Basecode.Services.ServiceModels.TicketViewModel
+
+@{
+    ViewData["Title"] = "Tickets";
+    Layout = "_Layout"; 
+}
+@section styles {
+    <link rel="stylesheet" href="~/css/functionalities.css" />
+    <link rel="stylesheet" href="~/css/Admin.css" />
+}
+
+@Html.Partial("Agent_Header")
+<div class="main">
+    @Html.Partial("Agent_Sidebar")
+    <div class="admin-body p-y-3 relative bg-grey flex flex-col gap-1">
+        <h1>Assigned Tickets</h1>
+        <div class="flex-Row justify-content-between align-items-center">
+            <div class="j-search-container | flex-Row align-center justify-content-center">
+                <i class="fa-solid fa-magnifying-glass text-1-5"></i>
+                <input class="bg-transparent" type="text" placeholder="Search" />
+            </div>
+            <div class="bg-red br-1 p-y-0-5 p-x-1 color-white flex-Row gap-2 align-items-center">
+                <i class="fa-solid fa-filter"></i>
+                <p>Filter</p>
+            </div>
+        </div>
+ 
+
+        <div class="w-full margin-1 bg-white flex flex-col align-items-center  gap-2 flex-between p-y-1 p-x-1 align-center">
+            <div class="w-75 flex flex-Row justify-content-between border-b-2 pb-2">
+                <p>Total Tickets: 150</p>
+                <p>Open Tickets: 150</p>
+                <p>Closed Tickets: 150</p>
+                <p>AVG RT: 150</p>
+            </div>
+            <ul class="w-50 flex flex-Row justify-content-between mt-4">
+                <li class="nav-item active-admin-nav" data-ts-nav-item>Tickets by Category</li>
+                <li class="nav-item" data-ts-nav-item>Tickets by Status</li>
+                <li class="nav-item " data-ts-nav-item>Tickets by Priority</li>
+            </ul>
+            <div class="w-25">
+                <canvas id="pieChartStatus"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+    <script>
+        const navItems = document.querySelectorAll('[data-ts-nav-item]')
+
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                navItems.forEach(navItem => navItem.classList.remove("active-admin-nav"));
+                item.classList.add("active-admin-nav");
+    
+            });
+        });
+
+        const pieChartStatus = document.getElementById('pieChartStatus').getContext('2d');
+        new Chart(pieChartStatus, {
+            type: 'pie',
+            data: {
+                labels: ['Open', 'Resolved', 'In Progress', 'Closed'],
+                datasets: [{
+                    data: [10, 20, 15, 5],
+                    backgroundColor: ['#40A6D8', '#6DB971', '#E68F36', '#DA5D5B']
+                }]
+            }
+        });
+    </script>
+}

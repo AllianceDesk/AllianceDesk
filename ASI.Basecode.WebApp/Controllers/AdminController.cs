@@ -95,7 +95,7 @@ namespace ASI.Basecode.WebApp.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet("/dashboard")]
         [AllowAnonymous]
         public ActionResult Dashboard()
         {
@@ -105,6 +105,7 @@ namespace ASI.Basecode.WebApp.Controllers
 
 
         [HttpGet("/AddUser")]
+        [AllowAnonymous]
         /// <summary>
         /// Go to the Add a User View
         /// </summary>

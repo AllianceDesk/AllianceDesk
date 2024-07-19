@@ -320,3 +320,11 @@ a[data-a-btn] {
     cursor: pointer;
 }
 
+
+
+.agent-metrics {
+    display: grid;
+    grid-template-columns: 40% 60%;
+    overflow: hidden;
+    width: 100%;
+}
