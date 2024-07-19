@@ -6,14 +6,13 @@ using System.Threading.Tasks;
 
 namespace ASI.Basecode.Services.ServiceModels
 {
-    public class TeamTicketCountViewModel
+    public class AnalyticsAgentMetricViewModel
     {
-        public string TeamName { get; set; }
-
+        public UserViewModel Agent { get; set; }
         public Dictionary<string, int> TicketCountsByCategory { get; set; }
-
         public Dictionary<string, int> TicketCountsByStatus { get; set; }
+        public Dictionary<string, int> TicketCountsByPriority { get; set; }
 
-        public int TotalTicketCount => TicketCountsByCategory.Values.Sum() + TicketCountsByStatus.Values.Sum();
+        public int TotalTicketCount;
     }
 }

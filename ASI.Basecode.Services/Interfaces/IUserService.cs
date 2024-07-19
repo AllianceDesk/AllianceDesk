@@ -14,7 +14,7 @@ namespace ASI.Basecode.Services.Interfaces
         void AddTeam(UserViewModel model);
         void UpdateUser (UserViewModel model);
         void DeleteUser(string userId);
-        IEnumerable<Team> GetTeams();
+        IEnumerable<TeamViewModel> GetTeams();
         IEnumerable<UserRole> GetUserRoles();
         IEnumerable<User> GetUsers();
         IEnumerable<User> GetAllUsers();

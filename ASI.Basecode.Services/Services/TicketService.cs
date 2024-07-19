@@ -128,9 +128,20 @@ namespace ASI.Basecode.Services.Services
 
         public void Delete(String id)
         {
+           // Delete the ticket activities associated with the ticket
+
+            var activities = _ticketActivityRepository.RetrieveAll().Where(s => s.TicketId.ToString() == id).ToList();
+            
+            foreach (var activity in activities)
+            {
+                _ticketActivityRepository.Delete(activity.HistoryId.ToString());
+            }
+
+            // Delete the ticket messages associated with the ticket
+
+            // Delete the ticket itself
             _ticketRepository.Delete(id);
         }
-
         public TicketViewModel GetById(string id)
         {
             var ticket = _ticketRepository.RetrieveAll().Where(s => s.TicketId.ToString() == id).FirstOrDefault();

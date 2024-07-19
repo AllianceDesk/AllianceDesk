@@ -1,4 +1,6 @@
-﻿@{
+﻿@model  IEnumerable<ASI.Basecode.Services.ServiceModels.AnalyticsTeamMetricViewModel>
+
+@{
     ViewData["Title"] = "Tickets";
     Layout = "_Layout";
 }
@@ -12,7 +14,7 @@
     @Html.Partial("Admin_Sidebar")
     <div class="admin-body p-y-3 relative bg-grey">
         @* Status *@
-        <p class="hidden" data-aom-open>5</p>
+        <p class="hidden" data-aom-open>></p>
         <p class="hidden" data-aom-resolved>10</p>
         <p class="hidden" data-aom-inprogress>15</p>
         <p class="hidden" data-aom-closed>16</p>
@@ -47,7 +49,15 @@
                 </div>
 
                 <div id="teams-list" class="h-100 flex flex-col gap-1 mt-4">
-                    <!-- Teams will be dynamically inserted here -->
+                    @foreach (var item in Model)
+                    {
+                        <div class="flex-Row bg-White cursor-pointer p-x-1 p-y-0-5 gap-1 align-items-center"
+                             data-team-id="@item.Team.TeamId"
+                             data-team-item="">
+                            <div class="p-y-1 p-x-1 br-50 bg-grey"></div>
+                            <h6 class="H6">@item.Team.TeamName</h6>
+                        </div>
+                    }
                 </div>
                 <div class="h-100 flex flex-col gap-1 mt-4">
                     <div class="flex-Row bg-White p-x-1 p-y-0-5 gap-1 align-items-center align-items-center">
@@ -92,114 +102,114 @@
     <script>
         const ctx = document.getElementById('LineTicketVolumeMetric').getContext('2d');
 
-        const teams = {
-            OG: {
-                id: "OG",
-                teamName: "OG",
-                ticketVolume: {
-                    total: 50,
-                    star_1: 5,
-                    star_2: 0,
-                    star_3: 15,
-                    star_4: 25,
-                    star_5: 5,
-                },
-                ticketStatus: {
-                    total: 50,
-                    open: 5,
-                    resolved: 10,
-                    inProgress: 25,
-                    closed: 15
-                },
-                ticketCategory: {
-                    total: 50,
-                    technical: 15,
-                    billing: 25,
-                    generalInquiry: 5,
-                    others: 15,
-                }
-            },
-            IG: {
-                id: "IG",
-                teamName: "IG",
-                ticketVolume: {
-                    total: 50,
-                    star_1: 15,
-                    star_2: 10,
-                    star_3: 5,
-                    star_4: 15,
-                    star_5: 5,
-                },
-                ticketStatus: {
-                    total: 50,
-                    open: 7,
-                    resolved: 20,
-                    inProgress: 8,
-                    closed: 15
-                },
-                ticketCategory: {
-                    total: 50,
-                    technical: 8,
-                    billing: 20,
-                    generalInquiry: 15,
-                    others: 7,
-                }
-            }
-        }
+        // const teams = {
+        //     OG: {
+        //         id: "OG",
+        //         teamName: "OG",
+        //         ticketVolume: {
+        //             total: 50,
+        //             star_1: 5,
+        //             star_2: 0,
+        //             star_3: 15,
+        //             star_4: 25,
+        //             star_5: 5,
+        //         },
+        //         ticketStatus: {
+        //             total: 50,
+        //             open: 5,
+        //             resolved: 10,
+        //             inProgress: 25,
+        //             closed: 15
+        //         },
+        //         ticketCategory: {
+        //             total: 50,
+        //             technical: 15,
+        //             billing: 25,
+        //             generalInquiry: 5,
+        //             others: 15,
+        //         }
+        //     },
+        //     IG: {
+        //         id: "IG",
+        //         teamName: "IG",
+        //         ticketVolume: {
+        //             total: 50,
+        //             star_1: 15,
+        //             star_2: 10,
+        //             star_3: 5,
+        //             star_4: 15,
+        //             star_5: 5,
+        //         },
+        //         ticketStatus: {
+        //             total: 50,
+        //             open: 7,
+        //             resolved: 20,
+        //             inProgress: 8,
+        //             closed: 15
+        //         },
+        //         ticketCategory: {
+        //             total: 50,
+        //             technical: 8,
+        //             billing: 20,
+        //             generalInquiry: 15,
+        //             others: 7,
+        //         }
+        //     }
+        // }
 
-        const teamsList = document.getElementById('teams-list');
+        // const teamsList = document.getElementById('teams-list');
 
-        function renderTeams(teamsToRender) {
-            teamsList.innerHTML = '';
-            teamsToRender.forEach(team => {
-                const teamDiv = document.createElement('div');
-                teamDiv.classList.add('flex-Row', 'bg-White', 'cursor-pointer', 'p-x-1', 'p-y-0-5', 'gap-1', 'align-items-center');
-                teamDiv.dataset.teamId = team.id;
-                teamDiv.dataset.teamItem = '';
-                teamDiv.innerHTML = `
-                                <div class="p-y-1 p-x-1 br-50 bg-grey"></div>
-                                <h6 class="H6">${team.teamName}</h6>
-                            `;
-                teamsList.appendChild(teamDiv);
-            });
+        // function renderTeams(teamsToRender) {
+        //     teamsList.innerHTML = '';
+        //     teamsToRender.forEach(team => {
+        //         const teamDiv = document.createElement('div');
+        //         teamDiv.classList.add('flex-Row', 'bg-White', 'cursor-pointer', 'p-x-1', 'p-y-0-5', 'gap-1', 'align-items-center');
+        //         teamDiv.dataset.teamId = team.id;
+        //         teamDiv.dataset.teamItem = '';
+        //         teamDiv.innerHTML = `
+        //                                 <div class="p-y-1 p-x-1 br-50 bg-grey"></div>
+        //                                 <h6 class="H6">${team.teamName}</h6>
+        //                             `;
+        //         teamsList.appendChild(teamDiv);
+        //     });
 
-        
-            const teamItems = document.querySelectorAll('[data-team-item]');
-            teamItems.forEach(item => {
-                item.addEventListener('click', () => {
-                    teamItems.forEach(teamItem => {
-                        teamItem.classList.remove('selected-agent');
-                    });
-                    item.classList.add('selected-agent');
-                    const teamId = item.dataset.teamId;
 
-                    const teamActive = Object.values(teams).find(team => team.id === teamId);
+        //     const teamItems = document.querySelectorAll('[data-team-item]');
+        //     teamItems.forEach(item => {
+        //         item.addEventListener('click', () => {
+        //             teamItems.forEach(teamItem => {
+        //                 teamItem.classList.remove('selected-agent');
+        //             });
+        //             item.classList.add('selected-agent');
+        //             const teamId = item.dataset.teamId;
 
-                    console.log("teamActive", teamActive);
-                    console.log('Clicked team ID:', teamId);
+        //             const teamActive = Object.values(teams).find(team => team.id === teamId);
 
-                    tm1star = teamActive.ticketVolume.star_1;
-                    tm2star = teamActive.ticketVolume.star_2;
-                    tm3star = teamActive.ticketVolume.star_3;
-                    tm4star = teamActive.ticketVolume.star_4;
-                    tm5star = teamActive.ticketVolume.star_5;
+        //             console.log("teamActive", teamActive);
+        //             console.log('Clicked team ID:', teamId);
 
-                    aomClosed = teamActive.ticketStatus.closed;
-                    aomOpen = teamActive.ticketStatus.open;
-                    aomInProgress = teamActive.ticketStatus.inProgress;
-                    aomResolved = teamActive.ticketStatus.resolved;
+        //             tm1star = teamActive.ticketVolume.star_1;
+        //             tm2star = teamActive.ticketVolume.star_2;
+        //             tm3star = teamActive.ticketVolume.star_3;
+        //             tm4star = teamActive.ticketVolume.star_4;
+        //             tm5star = teamActive.ticketVolume.star_5;
 
-                    aomTechnical = teamActive.ticketCategory.technical;
-                    aomBilling = teamActive.ticketCategory.billing;
-                    aomGeneralInquiry = teamActive.ticketCategory.generalInquiry;
-                    aomOthers = teamActive.ticketCategory.others;
+        //             aomClosed = teamActive.ticketStatus.closed;
+        //             aomOpen = teamActive.ticketStatus.open;
+        //             aomInProgress = teamActive.ticketStatus.inProgress;
+        //             aomResolved = teamActive.ticketStatus.resolved;
 
-                    updateCharts();
-                });
-            });
-        }
+        //             aomTechnical = teamActive.ticketCategory.technical;
+        //             aomBilling = teamActive.ticketCategory.billing;
+        //             aomGeneralInquiry = teamActive.ticketCategory.generalInquiry;
+        //             aomOthers = teamActive.ticketCategory.others;
 
-        renderTeams(Object.values(teams)); 
+        //             updateCharts();
+        //         });
+        //     });
+        // }
+
+        // renderTeams(Object.values(teams)); 
 
         const searchInput = document.getElementById('team-search-input');
         searchInput.addEventListener('input', () => {

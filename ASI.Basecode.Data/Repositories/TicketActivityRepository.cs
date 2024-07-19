@@ -26,5 +26,16 @@ namespace ASI.Basecode.Data.Repositories
         {
             return this.GetDbSet<TicketActivity>();
         }
+
+        public void Delete(String id)
+        {
+            var ticketActivityToDelete = this.GetDbSet<TicketActivity>().FirstOrDefault(x => x.TicketId.ToString() == id);
+
+            if (ticketActivityToDelete != null)
+            {
+                this.GetDbSet<TicketActivity>().Remove(ticketActivityToDelete);
+                UnitOfWork.SaveChanges();
+            }
+        }
     }
 }

@@ -104,12 +104,7 @@ namespace ASI.Basecode.Services.Services
                 team.TeamName = model.TeamName;
                 _teamRepository.AddTeam(team);
             }
-        }
-
-        public IEnumerable<Team> GetTeams()
-        {
-            return _teamRepository.RetrieveAll();
-        }
+        } 
 
         public IEnumerable<UserRole> GetUserRoles()
         {
@@ -143,6 +138,13 @@ namespace ASI.Basecode.Services.Services
             var agents = _repository.GetUsers().Where(x => x.RoleId == 2).ToList();
 
             return _mapper.Map<IEnumerable<UserViewModel>>(agents);
+        }
+
+        public IEnumerable<TeamViewModel> GetTeams()
+        {
+            var teams = _teamRepository.RetrieveAll().ToList();
+
+            return _mapper.Map<IEnumerable<TeamViewModel>>(teams);
         }
     }
 }

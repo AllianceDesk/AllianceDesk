@@ -130,6 +130,7 @@ namespace ASI.Basecode.WebApp.Controllers
         {
 
             var ticket = _ticketService.GetById(id);
+ 
             if (ticket == null)
             {
                 return NotFound();

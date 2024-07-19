@@ -30,6 +30,7 @@ namespace ASI.Basecode.WebApp
                 CreateMap<TicketViewModel, Ticket>();
                 CreateMap<NotificationServiceModel, Notification>();
                 CreateMap<ArticleViewModel, Article>();
+                CreateMap<Team, TeamViewModel>();
             }
         }
     }

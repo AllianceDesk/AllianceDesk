@@ -6,14 +6,12 @@ using System.Threading.Tasks;
 
 namespace ASI.Basecode.Services.ServiceModels
 {
-    public class AgentTicketCountViewModel
+    public class AnalyticsTeamMetricViewModel
     {
-        public UserViewModel Agent { get; set; }
-
+        public TeamViewModel Team { get; set; }
         public Dictionary<string, int> TicketCountsByCategory { get; set; }
-
         public Dictionary<string, int> TicketCountsByStatus { get; set; }
-
-        public int TotalTicketCount;
+        public Dictionary<string, int> TicketCountsByPriority { get; set; }
+        public int TotalTicketCount { get; set; }
     }
 }
