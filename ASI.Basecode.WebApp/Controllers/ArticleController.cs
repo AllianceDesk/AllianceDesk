@@ -88,6 +88,32 @@ namespace ASI.Basecode.WebApp.Controllers
         }
 
         /// <summary>
+        /// Returns Article Favorites View.
+        /// </summary>
+        /// <returns> Article Favorites View </returns>
+        [HttpGet("/KnowledgeBase/MyFavorites")]
+        public IActionResult MyFavorites()
+        {
+            ViewBag.AdminSidebar = "Index";
+            var data = _articleService.RetrieveAll()
+                                        .Select(u => new ArticleViewModel
+                                        {
+                                            ArticleId = u.ArticleId,
+                                            Title = u.Title,
+                                            Body = u.Body,
+                                            CategoryNavigation = u.CategoryNavigation,
+                                            DateUpdated = u.DateUpdated,
+                                        })
+                                        .ToList();
+
+            var viewModel = new ArticleViewModel
+            {
+                Articles = data
+            };
+            return View(viewModel);
+        }
+
+        /// <summary>
         /// Return Article-Create View
         /// </summary>
         /// <returns></returns>
