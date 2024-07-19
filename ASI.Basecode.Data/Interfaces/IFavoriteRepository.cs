@@ -11,6 +11,6 @@ namespace ASI.Basecode.Data.Interfaces
     {
         IEnumerable<Favorite> RetrieveAll();
         void Add(Favorite favorite);
-        void Delete(Favorite favorite);
+        void Delete(string articleId);
     }
 }

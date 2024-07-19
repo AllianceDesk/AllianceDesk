@@ -28,10 +28,14 @@ namespace ASI.Basecode.Data.Repositories
             UnitOfWork.SaveChanges();
         }
 
-        public void Delete(Favorite favorite)
+        public void Delete(string articleId)
         {
-            this.GetDbSet<Favorite>().Remove(favorite);
-            UnitOfWork.SaveChanges();
+            var deleteFav = this.GetDbSet<Favorite>().Where(d => d.ArticleId.ToString() == articleId).FirstOrDefault();
+            if (deleteFav != null)
+            {
+                this.GetDbSet<Favorite>().Remove(deleteFav);
+                UnitOfWork.SaveChanges();
+            }
         }
     }
 }

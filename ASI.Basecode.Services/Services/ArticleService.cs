@@ -19,18 +19,21 @@ namespace ASI.Basecode.Services.Services
         private readonly ICategoryRepository _categoryRepository;
         private readonly ISessionHelper _sessionHelper;
         private readonly IUserRepository _userRepository;
+        private readonly IFavoriteRepository _favoriteRepository;
 
         public ArticleService (IMapper mapper, 
                                 IArticleRepository articleRepository, 
                                 ICategoryRepository categoryRepository, 
                                 ISessionHelper sessionHelper,
-                                IUserRepository userRepository)
+                                IUserRepository userRepository,
+                                IFavoriteRepository favoriteRepository)
         {
             _mapper = mapper;
             _articleRepository = articleRepository;
             _categoryRepository = categoryRepository;
             _sessionHelper = sessionHelper;
             _userRepository = userRepository;
+            _favoriteRepository = favoriteRepository;
         }
         public IEnumerable<ArticleViewModel> RetrieveAll()
         {
@@ -51,26 +54,29 @@ namespace ASI.Basecode.Services.Services
 
         public void Add(ArticleViewModel article)
         {
+            var articleExist = _articleRepository.RetrieveAll().Where(a => a.Title == article.Title && a.Body == article.Body);
             if (article == null)
             {
                 throw new ArgumentNullException(nameof(article), "ArticleViewModel cannot be null");
             }
+            
+            if (articleExist == null)
+            {
+                var newArticle = new Article();
+                newArticle.ArticleId = Guid.NewGuid();
+                newArticle.Title = article.Title;
+                newArticle.Body = article.Body;
+                newArticle.DateCreated = DateTime.Now;
+                newArticle.DateUpdated = DateTime.Now;
+                newArticle.Status = true;
 
-            var newArticle = new Article();
-            newArticle.ArticleId = Guid.NewGuid();
-            newArticle.Title = article.Title;
-            newArticle.Body = article.Body;
-            newArticle.DateCreated = DateTime.Now;
-            newArticle.DateUpdated = DateTime.Now;
-            newArticle.Status = true;
+                newArticle.CreatedBy = _sessionHelper.GetUserIdFromSession();
+                newArticle.UpdatedBy = _sessionHelper.GetUserIdFromSession();
 
-            newArticle.CreatedBy = _sessionHelper.GetUserIdFromSession();
-            newArticle.UpdatedBy = _sessionHelper.GetUserIdFromSession();
+                newArticle.CategoryId = Convert.ToByte(article.CategoryId);
 
-            newArticle.CategoryId = Convert.ToByte(article.CategoryId);
-
-
-            _articleRepository.AddArticle(newArticle);
+                _articleRepository.AddArticle(newArticle);
+            }
         }
 
         public void Update (ArticleViewModel article)
@@ -104,5 +110,28 @@ namespace ASI.Basecode.Services.Services
             return _categoryRepository.RetrieveAll();
         }
 
+        public void AddFavorite (ArticleViewModel article)
+        {
+            var existingFavorite = _favoriteRepository.RetrieveAll().Where(f => f.ArticleId.ToString() == article.ArticleId && f.UserId.ToString() == _sessionHelper.GetUserIdFromSession().ToString());
+            if (existingFavorite == null)
+            {
+                var newFavorite = new Favorite();
+
+                newFavorite.FavoriteId = Guid.NewGuid();
+                newFavorite.UserId = _sessionHelper.GetUserIdFromSession();
+                newFavorite.ArticleId = Guid.Parse(article.ArticleId);
+
+                _favoriteRepository.Add(newFavorite);
+            }
+        }
+
+        public void RemoveFavorite (ArticleViewModel article)
+        {
+            var existingFavorite = _favoriteRepository.RetrieveAll().Where(f => f.ArticleId.ToString() == article.ArticleId && f.UserId.ToString() == _sessionHelper.GetUserIdFromSession().ToString());
+            if (existingFavorite != null)
+            {
+                _favoriteRepository.Delete(article.ArticleId);
+            }
+        }
     }
 }
