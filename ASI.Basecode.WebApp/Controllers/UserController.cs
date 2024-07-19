@@ -52,7 +52,7 @@ namespace ASI.Basecode.WebApp.Controllers
                 .AsEnumerable();
           
             // Replace this later to retrieve from the user preferences
-            var pageSize = 10;
+            var pageSize = 5;
 
             var statuses = _ticketService.GetStatuses()
                                    .Select(c => new SelectListItem
@@ -108,7 +108,7 @@ namespace ASI.Basecode.WebApp.Controllers
             ViewBag.CurrentStatus = string.IsNullOrEmpty(status) ? "All" : status;
             ViewBag.CurrentPage = CurrentPage;
             ViewBag.TotalPages = Math.Ceiling(count / (double)pageSize);
-            ViewBag.SearchTerm = searchTerm;
+            ViewBag.CurrentSearchTerm = searchTerm;
 
             var model = new UserTicketViewModel
             {
