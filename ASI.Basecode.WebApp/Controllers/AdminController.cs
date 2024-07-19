@@ -397,5 +397,31 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("Tickets", new { id = model.TicketId });
         }
         #endregion
+
+        #region Analytics
+        [HttpGet("AnalyticsTeamMetric")]
+        [AllowAnonymous]
+        public ActionResult AnalyticsTeamMetric()
+        {
+            ViewBag.AdminSidebar = "Analytics";
+            return this.View();
+        }
+
+        [HttpGet("AnalyticsOverallMetrics")]
+        [AllowAnonymous]
+        public ActionResult AnalyticsOverallMetrics()
+        {
+            ViewBag.AdminSidebar = "Analytics";
+            return this.View();
+        }
+
+        [HttpGet("AgentMetric")]
+        [AllowAnonymous]
+        public ActionResult AgentMetric()
+        {
+            ViewBag.AdminSidebar = "Analytics";
+            return this.View();
+        }
+        #endregion
     }
 }
