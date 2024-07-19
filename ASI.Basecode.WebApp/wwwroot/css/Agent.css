@@ -1,4 +1,21 @@
-.asgn-tix-item {
+.asgn-tix-item-2 {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: 65% 15% 10% 10%;
+    padding-block: 0.5rem;
+}
+
+.agent-performance-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    color: white;
+    text-align: center;
+    padding-block: 0.5rem;
+}
+
+.bg-blue {
+    background: #0094ff;
+}
+
+.bg-sayan {
+    background: #ff6a00;
 }

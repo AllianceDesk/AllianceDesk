@@ -11,6 +11,21 @@
 <div class="main">
     @Html.Partial("Admin_Sidebar")
     <div class="admin-body p-y-3 relative bg-grey">
+        @* Status *@
+        <p class="hidden" data-aom-open>1</p>
+        <p class="hidden" data-aom-resolved>2</p>
+        <p class="hidden" data-aom-inprogress>3</p>
+        <p class="hidden" data-aom-closed>4</p>
+        @* Category *@
+        <p class="hidden" data-aom-technical>1</p>
+        <p class="hidden" data-aom-billing>3</p>
+        <p class="hidden" data-aom-generalInquiry>5</p>
+        <p class="hidden" data-aom-others>6</p>
+        @* Priority *@
+        <p class="hidden" data-aom-low>5</p>
+        <p class="hidden" data-aom-medium>10</p>
+        <p class="hidden" data-aom-high>15</p>
+        <p class="hidden" data-aom-urgent>16</p>
         <h2>Analytics</h2>
         <div class="view-user-nav">
             <div class="agent-nav pt-4">
@@ -67,6 +82,21 @@
     <script>
         const ctx = document.getElementById('LineTicketVolumeMetric').getContext('2d');
 
+        const aomClosed = document.querySelector('[data-aom-closed]').textContent.trim()
+        const aomOpen = document.querySelector('[data-aom-open]').textContent.trim()
+        const aomInProgress = document.querySelector('[data-aom-inprogress]').textContent.trim()
+        const aomResolved = document.querySelector('[data-aom-resolved]').textContent.trim()
+
+        const aomTechnical = document.querySelector('[data-aom-technical]').textContent.trim()
+        const aomBilling = document.querySelector('[data-aom-billing]').textContent.trim()
+        const aomGeneralInquiry = document.querySelector('[data-aom-generalInquiry]').textContent.trim()
+        const aomOthers = document.querySelector('[data-aom-others]').textContent.trim()
+
+        const aomLow = document.querySelector('[data-aom-low]').textContent.trim()
+        const aomMedium = document.querySelector('[data-aom-medium]').textContent.trim()
+        const aomHigh = document.querySelector('[data-aom-high]').textContent.trim()
+        const aomUrgent = document.querySelector('[data-aom-urgent]').textContent.trim()
+    
         new Chart(ctx, {
             type: 'line',
             data: {
@@ -96,7 +126,7 @@
             data: {
                 labels: ['Open', 'Resolved', 'In Progress', 'Closed'],
                 datasets: [{
-                    data: [10, 20, 15, 5], // Replace with your actual data
+                    data: [aomOpen, aomResolved, aomInProgress, aomClosed], // Replace with your actual data
                     backgroundColor: ['#40A6D8', '#6DB971', '#E68F36', '#DA5D5B']
                 }]
             }
@@ -108,7 +138,7 @@
             data: {
                 labels: ['Technical', 'Billing', 'General Inquiry', 'Others'],
                 datasets: [{
-                    data: [15, 10, 20, 5], // Replace with your actual data
+                    data: [aomTechnical, aomBilling, aomGeneralInquiry, aomOthers], // Replace with your actual data
                     backgroundColor: ['#40A6D8', '#E68F36', '#6DB971', '#DA5D5B']
                 }]
             }
@@ -120,7 +150,7 @@
             data: {
                 labels: ['Low', 'High', 'Medium', 'Urgent'],
                 datasets: [{
-                    data: [5, 15, 10, 20], // Replace with your actual data
+                    data: [aomLow, aomMedium, aomHigh, aomUrgent], // Replace with your actual data
                     backgroundColor: ['#40A6D8', '#6DB971', '#E68F36', '#DA5D5B']
                 }]
             }

@@ -43,7 +43,7 @@ namespace ASI.Basecode.WebApp.Controllers
         /// Returns User View
         /// </summary>
         /// <returns> Home View </returns>
-        [HttpGet("View/User")]
+        [HttpGet("/ViewUser")]
         [AllowAnonymous]
         public ActionResult ViewUser()
         {
@@ -133,7 +133,7 @@ namespace ASI.Basecode.WebApp.Controllers
             }
         }
 
-        [HttpGet("Tickets/Assignment")]
+        [HttpGet("/TicketAssignment")]
         [AllowAnonymous]
         public ActionResult TicketAssignment(string id)
         {
@@ -182,7 +182,7 @@ namespace ASI.Basecode.WebApp.Controllers
             return View(model);
         }
 
-        [HttpGet("Analytics/TeamMetric")]
+        [HttpGet("/AnalyticsTeamMetric")]
         [AllowAnonymous]
         public ActionResult AnalyticsTeamMetric()
         {
@@ -195,10 +195,19 @@ namespace ASI.Basecode.WebApp.Controllers
         public ActionResult AnalyticsOverallMetrics()
         {
             ViewBag.AdminSidebar = "Analytics";
+
+            ViewBag.WeeklyStatus = new
+            {
+                open = 5,
+                resolved = 10,
+                inProgress = 15,
+                closed = 5
+            };
+
             return this.View();
         }
 
-        [HttpGet("Analytics/AgentMetric")]
+        [HttpGet("/AnalyticsAgentMetric")]
         [AllowAnonymous]
         public ActionResult AgentMetric()
         {
@@ -207,11 +216,12 @@ namespace ASI.Basecode.WebApp.Controllers
         }
 
 
-        [HttpGet("Tickets/Reassignment")]
+        [HttpGet("/TicketReassignment")]
         [AllowAnonymous]
         public ActionResult TicketReassignment()
         {
             ViewBag.AdminSidebar = "Tickets";
+            ViewBag.UserID = "Tickets";
             return this.View();
         }
 
@@ -256,7 +266,7 @@ namespace ASI.Basecode.WebApp.Controllers
         }
 
 
-        [HttpGet("home/dashboard")]
+        [HttpGet("/dashboard")]
         [AllowAnonymous]
         public ActionResult Dashboard()
         {
@@ -266,6 +276,7 @@ namespace ASI.Basecode.WebApp.Controllers
 
 
         [HttpGet("/AddUser")]
+        [AllowAnonymous]
         /// <summary>
         /// Go to the Add a User View
         /// </summary>
@@ -297,6 +308,7 @@ namespace ASI.Basecode.WebApp.Controllers
 
         [HttpPost]
         [Route("AddUser")]
+        [AllowAnonymous]
         /// <summary>
         /// Post Request for Adding a User
         /// </summary>

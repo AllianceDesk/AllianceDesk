@@ -1,0 +1,57 @@
+﻿@model ASI.Basecode.Services.ServiceModels.TicketViewModel
+
+@{
+    ViewData["Title"] = "Tickets";
+    Layout = "_Layout"; 
+}
+@section styles {
+    <link rel="stylesheet" href="~/css/functionalities.css" />
+    <link rel="stylesheet" href="~/css/Agent.css" />
+}
+
+@Html.Partial("Agent_Header")
+<div class="main">
+    @Html.Partial("Admin_Sidebar")
+    <div class="admin-body p-y-3 relative bg-grey flex flex-col gap-1">
+        <div class="modal-admin bg-modal" data-admin-modal-container>
+            <form class="modal-container w-75 br-1 bg-white p-y-1 p-x-2" data-modal-edit-form>
+                <div class="agents-details | margin-1 bg-white flex-Row gap-2 p-y-1 p-x-1 align-center">
+                    <div class="flex flex-col gap-4">
+                        <h2>Your Performance</h2>
+                        <div class="flex-Row gap-2">
+                            <div class="user-img-profile br-50 bg-grey"></div>
+                            <div class="flex-col justify-content-center align-center">
+                                <p class="fw-semi">Agent Name</p>
+                                <p class="text-sm">agentemail@gmail.com</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h3>Performance: </h3>
+                <div class="flex flex-col gap-2">
+                    <div class="agent-performance-row bg-sayan">
+                        <p>Ticket Resolved</p>
+                        <p>Customer’s Rating</p>
+                        <p>Resolution time</p>
+                    </div>
+                    <div class="agent-performance-row bg-blue">
+                        <p>Billing</p>
+                        <p>4/5</p>
+                        <p>24 hours</p>
+                    </div>
+                    <div class="agent-performance-row bg-blue">
+                        <p>Ticket Resolved</p>
+                        <p>4/5</p>
+                        <p>24 hours</p>
+                    </div>
+                </div>
+                <div class="flex-Row gap-2 w-100 justify-content-center">
+    
+                        <button asp-action="AgentProfile" asp-controller="Agent" class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-edit-cancel-btn>Back</button>
+                 
+                    <button class="mbtn-primary color-white bg-red align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-edit-save-btn>Export</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

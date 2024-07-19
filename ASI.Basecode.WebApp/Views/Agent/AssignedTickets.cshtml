@@ -9,35 +9,35 @@
     <link rel="stylesheet" href="~/css/Agent.css" />
 }
 
-@Html.Partial("Admin_Header")
+@Html.Partial("Agent_Header")
 <div class="main">
-    @Html.Partial("Admin_Sidebar")
+    @Html.Partial("Agent_Sidebar")
     <div class="admin-body p-y-3 relative bg-grey flex flex-col gap-1">
         <h1>Assigned Tickets</h1>
-        <div>
+        <div class="flex-Row justify-content-between align-items-center">
             <div class="j-search-container | flex-Row align-center justify-content-center">
                 <i class="fa-solid fa-magnifying-glass text-1-5"></i>
                 <input class="bg-transparent" type="text" placeholder="Search" />
             </div>
-            <div>
-                <div>Icon</div>
+            <div class="bg-red br-1 p-y-0-5 p-x-1 color-white flex-Row gap-2 align-items-center">
+                <i class="fa-solid fa-filter"></i>
                 <p>Filter</p>
             </div>
         </div>
-        <div class="agent-asgn-tix">
-            <div class="asgn-tix-item">
+        <div class="agent-asgn-tix flex flex-col gap-1">
+            <div class="asgn-tix-item-2 bg-White">
                 <p class="font-weight-bold">Ticket</p>
                 <p class="font-weight-bold">Category</p>
                 <p class="font-weight-bold">Priority</p>
                 <p class="font-weight-bold">Status</p>
             </div>
-            <div class="asgn-tix-item">
+            <div class="asgn-tix-item-2 bg-sayan">
                 <p>How to change my password? </p>
                 <p>Technical</p>
                 <p>Low</p>
                 <p>Closed</p>
             </div>
-            <div class="asgn-tix-item">
+            <div class="asgn-tix-item-2 bg-sayan">
                 <p>How to change my password? </p>
                 <p>Technical</p>
                 <p>Low</p>

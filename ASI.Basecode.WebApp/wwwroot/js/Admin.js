@@ -137,7 +137,7 @@ adminEditSaveBtn.addEventListener("click", () => {
 })*/
 
 
-navItems.forEach(navItem => {
+/*navItems.forEach(navItem => {
     navItem.addEventListener("click", () => {
         navItems.forEach(a => a.classList.remove("active"));
         navItem.classList.add("active");

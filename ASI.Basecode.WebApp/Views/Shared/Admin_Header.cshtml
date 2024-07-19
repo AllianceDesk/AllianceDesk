@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Http
 
 @inject IHttpContextAccessor HttpContextAccessor
-<header class="flex-Row">
+<header class="flex-Row" style="border-bottom: 2px solid grey;">
     <div class="logosec hover-pointer">
         <img src="~/img/alliancedesk-logo.png"
              style="width: 185px;" alt="logo"
@@ -18,7 +18,7 @@
                 <img src="~/img/profile-logo.png" class="dpicn hover-pointer" alt="dp">           
             </div>
 
-            <div class="dropdown">
+            <div class="dropdown absolute">
                 <ul>                    
                     <li>
                         <i class="bx bx-user bx-xs bx-fw" style="color: #3D3B40;"></i>

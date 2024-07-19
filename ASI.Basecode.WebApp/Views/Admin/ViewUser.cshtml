@@ -75,6 +75,7 @@
         </div>
         <div class="p-x-1 hidden" data-admin-edit-details>
             <!-- User Details Content Will Be Loaded Here -->
+            asdasd
         </div>
         <div class="hidden modal-admin bg-modal" data-admin-modal-container>
             <div class="hidden modal-container br-1 bg-white p-y-1 p-x-2" data-modal-edit-form>
@@ -111,7 +112,7 @@
                 });
 
                 // Handle form submission
-                $(document).on('submit', '[data-modal-add-form] form', function (e) {
+                $(document).on('submit', '[data-modal-add-form]', function (e) {
                     e.preventDefault();
                     var form = $(this);
                     $.ajax({
@@ -138,13 +139,29 @@
                     $('[data-modal-add-form]').addClass('hidden');
                 });
 
-                // Close the modal on clicking outside of it
-                $('[data-admin-modal-container]').on('click', function () {
-                    $(this).addClass('hidden');
-                });
+                const agentList = document.querySelectorAll("[data-viewuser-agent]")
+
+                agentList.forEach(agent => {
+                    agent.addEventListener('click', () => {
+                        console.log("whats happening")
+                        $('[data-admin-edit-details]').removeClass('hidden');
+                        var userId = $(this).data('user-id');
+                        $.ajax({
+                            url: '/UserDetails',
+                            type: 'GET',
+                            data: { UserId: userId },
+                            success: function (response) {
+                                $('[data-admin-edit-details]').html(response).removeClass('hidden');
+                            },
+                            error: function (xhr, status, error) {
+                                console.error('Error fetching user details:', status, error);
+                            }
+                        });
+                    })
+                })
 
                 // Show user details on list item click
-                $(document).on('click', '[data-viewuser-agent]', function () {
+                /*$(document).on('click', '[data-viewuser-agent]', function () {
                     console.log("whats happening")
                     var userId = $(this).data('user-id');
                     $.ajax({
@@ -158,7 +175,7 @@
                             console.error('Error fetching user details:', status, error);
                         }
                     });
-                });
+                });*/
 
                 // Show user edit details on edit button click
                 $(document).on('click', '[data-admin-edit-btn]', function () {
