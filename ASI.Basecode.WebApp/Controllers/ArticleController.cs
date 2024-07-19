@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ASI.Basecode.Services.Services;
+using ASI.Basecode.Data.Interfaces;
 
 
 
@@ -23,6 +24,8 @@ namespace ASI.Basecode.WebApp.Controllers
     {
 
         private readonly IArticleService _articleService;
+        private readonly IFavoriteRepository _favoriteRepository;
+        private readonly ISessionHelper _sessionHelper;
 
         /// <summary>
         /// Constructor
@@ -36,9 +39,13 @@ namespace ASI.Basecode.WebApp.Controllers
             IHttpContextAccessor httpContextAccessor,
                               ILoggerFactory loggerFactory,
                               IConfiguration configuration,
+                              IFavoriteRepository favoriteRepository,
+                              ISessionHelper sessionHelper,
                               IMapper mapper = null) : base(httpContextAccessor, loggerFactory, configuration, mapper)
         {
             _articleService = articleService;
+            _favoriteRepository = favoriteRepository;
+            _sessionHelper = sessionHelper;
         }
 
         /// <summary>
@@ -98,6 +105,7 @@ namespace ASI.Basecode.WebApp.Controllers
         public IActionResult DetailModal(string articleId)
         {
             var articleData = _articleService.RetrieveAll().Where(a => a.ArticleId.ToString() == articleId).FirstOrDefault();
+            var isFavorite = _favoriteRepository.RetrieveAll().Any(f => f.ArticleId.ToString() == articleId && f.UserId.ToString() == _sessionHelper.GetUserIdFromSession().ToString());
             if (articleData == null)
             {
                 return NotFound();
@@ -110,6 +118,7 @@ namespace ASI.Basecode.WebApp.Controllers
                 Body = articleData.Body,
                 UpdatedBy = articleData.UpdatedBy,
                 DateUpdated = articleData.DateUpdated,
+                IsFavorite = isFavorite,
             };
 
             return PartialView("DetailModal", viewModel);
@@ -187,5 +196,28 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpPost("/KnowledgeBase/Article-AddFavorite")]
+        public IActionResult PostAddFavoriteArticle(string articleId)
+        {
+            if (articleId == null)
+            {
+                return NotFound();
+            }
+            _articleService.AddFavorite(articleId);
+
+            return Ok(new { message = "Article added to favorites successfully." });
+        }
+
+        [HttpPost("/KnowledgeBase/Article-DeleteFavorite")]
+        public IActionResult PostDeleteFavoriteArticle(string articleId)
+        {
+            if (articleId == null)
+            {
+                return NotFound();
+            }
+            _articleService.DeleteFavorite(articleId);
+
+            return Ok(new { message = "Article added to favorites successfully." });
+        }
     }
 }
