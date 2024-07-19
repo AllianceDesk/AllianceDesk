@@ -127,8 +127,8 @@ namespace ASI.Basecode.Services.Services
 
         public void DeleteFavorite (string articleId)
         {
-            var existingFavorite = _favoriteRepository.RetrieveAll().Where(f => f.ArticleId.ToString() == articleId && f.UserId.ToString() == _sessionHelper.GetUserIdFromSession().ToString());
-            if (existingFavorite != null)
+            var existingFavorite = _favoriteRepository.RetrieveAll().Any(f => f.ArticleId.ToString() == articleId && f.UserId.ToString() == _sessionHelper.GetUserIdFromSession().ToString());
+            if (existingFavorite)
             {
                 _favoriteRepository.Delete(articleId);
             }

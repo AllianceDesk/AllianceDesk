@@ -253,6 +253,23 @@
                 }
             });
         });
+
+        $(document).on('click', '[data-article-removeFavorites-btn]', function () {
+            var articleId = $(this).data('article-id');
+
+            // Perform AJAX request to fetch article details
+            $.ajax({
+                url: '/KnowledgeBase/Article-DeleteFavorite',
+                type: 'Post',
+                data: { articleId: articleId },
+                success: function (result) {
+                    alert('Article remove from favorites successfully!');
+                },
+                error: function (error) {
+                    console.error('Error loading article details:', error);
+                }
+            });
+        });
     });
 
 </script>
