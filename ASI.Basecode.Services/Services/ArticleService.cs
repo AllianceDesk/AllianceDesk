@@ -110,27 +110,27 @@ namespace ASI.Basecode.Services.Services
             return _categoryRepository.RetrieveAll();
         }
 
-        public void AddFavorite (ArticleViewModel article)
+        public void AddFavorite (string articleId)
         {
-            var existingFavorite = _favoriteRepository.RetrieveAll().Where(f => f.ArticleId.ToString() == article.ArticleId && f.UserId.ToString() == _sessionHelper.GetUserIdFromSession().ToString());
-            if (existingFavorite == null)
+            var existingFavorite = _favoriteRepository.RetrieveAll().Any(f => f.ArticleId.ToString() == articleId && f.UserId.ToString() == _sessionHelper.GetUserIdFromSession().ToString());
+            if (!existingFavorite)
             {
                 var newFavorite = new Favorite();
 
                 newFavorite.FavoriteId = Guid.NewGuid();
                 newFavorite.UserId = _sessionHelper.GetUserIdFromSession();
-                newFavorite.ArticleId = Guid.Parse(article.ArticleId);
+                newFavorite.ArticleId = Guid.Parse(articleId);
 
                 _favoriteRepository.Add(newFavorite);
             }
         }
 
-        public void RemoveFavorite (ArticleViewModel article)
+        public void DeleteFavorite (string articleId)
         {
-            var existingFavorite = _favoriteRepository.RetrieveAll().Where(f => f.ArticleId.ToString() == article.ArticleId && f.UserId.ToString() == _sessionHelper.GetUserIdFromSession().ToString());
+            var existingFavorite = _favoriteRepository.RetrieveAll().Where(f => f.ArticleId.ToString() == articleId && f.UserId.ToString() == _sessionHelper.GetUserIdFromSession().ToString());
             if (existingFavorite != null)
             {
-                _favoriteRepository.Delete(article.ArticleId);
+                _favoriteRepository.Delete(articleId);
             }
         }
     }

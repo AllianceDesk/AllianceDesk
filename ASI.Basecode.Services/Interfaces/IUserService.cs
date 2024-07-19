@@ -8,6 +8,7 @@ namespace ASI.Basecode.Services.Interfaces
     public interface IUserService
     {
         LoginResult AuthenticateUser(string userid, string password, ref User user);
+        int GetLogInUserRole(string userName);
         void AddUser(UserViewModel model);
         User GetUserById(string id);
         void AddTeam(UserViewModel model);
