@@ -84,23 +84,6 @@ namespace ASI.Basecode.WebApp.Controllers
                 userTickets = userTickets.Where(t => t.StatusId == status);
             }
 
-            var CurrentPage = page ?? 1;
-            var count = userTickets.Count();
-
-
-            if (Math.Ceiling(userTickets.Count() / (double)pageSize) > 1)
-            {
-                userTickets = userTickets.Skip((CurrentPage - 1) * pageSize)
-                                         .Take(pageSize)
-                                         .ToList();
-            }
-
-
-            if (!string.IsNullOrEmpty(status) && status != "All")
-            {
-                userTickets = userTickets.Where(t => t.StatusId == status);
-            }
-
             if (!string.IsNullOrEmpty(searchTerm))
             {
                 userTickets = userTickets.Where(t => t.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
