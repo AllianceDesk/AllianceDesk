@@ -15,9 +15,9 @@
         <a asp-controller="Admin" asp-action="Dashboard" data-admin-btn class=" admin-sb-inactive-button margin-0"><i class='bx bx-grid-alt bx-sm as' style="align-self:center;"></i>  <p>Overview</p> </a>
     }
     @if (ViewBag.AdminSidebar == "Tickets") {
-        <a asp-controller="Admin" asp-action="TicketsAll" data-admin-btn class=" admin-sb-active-button margin-0"><i class='bx bx-purchase-tag-alt bx-sm as' style="align-self:center;"></i> <p>Tickets</p> </a>
+        <a asp-controller="Admin" asp-action="Tickets" data-admin-btn class=" admin-sb-active-button margin-0"><i class='bx bx-purchase-tag-alt bx-sm as' style="align-self:center;"></i> <p>Tickets</p> </a>
     } else {
-        <a asp-controller="Admin" asp-action="TicketsAll" data-admin-btn class=" admin-sb-inactive-button margin-0"><i class='bx bx-purchase-tag-alt bx-sm as' style="align-self:center;"></i> <p>Tickets</p> </a>
+        <a asp-controller="Admin" asp-action="Tickets" data-admin-btn class=" admin-sb-inactive-button margin-0"><i class='bx bx-purchase-tag-alt bx-sm as' style="align-self:center;"></i> <p>Tickets</p> </a>
     } 
     @if (ViewBag.AdminSidebar == "ViewUser")
     {

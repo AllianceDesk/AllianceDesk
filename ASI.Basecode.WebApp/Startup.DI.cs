@@ -52,6 +52,7 @@ namespace ASI.Basecode.WebApp
             this._services.AddScoped<ITeamRepository, TeamRepository>();
             this._services.AddScoped<IArticleRepository, ArticleRepository>();
             this._services.AddScoped<INotificationRepository, NotificationRepository>();
+            this._services.AddScoped<IFavoriteRepository, FavoriteRepository>();
 
             // Manager Class
             this._services.AddScoped<SignInManager>();

@@ -1,0 +1,55 @@
+﻿@section styles {
+    <link rel="stylesheet" href="~/css/user_tickets.css" />
+
+}
+
+<div class="modal fade" id="knowledge" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="ticket-modal1">
+
+                <div class="top_modal d-flex justify-content-between align-items-center mb-4">                   
+                    <h3>Knowledge Base</h3>
+                    <button type="button" class="btn closebtn1" data-bs-dismiss="modal"><i class='bx bx-x bx-sm icon' style="color: #45474B; cursor: pointer;"></i></button>
+                </div>
+
+                <div class="nav_two">                    
+
+                    <div class="filter_button d-flex justify-content-between mb-3">
+
+                        <form>
+                            <div class="input-group w-100">
+                                <button class="btn btn-outline-secondary" type="button" id="button-search" style="background-color: whitesmoke; border: 1px solid #ccc;"><i class='bx bx-search bx-xs bx-fw' style="color: #45474B; cursor: pointer;"></i></button>
+                                <input type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="button-search" style="background-color: whitesmoke; border: 1px solid #ccc;">
+                            </div>
+                        </form>
+
+                        <button type="button" class="btn btn-outline-danger"><i class='bx bx-filter-alt bx-xs bx-fw' style="color: #E21818; cursor: pointer; hover-color: white;"></i>Filter</button>
+
+                    </div>
+
+                </div>
+                
+                <hr class="mb-4" style="border-top: 2px solid black; width: 98%;"/>
+
+                <a href="#" class="link_card" style="text-decoration: none; color: black;">
+                    <div class="article_card" data-bs-toggle="modal" data-bs-target="#detail" style=" display: flex; flex-direction: column; background-color: whitesmoke; padding: 1em; border-radius: 10px;">
+                        <div class="article_top mb-4 d-flex justify-content-between">
+                            <h5>Change Password</h5>
+                            <p>20th Oct</p>
+                        </div>
+
+                        <p class="mb-3" style="font-size: 14px;">Life seasons open have. Air have of. Lights fill after let third darkness replenish fruitful let. Wherein set image. Creepeth said above gathered bring.</p>
+
+                        <h6 class="article_category" style=" color: #2417BA; border: 1px solid #2417BA; width: 10.5%; padding: 0.5em; border-radius: 10px; background-color: rgba(36, 23, 186, 0.2);">
+                            Technical
+                        </h6>
+                    </div>
+                </a>
+                
+           </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("ArticleDetailModal")

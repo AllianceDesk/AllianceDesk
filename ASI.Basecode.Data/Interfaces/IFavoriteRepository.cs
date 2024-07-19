@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace ASI.Basecode.Data.Interfaces
 {
-    public interface IArticleRepository
+    public interface IFavoriteRepository
     {
-        IEnumerable<Article> RetrieveAll();
-        void AddArticle(Article article);
-        void UpdateArticle(Article article);
+        IEnumerable<Favorite> RetrieveAll();
+        void Add(Favorite favorite);
+        void Delete(string articleId);
     }
 }

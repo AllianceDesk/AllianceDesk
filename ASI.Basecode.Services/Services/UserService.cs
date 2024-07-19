@@ -39,6 +39,16 @@ namespace ASI.Basecode.Services.Services
             return user != null ? LoginResult.Success : LoginResult.Failed;
         }
 
+        public int GetLogInUserRole(string userName)
+        {
+            var user = _repository.GetUsers().Where(u => u.Username == userName).FirstOrDefault();
+            if (user != null)
+            {
+                return user.RoleId;
+            }
+            return 0;
+        }
+
         public void AddUser(UserViewModel model)
         {
             var user = new User();
@@ -103,6 +113,11 @@ namespace ASI.Basecode.Services.Services
         public IEnumerable<UserRole> GetUserRoles()
         {
             return _userRoleRepository.RetrieveAll();
+        }
+
+        public IEnumerable<User> GetAllUsers()
+        {
+            return _repository.GetUsers();
         }
 
         public IEnumerable<User> GetUsers()

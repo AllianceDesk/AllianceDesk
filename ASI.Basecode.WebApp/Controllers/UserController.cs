@@ -18,6 +18,7 @@ namespace ASI.Basecode.WebApp.Controllers
     {
         private readonly IUserService _userService;
         private readonly ITicketService _ticketService;
+        private readonly ISessionHelper _sessionHelper;
         /// <summary>
         /// Constructor
         /// </summary>
@@ -31,34 +32,26 @@ namespace ASI.Basecode.WebApp.Controllers
                               IConfiguration configuration,
                               IUserService userService,
                               ITicketService ticketService,
+                              ISessionHelper sessionHelper,
                               IMapper mapper = null) : base(httpContextAccessor, loggerFactory, configuration, mapper)
         {
             this._userService = userService;
             this._ticketService = ticketService;
+            _sessionHelper = sessionHelper;
         }
-
 
         [HttpGet("Tickets")]
         public IActionResult Tickets(string? status)
         {
-            // Replace with User.Identity.Name when authentication is implemented
-            string user = "857949fe-ec30-4c0b-a514-eb0fd9262738";
-            string user2 = "90122701-1c8c-40a4-8936-7717Cfaa9c14";
+/*            // Replace with User.Identity.Name when authentication is implemented
+            string user = "90122701-1c8c-40a4-8936-7717cfaa9c14";*/
 
             var tickets = _ticketService.RetrieveAll();
 
-
             var userTickets = tickets
-                .Where(t => t.CreatorId == user)
+                .Where(t => t.CreatorId == _sessionHelper.GetUserIdFromSession().ToString())
                 .OrderByDescending(t => t.DateCreated)
                 .ToList();
-
-
-            if (userTickets.Count == 0)
-            {
-                Console.WriteLine("No tickets found for user");
-                return NotFound();
-            }
 
             var statuses = _ticketService.GetStatuses()
                                    .Select(c => new SelectListItem
@@ -69,12 +62,12 @@ namespace ASI.Basecode.WebApp.Controllers
                                    .ToList();
 
             var categories = _ticketService.GetCategories()
-                                  .Select(c => new SelectListItem
-                                  {
-                                      Value = c.CategoryId.ToString(),
-                                      Text = c.CategoryName
-                                  })
-                                  .ToList();
+                                      .Select(c => new SelectListItem
+                                      {
+                                          Value = c.CategoryId.ToString(),
+                                          Text = c.CategoryName
+                                      })
+                                      .ToList();
 
             var priorities = _ticketService.GetPriorities()
                                            .Select(p => new SelectListItem
@@ -89,38 +82,30 @@ namespace ASI.Basecode.WebApp.Controllers
             ViewBag.Categories = new SelectList(categories, "Value", "Text");
             ViewBag.Priorities = new SelectList(priorities, "Value", "Text");
 
-            if (!string.IsNullOrEmpty(status))
+            // Check if userTickets is null or empty
+            if (userTickets == null || userTickets.Count == 0)
             {
-                ViewBag.CurrentStatus = status;
-
-                var model = new TicketPageViewModel
-                {
-                    Tickets = userTickets.Where(t => t.StatusId == status),
-                    Ticket = new TicketViewModel() // Initialize a new ticket for the form
-                };
-
-                return View(model);
-            }
-            else
-            {
-                ViewBag.CurrentStatus = "All";
-
-                var model = new TicketPageViewModel
-                {
-                    Tickets = userTickets,
-                    Ticket = new TicketViewModel() // Initialize a new ticket for the form
-                };
-
-                return View(model);
+                Console.WriteLine("No tickets found for user");
+                // Instead of returning NotFound(), return an empty view or handle it accordingly
+                return View("Views/User/Tickets.cshtml", new TicketPageViewModel());
             }
 
+            ViewBag.CurrentStatus = string.IsNullOrEmpty(status) ? "All" : status;
+
+            var model = new TicketPageViewModel
+            {
+                Tickets = string.IsNullOrEmpty(status) ? userTickets : userTickets.Where(t => t.StatusId == status),
+                Ticket = new TicketViewModel() // Initialize a new ticket for the form
+            };
+
+            return View(model);
         }
 
         [HttpPost("Tickets/Create")]
         public IActionResult TicketCreate(TicketViewModel ticket)
         {
             // Replace with User.Identity.Name when authentication is implemented
-            ticket.CreatorId = "857949FE-EC30-4C0B-A514-EB0FD9262738";
+            /*ticket.CreatorId = "857949FE-EC30-4C0B-A514-EB0FD9262738";*/
             _ticketService.Add(ticket);
 
             return RedirectToAction("Tickets");

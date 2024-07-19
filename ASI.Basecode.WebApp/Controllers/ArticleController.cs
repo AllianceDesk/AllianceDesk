@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ASI.Basecode.Services.Services;
+using ASI.Basecode.Data.Interfaces;
 
 
 
@@ -23,6 +24,8 @@ namespace ASI.Basecode.WebApp.Controllers
     {
 
         private readonly IArticleService _articleService;
+        private readonly IFavoriteRepository _favoriteRepository;
+        private readonly ISessionHelper _sessionHelper;
 
         /// <summary>
         /// Constructor
@@ -36,9 +39,13 @@ namespace ASI.Basecode.WebApp.Controllers
             IHttpContextAccessor httpContextAccessor,
                               ILoggerFactory loggerFactory,
                               IConfiguration configuration,
+                              IFavoriteRepository favoriteRepository,
+                              ISessionHelper sessionHelper,
                               IMapper mapper = null) : base(httpContextAccessor, loggerFactory, configuration, mapper)
         {
             _articleService = articleService;
+            _favoriteRepository = favoriteRepository;
+            _sessionHelper = sessionHelper;
         }
 
         /// <summary>
@@ -46,11 +53,64 @@ namespace ASI.Basecode.WebApp.Controllers
         /// </summary>
         /// <returns> Article View </returns>
         [HttpGet ("/KnowledgeBase")]
-        public IActionResult Index()
+        public IActionResult Index(string searchString)
         {
-            var data = _articleService.RetrieveAll();
-            ViewBag.AdminSidebar = "KnowledgeBase";
-            return View(data);
+            ViewBag.AdminSidebar = "Index";
+            var data = _articleService.RetrieveAll()
+                                        .Select(u => new ArticleViewModel
+                                        {
+                                            ArticleId = u.ArticleId,
+                                            Title = u.Title,
+                                            Body = u.Body,
+                                            CategoryNavigation = u.CategoryNavigation,
+                                            DateUpdated = u.DateUpdated,
+                                        })
+                                        .ToList();
+            if (!String.IsNullOrEmpty(searchString)){
+                data = _articleService.RetrieveAll()
+                                        .Where(u =>  u.Title == searchString)
+                                        .Select(u => new ArticleViewModel
+                                        {
+                                            ArticleId = u.ArticleId,
+                                            Title = u.Title,
+                                            Body = u.Body,
+                                            CategoryNavigation = u.CategoryNavigation,
+                                            DateUpdated = u.DateUpdated,
+                                        })
+                                        .ToList();
+            }
+
+            var viewModel = new ArticleViewModel
+            {
+                Articles = data
+            };
+            return View(viewModel);
+        }
+
+        /// <summary>
+        /// Returns Article Favorites View.
+        /// </summary>
+        /// <returns> Article Favorites View </returns>
+        [HttpGet("/KnowledgeBase/MyFavorites")]
+        public IActionResult MyFavorites()
+        {
+            ViewBag.AdminSidebar = "Index";
+            var data = _articleService.RetrieveAll()
+                                        .Select(u => new ArticleViewModel
+                                        {
+                                            ArticleId = u.ArticleId,
+                                            Title = u.Title,
+                                            Body = u.Body,
+                                            CategoryNavigation = u.CategoryNavigation,
+                                            DateUpdated = u.DateUpdated,
+                                        })
+                                        .ToList();
+
+            var viewModel = new ArticleViewModel
+            {
+                Articles = data
+            };
+            return View(viewModel);
         }
 
         /// <summary>
@@ -58,7 +118,7 @@ namespace ASI.Basecode.WebApp.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet ("/KnowledgeBase/Add-Article")]
-        public IActionResult Create()
+        public IActionResult CreateModal()
         {
             var categories = _articleService.GetCategories()
                                    .Select(c => new SelectListItem
@@ -68,16 +128,134 @@ namespace ASI.Basecode.WebApp.Controllers
                                    })
                                    .ToList();
             ViewBag.Categories = new SelectList(categories, "Value", "Text");
-            ViewBag.AdminSidebar = "KnowledgeBase";
-            return View();
+
+            return PartialView("CreateModal");
         }
 
-        [HttpPost]
+        [HttpPost("/KnowledgeBase/Add-Article")]
         public IActionResult PostCreate(ArticleViewModel articleViewModel)
         {
             _articleService.Add(articleViewModel);
             return RedirectToAction("Index");
         }
 
+        [HttpGet ("/KnowledgeBase/Article-Detail")]
+        public IActionResult DetailModal(string articleId)
+        {
+            var articleData = _articleService.RetrieveAll().Where(a => a.ArticleId.ToString() == articleId).FirstOrDefault();
+            var isFavorite = _favoriteRepository.RetrieveAll().Any(f => f.ArticleId.ToString() == articleId && f.UserId.ToString() == _sessionHelper.GetUserIdFromSession().ToString());
+            if (articleData == null)
+            {
+                return NotFound();
+            }
+
+            var viewModel = new ArticleViewModel
+            {
+                ArticleId = articleId,
+                Title = articleData.Title,
+                Body = articleData.Body,
+                UpdatedBy = articleData.UpdatedBy,
+                DateUpdated = articleData.DateUpdated,
+                IsFavorite = isFavorite,
+            };
+
+            return PartialView("DetailModal", viewModel);
+        }
+
+        [HttpGet("/KnowledgeBase/Article-Edit")]
+        public IActionResult EditModal(string articleId)
+        {
+            var articleData = _articleService.RetrieveAll().Where(a => a.ArticleId.ToString() == articleId).FirstOrDefault();
+            if (articleData == null)
+            {
+                return NotFound();
+            }
+
+            var viewModel = new ArticleViewModel
+            {
+                ArticleId = articleData.ArticleId,
+                Title = articleData.Title,
+                Body = articleData.Body,
+                CategoryNavigation = articleData.CategoryNavigation,
+                UpdatedBy = articleData.UpdatedBy,
+                CategoryId = articleData.CategoryId,
+            };
+
+            var categories = _articleService.GetCategories()
+                                   .Select(c => new SelectListItem
+                                   {
+                                       Value = c.CategoryId.ToString(),
+                                       Text = c.CategoryName
+                                   })
+                                   .ToList();
+            ViewBag.Categories = new SelectList(categories, "Value", "Text", viewModel.CategoryId);
+
+            return PartialView("EditModal", viewModel);
+        }
+
+        [HttpPost("/KnowledgeBase/Article-Edit")]
+        public IActionResult PostEditModal(ArticleViewModel article)
+        {
+            if (article == null)
+            {
+                return NotFound();
+            }
+            _articleService.Update(article);
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet("/KnowledgeBase/Article-Delete")]
+        public IActionResult DeleteModal(string articleId)
+        {
+            var articleData = _articleService.RetrieveAll().Where(a => a.ArticleId.ToString() == articleId).FirstOrDefault();
+            if (articleData == null)
+            {
+                return NotFound();
+            }
+
+            var viewModel = new ArticleViewModel
+            {
+                ArticleId= articleData.ArticleId,
+            };
+
+            return PartialView("DeleteModal", viewModel);
+        }
+
+        [HttpPost("/KnowledgeBase/Article-Delete")]
+        public IActionResult PostDeleteModal(ArticleViewModel article)
+        {
+            if (article == null)
+            {
+                return NotFound();
+            }
+            _articleService.Delete(article);
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost("/KnowledgeBase/Article-AddFavorite")]
+        public IActionResult PostAddFavoriteArticle(string articleId)
+        {
+            if (articleId == null)
+            {
+                return NotFound();
+            }
+            _articleService.AddFavorite(articleId);
+
+            return Ok(new { message = "Article added to favorites successfully." });
+        }
+
+        [HttpPost("/KnowledgeBase/Article-DeleteFavorite")]
+        public IActionResult PostDeleteFavoriteArticle(string articleId)
+        {
+            if (articleId == null)
+            {
+                return NotFound();
+            }
+            _articleService.DeleteFavorite(articleId);
+
+            return Ok(new { message = "Article added to favorites successfully." });
+        }
     }
 }

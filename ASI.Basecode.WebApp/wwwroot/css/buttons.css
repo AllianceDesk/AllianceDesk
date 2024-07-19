@@ -14,12 +14,12 @@
 .active-button {
     display: flex;
     align-items: center;
-    padding: 10px 15px;
-    width: 88%;
+    /*padding: 10px 15px;*/
+    /*width: 88%;*/
     background-color: var(--active-button) !important;
     border-radius: 5px;
     color: var(--active-button-text);
-    margin: 20px 10px;
+    /*margin: 20px 10px;*/
     cursor: pointer;
     transition: background-color 0.3s;
     border: none;
@@ -38,12 +38,12 @@
 .inactive-button {
     display: flex;
     align-items: center;
-    padding: 10px 15px;
-    width: 88%;
+   /* padding: 10px 15px;*/
+    /*width: 88%;*/
     background-color: var(--inactive-button);
     border-radius: 5px;
     color: var(--inactive-button-text);
-    margin: 20px 10px;
+    /*margin: 20px 10px;*/
     cursor: pointer;
     transition: background-color 0.3s;
     border: none;

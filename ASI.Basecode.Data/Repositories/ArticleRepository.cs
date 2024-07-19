@@ -23,8 +23,13 @@ namespace ASI.Basecode.Data.Repositories
 
         public void AddArticle(Article article)
         {
-
             this.GetDbSet<Article>().Add(article);
+            UnitOfWork.SaveChanges();
+        }
+
+        public void UpdateArticle(Article article)
+        {
+            this.GetDbSet<Article>().Update(article);
             UnitOfWork.SaveChanges();
         }
 

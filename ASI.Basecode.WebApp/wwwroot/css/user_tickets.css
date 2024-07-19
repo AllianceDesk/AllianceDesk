@@ -379,6 +379,24 @@ main {
     transition: background-color 0.3s;
 }
 
+.button-container1 {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    width: 88%;
+    background-color: var(--active-button);
+    border-radius: 5px;
+    color: var(--active-button-text);
+    margin: 10px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.button-container1 i {
+    margin-right: 10px;
+    font-size: 20px;
+}
+
     #button-container:hover {
         background-color: darken(var(--active-button), 10%);
     }
@@ -391,6 +409,34 @@ main {
     #button-container .label-1 {
         font-size: 16px;
     }
+
+.link_card {
+    text-decoration: none;
+    color: black;
+}
+
+.article_card {
+    display: flex;
+    flex-direction: column;
+    background-color: whitesmoke;
+    padding: 1em;
+    border-radius: 10px;
+}
+
+.article_top {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.article_category {
+    color: #2417BA;
+    border: 1px solid #2417BA;
+    width: 10.5%;
+    padding: 0.5em;
+    border-radius: 10px;
+    background-color: rgba(36, 23, 186, 0.2);
+}
 
 #instruction-container {
     width: 88%;
@@ -468,6 +514,13 @@ hr {
 .button-container:hover,
 .instruction-label:hover {
     background-color: var(--hover-background);
+}
+
+
+/*MODALS*/
+
+.email {
+    font-size: 12px;
 }
 
 

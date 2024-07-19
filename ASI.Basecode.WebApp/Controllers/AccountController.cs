@@ -104,7 +104,20 @@ namespace ASI.Basecode.WebApp.Controllers
                 await this._signInManager.SignInAsync(user);
                 HttpContext.Session.SetString("UserName", user.Username);
                 HttpContext.Session.SetString("UserId", user.UserId.ToString());
-                return RedirectToAction("Index", "Home");
+                int userRole = _userService.GetLogInUserRole(user.Username);
+                if (userRole == 1)
+                {
+                    return RedirectToAction("ViewUser", "Admin");
+                }
+                else if (userRole == 2)
+                {
+                    return RedirectToAction("Dashboard", "Agent");
+                }
+                else if(userRole == 3)
+                {
+                    return RedirectToAction("Tickets", "User");
+                }
+                return View();
             }
             else
             {

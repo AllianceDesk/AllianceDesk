@@ -6,6 +6,7 @@ using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 
 namespace ASI.Basecode.Services.Services
 {
@@ -19,6 +20,7 @@ namespace ASI.Basecode.Services.Services
         private readonly ITicketActivityRepository _ticketActivityRepository;
         private readonly ITicketActivityOperationRepository _ticketActivityOperationRepository;
         private readonly ITicketMessageRepository _ticketMessageRepository;
+        private readonly ISessionHelper _sessionHelper;
         private readonly IMapper _mapper;
 
         public TicketService(
@@ -30,7 +32,8 @@ namespace ASI.Basecode.Services.Services
             ITicketActivityRepository ticketActivityRepository,
             ITicketActivityOperationRepository ticketActivityOperationRepository,
             ITicketMessageRepository ticketMessageRepository,
-            IMapper mapper)
+            IMapper mapper,
+            ISessionHelper sessionHelper)
         {
             _ticketRepository = ticketRepository;
             _userRepository = userRepository;
@@ -41,6 +44,7 @@ namespace ASI.Basecode.Services.Services
             _ticketActivityOperationRepository = ticketActivityOperationRepository;
             _ticketMessageRepository = ticketMessageRepository;
             _mapper = mapper;
+            _sessionHelper = sessionHelper;
         }
 
         public IEnumerable<TicketViewModel> RetrieveAll()
@@ -77,7 +81,7 @@ namespace ASI.Basecode.Services.Services
             newTicket.Title = ticket.Title;
             newTicket.Description = ticket.Description;
             newTicket.DateCreated = DateTime.Now;
-            newTicket.CreatedBy = Guid.Parse(ticket.CreatorId);
+            newTicket.CreatedBy = _sessionHelper.GetUserIdFromSession();
             newTicket.StatusId = 1;
             newTicket.PriorityId = Convert.ToByte(ticket.PriorityId);
             newTicket.CategoryId = Convert.ToByte(ticket.CategoryId);
@@ -215,8 +219,8 @@ namespace ASI.Basecode.Services.Services
             newActivity.OperationId = activity.OperationId;
             newActivity.ModifiedBy = Guid.Parse(activity.ModifiedBy);
             newActivity.ModifiedAt = activity.ModifiedAt;
-            newActivity.OldValue = activity.OldValue;
-            newActivity.NewValue = activity.NewValue;
+            newActivity.Message = activity.message;
+            
 
             _ticketActivityRepository.Add(newActivity);
         }
@@ -237,6 +241,15 @@ namespace ASI.Basecode.Services.Services
                                     });
 
             return activities;
+        }
+
+        public void AssignAgent(string ticketId, string userId)
+        {
+            var existingTicket = _ticketRepository.RetrieveAll().Where(s => s.TicketId.ToString() == ticketId).FirstOrDefault();
+
+            existingTicket.AssignedAgent = Guid.Parse(userId);
+            existingTicket.StatusId = 2;
+            _ticketRepository.Update(existingTicket);
         }
     }
 }

@@ -17,10 +17,23 @@
             <div class="flex-Row justify-content-between align-items-center gap-1">
                 <a asp-controller="Admin" asp-action="Tickets" asp-route-id=""><i class="fa-solid fa-arrow-left"></i></a>
             </div>
-            <div class="flex-Row justify-content-between align-items-center gap-1">
-                <a data-admin-btn class="registerBtn color-white" href="#">Update Priority</a>
-                <a asp-controller="Admin" asp-action="TicketAssignment" asp-route-id="@Model.TicketId" class="registerBtn color-white" >Assign Ticket</a>
-            </div>
+
+            @if(Model.StatusId != "4" && Model.StatusId != "5")
+            {
+                <div class="flex-Row justify-content-between align-items-center gap-1">
+                    <a data-admin-btn class="registerBtn color-white" href="#">Update Priority</a>
+
+                    @if (string.IsNullOrWhiteSpace(Model.AgentName))
+                    {
+                        <a asp-controller="Admin" asp-action="TicketAssignment" asp-route-id="@Model.TicketId" class="registerBtn color-white">Assign Ticket</a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Admin" asp-action="TicketAssignment" asp-route-id="@Model.TicketId" class="registerBtn color-white">Reassign Ticket</a>
+                    }
+                </div>
+            }
+            
         </div>
         <div class="h-29 p-x-1 p-y-1 br-1 bg-white flex flex-col gap-1">
             <h2>@Model.Title</h2>
@@ -34,6 +47,10 @@
             </div>
             <p>@Model.Description</p>
             <button class="registerBtn mbtn-primary align-self-start">@Model.Status</button>
+
+            @if (!string.IsNullOrWhiteSpace(Model.AgentName)) {
+                <button class="registerBtn mbtn-primary align-self-start">@Model.AgentName</button>
+            }
         </div>
     </div>
 </div>
