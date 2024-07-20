@@ -54,13 +54,13 @@ namespace ASI.Basecode.Services.Services
 
         public void Add(ArticleViewModel article)
         {
-            var articleExist = _articleRepository.RetrieveAll().Where(a => a.Title == article.Title && a.Body == article.Body);
+            var articleExist = _articleRepository.RetrieveAll().Any(a => a.Title == article.Title && a.Body == article.Body);
             if (article == null)
             {
                 throw new ArgumentNullException(nameof(article), "ArticleViewModel cannot be null");
             }
-
-            if (articleExist == null)
+            
+            if (!articleExist)
             {
                 var newArticle = new Article();
                 newArticle.ArticleId = Guid.NewGuid();
@@ -110,6 +110,32 @@ namespace ASI.Basecode.Services.Services
             return _categoryRepository.RetrieveAll();
         }
 
+        public IEnumerable<ArticleViewModel> RetrieveFavorites()
+        {
+            var data = _favoriteRepository.RetrieveAll().Where(f => f.UserId == _sessionHelper.GetUserIdFromSession()).Select(s => new ArticleViewModel
+            {
+                ArticleId = s.ArticleId.ToString(),
+                Title = _articleRepository.RetrieveAll().Where(a => a.ArticleId == s.ArticleId).FirstOrDefault().Title,
+                Body = _articleRepository.RetrieveAll().Where(a => a.ArticleId == s.ArticleId).FirstOrDefault().Body,
+                CategoryNavigation = _categoryRepository.RetrieveAll().Where(c => 
+                                    c.CategoryId == _articleRepository.RetrieveAll().Where(a => a.ArticleId == s.ArticleId).FirstOrDefault().CategoryId)
+                                    .FirstOrDefault().CategoryName,
+                DateUpdated = _articleRepository.RetrieveAll().Where(a => a.ArticleId == s.ArticleId).FirstOrDefault().DateUpdated.HasValue ? 
+                                    _articleRepository.RetrieveAll().Where(a => a.ArticleId == s.ArticleId).FirstOrDefault().DateUpdated.Value.ToString("MMM dd yyyy") : string.Empty,
+                UpdatedBy = _userRepository.GetUsers().Where(c => c.UserId == 
+                                    _articleRepository.RetrieveAll().Where(a => a.ArticleId == s.ArticleId)
+                                    .FirstOrDefault().UpdatedBy).FirstOrDefault().Username,
+                CategoryId = _articleRepository.RetrieveAll().Where(a => a.ArticleId == s.ArticleId).FirstOrDefault().CategoryId,
+            });
+
+            return data;
+        }
+
+        public int GetUserFavoriteCount()
+        {
+            return _favoriteRepository.RetrieveAll().Count(a => a.UserId == _sessionHelper.GetUserIdFromSession());
+        }
+
         public void AddFavorite(string articleId)
         {
             var existingFavorite = _favoriteRepository.RetrieveAll().Any(f => f.ArticleId.ToString() == articleId && f.UserId.ToString() == _sessionHelper.GetUserIdFromSession().ToString());
@@ -132,11 +158,6 @@ namespace ASI.Basecode.Services.Services
             {
                 _favoriteRepository.Delete(articleId);
             }
-        }
-
-        public IEnumerable<Article> GetArticles()
-        {
-            return _articleRepository.RetrieveAll();
         }
     }
 }
