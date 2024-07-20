@@ -1,9 +1,10 @@
-﻿@model ASI.Basecode.Services.ServiceModels.TicketViewModel
+﻿@model ASI.Basecode.Services.ServiceModels.UserViewModel
 
 @{
-    ViewData["Title"] = "Tickets";
+    ViewData["Title"] = "Agent Profile";
     Layout = "_Layout"; 
 }
+
 @section styles {
     <link rel="stylesheet" href="~/css/functionalities.css" />
     <link rel="stylesheet" href="~/css/Admin.css" />
@@ -14,16 +15,15 @@
     @Html.Partial("Agent_Sidebar")
     <div class="admin-body p-y-3 relative bg-grey flex flex-col gap-1">
         <div class="modal-admin bg-modal" data-admin-modal-container>
-            <form class="modal-container w-75 br-1 bg-white p-y-1 p-x-2" data-modal-edit-form>
-          
+            <form class="modal-container w-75 br-1 bg-white p-y-1 p-x-2" asp-action="AgentProfile" method="post">
                 <div class="agents-details | margin-1 bg-white flex-Row gap-2 flex-between p-y-1 p-x-1 align-center">
                     <div class="flex flex-col gap-4">
                         <h2>Agent Profile</h2>
                         <div class="flex-Row gap-1">
                             <div class="user-img-profile br-50 bg-grey"></div>
                             <div class="flex-col justify-content-center align-center">
-                                <p class="fw-semi">Agent Name</p>
-                                <p class="text-sm">agentemail@gmail.com</p>
+                                <p class="fw-semi">@Model.Name</p>
+                                <p class="text-sm">@Model.Email</p>
                             </div>
                         </div>
                     </div>
@@ -41,41 +41,36 @@
                 <div class="modal-input-container">
                     <label class="modal-input relative flex">
                         <span>First Name</span>
-                        <input type="text" placeholder="John" />
+                        <input type="text" name="FirstName" value="@Model.Name" placeholder="John" />
                     </label>
                     <label class="modal-input relative flex">
                         <span>Last Name</span>
-                        <input type="text" placeholder="Doe" />
+                        <input type="text" name="LastName" value="@Model.UserName" placeholder="Doe" />
                     </label>
                     <label class="modal-input relative flex">
                         <span>Email</span>
-                        <input type="text" placeholder="johndoe@gmail.com" />
+                        <input type="email" name="Email" value="@Model.Email" placeholder="johndoe@gmail.com" />
                     </label>
-                    
                     <label class="modal-input relative flex">
-                        <select>
-                            <option value="none" selected disabled>Role</option>
-                            <option value="agent">Agent</option>
-                            <option value="admin">Admin</option>
-                            <option value="manager">Manager</option>
+                        <span>Role</span>
+                        <select asp-for="RoleId" asp-items="ViewBag.UserRoles">
+                            <option selected disabled hidden value="">-- Select Role --</option>
                         </select>
+                        <span asp-validation-for="RoleId" class="text-danger"></span>
                     </label>
                     <label class="modal-input relative flex">
                         <span>Password</span>
-                        <input type="password" placeholder="*****" />
+                        <input type="password" name="Password" placeholder="*****" />
                     </label>
                     <label class="modal-input relative flex">
                         <span>Confirm Password</span>
-                        <input typepassword placeholder="*****" />
+                        <input type="password" name="ConfirmPassword" placeholder="*****" />
                     </label>
                 </div>
                 <div class="flex-Row gap-2 w-100 justify-content-center">
-                    <button class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-edit-cancel-btn>Cancel</button>
-                    <button class="mbtn-primary color-white bg-red align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-edit-save-btn>Save</button>
+                    <button type="button" class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-edit-cancel-btn>Cancel</button>
+                    <button type="submit" class="mbtn-primary color-white bg-red align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-edit-save-btn>Save</button>
                 </div>
-
-
-
             </form>
         </div>
     </div>

@@ -71,26 +71,43 @@
         $(document).ready(function () {
             const teams = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
 
-            const teamItems = document.querySelectorAll('[data-team-item]');
-            teamItems.forEach(item => {
-                item.addEventListener('click', () => {
-                    teamItems.forEach(teamItem => {
-                        teamItem.classList.remove('selected-agent');
-                    });
-                    item.classList.add('selected-agent');
-                    const teamId = item.dataset.teamId;
-
-                    const teamActive = teams.find(team => team.Team.TeamId === teamId);
-
-                    if (teamActive) {
-                        const ticketVolume = teamActive.TicketCountsByPriority;
-                        const ticketStatus = teamActive.TicketCountsByStatus;
-                        const ticketCategory = teamActive.TicketCountsByCategory;
-
-                        updateCharts(ticketVolume, ticketStatus, ticketCategory);
-                    }
+            console.log("TEAMS", teams)
+            function renderTeams(teamsToRender) {
+                const teamsList = document.getElementById('teams-list');
+                teamsList.innerHTML = '';
+                teamsToRender.forEach(team => {
+                    const teamDiv = document.createElement('div');
+                    teamDiv.classList.add('flex-Row', 'bg-White', 'cursor-pointer', 'p-x-1', 'p-y-0-5', 'gap-2', 'align-items-center');
+                    teamDiv.dataset.teamId = team.Team.TeamId;
+                    teamDiv.dataset.teamItem = '';
+                    teamDiv.innerHTML = `
+                            <div class="p-y-1 p-x-1 br-50 bg-grey"></div>
+                            <h6 class="H6">${team.Team.TeamName}</h6>
+                        `;
+                    teamsList.appendChild(teamDiv);
                 });
-            });
+
+                const teamItems = document.querySelectorAll('[data-team-item]');
+                teamItems.forEach(item => {
+                    item.addEventListener('click', () => {
+                        teamItems.forEach(teamItem => {
+                            teamItem.classList.remove('selected-agent');
+                        });
+                        item.classList.add('selected-agent');
+                        const teamId = item.dataset.teamId;
+
+                        const teamActive = teams.find(team => team.Team.TeamId === teamId);
+
+                        if (teamActive) {
+                            const ticketVolume = teamActive.TicketCountsByPriority;
+                            const ticketStatus = teamActive.TicketCountsByStatus;
+                            const ticketCategory = teamActive.TicketCountsByCategory;
+
+                            updateCharts(ticketVolume, ticketStatus, ticketCategory);
+                        }
+                    });
+                });
+            }
 
             function updateCharts(ticketVolume, ticketStatus, ticketCategory) {
                 // Update Line Chart
@@ -121,6 +138,18 @@
                 ];
                 categoryChart.update();
             }
+
+            // Initial rendering
+            renderTeams(Object.values(teams));
+
+            const searchInput = document.getElementById('team-search-input');
+            searchInput.addEventListener('input', () => {
+                const searchTerm = searchInput.value.toLowerCase();
+                const filteredTeams = Object.values(teams).filter(team =>
+                    team.Team.TeamName.toLowerCase().includes(searchTerm)
+                );
+                renderTeams(filteredTeams);
+            });
 
             // Placeholder initial values
             const initialTicketVolume = { "1star": 5, "2star": 10, "3star": 15, "4star": 12, "5star": 16 };
@@ -179,4 +208,5 @@
             }
         });
     </script>
+
 }

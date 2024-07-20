@@ -15,25 +15,34 @@
 
         <div class="mr-20 hover-pointer" style="position: relative">           
 
-            <div class="dp">                                
+            <div data-agent-header class="dp">
                 <img src="~/img/profile-logo.png" class="dpicn hover-pointer" alt="dp">           
             </div>
 
-            <div class="dropdown absolute" >
-                <ul>               
-                        <li>
-                            <a asp-action="AgentProfile" asp-controller="Agent" class="flex flex-Row align-items-center gap-2">
-                                <i class="bx bx-user bx-xs bx-fw" style="color: #3D3B40;"></i>
-                                <p>Profile</p>
-                             </a>
-                        </li>
-                    <li>
+            <div data-agent-settings class="hidden absolute" style="top:2rem; left:-5rem; background: white; z-index: 10; border: 1px solid black; border-radius: 3px; padding: 0.5rem 1rem;">
+                           
+                    <div>
+                        <a asp-action="AgentProfile" asp-controller="Agent" class="flex flex-Row align-items-center gap-2">
+                            <i class="bx bx-user bx-xs bx-fw" style="color: #3D3B40;"></i>
+                            <p class="text-black-50">Profile</p>
+                            </a>
+                    </div>
+                    <div>
                         <i class="bx bx-log-out bx-xs bx-fw" style="color: #3D3B40;"></i>
-                        <a asp-action="SignOutUser" asp-controller="Account">Logout</a>
-                    </li>
-                </ul>
+                    <a asp-action="SignOutUser" asp-controller="Account" class="text-black-50">Logout</a>
+                    </div>
+               
             </div>
 
         </div>
     </div>
 </header>
+
+<script>
+    const agentHeader = document.querySelector("[data-agent-header]")
+    const agentSettings = document.querySelector("[data-agent-settings]")
+
+    agentHeader.addEventListener("click", () => {
+        agentSettings.classList.toggle("hidden")
+    })
+</script>

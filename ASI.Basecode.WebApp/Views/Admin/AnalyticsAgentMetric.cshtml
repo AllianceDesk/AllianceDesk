@@ -50,7 +50,7 @@
                     @foreach (var item in Model)
                     {
                         <div class="flex-Row bg-White cursor-pointer p-x-1 p-y-0-5 gap-1 align-items-center"
-                             data-team-id="@item.Agent.UserId"
+                             data-user-id="@item.Agent.UserId"
                              data-team-item="">
                             <div class="p-y-1 p-x-1 br-50 bg-grey"></div>
                             <h6 class="H6">@item.Agent.Name</h6>
@@ -98,155 +98,110 @@
 
 
 @section scripts {
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        const ctx = document.getElementById('LineTicketVolumeMetric').getContext('2d');
+        $(document).ready(function () {
+            const teams = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
 
-        // const teams = [ 
-        //     {
-        //         id: "goku",
-        //         userName: "goku",
-        //         role: "IT SUPPORT",
-        //         ticketVolume: {
-        //             total: 50,
-        //             star_1: 5,
-        //             star_2: 0,
-        //             star_3: 15,
-        //             star_4: 25,
-        //             star_5: 5,
-        //         },
-        //         ticketStatus: {
-        //             total: 50,
-        //             open: 5,
-        //             resolved: 10,
-        //             inProgress: 25,
-        //             closed: 15
-        //         },
-        //         ticketCategory: {
-        //             total: 50,
-        //             technical: 15,
-        //             billing: 25,
-        //             generalInquiry: 5,
-        //             others: 15,
-        //         }
-        //     },
-        //     {
-        //         id: "gon",
-        //         userName: "gon",
-        //         role: "IT SUPPORT",
-        //         ticketVolume: {
-        //             total: 50,
-        //             star_1: 15,
-        //             star_2: 10,
-        //             star_3: 5,
-        //             star_4: 15,
-        //             star_5: 5,
-        //         },
-        //         ticketStatus: {
-        //             total: 50,
-        //             open: 7,
-        //             resolved: 20,
-        //             inProgress: 8,
-        //             closed: 15
-        //         },
-        //         ticketCategory: {
-        //             total: 50,
-        //             technical: 8,
-        //             billing: 20,
-        //             generalInquiry: 15,
-        //             others: 7,
-        //         }
-        //     }
-        // ]
+            console.log("TEAMS", teams)
+            function renderTeams(teamsToRender) {
+                const teamsList = document.getElementById('teams-list');
+                teamsList.innerHTML = '';
+                teamsToRender.forEach(team => {
+                    const teamDiv = document.createElement('div');
+                    teamDiv.classList.add('flex-Row', 'bg-White', 'cursor-pointer', 'p-x-1', 'p-y-0-5', 'gap-2', 'align-items-center');
+                    teamDiv.dataset.userId = team.Agent.UserId;
+                    teamDiv.dataset.teamItem = '';
+                    teamDiv.innerHTML = `
+                                    <div class="p-y-1 p-x-1 br-50 bg-grey"></div>
+                                            <h6 class="H6">${team.Agent.Name}</h6>
+                                `;
+                    teamsList.appendChild(teamDiv);
+                });
 
-        // const teamsList = document.getElementById('teams-list');
+                const teamItems = document.querySelectorAll('[data-team-item]');
+                teamItems.forEach(item => {
+                    item.addEventListener('click', () => {
+                        teamItems.forEach(teamItem => {
+                            teamItem.classList.remove('selected-agent');
+                        });
+                        item.classList.add('selected-agent');
 
-        // function renderTeams(teamsToRender) {
-        //     teamsList.innerHTML = '';
-        //     teamsToRender.forEach(team => {
-        //         const teamDiv = document.createElement('div');
-        //         teamDiv.classList.add('flex-Row', 'bg-White', 'justify-content-between', 'cursor-pointer', 'p-x-1', 'p-y-0-5', 'gap-1', 'align-items-center');
-        //         teamDiv.dataset.teamId = team.id;
-        //         teamDiv.dataset.teamItem = '';
-        //         teamDiv.innerHTML = `
-        //                                 <div class="p-y-1 p-x-1 br-50 bg-grey"></div>
-        //                                         <h6 class="H6">${team.userName}</h6>
-        //                                 <div class="role-container role-agent fw-semi text-0-5 text-sm">${team.role}</div>
-        //                             `;
-        //         teamsList.appendChild(teamDiv);
-        //     });
+                        console.log("ITEM", item)
+                        const userId = item.dataset.userId;
+                        console.log("User ID", userId)
+                        const teamActive = teams.find(team => team.Agent.UserId === userId);
+                        console.log("TEAM ACTIVE", teamActive)
+                        if (teamActive) {
+                            const ticketVolume = teamActive.TicketCountsByPriority;
+                            const ticketStatus = teamActive.TicketCountsByStatus;
+                            const ticketCategory = teamActive.TicketCountsByCategory;
 
+                            updateCharts(ticketVolume, ticketStatus, ticketCategory);
+                        }
+                    });
+                });
+            }
 
-        //     const teamItems = document.querySelectorAll('[data-team-item]');
-        //     teamItems.forEach(item => {
-        //         item.addEventListener('click', () => {
-        //             teamItems.forEach(teamItem => {
-        //                 teamItem.classList.remove('selected-agent');
-        //             });
-        //             item.classList.add('selected-agent');
-        //             const teamId = item.dataset.teamId;
+            function updateCharts(ticketVolume, ticketStatus, ticketCategory) {
+                // Update Line Chart
+                lineChart.data.datasets[0].data = [
+                    ticketVolume["1star"] || 0,
+                    ticketVolume["2star"] || 0,
+                    ticketVolume["3star"] || 0,
+                    ticketVolume["4star"] || 0,
+                    ticketVolume["5star"] || 0
+                ];
+                lineChart.update();
 
-        //             const teamActive = Object.values(teams).find(team => team.id === teamId);
+                // Update Status Chart
+                statusChart.data.datasets[0].data = [
+                    ticketStatus["Open"] || 0,
+                    ticketStatus["Resolved"] || 0,
+                    ticketStatus["In Progress"] || 0,
+                    ticketStatus["Closed"] || 0
+                ];
+                statusChart.update();
 
-        //             console.log("teamActive", teamActive);
-        //             console.log('Clicked team ID:', teamId);
+                // Update Category Chart
+                categoryChart.data.datasets[0].data = [
+                    ticketCategory["Technical"] || 0,
+                    ticketCategory["Billing"] || 0,
+                    ticketCategory["General Inquiry"] || 0,
+                    ticketCategory["Others"] || 0
+                ];
+                categoryChart.update();
+            }
 
-        //             tm1star = teamActive.ticketVolume.star_1;
-        //             tm2star = teamActive.ticketVolume.star_2;
-        //             tm3star = teamActive.ticketVolume.star_3;
-        //             tm4star = teamActive.ticketVolume.star_4;
-        //             tm5star = teamActive.ticketVolume.star_5;
+            // Initial rendering
+            renderTeams(Object.values(teams));
 
-        //             aomClosed = teamActive.ticketStatus.closed;
-        //             aomOpen = teamActive.ticketStatus.open;
-        //             aomInProgress = teamActive.ticketStatus.inProgress;
-        //             aomResolved = teamActive.ticketStatus.resolved;
+            const searchInput = document.getElementById('team-search-input');
+            searchInput.addEventListener('input', () => {
+                const searchTerm = searchInput.value.toLowerCase();
+                const filteredTeams = Object.values(teams).filter(team =>
+                    team.Agent.Name.toLowerCase().includes(searchTerm)
+                );
+                renderTeams(filteredTeams);
+            });
 
-        //             aomTechnical = teamActive.ticketCategory.technical;
-        //             aomBilling = teamActive.ticketCategory.billing;
-        //             aomGeneralInquiry = teamActive.ticketCategory.generalInquiry;
-        //             aomOthers = teamActive.ticketCategory.others;
+            // Placeholder initial values
+            const initialTicketVolume = { "1star": 5, "2star": 10, "3star": 15, "4star": 12, "5star": 16 };
+            const initialTicketStatus = { "Open": 0, "Resolved": 10, "In Progress": 15, "Closed": 16 };
+            const initialTicketCategory = { "Technical": 5, "Billing": 10, "General Inquiry": 15, "Others": 16 };
 
-        //             updateCharts();
-        //         });
-        //     });
-        // }
-
-        // renderTeams(Object.values(teams));
-
-        const searchInput = document.getElementById('team-search-input');
-        searchInput.addEventListener('input', () => {
-            const searchTerm = searchInput.value.toLowerCase();
-            const filteredTeams = Object.values(teams).filter(team =>
-                team.userName.toLowerCase().includes(searchTerm)
-            );
-            renderTeams(filteredTeams);
+            // Initial chart rendering
+            updateCharts(initialTicketVolume, initialTicketStatus, initialTicketCategory);
         });
 
-
-        let aomClosed = document.querySelector('[data-aom-closed]').textContent.trim()
-        let aomOpen = document.querySelector('[data-aom-open]').textContent.trim()
-        let aomInProgress = document.querySelector('[data-aom-inprogress]').textContent.trim()
-        let aomResolved = document.querySelector('[data-aom-resolved]').textContent.trim()
-
-        let aomTechnical = document.querySelector('[data-aom-technical]').textContent.trim()
-        let aomBilling = document.querySelector('[data-aom-billing]').textContent.trim()
-        let aomGeneralInquiry = document.querySelector('[data-aom-generalInquiry]').textContent.trim()
-        let aomOthers = document.querySelector('[data-aom-others]').textContent.trim()
-
-        let tm1star = document.querySelector('[data-tm-1star]').textContent.trim()
-        let tm2star = document.querySelector('[data-tm-2star]').textContent.trim()
-        let tm3star = document.querySelector('[data-tm-3star]').textContent.trim()
-        let tm4star = document.querySelector('[data-tm-4star]').textContent.trim()
-        let tm5star = document.querySelector('[data-tm-5star]').textContent.trim()
-
+        const ctx = document.getElementById('LineTicketVolumeMetric').getContext('2d');
         const lineChart = new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: ['1star', '2star', '3star', '4star', '5star'],
                 datasets: [{
-                    data: [tm1star, tm2star, tm3star, tm4star, tm5star],
+                    data: [],
                     label: "Ticket Volume",
                     borderWidth: 1,
                     borderColor: 'rgba(75, 192, 192, 1)',
@@ -270,7 +225,7 @@
             data: {
                 labels: ['Open', 'Resolved', 'In Progress', 'Closed'],
                 datasets: [{
-                    data: [aomOpen, aomResolved, aomInProgress, aomClosed], // Replace with your actual data
+                    data: [],
                     backgroundColor: ['#40A6D8', '#6DB971', '#E68F36', '#DA5D5B']
                 }]
             }
@@ -282,34 +237,11 @@
             data: {
                 labels: ['Technical', 'Billing', 'General Inquiry', 'Others'],
                 datasets: [{
-                    data: [aomTechnical, aomBilling, aomGeneralInquiry, aomOthers], // Replace with your actual data
+                    data: [],
                     backgroundColor: ['#40A6D8', '#E68F36', '#6DB971', '#DA5D5B']
                 }]
             }
         });
-
-        const pieChartPriority = document.getElementById('pieChartPriority').getContext('2d');
-        const priorityChart = new Chart(pieChartPriority, {
-            type: 'doughnut',
-            data: {
-                labels: ['Low', 'High', 'Medium', 'Urgent'],
-                datasets: [{
-                    data: [aomLow, aomMedium, aomHigh, aomUrgent], // Replace with your actual data
-                    backgroundColor: ['#40A6D8', '#6DB971', '#E68F36', '#DA5D5B']
-                }]
-            }
-        });
-
-        function updateCharts() {
-            lineChart.data.datasets[0].data = [tm1star, tm2star, tm3star, tm4star, tm5star];
-            lineChart.update();
-
-            categoryChart.data.datasets[0].data = [aomTechnical, aomBilling, aomGeneralInquiry, aomOthers]
-            categoryChart.update();
-
-            statusChart.data.datasets[0].data = [aomOpen, aomResolved, aomInProgress, aomClosed]
-            statusChart.update();
-        }
     </script>
 
  

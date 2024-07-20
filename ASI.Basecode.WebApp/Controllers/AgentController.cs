@@ -77,9 +77,40 @@ namespace ASI.Basecode.WebApp.Controllers
         [AllowAnonymous]
         public ActionResult AgentProfile()
         {
- 
-            return this.View();
+            var userId = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userId))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var user = _userService.GetUserById(Guid.Parse(userId).ToString());
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var userRoles = _userService.GetUserRoles()
+                                        .Select(u => new SelectListItem
+                                        {
+                                            Value = u.RoleId.ToString(),
+                                            Text = u.RoleName
+                                        })
+                                        .ToList();
+
+            ViewBag.UserRoles = userRoles;
+
+            var viewModel = new UserViewModel
+            {
+                UserId = user.UserId.ToString(),
+                Name = user.Name,
+                Email = user.Email,
+                RoleId = user.RoleId
+            };
+
+            return View(viewModel);
         }
+
+
 
         [HttpGet("PerformanceReport")]
         [AllowAnonymous]
