@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ASI.Basecode.Data.Models;
 using ASI.Basecode.Services.ServiceModels;
+using ASI.Basecode.Services.Services;
 
 
 namespace ASI.Basecode.Services.Interfaces
@@ -9,6 +10,9 @@ namespace ASI.Basecode.Services.Interfaces
     public interface ITicketService
     {
         IEnumerable<TicketViewModel> RetrieveAll();
+        IEnumerable<TicketViewModel> GetUserTickets(Guid id);
+        IEnumerable<TicketViewModel> GetAgentTickets(Guid id);
+        
         void Add(TicketViewModel ticket);
         void Update(TicketViewModel ticket);
         void Delete(string id);
@@ -20,7 +24,7 @@ namespace ASI.Basecode.Services.Interfaces
         Category GetCategoryById(byte id);
         TicketPriority GetPriorityById(byte id);
         TicketStatus GetStatusById(byte id);
-
+       
         void SendMessage(TicketMessageViewModel message);
         IEnumerable<TicketActivityViewModel> GetHistory(string id);
         IEnumerable<TicketMessageViewModel> GetMessages(string id);

@@ -41,5 +41,10 @@ namespace ASI.Basecode.Data.Repositories
         {
             return this.GetDbSet<TicketActivity>().Where(x => x.TicketId == ticketId);
         }
+
+        public IEnumerable<TicketActivity> GetActivitiesByTicketIds(List<Guid> ticketId)
+        {
+            return this.GetDbSet<TicketActivity>().Where(x => ticketId.Contains(x.TicketId));
+        }
     }
 }

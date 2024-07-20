@@ -46,7 +46,6 @@ namespace ASI.Basecode.WebApp.Controllers
             
             var tickets = _ticketService.GetUserTickets(_sessionHelper.GetUserIdFromSession());
 
-
             // Replace this later to retrieve from the user preferences
             var pageSize = 5;
 
@@ -64,22 +63,22 @@ namespace ASI.Basecode.WebApp.Controllers
 
             if (!string.IsNullOrEmpty(status) && status != "All")
             {
-                userTickets = userTickets.Where(t => t.StatusId == status);
+                tickets = tickets.Where(t => t.StatusId == status);
             }
 
             if (!string.IsNullOrEmpty(searchTerm))
             {
-                userTickets = userTickets.Where(t => t.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+                tickets = tickets.Where(t => t.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
                                                      t.Description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
             }
 
             var CurrentPage = page ?? 1;
-            var count = userTickets.Count();
+            var count = tickets.Count();
 
 
-            if (Math.Ceiling(userTickets.Count() / (double)pageSize) > 1)
+            if (Math.Ceiling(tickets.Count() / (double)pageSize) > 1)
             {
-                userTickets = userTickets.Skip((CurrentPage - 1) * pageSize)
+                tickets = tickets.Skip((CurrentPage - 1) * pageSize)
                                          .Take(pageSize)
                                          .ToList();
             }
@@ -87,7 +86,7 @@ namespace ASI.Basecode.WebApp.Controllers
             
             var model = new UserTicketsViewModel
             {
-                Tickets = userTickets,
+                Tickets = tickets,
                 Ticket = new TicketViewModel(),
                 CurrentPage = CurrentPage,
                 TotalPages = (int)Math.Ceiling(count / (double)pageSize),
