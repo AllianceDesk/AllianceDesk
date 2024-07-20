@@ -21,5 +21,10 @@ namespace ASI.Basecode.Data.Repositories
         {
             return this.GetDbSet<Category>();
         }
+
+        public Category GetCategoryById(byte categoryId)
+        {
+            return this.GetDbSet<Category>().FirstOrDefault(x => x.CategoryId == categoryId);
+        }
     }
 }

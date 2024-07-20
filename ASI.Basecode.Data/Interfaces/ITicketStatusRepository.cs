@@ -6,5 +6,6 @@ namespace ASI.Basecode.Data.Interfaces
     public interface ITicketStatusRepository
     {
         IEnumerable<TicketStatus> RetrieveAll();
+        TicketStatus GetStatusById(byte statusId);
     }
 }

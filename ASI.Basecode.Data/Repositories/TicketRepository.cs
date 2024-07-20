@@ -43,5 +43,10 @@ namespace ASI.Basecode.Data.Repositories
                 UnitOfWork.SaveChanges();
             }
         }
+
+        public Ticket GetTicketById(Guid id)
+        {
+            return this.GetDbSet<Ticket>().FirstOrDefault(x => x.TicketId == id);
+        }
     }
 }
