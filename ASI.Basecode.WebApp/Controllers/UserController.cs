@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ASI.Basecode.WebApp.Controllers
@@ -42,41 +43,24 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpGet("Tickets")]
         public IActionResult Tickets(string? status, int? page, string? searchTerm)
         {
+            
+            var tickets = _ticketService.GetUserTickets(_sessionHelper.GetUserIdFromSession());
 
-            var tickets = _ticketService.RetrieveAll();
-
-            var userTickets = tickets
-                .Where(t => t.CreatorId == _sessionHelper.GetUserIdFromSession().ToString())
-                .OrderByDescending(t => t.DateCreated)
-                .AsEnumerable();
 
             // Replace this later to retrieve from the user preferences
             var pageSize = 5;
 
             var statuses = _ticketService.GetStatuses()
-                                   .Select(c => new SelectListItem
-                                   {
-                                       Value = c.StatusId.ToString(),
-                                       Text = c.StatusName
-                                   })
-                                   .ToList();
+                .Select(c => new KeyValuePair<string, string>(c.StatusId.ToString(), c.StatusName))
+                .ToList();
 
             var categories = _ticketService.GetCategories()
-                                      .Select(c => new SelectListItem
-                                      {
-                                          Value = c.CategoryId.ToString(),
-                                          Text = c.CategoryName
-                                      })
-                                      .ToList();
+                .Select(c => new KeyValuePair<string, string>(c.CategoryId.ToString(), c.CategoryName))
+                .ToList();
 
             var priorities = _ticketService.GetPriorities()
-                                           .Select(p => new SelectListItem
-                                           {
-                                               Value = p.PriorityId.ToString(),
-                                               Text = p.PriorityName
-                                           })
-                                           .ToList();
-
+                .Select(p => new KeyValuePair<string, string>(p.PriorityId.ToString(), p.PriorityName))
+                .ToList();
 
             if (!string.IsNullOrEmpty(status) && status != "All")
             {
@@ -100,19 +84,18 @@ namespace ASI.Basecode.WebApp.Controllers
                                          .ToList();
             }
 
-            // Pass data to ViewBag
-            ViewBag.Statuses = new SelectList(statuses, "Value", "Text");
-            ViewBag.Categories = new SelectList(categories, "Value", "Text");
-            ViewBag.Priorities = new SelectList(priorities, "Value", "Text");
-            ViewBag.CurrentStatus = string.IsNullOrEmpty(status) ? "All" : status;
-            ViewBag.CurrentPage = CurrentPage;
-            ViewBag.TotalPages = Math.Ceiling(count / (double)pageSize);
-            ViewBag.CurrentSearchTerm = searchTerm;
-
-            var model = new UserTicketViewModel
+            
+            var model = new UserTicketsViewModel
             {
                 Tickets = userTickets,
                 Ticket = new TicketViewModel(),
+                CurrentPage = CurrentPage,
+                TotalPages = (int)Math.Ceiling(count / (double)pageSize),
+                CurrentStatus = string.IsNullOrEmpty(status) ? "All" : status,
+                CurrentSearchTerm = string.IsNullOrEmpty(searchTerm) ? "" : searchTerm,
+                Statuses = statuses,
+                Categories = categories,
+                Priorities = priorities
             };
 
             return View(model);
@@ -183,7 +166,7 @@ namespace ASI.Basecode.WebApp.Controllers
 
 
         [HttpPost("Tickets/{id}/Edit"), ActionName("TicketEdit")]
-        public IActionResult TicketEditPost(string id, UserTicketViewModel model)
+        public IActionResult TicketEditPost(string id, UserTicketsViewModel model)
         {
             var ticket = _ticketService.GetById(id); // Ensure this matches with the ID being passed
             if (ticket == null)
