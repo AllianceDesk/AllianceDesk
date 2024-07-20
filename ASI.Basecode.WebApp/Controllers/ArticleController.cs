@@ -57,6 +57,7 @@ namespace ASI.Basecode.WebApp.Controllers
         {
             ViewBag.AdminSidebar = "Index";
             ViewBag.SearchString = searchString;
+
             var data = _articleService.RetrieveAll()
                                         .Select(u => new ArticleViewModel
                                         {
@@ -96,7 +97,7 @@ namespace ASI.Basecode.WebApp.Controllers
         public IActionResult MyFavorites()
         {
             ViewBag.AdminSidebar = "Index";
-            var data = _articleService.RetrieveAll()
+            var data = _articleService.RetrieveFavorites()
                                         .Select(u => new ArticleViewModel
                                         {
                                             ArticleId = u.ArticleId,
