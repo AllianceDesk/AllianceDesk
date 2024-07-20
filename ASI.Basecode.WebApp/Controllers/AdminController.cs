@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using System.Linq;
 using System;
 using System.Collections.Generic;
+using ASI.Basecode.Data.Models;
 
 namespace ASI.Basecode.WebApp.Controllers
 {
@@ -20,6 +21,7 @@ namespace ASI.Basecode.WebApp.Controllers
     {
         private readonly IUserService _userService;
         private readonly ITicketService _ticketService;
+        private readonly ISessionHelper _sessionHelper;
         
         /// <summary>
         /// Constructor
@@ -34,12 +36,22 @@ namespace ASI.Basecode.WebApp.Controllers
                               IConfiguration configuration,
                               IUserService userService,
                               ITicketService ticketService,
+                              ISessionHelper sessionHelper,
                               IMapper mapper = null) : base(httpContextAccessor, loggerFactory, configuration, mapper)
         {
             this._userService = userService;
             this._ticketService = ticketService;
+            this._sessionHelper = sessionHelper;
         }
 
+        [HttpGet("/Dashboard")]
+        [AllowAnonymous]
+        public ActionResult Dashboard()
+        {
+            ViewBag.Name = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).Name;
+            ViewBag.AdminSidebar = "Overview";
+            return this.View();
+        }
 
         [HttpGet("AnalyticsOverallMetrics")]
         [AllowAnonymous]
@@ -75,7 +87,7 @@ namespace ASI.Basecode.WebApp.Controllers
                 priority => weeklyTickets.Count(t => t.Priority == priority.PriorityName)
             );
 
-            var model = new OverallTicketCountViewModel
+            var model = new OverAllTicketCountViewModel
             {
                 TicketCountsByCategory = ticketCountsByCategory,
                 TicketCountsByStatus = ticketCountsByStatus,
@@ -286,14 +298,25 @@ namespace ASI.Basecode.WebApp.Controllers
         /// </summary>
         /// <returns> User Details</returns>
         /// 
-        public IActionResult UserDetails(string id)
+        public IActionResult UserDetails(string userId)
         {
-            var data = _userService.GetAllUsers().Where(x => x.UserId.ToString() == UserId).FirstOrDefault();
-            var team = _userService.GetTeams().Where(t => t.TeamId.Equals(data.TeamId)).FirstOrDefault();
+            var data = _userService.GetAllUsers().Where(x => x.UserId.ToString() == userId).FirstOrDefault();
+            if (data == null)
+            {
+                return NotFound();
+            }
+
+            var team = new TeamViewModel();
+
+            if (data.TeamId != null)
+            {
+                team = _userService.GetTeams().Where(t => t.TeamId == data.TeamId.ToString()).FirstOrDefault();
+            }
+            
 
             var userModel = new UserViewModel
             {
-                UserId = id,
+                UserId = userId,
                 Name = data.Name,
                 Email = data.Email,
                 RoleId = data.RoleId,
@@ -331,6 +354,7 @@ namespace ASI.Basecode.WebApp.Controllers
             // Pass data to ViewBag
             ViewBag.Teams = new SelectList(teams, "Value", "Text");
             ViewBag.UserRoles = new SelectList(userRoles, "Value", "Text");
+            ViewBag.Password = _userService.GeneratePassword();
 
             return PartialView("AddUser");
         }
@@ -354,7 +378,7 @@ namespace ASI.Basecode.WebApp.Controllers
         /// </summary>
         /// <returns> User Details</returns>
         /// 
-        public IActionResult UserEdit(string UserId)
+        public IActionResult UserEdit(string UserId, bool resetPassword)
         {
             // Fetch user data
             var user = _userService.GetAllUsers().FirstOrDefault(x => x.UserId.ToString() == UserId);
@@ -371,10 +395,15 @@ namespace ASI.Basecode.WebApp.Controllers
                 Email = user.Email,
                 Password = PasswordManager.DecryptPassword(user.Password),
                 RoleId = user.RoleId,
-                TeamId = user.TeamId.ToString(),
-                RoleName = _userService.GetUserRoles().FirstOrDefault(r => r.RoleId == user.RoleId)?.RoleName,
+                TeamId = user.TeamId?.ToString(),
+                RoleName = _userService.GetUserRoles().FirstOrDefault(r => r.RoleId == user.RoleId).RoleName,
                 TeamName = _userService.GetTeams().FirstOrDefault(t => t.TeamId == user.TeamId.ToString())?.TeamName
             };
+
+            if (resetPassword)
+            {
+                userModel.Password = _userService.GeneratePassword();
+            }
 
             var teams = _userService.GetTeams()
                                    .Select(t => new SelectListItem
@@ -395,6 +424,7 @@ namespace ASI.Basecode.WebApp.Controllers
             // Pass data to ViewBag
             ViewBag.Teams = new SelectList(teams, "Value", "Text", userModel.TeamId);
             ViewBag.UserRoles = new SelectList(userRoles, "Value", "Text", userModel.RoleId);
+            ViewBag.ResetPassword = false;
 
             return PartialView("UserEdit", userModel);
         }

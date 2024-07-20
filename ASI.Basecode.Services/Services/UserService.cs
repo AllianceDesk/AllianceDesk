@@ -5,11 +5,13 @@ using ASI.Basecode.Services.Interfaces;
 using ASI.Basecode.Services.Manager;
 using ASI.Basecode.Services.ServiceModels;
 using AutoMapper;
+using NetTopologySuite.Algorithm;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
+using System.Text;
 using static ASI.Basecode.Resources.Constants.Enums;
 
 namespace ASI.Basecode.Services.Services
@@ -20,6 +22,7 @@ namespace ASI.Basecode.Services.Services
         private readonly IUserRoleRepository _userRoleRepository;
         private readonly ITeamRepository _teamRepository;
         private readonly IMapper _mapper;
+        private static readonly Random Random = new Random();
 
         public UserService(IUserRepository repository, IMapper mapper, IUserRoleRepository userRoleRepository, ITeamRepository teamRepository)
         {
@@ -84,7 +87,15 @@ namespace ASI.Basecode.Services.Services
                 existingData.Password = PasswordManager.EncryptPassword(model.Password);
                 existingData.Email = model.Email;
                 existingData.RoleId = model.RoleId;
-                existingData.TeamId = Guid.Parse(model.TeamId);
+                if (!string.IsNullOrEmpty(model.TeamId))
+                {
+                    existingData.TeamId = Guid.Parse(model.TeamId);
+                }
+                else
+                {
+                    // Handle the case where model.TeamId is null or empty
+                    existingData.TeamId = null; // or set a default value if appropriate
+                }
 
                 _repository.UpdateUser(existingData);
             }
@@ -145,6 +156,33 @@ namespace ASI.Basecode.Services.Services
             var teams = _teamRepository.RetrieveAll().ToList();
 
             return _mapper.Map<IEnumerable<TeamViewModel>>(teams);
+        }
+
+        public string GeneratePassword()
+        {
+            int length = 8;
+            const string lowerCase = "abcdefghijklmnopqrstuvwxyz";
+            const string upperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            const string digits = "1234567890";
+            const string symbols = ".!@#$%^&*()";
+            const string allChars = lowerCase + upperCase + digits + symbols;
+
+            var password = new StringBuilder();
+
+            // Ensure at least one character from each required set
+            password.Append(lowerCase[Random.Next(lowerCase.Length)]);
+            password.Append(upperCase[Random.Next(upperCase.Length)]);
+            password.Append(symbols[Random.Next(symbols.Length)]);
+            password.Append(digits[Random.Next(digits.Length)]);
+
+            // Fill the remaining characters with random characters from allChars
+            for (int i = password.Length; i < length; i++)
+            {
+                password.Append(allChars[Random.Next(allChars.Length)]);
+            }
+
+            // Shuffle the password to ensure randomness
+            return new string(password.ToString().ToCharArray().OrderBy(s => (Random.Next(2) % 2) == 0).ToArray());
         }
     }
 }

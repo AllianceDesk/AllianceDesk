@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ASI.Basecode.Services.ServiceModels
 {
-    public class OverallTicketCountViewModel
+    public class OverAllTicketCountViewModel
     {
         public Dictionary<string, int> TicketCountsByCategory { get; set; }
         public Dictionary<string, int> TicketCountsByStatus { get; set; }

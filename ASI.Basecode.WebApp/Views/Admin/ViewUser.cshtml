@@ -63,7 +63,7 @@
                 <ul class="agents-container bg-white">
                     @foreach (var item in Model.Users)
                     {
-                        <li class="agents | flex-Row flex-between p-y-1 p-x-1 align-center" data-viewuser-agent data-agents-1 data-user-id="@item.UserId">
+                        <li class="agents | flex-Row flex-between p-y-1 p-x-1 align-center" data-viewuser-agent data-user-id="@item.UserId">
                             <div class="user-img-profile br-50 bg-red"></div>
                             <div class="flex-col justify-content-center align-center">
                                 <p class="fw-semi text-1-5">@Html.DisplayFor(modelItem => item.Name)</p>
@@ -99,6 +99,7 @@
     }
 
     @section scripts {
+        <script src="~/js/Admin.js"></script>
         <script>
             $(document).ready(function () {
                 // Open modal on button click
@@ -117,63 +118,13 @@
                     });
                 });
 
-                // Handle form submission
-                $(document).on('submit', '[data-modal-add-form]', function (e) {
-                    e.preventDefault();
-                    var form = $(this);
-                    $.ajax({
-                        url: form.attr('action'),
-                        type: 'POST',
-                        data: form.serialize(),
-                        success: function (response) {
-                            // Handle successful form submission, such as closing the modal and updating the list
-                            alert('User added successfully');
-                            $('[data-modal-add-form]').closest('.modal-admin').addClass('hidden');
-                            $('[data-modal-add-form]').addClass('hidden');
-                            // You may also want to update the user list here
-                            window.location.reload(); // Reload the page to reflect changes
-                        },
-                        error: function (xhr, status, error) {
-                            console.error('Error submitting form:', status, error);
-                        }
-                    });
-                });
-
-                // Close modal
-                $(document).on('click', '[data-admin-add-close-btn], [data-admin-add-cancel-btn]', function () {
-                    $('[data-modal-add-form]').closest('.modal-admin').addClass('hidden');
-                    $('[data-modal-add-form]').addClass('hidden');
-                });
-
-                const agentList = document.querySelectorAll("[data-viewuser-agent]")
-
-                agentList.forEach(agent => {
-                    agent.addEventListener('click', () => {
-                        console.log("whats happening")
-                        $('[data-admin-edit-details]').removeClass('hidden');
-                        var userId = $(this).data('user-id');
-                        $.ajax({
-                            url: '/UserDetails',
-                            type: 'GET',
-                            data: { UserId: userId },
-                            success: function (response) {
-                                $('[data-admin-edit-details]').html(response).removeClass('hidden');
-                            },
-                            error: function (xhr, status, error) {
-                                console.error('Error fetching user details:', status, error);
-                            }
-                        });
-                    })
-                })
-
                 // Show user details on list item click
-                /*$(document).on('click', '[data-viewuser-agent]', function () {
-                    console.log("whats happening")
+                $(document).on('click', '[data-viewuser-agent]', function () {
                     var userId = $(this).data('user-id');
                     $.ajax({
                         url: '/UserDetails',
                         type: 'GET',
-                        data: { UserId: userId },
+                        data: { userId: userId },
                         success: function (response) {
                             $('[data-admin-edit-details]').html(response).removeClass('hidden');
                         },
@@ -181,7 +132,7 @@
                             console.error('Error fetching user details:', status, error);
                         }
                     });
-                });*/
+                });
 
                 // Show user edit details on edit button click
                 $(document).on('click', '[data-admin-edit-btn]', function () {
@@ -198,28 +149,6 @@
                         },
                         error: function (xhr, status, error) {
                             console.error('Error fetching user details:', status, error);
-                        }
-                    });
-                });
-
-                //POST req for submitting form when user details are edited
-                $(document).on('submit', '[data-modal-edit-form] form', function (e) {
-                    e.preventDefault();
-                    var form = $(this);
-                    $.ajax({
-                        url: '/UserEdit',
-                        type: 'POST',
-                        data: form.serialize(),
-                        success: function (response) {
-                            // Handle successful form submission, such as closing the modal and updating the list
-                            alert('User updated successfully');
-                            $('[data-modal-edit-form]').closest('.modal-container').addClass('hidden');
-                            $('[data-modal-edit-form]').addClass('hidden');
-                            // You may also want to update the user list here
-                            window.location.reload(); // Reload the page to reflect changes
-                        },
-                        error: function (xhr, status, error) {
-                            console.error('Error submitting form:', status, error);
                         }
                     });
                 });
@@ -243,37 +172,22 @@
                     });
                 });
 
-                // Handle closing the modal
-                $(document).on('click', '[data-admin-edit-close-btn], [data-admin-delete-cancel-btn]', function () {
-                    $('[data-modal-edit-form]').closest('.modal-container').addClass('hidden');
-                });
-
-                //POST request for deleting a user
-                $(document).on('click', '[data-admin-delete-save-btn]', function (e) {
-                    e.preventDefault();
-
-                    var userId = $('[data-admin-delete-modal-container] input[name="UserId"]').val();
+                $(document).on('click', '[data-admin-resetPassowrd-btn]', function () {
+                    var userId = $('[data-modal-edit-form] input[name="UserId"]').val();
+                    const resetPasswordFlag = true;
 
                     $.ajax({
-                        url: '/UserDelete',
-                        type: 'POST',
-                        data: { UserId: userId },
+                        url: '/UserEdit',
+                        type: 'GET',
+                        data: { UserId: userId, resetPassword: resetPasswordFlag },
                         success: function (response) {
-                            // Handle successful deletion
-                            alert('User deleted successfully');
-                            $('[data-admin-delete-modal-container]').addClass('hidden');
-                            // You may also want to update the user list here
-                            window.location.reload(); // Reload the page to reflect changes
+                            console.log('AJAX request successful');
+                            $('[data-admin-edit-modal-container]').html(response).removeClass('hidden');
                         },
                         error: function (xhr, status, error) {
                             console.error('Error deleting user:', status, error);
                         }
                     });
-                });
-
-                // Handle closing the modal
-                $(document).on('click', '[data-admin-delete-close-btn], [data-admin-delete-cancel-btn]', function () {
-                    $('[data-admin-delete-modal-container]').addClass('hidden');
                 });
             });
         </script>
