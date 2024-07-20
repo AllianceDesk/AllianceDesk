@@ -81,10 +81,10 @@
             </div>
 
             <div class="filter_button">
-                <form asp-action="Index">
+                <form asp-action="Index" method="get" asp-controller="Article" id="searchForm">
                     <div class="input-group">
                         <button class="btn btn-outline-secondary" type="submit" id="button-search" style="background-color: whitesmoke; border: 1px solid #ccc;"><i class='bx bx-search bx-xs bx-fw' style="color: #45474B; cursor: pointer;"></i></button>
-                        <input name="searchString" type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="button-search" style="background-color: whitesmoke; border: 1px solid #ccc;">
+                        <input name="searchString" id="searchInput" type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="button-search" style="background-color: whitesmoke; border: 1px solid #ccc;" value="@ViewBag.SearchString">
                     </div>
                 </form>
                 <button type="button" class="btn fbtn"><i class='bx bx-filter-alt bx-xs bx-fw' style="color: #45474B; cursor: pointer;"></i>Filter</button>

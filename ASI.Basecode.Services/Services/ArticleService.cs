@@ -54,13 +54,13 @@ namespace ASI.Basecode.Services.Services
 
         public void Add(ArticleViewModel article)
         {
-            var articleExist = _articleRepository.RetrieveAll().Where(a => a.Title == article.Title && a.Body == article.Body);
+            var articleExist = _articleRepository.RetrieveAll().Any(a => a.Title == article.Title && a.Body == article.Body);
             if (article == null)
             {
                 throw new ArgumentNullException(nameof(article), "ArticleViewModel cannot be null");
             }
-
-            if (articleExist == null)
+            
+            if (!articleExist)
             {
                 var newArticle = new Article();
                 newArticle.ArticleId = Guid.NewGuid();

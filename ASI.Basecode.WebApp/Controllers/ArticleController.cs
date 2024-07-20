@@ -56,6 +56,7 @@ namespace ASI.Basecode.WebApp.Controllers
         public IActionResult Index(string searchString)
         {
             ViewBag.AdminSidebar = "Index";
+            ViewBag.SearchString = searchString;
             var data = _articleService.RetrieveAll()
                                         .Select(u => new ArticleViewModel
                                         {
@@ -68,7 +69,7 @@ namespace ASI.Basecode.WebApp.Controllers
                                         .ToList();
             if (!String.IsNullOrEmpty(searchString)){
                 data = _articleService.RetrieveAll()
-                                        .Where(u =>  u.Title == searchString)
+                                        .Where(u =>  u.Title.Contains(searchString, StringComparison.OrdinalIgnoreCase))
                                         .Select(u => new ArticleViewModel
                                         {
                                             ArticleId = u.ArticleId,

@@ -107,7 +107,7 @@ namespace ASI.Basecode.WebApp.Controllers
                 int userRole = _userService.GetLogInUserRole(user.Username);
                 if (userRole == 1)
                 {
-                    return RedirectToAction("ViewUser", "Admin");
+                    return RedirectToAction("Dashboard", "Admin");
                 }
                 else if (userRole == 2)
                 {
