@@ -15,5 +15,9 @@ namespace ASI.Basecode.Data.Interfaces
         void Delete (string id);
 
         Ticket GetTicketById(Guid id);
+
+        IEnumerable<Ticket> GetUserTicketsById(Guid id);
+
+        IEnumerable<Ticket> GetAgentTicketsById(Guid id);
     }
 }

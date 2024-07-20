@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
+using static ASI.Basecode.Resources.Constants.Enums;
 
 namespace ASI.Basecode.Services.Services
 {
@@ -60,7 +61,12 @@ namespace ASI.Basecode.Services.Services
             var priorities = _priorityRepository.RetrieveAll().ToDictionary(p => p.PriorityId, p => p.PriorityName);
             var statuses = _statusRepository.RetrieveAll().ToDictionary(st => st.StatusId, st => st.StatusName);
             var users = _userRepository.GetUsers().ToDictionary(u => u.UserId, u => u.Name);
-            var ticketActivities = _ticketActivityRepository.RetrieveAll().ToList();
+            var ticketIds = tickets.Select(t => t.TicketId).ToList();
+            var ticketActivities = _ticketActivityRepository.GetActivitiesByTicketIds(ticketIds).ToList();
+
+            var activitiesByTicketId = ticketActivities
+                .GroupBy(a => a.TicketId)
+                .ToDictionary(g => g.Key, g => g.OrderByDescending(a => a.ModifiedAt).ToList());
 
             var data = tickets.Select(s => new TicketViewModel
             {
@@ -76,12 +82,52 @@ namespace ASI.Basecode.Services.Services
                 Status = statuses.TryGetValue(s.StatusId, out var statusName) ? statusName : "Unknown",
                 AgentName = s.AssignedAgent.HasValue && users.TryGetValue(s.AssignedAgent.Value, out var agentName) ? agentName : "Unknown",
                 CreatorName = users.TryGetValue(s.CreatedBy, out var creatorName) ? creatorName : "Unknown",
-                LatestUpdate = ticketActivities
-            .Where(a => a.TicketId == s.TicketId)
-            .OrderByDescending(a => a.ModifiedAt)
-            .FirstOrDefault()
+                TicketHistory = activitiesByTicketId.TryGetValue(s.TicketId, out var activities) ?
+                    _mapper.Map<IEnumerable<TicketActivityViewModel>>(activities) : Enumerable.Empty<TicketActivityViewModel>()
             });
+
             return data;
+        }
+
+        public IEnumerable<TicketViewModel> GetUserTickets(Guid id)
+        {
+            var tickets = _ticketRepository.GetUserTicketsById(id);
+            var categories = _categoryRepository.RetrieveAll().ToDictionary(c => c.CategoryId, c => c.CategoryName);
+            var priorities = _priorityRepository.RetrieveAll().ToDictionary(p => p.PriorityId, p => p.PriorityName);
+            var statuses = _statusRepository.RetrieveAll().ToDictionary(st => st.StatusId, st => st.StatusName);
+            var users = _userRepository.GetUsers().ToDictionary(u => u.UserId, u => u.Name);
+            var ticketIds = tickets.Select(t => t.TicketId).ToList();
+            var ticketActivities = _ticketActivityRepository.GetActivitiesByTicketIds(ticketIds).ToList();
+
+            var activitiesByTicketId = ticketActivities
+                .GroupBy(a => a.TicketId)
+                .ToDictionary(g => g.Key, g => g.OrderByDescending(a => a.ModifiedAt).ToList());
+
+            var model = tickets.Select(s => new TicketViewModel
+            {
+                TicketId = s.TicketId.ToString(),
+                Title = s.Title,
+                Description = s.Description,
+                DateCreated = s.DateCreated,
+                CreatorId = s.CreatedBy.ToString(),
+                AgentId = s.AssignedAgent.ToString(),
+                StatusId = s.StatusId.ToString(),
+                Category = categories.TryGetValue(s.CategoryId, out var categoryName) ? categoryName : "Unknown",
+                Priority = priorities.TryGetValue(s.PriorityId, out var priorityName) ? priorityName : "Unknown",
+                Status = statuses.TryGetValue(s.StatusId, out var statusName) ? statusName : "Unknown",
+                AgentName = s.AssignedAgent.HasValue && users.TryGetValue(s.AssignedAgent.Value, out var agentName) ? agentName : "Unknown",
+                CreatorName = users.TryGetValue(s.CreatedBy, out var creatorName) ? creatorName : "Unknown",
+                LatestUpdate = activitiesByTicketId.TryGetValue(s.TicketId, out var activities) ?
+                    activities.OrderByDescending(a => a.ModifiedAt).FirstOrDefault() : null
+            });
+
+            return model;
+        }
+        public IEnumerable<TicketViewModel> GetAgentTickets(Guid id)
+        {
+            var tickets = _ticketRepository.GetAgentTicketsById(id);
+
+            return _mapper.Map<IEnumerable<TicketViewModel>>(tickets);
         }
 
         public void Add(TicketViewModel ticket)
@@ -153,7 +199,7 @@ namespace ASI.Basecode.Services.Services
             // Delete the ticket activities associated with the ticket
             var activitites = _ticketActivityRepository.GetActivitiesByTicketId(guid);
             var activities = _ticketActivityRepository.RetrieveAll().Where(s => s.TicketId.ToString() == id).ToList();
-            
+
             foreach (var activity in activities)
             {
                 _ticketActivityRepository.Delete(activity.HistoryId);
@@ -172,7 +218,7 @@ namespace ASI.Basecode.Services.Services
 
             if (ticket == null)
             {
-                return null; 
+                return null;
             }
 
             var userIds = new[] { ticket.CreatedBy, ticket.AssignedAgent }
@@ -318,7 +364,7 @@ namespace ASI.Basecode.Services.Services
             var dailyCounts = _ticketRepository.RetrieveAll()
                             .Where(t => t.DateCreated >= startDate && t.DateCreated <= endDate)
                             .GroupBy(t => t.DateCreated.Date)
-                            .Select (g => new {Date = g.Key, Count = g.Count()})
+                            .Select(g => new { Date = g.Key, Count = g.Count() })
                             .ToList();
 
             var result = Enumerable.Range(0, 7)
@@ -332,22 +378,22 @@ namespace ASI.Basecode.Services.Services
             return result;
         }
 
-        public List <UserViewModel> GetWeeklyTopResolvers()
+        public List<UserViewModel> GetWeeklyTopResolvers()
         {
             var startDate = DateTime.Today.AddDays(-6);
             var endDate = DateTime.Today.AddDays(1);
 
             var topResolvers = _ticketRepository.RetrieveAll()
-                                .Where (t => t.StatusId == 4 && t.DateClosed >= startDate && t.DateClosed <= endDate)
+                                .Where(t => t.StatusId == 4 && t.DateClosed >= startDate && t.DateClosed <= endDate)
                                 .GroupBy(t => t.AssignedAgent)
-                                .Select(g => new {UserId = g.Key, ResolvedCount = g.Count()})
-                                .OrderByDescending (g=> g.ResolvedCount)
-                                .Take (5)
+                                .Select(g => new { UserId = g.Key, ResolvedCount = g.Count() })
+                                .OrderByDescending(g => g.ResolvedCount)
+                                .Take(5)
                                 .ToList();
             var result = topResolvers.Select(tr => new UserViewModel
             {
                 UserId = tr.UserId.ToString(),
-                TeamName = _teamRepository.RetrieveAll().Where(t => t.TeamId == 
+                TeamName = _teamRepository.RetrieveAll().Where(t => t.TeamId ==
                             _userRepository.GetUsers().Where(u => u.UserId == tr.UserId).FirstOrDefault().TeamId)
                             .FirstOrDefault().TeamName,
                 Name = _userRepository.GetUsers().Where(u => u.UserId == tr.UserId).FirstOrDefault().Name,

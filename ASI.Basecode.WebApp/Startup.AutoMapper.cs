@@ -31,6 +31,14 @@ namespace ASI.Basecode.WebApp
                 CreateMap<NotificationServiceModel, Notification>();
                 CreateMap<ArticleViewModel, Article>();
                 CreateMap<Team, TeamViewModel>();
+
+                CreateMap<TicketActivity, TicketActivityViewModel>()
+                    .ForMember(dest => dest.HistoryId, opt => opt.MapFrom(src => src.HistoryId.ToString()))
+                    .ForMember(dest => dest.TicketId, opt => opt.MapFrom(src => src.TicketId.ToString()))
+                    .ForMember(dest => dest.ModifiedBy, opt => opt.MapFrom(src => src.ModifiedBy.ToString()))
+                    .ForMember(dest => dest.ModifiedByName, opt => opt.MapFrom(src => src.ModifiedByNavigation.Name))
+                    .ForMember(dest => dest.OperationName, opt => opt.MapFrom(src => src.Operation.Name))
+                    .ForMember(dest => dest.message, opt => opt.MapFrom(src => src.Message));
             }
         }
     }
