@@ -55,8 +55,14 @@ namespace ASI.Basecode.Services.Services
 
         public IEnumerable<TicketViewModel> RetrieveAll()
         {
+            var tickets = _ticketRepository.RetrieveAll().ToList();
+            var categories = _categoryRepository.RetrieveAll().ToDictionary(c => c.CategoryId, c => c.CategoryName);
+            var priorities = _priorityRepository.RetrieveAll().ToDictionary(p => p.PriorityId, p => p.PriorityName);
+            var statuses = _statusRepository.RetrieveAll().ToDictionary(st => st.StatusId, st => st.StatusName);
+            var users = _userRepository.GetUsers().ToDictionary(u => u.UserId, u => u.Name);
+            var ticketActivities = _ticketActivityRepository.RetrieveAll().ToList();
 
-            var data = _ticketRepository.RetrieveAll().Select(s => new TicketViewModel
+            var data = tickets.Select(s => new TicketViewModel
             {
                 TicketId = s.TicketId.ToString(),
                 Title = s.Title,
@@ -65,14 +71,16 @@ namespace ASI.Basecode.Services.Services
                 CreatorId = s.CreatedBy.ToString(),
                 AgentId = s.AssignedAgent.ToString(),
                 StatusId = s.StatusId.ToString(),
-                Category = _categoryRepository.RetrieveAll().Where(c => c.CategoryId == s.CategoryId).FirstOrDefault().CategoryName,
-                Priority = _priorityRepository.RetrieveAll().Where(p => p.PriorityId == s.PriorityId).FirstOrDefault().PriorityName,
-                Status = _statusRepository.RetrieveAll().Where(st => st.StatusId == s.StatusId).FirstOrDefault().StatusName,
-                AgentName = _userRepository.GetUsers().Where(u => u.UserId == s.AssignedAgent).FirstOrDefault()?.Name,
-                CreatorName = _userRepository.GetUsers().Where(u => u.UserId == s.CreatedBy).FirstOrDefault()?.Name,
-                LatestUpdate = _ticketActivityRepository.RetrieveAll().Where(a => a.TicketId == s.TicketId).OrderByDescending(a => a.ModifiedAt).FirstOrDefault()
+                Category = categories.TryGetValue(s.CategoryId, out var categoryName) ? categoryName : "Unknown",
+                Priority = priorities.TryGetValue(s.PriorityId, out var priorityName) ? priorityName : "Unknown",
+                Status = statuses.TryGetValue(s.StatusId, out var statusName) ? statusName : "Unknown",
+                AgentName = s.AssignedAgent.HasValue && users.TryGetValue(s.AssignedAgent.Value, out var agentName) ? agentName : "Unknown",
+                CreatorName = users.TryGetValue(s.CreatedBy, out var creatorName) ? creatorName : "Unknown",
+                LatestUpdate = ticketActivities
+            .Where(a => a.TicketId == s.TicketId)
+            .OrderByDescending(a => a.ModifiedAt)
+            .FirstOrDefault()
             });
-
             return data;
         }
 
