@@ -47,6 +47,10 @@ namespace ASI.Basecode.Data.Repositories
                 UnitOfWork.SaveChanges();
             }
         }
-
+        
+        public IEnumerable<User> GetUsersByIds(IEnumerable<Guid> userIds)
+        {
+           return this.GetDbSet<User>().Where(x => userIds.Contains(x.UserId));
+        }
     }
 }

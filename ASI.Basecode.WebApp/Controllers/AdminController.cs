@@ -532,45 +532,38 @@ namespace ASI.Basecode.WebApp.Controllers
             ViewBag.IsLoginOrRegister = false;
             ViewBag.AdminSidebar = "Tickets";
 
+            // Retrieve all tickets once
+            var allTickets = _ticketService.RetrieveAll();
+
+            // Handle the case where status is provided
             if (status != null)
             {
                 ViewBag.ShowStatus = status;
 
-                if (status == "Resolved")
+                IEnumerable<TicketViewModel> filteredTickets = status switch
                 {
-                    var resolvedTickets = _ticketService.RetrieveAll()
-                        .Where(t => t.StatusId == "4" || t.StatusId == "5")
-                        .OrderByDescending(t => t.DateCreated);
+                    "Resolved" => allTickets.Where(t => t.StatusId == "4" || t.StatusId == "5"),
+                    _ => allTickets.Where(t => t.StatusId == "1" || t.StatusId == "2" || t.StatusId == "3")
+                };
 
-                    return View("/Views/Admin/Tickets.cshtml", resolvedTickets);
-                }
-
-                var unresolvedTickets = _ticketService.RetrieveAll()
-                    .Where(t => t.StatusId == "1" || t.StatusId == "2" || t.StatusId == "3")
-                    .OrderByDescending(t => t.DateCreated);
-
-                return View("/Views/Admin/Tickets.cshtml", unresolvedTickets);
+                filteredTickets = filteredTickets.OrderByDescending(t => t.DateCreated);
+                return View("/Views/Admin/Tickets.cshtml", filteredTickets);
             }
 
+            // Handle the case where id is provided
             if (id != null)
             {
+                var ticketId = id.Trim(); // Trim to avoid any leading/trailing whitespace
+                var ticket = allTickets.FirstOrDefault(t => t.TicketId.ToString() == ticketId);
 
-                var ticket = _ticketService.RetrieveAll()
-                    .Where(t => t.TicketId.ToString() == id)
-                    .FirstOrDefault();
-                
                 Console.WriteLine(ticket);
 
-                return this.View("/Views/Admin/TicketDetail.cshtml", ticket);
+                return View("/Views/Admin/TicketDetail.cshtml", ticket);
             }
-            else
-            {
-                var tickets = _ticketService.RetrieveAll()
-                    .OrderByDescending(t => t.DateCreated);
 
-                // Handle the case where no ID is provided
-                return this.View("/Views/Admin/Tickets.cshtml", tickets);
-            }
+            // Handle the case where no id and status are provided
+            var tickets = allTickets.OrderByDescending(t => t.DateCreated);
+            return View("/Views/Admin/Tickets.cshtml", tickets);
         }
 
         [HttpGet("Tickets/Assignment")]

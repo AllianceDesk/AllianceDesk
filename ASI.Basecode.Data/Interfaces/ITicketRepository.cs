@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ASI.Basecode.Data.Models;
 
 namespace ASI.Basecode.Data.Interfaces
@@ -12,5 +13,7 @@ namespace ASI.Basecode.Data.Interfaces
         void Update (Ticket ticket);
 
         void Delete (string id);
+
+        Ticket GetTicketById(Guid id);
     }
 }

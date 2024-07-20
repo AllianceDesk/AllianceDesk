@@ -11,6 +11,8 @@ namespace ASI.Basecode.Data.Interfaces
     {
             IEnumerable<TicketMessage> RetrieveAll();
 
-            void Add(TicketMessage ticketMessage);        
+            void Add(TicketMessage ticketMessage);
+
+            IEnumerable<TicketMessage> GetMessagesByTicketId(string ticketId);
     }
 }

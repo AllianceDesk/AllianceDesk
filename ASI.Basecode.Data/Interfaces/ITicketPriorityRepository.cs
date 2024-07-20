@@ -10,5 +10,7 @@ namespace ASI.Basecode.Data.Interfaces
     public interface ITicketPriorityRepository
     {
         IEnumerable<TicketPriority> RetrieveAll();
+
+        TicketPriority GetPriorityById(byte priorityId);
     }
 }
