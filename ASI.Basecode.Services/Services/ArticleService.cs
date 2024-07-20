@@ -131,6 +131,11 @@ namespace ASI.Basecode.Services.Services
             return data;
         }
 
+        public int GetUserFavoriteCount()
+        {
+            return _favoriteRepository.RetrieveAll().Count(a => a.UserId == _sessionHelper.GetUserIdFromSession());
+        }
+
         public void AddFavorite(string articleId)
         {
             var existingFavorite = _favoriteRepository.RetrieveAll().Any(f => f.ArticleId.ToString() == articleId && f.UserId.ToString() == _sessionHelper.GetUserIdFromSession().ToString());

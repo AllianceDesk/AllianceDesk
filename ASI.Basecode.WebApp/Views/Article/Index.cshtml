@@ -77,7 +77,12 @@
         <div class="nav_two">
             <div class="d-flex" style="gap:2em;">
                 <a class="active_link" asp-controller="Article" asp-action="Index">Articles</a>
-                <a class="inactive_link" asp-controller="Article" asp-action="MyFavorites">My Favorites <span class="badge">4</span></a>
+                <a class="inactive_link" asp-controller="Article" asp-action="MyFavorites">My Favorites
+                    @if (ViewBag.FavoriteCount != null && ViewBag.FavoriteCount > 0)
+                    {
+                        <span class="badge">@ViewBag.FavoriteCount</span>
+                    }
+                </a>
             </div>
 
             <div class="filter_button">

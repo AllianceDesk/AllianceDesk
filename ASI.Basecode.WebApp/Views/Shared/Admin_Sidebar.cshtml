@@ -21,11 +21,11 @@
     } 
     @if (ViewBag.AdminSidebar == "ViewUser")
     {
-        <a asp-controller="Admin" asp-action="ViewUser" data-admin-btn class=" admin-sb-active-button margin-0"><i class='bx bx-group bx-sm as' style="align-self:center;"></i> <p>Teams</p> </a>
+        <a asp-controller="Admin" asp-action="ViewUser" data-admin-btn class=" admin-sb-active-button margin-0"><i class='bx bx-group bx-sm as' style="align-self:center;"></i> <p>Directory</p> </a>
     }
     else
     {
-        <a asp-controller="Admin" asp-action="ViewUser" data-admin-btn class=" admin-sb-inactive-button margin-0"><i class='bx bx-group bx-sm as' style="align-self:center;"></i> <p>Teams</p> </a>
+        <a asp-controller="Admin" asp-action="ViewUser" data-admin-btn class=" admin-sb-inactive-button margin-0"><i class='bx bx-group bx-sm as' style="align-self:center;"></i> <p>Directory</p> </a>
     }
     @if (ViewBag.AdminSidebar == "KnowledgeBase")
     {

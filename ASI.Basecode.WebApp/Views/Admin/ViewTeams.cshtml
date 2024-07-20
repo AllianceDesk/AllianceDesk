@@ -1,7 +1,7 @@
 ﻿@model ASI.Basecode.Services.ServiceModels.UserViewModel
 
 @{
-    ViewData["Title"] = "Teams";
+    ViewData["Title"] = "Directory";
     var teams = ViewBag.Teams as SelectList;
 }
 @section styles {
@@ -14,11 +14,17 @@
     @Html.Partial("Admin_Sidebar")
     <div class="admin-body p-y-3 bg-grey relative ">
         <div style="padding-right: 2rem; border-right: 1.5px solid #9E9E9E;">
-            <h1>Agents and Team</h1>
+            <div class="flex-Row justify-content-between mb-3">
+                <h1>Team Directory</h1>
+                <button class="mbtn-primary flex-Row gap-1 color-white bg-red align-center justify-content-center border-0 p-x-1 br-1-5" data-admin-add-btn>
+                    <i class="fa-solid fa-user-plus"></i>
+                    <p class="br-1-5 p-y-1">Add</p>
+                </button>
+            </div>
             <div class="flex-Row flex-between">
                 <div class="agent-nav pt-4">
                     <ul class="flex-Row gap-2">
-                        <a asp-action="Teams" data-admin-btn class="nav-item" data-nav-item>Agents</a>
+                        <a asp-action="ViewUser" data-admin-btn class="nav-item" data-nav-item>Agents</a>
                         <a asp-action="ViewTeams" data-admin-btn class="nav-item active-admin-nav" data-nav-item>Team</a>
                     </ul>
                 </div>
@@ -27,9 +33,9 @@
                         <i class="fa-solid fa-magnifying-glass text-1-5"></i>
                         <input class="bg-transparent" type="text" placeholder="Search" />
                     </div>
-                    <button class="mbtn-primary flex-Row gap-1 color-white bg-red align-center justify-content-center border-0 p-x-1 br-1-5" data-admin-add-btn>
-                        <i class="fa-solid fa-user-plus"></i>
-                        <p class="br-1-5 p-y-1">Add</p>
+                    <button class="mbtn-primary flex-Row gap-1 color-white bg-red align-center justify-content-center border-0 p-x-1 br-1-5">
+                        <i class="fa-solid fa-filter"></i>
+                        <p class="br-1-5 p-y-1">Filter</p>
                     </button>
                 </div>
             </div>

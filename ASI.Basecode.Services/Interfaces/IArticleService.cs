@@ -18,5 +18,6 @@ namespace ASI.Basecode.Services.Interfaces
         IEnumerable<ArticleViewModel> RetrieveFavorites();
         void AddFavorite(string articleId);
         void DeleteFavorite(string articleId);
+        int GetUserFavoriteCount();
     }
 }

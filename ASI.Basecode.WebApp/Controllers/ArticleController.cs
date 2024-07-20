@@ -57,6 +57,7 @@ namespace ASI.Basecode.WebApp.Controllers
         {
             ViewBag.AdminSidebar = "Index";
             ViewBag.SearchString = searchString;
+            ViewBag.FavoriteCount = _articleService.GetUserFavoriteCount();
 
             var data = _articleService.RetrieveAll()
                                         .Select(u => new ArticleViewModel
@@ -94,9 +95,11 @@ namespace ASI.Basecode.WebApp.Controllers
         /// </summary>
         /// <returns> Article Favorites View </returns>
         [HttpGet("/KnowledgeBase/MyFavorites")]
-        public IActionResult MyFavorites()
+        public IActionResult MyFavorites(string searchString)
         {
             ViewBag.AdminSidebar = "Index";
+            ViewBag.SearchString = searchString;
+            ViewBag.FavoriteCount = _articleService.GetUserFavoriteCount();
             var data = _articleService.RetrieveFavorites()
                                         .Select(u => new ArticleViewModel
                                         {
@@ -107,6 +110,20 @@ namespace ASI.Basecode.WebApp.Controllers
                                             DateUpdated = u.DateUpdated,
                                         })
                                         .ToList();
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                data = _articleService.RetrieveAll()
+                                        .Where(u => u.Title.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                                        .Select(u => new ArticleViewModel
+                                        {
+                                            ArticleId = u.ArticleId,
+                                            Title = u.Title,
+                                            Body = u.Body,
+                                            CategoryNavigation = u.CategoryNavigation,
+                                            DateUpdated = u.DateUpdated,
+                                        })
+                                        .ToList();
+            }
 
             var viewModel = new ArticleViewModel
             {

@@ -78,14 +78,20 @@
 
             <div class="d-flex" style="gap:2em;">
                 <a class="inactive_link" asp-controller="Article" asp-action="Index">Articles</a>
-                <a class="active_link" asp-controller="Article" asp-action="MyFavorites">My Favorites <span class="badge">4</span></a>
+                <a class="active_link" asp-controller="Article" asp-action="MyFavorites">
+                    My Favorites
+                    @if (ViewBag.FavoriteCount != null && ViewBag.FavoriteCount > 0)
+                    {
+                        <span class="badge">@ViewBag.FavoriteCount</span>
+                    }
+                </a>
             </div>
 
             <div class="filter_button">
-                <form>
+                <form asp-action="MyFavorites" method="get" asp-controller="Article" id="searchForm">
                     <div class="input-group">
-                        <button class="btn btn-outline-secondary" type="button" id="button-search" style="background-color: whitesmoke; border: 1px solid #ccc;"><i class='bx bx-search bx-xs bx-fw' style="color: #45474B; cursor: pointer;"></i></button>
-                        <input type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="button-search" style="background-color: whitesmoke; border: 1px solid #ccc;">
+                        <button class="btn btn-outline-secondary" type="submit" id="button-search" style="background-color: whitesmoke; border: 1px solid #ccc;"><i class='bx bx-search bx-xs bx-fw' style="color: #45474B; cursor: pointer;"></i></button>
+                        <input name="searchString" id="searchInput" type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="button-search" style="background-color: whitesmoke; border: 1px solid #ccc;" value="@ViewBag.SearchString">
                     </div>
                 </form>
                 <button type="button" class="btn fbtn"><i class='bx bx-filter-alt bx-xs bx-fw' style="color: #45474B; cursor: pointer;"></i>Filter</button>
