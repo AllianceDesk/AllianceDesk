@@ -100,7 +100,7 @@ namespace ASI.Basecode.WebApp.Controllers
                 Categories = categories,
                 Priorities = priorities
             };
-
+            
             return View(model);
         }
 
@@ -127,6 +127,20 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("Tickets");
         }
 
+        [HttpPost("Tickets/{id}/Close")]
+        public IActionResult TicketClose(string id)
+        {
+            var ticket = _ticketService.GetById(id);
+
+            if(ticket == null)
+            {
+                return NotFound();
+            }
+
+            _ticketService.CloseTicket(id);
+            Console.WriteLine("Ticket closed");
+            return RedirectToAction("Tickets");
+        }
 
         [HttpGet("Tickets/{id}/Edit")]
         public IActionResult TicketEdit(string id)
@@ -177,12 +191,16 @@ namespace ASI.Basecode.WebApp.Controllers
                 return NotFound();
             }
 
+            // Update ticket properties from the model
             ticket.Title = model.Ticket.Title;
             ticket.Description = model.Ticket.Description;
             ticket.CategoryId = model.Ticket.CategoryId;
             ticket.PriorityId = model.Ticket.PriorityId;
 
+            // Call service to update the ticket
             _ticketService.Update(ticket);
+
+            // Redirect to the Tickets action
             return RedirectToAction("Tickets");
         }
     }

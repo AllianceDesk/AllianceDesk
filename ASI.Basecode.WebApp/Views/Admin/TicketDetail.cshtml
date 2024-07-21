@@ -24,7 +24,7 @@
                 <div class="flex-Row justify-content-between align-items-center gap-3">
                     <a data-admin-btn class="registerBtn color-white" href="#" data-bs-toggle="modal" data-bs-target="#updatePrio">Update Priority</a>
 
-                    @if (string.IsNullOrWhiteSpace(Model.AgentName))
+                    @if (Model.AgentName == "Unknown")
                     {
                         <a asp-controller="Admin" asp-action="TicketAssignment" asp-route-id="@Model.TicketId" class="registerBtn color-white">Assign Ticket</a>
                     }
