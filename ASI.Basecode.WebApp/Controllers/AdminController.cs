@@ -22,6 +22,7 @@ namespace ASI.Basecode.WebApp.Controllers
         private readonly IUserService _userService;
         private readonly ITicketService _ticketService;
         private readonly ISessionHelper _sessionHelper;
+        private readonly IArticleService _articleService;
         
         /// <summary>
         /// Constructor
@@ -37,11 +38,13 @@ namespace ASI.Basecode.WebApp.Controllers
                               IUserService userService,
                               ITicketService ticketService,
                               ISessionHelper sessionHelper,
+                              IArticleService articleService,
                               IMapper mapper = null) : base(httpContextAccessor, loggerFactory, configuration, mapper)
         {
             this._userService = userService;
             this._ticketService = ticketService;
             this._sessionHelper = sessionHelper;
+            this._articleService = articleService;
         }
 
         [HttpGet("/Dashboard")]
@@ -50,7 +53,14 @@ namespace ASI.Basecode.WebApp.Controllers
         {
             ViewBag.Name = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).Name;
             ViewBag.AdminSidebar = "Overview";
-            return this.View();
+            var model = new AdminDashboardViewModel
+            {
+                TicketCountsByDay = _ticketService.GetTicketVolume(),
+                TopAgents = _ticketService.GetWeeklyTopResolvers(),
+                FavoriteArticles = _articleService.RetrieveFavorites(),
+
+            };
+            return this.View(model);
         }
 
         [HttpGet("AnalyticsOverallMetrics")]
