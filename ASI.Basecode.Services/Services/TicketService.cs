@@ -179,6 +179,25 @@ namespace ASI.Basecode.Services.Services
             _ticketActivityRepository.Add(newActivity);
         }
 
+        public void CloseTicket(string ticketId)
+        {
+            var existingTicket = _ticketRepository.GetTicketById(Guid.Parse(ticketId));
+
+            existingTicket.StatusId = 5;
+
+            _ticketRepository.Update(existingTicket);
+
+            // Add ticket activity
+            TicketActivity newActivity = new TicketActivity();
+            newActivity.HistoryId = Guid.NewGuid();
+            newActivity.TicketId = existingTicket.TicketId;
+            newActivity.OperationId = 5;
+            newActivity.ModifiedBy = _sessionHelper.GetUserIdFromSession();
+            newActivity.ModifiedAt = DateTime.Now;
+            newActivity.Message = "Ticket was closed";
+            _ticketActivityRepository.Add(newActivity);
+        }
+
         public void Delete(String id)
         {
             Guid guid = Guid.Parse(id);
@@ -334,10 +353,12 @@ namespace ASI.Basecode.Services.Services
 
         public void AssignAgent(string ticketId, string userId)
         {
-            Guid guid = Guid.Parse(userId);
-            var existingTicket = _ticketRepository.GetTicketById(guid);
+            Guid ticketGuid = Guid.Parse(ticketId);
+            Guid userGuid = Guid.Parse(userId);
 
-            existingTicket.AssignedAgent = guid;
+            var existingTicket = _ticketRepository.GetTicketById(ticketGuid);
+
+            existingTicket.AssignedAgent = userGuid;
             existingTicket.StatusId = 2;
             _ticketRepository.Update(existingTicket);
         }
