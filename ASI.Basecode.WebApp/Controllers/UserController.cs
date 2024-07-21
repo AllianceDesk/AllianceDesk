@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Printing;
 using System.Linq;
 
 namespace ASI.Basecode.WebApp.Controllers
@@ -45,12 +46,13 @@ namespace ASI.Basecode.WebApp.Controllers
         }
 
         [HttpGet("Tickets")]
-        public IActionResult Tickets(string? status, int? page, string? searchTerm)
+        public IActionResult Tickets(byte? status, string? searchTerm, string? sortOrder, int? page)
         {
-            
-            var tickets = _ticketService.GetUserTickets(_sessionHelper.GetUserIdFromSession());
+            var tickets = _ticketService.GetUserTickets(_sessionHelper.GetUserIdFromSession(), status, searchTerm, sortOrder, page);
 
-            // Replace this later to retrieve from the user preferences
+            var currentPage = page ?? 1;
+            var currentStatus = status ?? 0;
+            var count = tickets.Count();
             var pageSize = 5;
 
             var statuses = _ticketService.GetStatuses()
@@ -65,42 +67,26 @@ namespace ASI.Basecode.WebApp.Controllers
                 .Select(p => new KeyValuePair<string, string>(p.PriorityId.ToString(), p.PriorityName))
                 .ToList();
 
-            if (!string.IsNullOrEmpty(status) && status != "All")
+            if (Math.Ceiling(tickets.Count() / (double )pageSize) > 1)
             {
-                tickets = tickets.Where(t => t.StatusId == status);
-            }
-
-            if (!string.IsNullOrEmpty(searchTerm))
-            {
-                tickets = tickets.Where(t => t.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
-                                                     t.Description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
-            }
-
-            var CurrentPage = page ?? 1;
-            var count = tickets.Count();
-
-
-            if (Math.Ceiling(tickets.Count() / (double)pageSize) > 1)
-            {
-                tickets = tickets.Skip((CurrentPage - 1) * pageSize)
+                tickets = tickets.Skip((currentPage - 1) * pageSize)
                                          .Take(pageSize)
                                          .ToList();
             }
 
-            
+            // Create view model and return view
             var model = new UserTicketsViewModel
             {
                 Tickets = tickets,
-                Ticket = new TicketViewModel(),
-                CurrentPage = CurrentPage,
+                CurrentPage = currentPage,
                 TotalPages = (int)Math.Ceiling(count / (double)pageSize),
-                CurrentStatus = string.IsNullOrEmpty(status) ? "All" : status,
+                CurrentStatus = currentStatus,
                 CurrentSearchTerm = string.IsNullOrEmpty(searchTerm) ? "" : searchTerm,
                 Statuses = statuses,
                 Categories = categories,
-                Priorities = priorities
+                Priorities = priorities,  
             };
-            
+
             return View(model);
         }
 
@@ -201,6 +187,22 @@ namespace ASI.Basecode.WebApp.Controllers
             _ticketService.Update(ticket);
 
             // Redirect to the Tickets action
+            return RedirectToAction("Tickets");
+        }
+
+        [HttpPost("Tickets/{id}/Feedback")]
+        public IActionResult TicketFeedback(string id, UserTicketsViewModel model)
+        {
+            model.Feedback.TicketId = Guid.Parse(id);
+            var ticket = _ticketService.GetById(id);
+
+            if (ticket == null)
+            {
+                return NotFound();
+            }
+
+            _ticketService.AddFeedback(model.Feedback);
+
             return RedirectToAction("Tickets");
         }
     }

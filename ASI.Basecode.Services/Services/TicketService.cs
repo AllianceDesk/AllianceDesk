@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 using static ASI.Basecode.Resources.Constants.Enums;
+using NUlid;
 
 namespace ASI.Basecode.Services.Services
 {
@@ -21,6 +22,7 @@ namespace ASI.Basecode.Services.Services
         private readonly ITicketActivityRepository _ticketActivityRepository;
         private readonly ITicketActivityOperationRepository _ticketActivityOperationRepository;
         private readonly ITicketMessageRepository _ticketMessageRepository;
+        private readonly IFeedbackRepository _feedbackRepository;
         private readonly ISessionHelper _sessionHelper;
         private readonly IMapper _mapper;
         private readonly ITeamRepository _teamRepository;
@@ -35,6 +37,7 @@ namespace ASI.Basecode.Services.Services
             ITicketActivityRepository ticketActivityRepository,
             ITicketActivityOperationRepository ticketActivityOperationRepository,
             ITicketMessageRepository ticketMessageRepository,
+            IFeedbackRepository feedbackRepository,
             IMapper mapper,
             ISessionHelper sessionHelper,
             INotificationRepository notificationRepository,
@@ -48,6 +51,7 @@ namespace ASI.Basecode.Services.Services
             _ticketActivityRepository = ticketActivityRepository;
             _ticketActivityOperationRepository = ticketActivityOperationRepository;
             _ticketMessageRepository = ticketMessageRepository;
+            _feedbackRepository = feedbackRepository;
             _mapper = mapper;
             _sessionHelper = sessionHelper;
             _teamRepository = teamRepository;
@@ -89,20 +93,51 @@ namespace ASI.Basecode.Services.Services
             return data;
         }
 
-        public IEnumerable<TicketViewModel> GetUserTickets(Guid id)
+        public IEnumerable<TicketViewModel> GetUserTickets(Guid userId, byte? status, string? searchTerm, string? sortOrder, int? page)
         {
-            var tickets = _ticketRepository.GetUserTicketsById(id);
+            // Retrieve IQueryable from repository
+            var ticketsQuery = _ticketRepository.GetUserTicketsById(userId);
+
+            // Retrieve additional data
             var categories = _categoryRepository.RetrieveAll().ToDictionary(c => c.CategoryId, c => c.CategoryName);
             var priorities = _priorityRepository.RetrieveAll().ToDictionary(p => p.PriorityId, p => p.PriorityName);
             var statuses = _statusRepository.RetrieveAll().ToDictionary(st => st.StatusId, st => st.StatusName);
             var users = _userRepository.GetUsers().ToDictionary(u => u.UserId, u => u.Name);
-            var ticketIds = tickets.Select(t => t.TicketId).ToList();
+            var ticketIds = ticketsQuery.Select(t => t.TicketId).ToList();
             var ticketActivities = _ticketActivityRepository.GetActivitiesByTicketIds(ticketIds).ToList();
+            var feedbacks = _feedbackRepository.GetFeedbackByTicketIds(ticketIds)
+                .ToDictionary(f => f.TicketId, f => _mapper.Map<FeedbackViewModel>(f));
+
+            // Apply filters
+            if (status.HasValue && status != 0)
+            {
+                ticketsQuery = ticketsQuery.Where(t => t.StatusId == status);
+            }
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                ticketsQuery = ticketsQuery.Where(t => t.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+                                                        t.Description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
+            }
+
+
+            //Sorting order
+            ticketsQuery = ticketsQuery.OrderBy(t => t.Title);
+
+
+            // Pagination
+            var pageSize = 5;
+            var currentPage = page ?? 1;
+            var count = ticketsQuery.Count();
+            var tickets = ticketsQuery.Skip((currentPage - 1) * pageSize)
+                                      .Take(pageSize)
+                                      .ToList();
 
             var activitiesByTicketId = ticketActivities
                 .GroupBy(a => a.TicketId)
                 .ToDictionary(g => g.Key, g => g.OrderByDescending(a => a.ModifiedAt).ToList());
 
+            // Transform to view model
             var model = tickets.Select(s => new TicketViewModel
             {
                 TicketId = s.TicketId.ToString(),
@@ -118,7 +153,8 @@ namespace ASI.Basecode.Services.Services
                 AgentName = s.AssignedAgent.HasValue && users.TryGetValue(s.AssignedAgent.Value, out var agentName) ? agentName : "Unknown",
                 CreatorName = users.TryGetValue(s.CreatedBy, out var creatorName) ? creatorName : "Unknown",
                 LatestUpdate = activitiesByTicketId.TryGetValue(s.TicketId, out var activities) ?
-                    activities.OrderByDescending(a => a.ModifiedAt).FirstOrDefault() : null
+                    activities.OrderByDescending(a => a.ModifiedAt).FirstOrDefault() : null,
+                Feedback = feedbacks.TryGetValue(s.TicketId, out var feedback) ? feedback : null
             });
 
             return model;
@@ -167,8 +203,6 @@ namespace ASI.Basecode.Services.Services
 
         public void Update(TicketViewModel ticket)
         {
-
-
             var existingTicket = _ticketRepository.GetTicketById(Guid.Parse(ticket.TicketId));
 
             existingTicket.Title = ticket.Title;
@@ -422,6 +456,20 @@ namespace ASI.Basecode.Services.Services
             }).ToList();
 
             return result;
+        }
+
+        public void AddFeedback(FeedbackViewModel model)
+        {
+            var existingFeedback = _feedbackRepository.GetFeedbackByTicketId(model.TicketId);
+
+            if (existingFeedback == null)
+            {
+                Feedback feedback = _mapper.Map<Feedback>(model);
+                feedback.UserId = _sessionHelper.GetUserIdFromSession();
+                feedback.FeedbackId = Guid.NewGuid();
+                feedback.DateCreated = DateTime.Now;
+                _feedbackRepository.Add(feedback);
+            }
         }
     }
 }

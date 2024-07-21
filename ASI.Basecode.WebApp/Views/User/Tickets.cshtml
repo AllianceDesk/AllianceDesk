@@ -40,13 +40,13 @@
         <div id="buttonContainer">
 
             <a asp-action="Tickets"
-               class="btn btn-primary @(Model.CurrentStatus == "All" ? "activeButton" : "inactiveButton")">
+               class="btn btn-primary @(Model.CurrentStatus == 0 ? "activeButton" : "inactiveButton")">
                 All
             </a>
 
             @foreach (var status in Model.Statuses)
             {
-                <a asp-action="Tickets" asp-route-status="@status.Key" class="btn btn-primary @(status.Key == Model.CurrentStatus ? "activeButton" : "inactiveButton")">@status.Value</a>
+                <a asp-action="Tickets" asp-route-status=@status.Key class="btn btn-primary @(status.Key == Model.CurrentStatus.ToString() ? "activeButton" : "inactiveButton")">@status.Value</a>
             }
         </div>
 
@@ -102,10 +102,18 @@
                                 }
                                 @if (item.Status == "Closed")
 								{
-                                    <button class="btn feedback" type="button" data-bs-toggle="modal" data-bs-target="feedback">
-                                        <i class="bx bx-user-voice bx-xs bx-fw feedbackIcon"></i>
-                                        Feedback
-                                    </button>
+                                    if(item.Feedback == null)
+									{
+									    <button class="btn feedback" type="button" data-bs-toggle="modal" data-bs-target="#fillFeedback" data-ticket-id="@item.TicketId">
+											<i class="bx bx-user-voice bx-xs bx-fw feedbackIcon"></i>
+											Feedback
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <p>Feedback Rating: @item.Feedback.Rating</p>
+                                        <p>Feedback Comments: @item.Feedback.Comments</p>
+                                    }
                                 }
                             </a>
                             <div class="btn-group option">
@@ -356,7 +364,7 @@
             </div>
         </div>
 
-        <div class="modal fade" id="feedback" tabindex="-1" aria-labelledby="feedbackLabel" aria-hidden="true">
+        <div class="modal fade" id="fillFeedback" tabindex="-1" aria-labelledby="feedbackLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content p-3">
                     <div id="main_card">
@@ -366,44 +374,43 @@
                             <button type="button" class="btn" data-bs-dismiss="modal"><i class='bx bx-x bx-sm icon' style="color: #45474B; cursor: pointer;"></i></button>
                         </div>
 
-                        <textarea class="form-control mb-3" id="largeTextField" rows="10" cols="50" placeholder="Description"></textarea>
-                        <h6 class="mb-3">How satisfied are you with our help? [5 as the highest]</h6>
-
-
-                        <div class="d-flex justify-content-between">
-
-                            <div class="rating mb-3 d-flex">
-                                <div class="d-flex flex-column mx-2">
-                                    <input type="radio" id="star5" name="rating" value="5" />
-                                    <label for="star5" title="5 stars">5</label>
-                                </div>
-
-                                <div class="d-flex flex-column mx-2">
-                                    <input type="radio" id="star4" name="rating" value="4" />
-                                    <label for="star4" title="4 stars">4</label>
-                                </div>
-
-                                <div class="d-flex flex-column mx-2">
-                                    <input type="radio" id="star3" name="rating" value="3" />
-                                    <label for="star3" title="3 stars">3</label>
-                                </div>
-
-                                <div class="d-flex flex-column mx-2">
-                                    <input type="radio" id="star2" name="rating" value="2" />
-                                    <label for="star2" title="2 stars">2</label>
-                                </div>
-
-                                <div class="d-flex flex-column mx-2">
-                                    <input type="radio" id="star1" name="rating" value="1" />
-                                    <label for="star1" title="1 star"> 1</label>
-                                </div>
+                        <form id="fillFeedbackForm" asp-action="FeedbackAdd" method="post">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input type="hidden" asp-for="Feedback.TicketId" id="Feedback_TicketId" />
+                            <div class="form-group mb-3">
+                                <textarea asp-for="Feedback.Comments" class="form-control" rows="10" placeholder="Description"></textarea>
+                                <span asp-validation-for="Feedback.Comments" class="text-danger"></span>
                             </div>
 
-                        </div>
-
-                        <div class="button_card mb-3 d-flex justify-content-between">
-                            <button type="button" class="btn attachment custom-button" style="background-color: #E21818; color: white;"><i class='bx bxl-telegram bx-xs bx-fw uh' style="align-self:center;"></i> Submit </button>
-                        </div>
+                            <input type="hidden" asp-for="Feedback.Rating" id="Rating" />
+                            <div class="rating mb-3 d-flex">
+                                <div class="d-flex flex-column mx-2">
+                                    <input type="radio" asp-for="Feedback.Rating" id="star5" name="Rating" value="5" />
+                                    <label for="star5" title="5 stars">5</label>
+                                </div>
+                                <div class="d-flex flex-column mx-2">
+                                    <input type="radio" id="star4" name="Rating" value="4" />
+                                    <label for="star4" title="4 stars">4</label>
+                                </div>
+                                <div class="d-flex flex-column mx-2">
+                                    <input type="radio" id="star3" name="Rating" value="3" />
+                                    <label for="star3" title="3 stars">3</label>
+                                </div>
+                                <div class="d-flex flex-column mx-2">
+                                    <input type="radio" id="star2" name="Rating" value="2" />
+                                    <label for="star2" title="2 stars">2</label>
+                                </div>
+                                <div class="d-flex flex-column mx-2">
+                                    <input type="radio" id="star1" name="Rating" value="1" />
+                                    <label for="star1" title="1 star">1</label>
+                                </div>
+                            </div>
+                            <div class="button_card mb-3 d-flex justify-content-between">
+                                <button type="submit" class="btn attachment custom-button" style="background-color: #E21818; color: white;">
+                                    <i class='bx bxl-telegram bx-xs bx-fw uh' style="align-self:center;"></i> Submit
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -462,59 +469,6 @@
 
     </div>
 
-    <div class="modal fade" id="feedback" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content p-3">
-                <div id="main_card">
-
-                    <div class="top_modal d-flex justify-content-between align-items-center mb-3">
-                        <h3>Feedback</h3>
-                        <button type="button" class="btn" data-bs-dismiss="modal"><i class='bx bx-x bx-sm icon' style="color: #45474B; cursor: pointer;"></i></button>
-                    </div>
-
-                    <textarea class="form-control mb-3" id="largeTextField" rows="10" cols="50" placeholder="Description"></textarea>
-                    <h6 class="mb-3">How satisfied are you with our help? [5 as the highest]</h6>
-
-
-                    <div class="d-flex justify-content-between">
-
-                        <div class="rating mb-3 d-flex">
-                            <div class="d-flex flex-column mx-2">
-                                <input type="radio" id="star5" name="rating" value="5" />
-                                <label for="star5" title="5 stars">5</label>
-                            </div>
-
-                            <div class="d-flex flex-column mx-2">
-                                <input type="radio" id="star4" name="rating" value="4" />
-                                <label for="star4" title="4 stars">4</label>
-                            </div>
-
-                            <div class="d-flex flex-column mx-2">
-                                <input type="radio" id="star3" name="rating" value="3" />
-                                <label for="star3" title="3 stars">3</label>
-                            </div>
-
-                            <div class="d-flex flex-column mx-2">
-                                <input type="radio" id="star2" name="rating" value="2" />
-                                <label for="star2" title="2 stars">2</label>
-                            </div>
-
-                            <div class="d-flex flex-column mx-2">
-                                <input type="radio" id="star1" name="rating" value="1" />
-                                <label for="star1" title="1 star"> 1</label>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="button_card mb-3 d-flex justify-content-between">
-                        <button type="button" class="btn attachment custom-button" style="background-color: #E21818; color: white;"><i class='bx bxl-telegram bx-xs bx-fw uh' style="align-self:center;"></i> Submit </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     @Html.Partial("KnowledgeBaseModal")
 </div>
 
@@ -523,6 +477,7 @@
         
         const viewTicketModal = new bootstrap.Modal(document.getElementById('viewTicket'));
         const editTicketModal = new bootstrap.Modal(document.getElementById('editTicket'));
+        var feedbackModal = new bootstrap.Modal(document.getElementById('fillFeedback'));
         
         const ticketLinks = document.querySelectorAll('.ticket-link');
 
@@ -598,17 +553,59 @@
                             document.querySelector('#Ticket_CategoryId').value = data.categoryId;
                             document.querySelector('#Ticket_PriorityId').value = data.priorityId;
                             document.querySelector('#Ticket_Description').value = data.description;
-                           editTicketModal.show();
+                            editTicketModal.show();
                         })
                         .catch(error => console.error('Error fetching ticket data:', error));
-                } else {
+                } else if (target === '#fillFeedback') {
+
+                    var ticketId = this.getAttribute('data-ticket-id');
+                    document.querySelector('#Feedback_TicketId').value = ticketId;
+                    document.querySelector('#fillFeedbackForm').action = `/User/Tickets/${ticketId}/Feedback`;
+
+                    feedbackModal.show();
+                } else if (target === '#closeTicket' {
+                    var ticketId = this.getAttribute('data-ticket-id');
+                    document.querySelector('#closeTicketId').value = ticketId;
+                    document.querySelector('#closeTicketForm').action = `/User/Tickets/${ticketId}/Close`;
+                    closeTicketModal.show();
+                }
+                else {
                     const modal = new bootstrap.Modal(document.querySelector(target));
                     modal.show();
                 }
             });
         });
-    });
 
+        // Get all modal elements
+        const modals = document.querySelectorAll('.modal');
+
+        modals.forEach(modal => {
+            // Find the close button within this specific modal
+            const closeButton = modal.querySelector('[data-bs-dismiss="modal"]');
+
+            if (closeButton) {
+                closeButton.addEventListener('click', function () {
+                    // Get the corresponding Bootstrap modal instance
+                    const modalInstance = bootstrap.Modal.getInstance(modal);
+
+                    if (modalInstance) {
+                        modalInstance.hide(); // Hide the correct modal
+                        // Manually remove backdrop if it still exists
+                        const backdrop = document.querySelector('.modal-backdrop');
+                        if (backdrop) {
+                            backdrop.remove();
+                        }
+                    }
+                });
+            }
+        });
+
+        document.querySelectorAll('input[name="Rating"]').forEach((elem) => {
+            elem.addEventListener("change", function () {
+                document.getElementById("Rating").value = this.value;
+            });
+        });
+    });
 
     function userDelete(ticketId) {
         var form = document.querySelector('#deleteTicketForm');

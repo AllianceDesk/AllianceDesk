@@ -31,5 +31,7 @@ namespace ASI.Basecode.Services.Interfaces
                 void AssignAgent(string ticketId, string userId);
                 Dictionary<string, int> GetTicketVolume();
                 List<UserViewModel> GetWeeklyTopResolvers();
+                void CloseTicket(string ticketId);
+                void AddFeedback(FeedbackViewModel model);
         }
 }

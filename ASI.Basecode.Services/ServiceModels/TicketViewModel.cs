@@ -83,5 +83,7 @@ namespace ASI.Basecode.Services.ServiceModels
                 return $"{timespan.Days / 365} years ago";
             }
         }
+
+        public FeedbackViewModel Feedback { get; set; }
     }
 }
