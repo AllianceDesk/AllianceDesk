@@ -213,11 +213,11 @@ namespace ASI.Basecode.Services.Services
             _ticketActivityRepository.Add(newActivity);
         }
 
-        public void CloseTicket(string ticketId)
+        public void UpdateStatus(string ticketId, byte statusId)
         {
             var existingTicket = _ticketRepository.GetTicketById(Guid.Parse(ticketId));
 
-            existingTicket.StatusId = 5;
+            existingTicket.StatusId = statusId;
 
             _ticketRepository.Update(existingTicket);
 

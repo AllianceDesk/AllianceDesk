@@ -109,21 +109,6 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("Tickets");
         }
 
-        [HttpPost("Tickets/{id}/Close")]
-        public IActionResult TicketClose(string id)
-        {
-            var ticket = _ticketService.GetById(id);
-
-            if(ticket == null)
-            {
-                return NotFound();
-            }
-
-            _ticketService.CloseTicket(id);
-            Console.WriteLine("Ticket closed");
-            return RedirectToAction("Tickets");
-        }
-
         [HttpGet("Tickets/{id}/Edit")]
         public IActionResult TicketEdit(string id)
         {
@@ -198,6 +183,36 @@ namespace ASI.Basecode.WebApp.Controllers
             }
 
             _ticketService.AddFeedback(model.Feedback);
+
+            return RedirectToAction("Tickets");
+        }
+
+        [HttpPost("Tickets/{id}/Close")]
+        public IActionResult TicketClose(string id)
+        {
+            var ticket = _ticketService.GetById(id);
+
+            if (ticket == null)
+            {
+                return NotFound();
+            }
+
+            _ticketService.UpdateStatus(id, 5);
+
+            return RedirectToAction("Tickets");
+        }
+
+        [HttpPost("Tickets/{id}/Reopen")]
+        public IActionResult TicketReopen(string id)
+        {
+            var ticket = _ticketService.GetById(id);
+
+            if (ticket == null)
+            {
+                return NotFound();
+            }
+
+            _ticketService.UpdateStatus(id, 3);
 
             return RedirectToAction("Tickets");
         }
