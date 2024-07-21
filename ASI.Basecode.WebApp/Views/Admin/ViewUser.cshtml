@@ -172,7 +172,7 @@
                     });
                 });
 
-                $(document).on('click', '[data-admin-resetPassowrd-btn]', function () {
+                $(document).on('click', '[data-admin-resetPassword-btn]', function () {
                     var userId = $('[data-modal-edit-form] input[name="UserId"]').val();
                     const resetPasswordFlag = true;
 
@@ -181,8 +181,9 @@
                         type: 'GET',
                         data: { UserId: userId, resetPassword: resetPasswordFlag },
                         success: function (response) {
+                            
                             console.log('AJAX request successful');
-                            $('[data-admin-edit-modal-container]').html(response).removeClass('hidden');
+                            $('[data-admin-edit-details]').html(response).removeClass('hidden');
                         },
                         error: function (xhr, status, error) {
                             console.error('Error deleting user:', status, error);
