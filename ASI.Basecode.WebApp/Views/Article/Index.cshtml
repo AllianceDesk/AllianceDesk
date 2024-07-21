@@ -16,7 +16,7 @@
 
         <div class="header-buttons">
             
-            <a asp-action="Index" asp-controller="Notification"><i class='bx bx-bell bx-sm icon' style="color: #45474B; cursor: pointer;"></i></a>
+            <a asp-action="Index" asp-controller="Notification" class="mt-1"><i class='bx bx-bell bx-sm icon' style="color: #45474B; cursor: pointer;"></i></a>
             <i class='bx bx-cog bx-sm icon' style="color: #45474B; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#settings"></i>
 
             <a class="profile" href="#">
@@ -80,26 +80,40 @@
                 <a class="inactive_link" asp-controller="Article" asp-action="MyFavorites">My Favorites
                     @if (ViewBag.FavoriteCount != null && ViewBag.FavoriteCount > 0)
                     {
-                        <span class="badge">@ViewBag.FavoriteCount</span>
+                        <span>(@ViewBag.FavoriteCount)</span>
                     }
                 </a>
             </div>
 
             <div class="filter_button">
+
                 <form asp-action="Index" method="get" asp-controller="Article" id="searchForm">
                     <div class="input-group">
-                        <button class="btn btn-outline-secondary" type="submit" id="button-search" style="background-color: whitesmoke; border: 1px solid #ccc;"><i class='bx bx-search bx-xs bx-fw' style="color: #45474B; cursor: pointer;"></i></button>
-                        <input name="searchString" id="searchInput" type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="button-search" style="background-color: whitesmoke; border: 1px solid #ccc;" value="@ViewBag.SearchString">
+                        <button class="btn btn-outline-secondary" type="submit" id="button-search" style="background-color: whitesmoke; border: 1px solid #ccc; outline: none; box-shadow: none;"><i class='bx bx-search bx-xs bx-fw' style="color: #45474B; cursor: pointer;"></i></button>
+                        <input name="searchString" id="searchInput" type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="button-search" style="background-color: whitesmoke; border: 1px solid #ccc; outline: none; box-shadow: none;" value="@ViewBag.SearchString">
                     </div>
                 </form>
-                <button type="button" class="btn fbtn"><i class='bx bx-filter-alt bx-xs bx-fw' style="color: #45474B; cursor: pointer;"></i>Filter</button>
+
+                <select class="form-select" aria-label="Default select example" style="width: 16em; outline: none; box-shadow: none; border: 1px solid #ccc; background-color: whitesmoke;">
+                    <option value="title" selected>Sort by Title (Ascending)</option>
+                    <option value="title_desc">Sort by Title (Descending)</option>
+                    <option value="date">Sort by Date (Ascending)</option>
+                    <option value="date_desc">Sort by Date (Descending)</option>
+                    <option value="Technical">Technical</option>
+                    <option value="Billing">Billing</option>
+                    <option value="General Questions">General Questions</option>
+                    <option value="Account Management">Account Management</option>
+                    <option value="Customer Support">Customer Support</option>
+                    <option value="Others">Others</option>
+                </select>
+
             </div>
         </div>
     </nav>
-    
+        
     <main>
         @foreach (var item in Model.Articles){
-            <a href="#" class="link_card">
+            <a href="#" class="link_card" style="text-decoration: none; color: inherit;">
                 <div class="article_card" data-bs-toggle="modal" data-bs-target="#detail" data-article-detail-btn data-article-id="@item.ArticleId">
                     <div class="article_top mb-4">
                         <h5>@Html.DisplayFor(modelItem => item.Title)</h5>
@@ -108,7 +122,8 @@
 
                     <p class="mb-3" style="font-size: 14px;">@Html.DisplayFor(modelItem => item.Body)</p>
 
-                    <h6 class="article_category">@Html.DisplayFor(modelItem => item.CategoryNavigation)</h6>
+                    <h6 class="article_category" style="width: 14em; text-align: center;">@Html.DisplayFor(modelItem => item.CategoryNavigation)</h6>
+                    
                 </div>
             </a>
         }

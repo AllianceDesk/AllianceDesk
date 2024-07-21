@@ -294,6 +294,10 @@ main {
   text-decoration: none;
 }
 
+.ticket-link:hover {
+    text-decoration: none;
+}
+
 .top-container {
   display: flex;
   flex-direction: row;
