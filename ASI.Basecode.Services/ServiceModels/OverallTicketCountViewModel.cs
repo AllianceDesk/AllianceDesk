@@ -11,6 +11,7 @@ namespace ASI.Basecode.Services.ServiceModels
         public Dictionary<string, int> TicketCountsByCategory { get; set; }
         public Dictionary<string, int> TicketCountsByStatus { get; set; }
         public Dictionary<string, int> TicketCountsByPriority { get; set; }
+        public Dictionary<string, int> TicketCountsByDay { get; set; }
         public int TotalTicketCount { get; set; }
     }
 } 

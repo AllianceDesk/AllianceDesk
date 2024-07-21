@@ -102,6 +102,7 @@ namespace ASI.Basecode.WebApp.Controllers
                 TicketCountsByCategory = ticketCountsByCategory,
                 TicketCountsByStatus = ticketCountsByStatus,
                 TicketCountsByPriority = ticketCountsByPriority,
+                TicketCountsByDay = _ticketService.GetTicketVolume(),
                 TotalTicketCount = weeklyTickets.Count()
             };
 
