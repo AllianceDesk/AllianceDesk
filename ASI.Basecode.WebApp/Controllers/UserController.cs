@@ -45,6 +45,47 @@ namespace ASI.Basecode.WebApp.Controllers
             _sessionHelper = sessionHelper;
         }
 
+        [HttpGet("Preferences")]
+        public IActionResult GetPreference()
+        {
+            var preference = _userService.GetPreferenceView();
+
+            return Json(new
+            {
+                InAppNotifications = preference.InAppNotifications,
+                EmailNotifications = preference.EmailNotifications,
+                DefaultTicketView = preference.DefaultTicketView,
+                DefaultTicketPerPage = preference.DefaultTicketPerPage,
+                Name = preference.User.Name,
+                Email = preference.User.Email
+             });
+        }
+
+        [HttpPost("UpdatePreferences")]
+        public IActionResult UpdatePreferencePost([FromBody] UserPreferenceViewModel model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    _userService.UpdatePreference(model);
+                    // TODO: Add Toastr notification for this
+                    return Ok(new { message = "Preferences updated successfully" });
+                }
+                else
+                {
+                    var errors = ModelState.Values.SelectMany(v => v.Errors)
+                                                 .Select(e => e.ErrorMessage);
+                    return BadRequest(new { errors });
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating user preferences");
+                return StatusCode(500, "Error updating user preferences"); // Internal Server Error
+            }
+        }
+
         [HttpGet("Tickets")]
         public IActionResult Tickets(byte? status, string? searchTerm, string? sortOrder, int? page)
         {
@@ -52,6 +93,7 @@ namespace ASI.Basecode.WebApp.Controllers
 
             var currentPage = page ?? 1;
             var currentStatus = status ?? 0;
+            var currentSearchTerm = searchTerm ?? "";
             var count = tickets.Count();
             var pageSize = 5;
 
@@ -83,10 +125,10 @@ namespace ASI.Basecode.WebApp.Controllers
                 CurrentPage = currentPage,
                 TotalPages = (int)Math.Ceiling(count / (double)pageSize),
                 CurrentStatus = currentStatus,
-                CurrentSearchTerm = string.IsNullOrEmpty(searchTerm) ? "" : searchTerm,
+                CurrentSearchTerm = currentSearchTerm,
                 Statuses = statuses,
                 Categories = categories,
-                Priorities = priorities,  
+                Priorities = priorities,
                 Agents = agents
             };
 

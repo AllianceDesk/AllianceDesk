@@ -46,6 +46,8 @@ namespace ASI.Basecode.WebApp
                     .ForMember(dest => dest.DateCreated, opt => opt.Ignore());
 
                 CreateMap<Feedback, FeedbackViewModel>();
+
+                CreateMap<UserPreference, UserPreferenceViewModel>();
             }
         }
     }

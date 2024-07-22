@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ASI.Basecode.Services.ServiceModels
 {
-    public class PreferenceViewModel
+    public class UserPreferenceViewModel
     {
         public Guid PreferenceId { get; set; }
         public Guid UserId { get; set; }

@@ -7,8 +7,8 @@ namespace ASI.Basecode.Data.Interfaces
     public interface IUserPreferenceRepository
     {
         void Add(UserPreference userPreference);
+        void Update(UserPreference userPreference);
         IEnumerable<UserPreference> RetrieveAll();
-        void Delete(Guid id);
         UserPreference GetUserPreferencesByUserId(Guid userId);
     }
 }

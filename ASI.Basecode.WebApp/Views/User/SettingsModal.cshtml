@@ -1,79 +1,136 @@
 ﻿@section styles {
     <link rel="stylesheet" href="~/css/user_tickets.css" />
-
 }
 
 <div class="modal fade" id="settings" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="ticket-modal1">
-                <div class="top_modal d-flex justify-content-between align-items-center mb-4">
-                    <h3>Preferences & Settings</h3>
-                    <button type="button" class="btn closebtn1" data-bs-dismiss="modal"><i class='bx bx-x bx-sm icon' style="color: #45474B; cursor: pointer;"></i></button>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">User Preferences</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-
-                <div class="top-container">
-                    <img class="image" src="/img/profile-logo.png" alt="image" style="height: 40px; width: 40px;">
-                    <div class="nameDateContainer" style="margin-right: 5em;">
-                        <h5 class="name">Golanginya</h5>
-                        <p class="email mb-4" style="font-size:12px;">Golanginya@gmail.com</p>
-                    </div>
-                    <button type="button" class="btn btn-outline-danger mb-4">Delete Account</button>
-                </div>
-
-                <div class="row mb-3">
-                    <div class="col">
-                        <div class="form-floating">
-                            <input type="text" class="form-control" id="floatingFirstName" placeholder="First name">
-                            <label for="floatingFirstName">First name</label>
+                <div class="modal-body">
+                    <form id="userPreferencesForm">
+                        <div class="row mb-3">
+                            <div class="col">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="floatingFirstName" name="name" placeholder="Full name">
+                                    <label for="floatingFirstName">Full name</label>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col">
-                        <div class="form-floating">
-                            <input type="text" class="form-control" id="floatingLastName" placeholder="Last name">
-                            <label for="floatingLastName">Last name</label>
+
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="floatingEmail" name="email" placeholder="Email">
+                            <label for="floatingEmail">Email</label>
                         </div>
-                    </div>
-                </div>
 
-                <div class="form-floating mb-3">
-                    <input type="email" class="form-control" id="floatingEmail" placeholder="Email">
-                    <label for="floatingEmail">Email</label>
-                </div>
-                <div class="form-floating mb-3">
-                    <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-                    <label for="floatingPassword">Password</label>
-                </div>
-                <div class="form-floating mb-3">
-                    <select class="form-select" id="floatingSelect1" aria-label="Floating label select example">
-                        <option selected>Set your preference</option>
-                        <option value="1">Open Tickets</option>
-                        <option value="2">Assigned Tickets</option>
-                        <option value="3">In Progress Tickets</option>
-                        <option value="4">Resolved Tickets</option>
-                        <option value="5">Close Tickets</option>
-                    </select>
-                    <label for="floatingSelect1">Default Ticket View</label>
-                </div>
-                <div class="form-floating mb-3">
-                    <select class="form-select" id="floatingSelect2" aria-label="Floating label select example">
-                        <option selected>Set your preference</option>
-                        <option value="1">On</option>
-                        <option value="2">Off</option>
-                    </select>
-                    <label for="floatingSelect2">Notifications</label>
-                </div>
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" id="floatingPassword" name="password" placeholder="Password">
+                            <label for="floatingPassword">Password</label>
+                        </div>
 
+                        <div class="form-floating mb-3">
+                            <select class="form-select" id="setDefaultTicketView" name="defaultTicketView" aria-label="Floating label select example">
+                                <option selected>Set your preference</option>
+                                <option value="Open">Open Tickets</option>
+                                <option value="Assigned">Assigned Tickets</option>
+                                <option value="In Progress">In Progress Tickets</option>
+                                <option value="Resolved">Resolved Tickets</option>
+                                <option value="Closed">Closed Tickets</option>
+                            </select>
+                            <label for="floatingSelect1">Default Ticket View</label>
+                        </div>
 
-            <div class="button_card mb-3 d-flex justify-content-between">
-                <button type="button" class="btn attachment custom-button" style="background-color: #E21818; color: white;"><i class='bx bxl-telegram bx-xs bx-fw uh' style="align-self:center;"></i> Save </button>
+                        <div class="form-floating mb-3">
+                            <select class="form-select" id="floatingSelect2" name="inAppNotifications" aria-label="Floating label select example">
+                                <option selected>Set your preference</option>
+                                <option value="1">On</option>
+                                <option value="2">Off</option>
+                            </select>
+                            <label for="floatingSelect2">Notifications</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control" id="floatingNumberInput" name="defaultTicketPerPage" placeholder="Enter a number" min="0" max="100">
+                            <label for="floatingNumberInput">Default Ticket Per Page</label>
+                        </div>
+
+                        <div class="button_card mb-3 d-flex justify-content-between">
+                            <button type="button" class="btn attachment custom-button" id="savePreferences" style="background-color: #E21818; color: white;">
+                                <i class='bx bxl-telegram bx-xs bx-fw uh' style="align-self:center;"></i> Save
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-       document.addEventListener('DOMContentLoaded', function () {
-        
-       });
+    document.addEventListener('DOMContentLoaded', function () {
+        fetch('/User/Preferences')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.querySelector('#floatingFirstName').value = data.name;
+                document.querySelector('#floatingEmail').value = data.email;
+                document.querySelector('#setDefaultTicketView').value = data.defaultTicketView || 'Set your preference';
+                document.querySelector('#floatingNumberInput').value = data.defaultTicketPerPage || '';
+
+                if (data.inAppNotifications) {
+                    document.querySelector('#floatingSelect2').value = 1;
+                } else {
+                    document.querySelector('#floatingSelect2').value = 2;
+                }
+
+                console.log(data);
+            })
+            .catch(error => console.error('Error fetching user preferences:', error));
+
+			document.querySelector('#savePreferences').addEventListener('click', function () {
+				const formData = new FormData(document.querySelector('#userPreferencesForm'));
+
+				const preferences = {
+					name: formData.get('name'),
+					email: formData.get('email'),
+					defaultTicketView: formData.get('defaultTicketView'),
+					defaultTicketPerPage: formData.get('defaultTicketPerPage'),
+					inAppNotifications: formData.get('inAppNotifications') === '1'
+				};
+
+                console.log(preferences);
+
+				fetch('/User/UpdatePreferences', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify(preferences)
+				})
+				.then(response => {
+					if (!response.ok) {
+						return response.text().then(text => {
+							throw new Error('Network response was not ok. ' + text);
+						});
+					}
+					return response.json();
+				})
+				.then(data => {
+					if (data.success) {
+						console.log('Preferences updated successfully:', data);
+						
+					} else {
+						console.error('Error updating user preferences:', data.message);
+					}
+				})
+				.catch(error => console.error('Error updating user preferences:', error));
+			}); 
+    });
 </script>

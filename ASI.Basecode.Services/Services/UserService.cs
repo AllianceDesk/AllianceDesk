@@ -20,18 +20,23 @@ namespace ASI.Basecode.Services.Services
     {
         private readonly IUserRepository _repository;
         private readonly IUserRoleRepository _userRoleRepository;
+        private readonly IUserPreferenceRepository _userPreferenceRepository;
         private readonly ITeamRepository _teamRepository;
         private readonly IMapper _mapper;
         private readonly ITicketActivityRepository _ticketActivityRepository;
         private readonly ITicketActivityOperationRepository _ticketActivityOperationRepository;
         private readonly ITicketRepository _ticketRepository;
         private static readonly Random Random = new Random();
+        private readonly ISessionHelper _sessionHelper;
+        private static readonly Random Random = new Random();
 
-        public UserService(IUserRepository repository, IMapper mapper, IUserRoleRepository userRoleRepository, ITeamRepository teamRepository, ITicketActivityRepository ticketActivityRepository, ITicketActivityOperationRepository ticketActivityOperationRepository, ITicketRepository ticketRepository)
+        public UserService(IUserRepository repository, IMapper mapper, ISessionHelper sessionHelper, IUserRoleRepository userRoleRepository, IUserPreferenceRepository userPreferenceRepository, ITeamRepository teamRepository)
         {
             _mapper = mapper;
+            _sessionHelper = sessionHelper;
             _repository = repository;
             _userRoleRepository = userRoleRepository;
+            _userPreferenceRepository = userPreferenceRepository;
             _teamRepository = teamRepository;
             _ticketActivityRepository = ticketActivityRepository;
             _ticketActivityOperationRepository = ticketActivityOperationRepository;
@@ -75,6 +80,16 @@ namespace ASI.Basecode.Services.Services
                 user.UpdatedBy = System.Environment.UserName;*/
                 user.RoleId = model.RoleId;
                 _repository.AddUser(user);
+
+                // Create User Preference
+                var preference = new UserPreference();
+                preference.PreferenceId = Guid.NewGuid();
+                preference.UserId = user.UserId;
+                preference.InAppNotifications = true;
+                preference.EmailNotifications = true;
+                preference.DefaultTicketView = "Open";
+                preference.DefaultTicketPerPage = 5;
+                _userPreferenceRepository.Add(preference);
             }
             else
             {
@@ -213,13 +228,39 @@ namespace ASI.Basecode.Services.Services
         }
         public PreferenceViewModel GetPreferenceView(Guid guid)
         {
-            var user = _repository.GetUsers().Where(x => x.UserId == guid).FirstOrDefault();
-            var preference = new PreferenceViewModel();
+            Guid userId = _sessionHelper.GetUserIdFromSession();
+            var user = _repository.GetUserById(userId);
+
             if (user != null)
             {
-                preference.UserId = user.UserId;
+                var preference = _userPreferenceRepository.GetUserPreferencesByUserId(userId);
+                var model = _mapper.Map<UserPreferenceViewModel>(preference);
+                return model;
             }
-            return preference;
+
+            return null;
         }
+
+        public void UpdatePreference(UserPreferenceViewModel model)
+        {
+            var user = _repository.GetUserById(model.UserId);
+            if (user != null)
+            {
+                user.Name = model.User.Name;
+                user.Email = model.User.Email;
+                _repository.UpdateUser(user);
+            }
+
+            var preference = _userPreferenceRepository.GetUserPreferencesByUserId(model.UserId);
+            if (preference != null)
+            {
+                preference.InAppNotifications = model.InAppNotifications;
+                preference.EmailNotifications = model.EmailNotifications;
+                preference.DefaultTicketView = model.DefaultTicketView;
+                preference.DefaultTicketPerPage = model.DefaultTicketPerPage;
+                _userPreferenceRepository.Update(preference);
+            }
+        }
+
     }
 }
