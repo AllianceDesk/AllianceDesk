@@ -28,9 +28,16 @@ namespace ASI.Basecode.Services.Services
         private readonly ITicketRepository _ticketRepository;
         private static readonly Random Random = new Random();
         private readonly ISessionHelper _sessionHelper;
-        private static readonly Random Random = new Random();
 
-        public UserService(IUserRepository repository, IMapper mapper, ISessionHelper sessionHelper, IUserRoleRepository userRoleRepository, IUserPreferenceRepository userPreferenceRepository, ITeamRepository teamRepository)
+        public UserService(IUserRepository repository, 
+                            IMapper mapper, 
+                            ISessionHelper sessionHelper, 
+                            IUserRoleRepository userRoleRepository, 
+                            IUserPreferenceRepository userPreferenceRepository, 
+                            ITeamRepository teamRepository,
+                            ITicketActivityOperationRepository ticketActivityOperationRepository,
+                            ITicketActivityRepository ticketActivityRepository,
+                            ITicketRepository ticketRepository)
         {
             _mapper = mapper;
             _sessionHelper = sessionHelper;
@@ -226,7 +233,7 @@ namespace ASI.Basecode.Services.Services
                                 }).ToList();
             return userActivity;
         }
-        public PreferenceViewModel GetPreferenceView(Guid guid)
+        public UserPreferenceViewModel GetPreferenceView()
         {
             Guid userId = _sessionHelper.GetUserIdFromSession();
             var user = _repository.GetUserById(userId);

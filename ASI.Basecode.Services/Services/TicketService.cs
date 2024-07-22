@@ -26,7 +26,6 @@ namespace ASI.Basecode.Services.Services
         private readonly ITeamRepository _teamRepository;
         private readonly ISessionHelper _sessionHelper;
         private readonly IMapper _mapper;
-        private readonly ITeamRepository _teamRepository;
         private readonly INotificationRepository _notificationRepository;
 
         public TicketService(

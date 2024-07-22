@@ -147,17 +147,20 @@ nav {
    height: 2.7em;
 }
 
-.badge {
+.article_badge {
     border-radius: 50%;
-/*    background-color: #E21818;*/
-    width: 20px;
-    height: 20px;
+    background-color: #E21818;
+    width: 24px;
+    height: 24px;
     color: white;
-    line-height: 12px;
-    font-size: 12px;
-    /*padding-right: 1.4em;*/
-    margin-left: 0.1em;
+    font-size: 14px;
+    display: flex;
+    /*align-items: center;*/
+    justify-content: center;
+    /*text-align: center;*/
+    padding: 0.2em 0.6em;
 }
+
 
 .active_link {
     text-decoration: none;
@@ -178,6 +181,7 @@ nav {
 
     .active_link:hover, .inactive_link:hover {
         color: #E21818;
+        text-decoration: none;
     }
 
 .inactive_link {
