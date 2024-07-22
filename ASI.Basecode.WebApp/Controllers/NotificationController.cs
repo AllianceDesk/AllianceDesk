@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Linq;
 
 namespace ASI.Basecode.WebApp.Controllers
@@ -14,7 +15,9 @@ namespace ASI.Basecode.WebApp.Controllers
     public class NotificationController : ControllerBase<NotificationController>
     {
         private readonly INotificationService _notificationService;
+        private readonly ITicketService _ticketService;
         private readonly ISessionHelper _sessionHelper;
+        private readonly IUserService _userService;
         /// <param name = "httpContextAccessor" ></ param >
         /// <param name="loggerFactory"></param>
         /// <param name="configuration"></param>
@@ -24,6 +27,8 @@ namespace ASI.Basecode.WebApp.Controllers
         public NotificationController(
             INotificationService notificationService,
             ISessionHelper sessionHelper,
+            ITicketService ticketService,
+            IUserService userService,
             IHttpContextAccessor httpContextAccessor,
             ILoggerFactory loggerFactory,
             IConfiguration configuration,
@@ -31,6 +36,8 @@ namespace ASI.Basecode.WebApp.Controllers
         {
             _notificationService = notificationService;
             _sessionHelper = sessionHelper;
+            _ticketService = ticketService;
+            _userService = userService;
         }
 
         /// <summary>
@@ -39,9 +46,31 @@ namespace ASI.Basecode.WebApp.Controllers
         /// <returns></returns>
         public IActionResult Index()
         {
-            var data = _notificationService.RetrieveAll().Where(u => u.RecipientId == _sessionHelper.GetUserIdFromSession().ToString());
+            var data = _notificationService.RetrieveAll().Where(u => u.RecipientId == _sessionHelper.GetUserIdFromSession().ToString())
+                        .Select(u => new NotificationServiceModel
+                        {
+                            NotificationId = u.NotificationId,
+                            Title = u.Title,
+                            Body = u.Body,
+                            TicketId = u.TicketId,
+                            RecipientId = u.RecipientId,
+                            DateCreated = u.DateCreated,
+                            TicketNumber = _ticketService.RetrieveAll().Where(t => t.TicketId.ToString() == u.TicketId).FirstOrDefault().TicketNumber,
+                        });
 
-            ViewBag.Role = 1;
+            var userId = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userId))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var user = _userService.GetUserById(Guid.Parse(userId).ToString());
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.Role = user.RoleId;
             return View(data);
         }
     }

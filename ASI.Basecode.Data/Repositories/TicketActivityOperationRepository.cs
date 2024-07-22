@@ -21,5 +21,10 @@ namespace ASI.Basecode.Data.Repositories
         {
             return this.GetDbSet<TicketActivityOperation>();
         }
+
+        public IEnumerable<TicketActivityOperation> GetOperationsByIds(IEnumerable<byte> operationIds)
+        {
+            return this.GetDbSet<TicketActivityOperation>().Where(x => operationIds.Contains(x.OperationId));
+        }
     }
 }

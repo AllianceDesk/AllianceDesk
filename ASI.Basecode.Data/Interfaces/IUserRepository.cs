@@ -14,5 +14,7 @@ namespace ASI.Basecode.Data.Interfaces
         void AddUser(User user);
         void UpdateUser(User user);
         void DeleteUser(string userId);
+        IEnumerable<User> GetUsersByIds(IEnumerable<Guid> userIds);
+        User GetUserById(Guid userId);
     }
 }

@@ -10,6 +10,7 @@ namespace ASI.Basecode.Data.Interfaces
     public interface ITicketActivityOperationRepository
     {
         IEnumerable<TicketActivityOperation> RetrieveAll();
+        IEnumerable<TicketActivityOperation> GetOperationsByIds(IEnumerable<byte> operationIds);
     }
 }
 

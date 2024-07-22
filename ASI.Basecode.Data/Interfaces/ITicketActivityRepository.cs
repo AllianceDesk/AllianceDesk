@@ -11,7 +11,9 @@ namespace ASI.Basecode.Data.Interfaces
     {
         void Add(TicketActivity ticketActivity);
         IEnumerable<TicketActivity> RetrieveAll();
+        void Delete(Guid id);
+        IEnumerable<TicketActivity> GetActivitiesByTicketId(Guid ticketId);
 
-        void Delete(string id);
+        IEnumerable<TicketActivity> GetActivitiesByTicketIds(List<Guid> ticketId);
     }
 }

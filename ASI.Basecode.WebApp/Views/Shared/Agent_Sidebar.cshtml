@@ -8,35 +8,35 @@
 
     @if (ViewBag.AgentSidebar == "Overview")
     {
-        <a asp-controller="Agent" asp-action="Dashboard" data-admin-btn class=" admin-sb-active-button margin-0"><i class='bx bx-grid-alt bx-sm as' style="align-self:center;"></i>  <p>Overview</p> </a>
+        <a asp-controller="Agent" data-td-none  asp-action="Dashboard" data-admin-btn class=" admin-sb-active-button margin-0"><i class='bx bx-grid-alt bx-sm as' style="align-self:center;"></i>  <p>Overview</p> </a>
     }
     else
     {
-        <a asp-controller="Agent" asp-action="Dashboard" data-admin-btn class=" admin-sb-inactive-button margin-0"><i class='bx bx-grid-alt bx-sm as' style="align-self:center;"></i>  <p>Overview</p> </a>
+        <a asp-controller="Agent" data-td-none asp-action="Dashboard" data-admin-btn class=" admin-sb-inactive-button margin-0"><i class='bx bx-grid-alt bx-sm as' style="align-self:center;"></i>  <p>Overview</p> </a>
     }
     @if (ViewBag.AgentSidebar == "Tickets")
     {
-        <a asp-controller="Agent" asp-action="AssignedTickets" data-admin-btn class=" admin-sb-active-button margin-0"><i class='bx bx-purchase-tag-alt bx-sm as' style="align-self:center;"></i> <p>Tickets</p> </a>
+        <a asp-controller="Agent" data-td-none asp-action="AssignedTickets" data-admin-btn class=" admin-sb-active-button margin-0"><i class='bx bx-purchase-tag-alt bx-sm as' style="align-self:center;"></i> <p>Tickets</p> </a>
     }
     else
     {
-        <a asp-controller="Agent" asp-action="AssignedTickets" data-admin-btn class=" admin-sb-inactive-button margin-0"><i class='bx bx-purchase-tag-alt bx-sm as' style="align-self:center;"></i> <p>Tickets</p> </a>
+        <a asp-controller="Agent" data-td-none asp-action="AssignedTickets" data-admin-btn class=" admin-sb-inactive-button margin-0"><i class='bx bx-purchase-tag-alt bx-sm as' style="align-self:center;"></i> <p>Tickets</p> </a>
     }
     @if (ViewBag.AgentSidebar == "ViewUser")
     {
-        <a asp-controller="Agent" asp-action="Teams" data-admin-btn class=" admin-sb-active-button margin-0"><i class='bx bx-group bx-sm as' style="align-self:center;"></i> <p>Teams</p> </a>
+        <a asp-controller="Agent" data-td-none asp-action="Teams" data-admin-btn class=" admin-sb-active-button margin-0"><i class='bx bx-group bx-sm as' style="align-self:center;"></i> <p>Teams</p> </a>
     }
     else
     {
-        <a asp-controller="Agent" asp-action="Teams" data-admin-btn class=" admin-sb-inactive-button margin-0"><i class='bx bx-group bx-sm as' style="align-self:center;"></i> <p>Teams</p> </a>
+        <a asp-controller="Agent" data-td-none asp-action="Teams" data-admin-btn class=" admin-sb-inactive-button margin-0"><i class='bx bx-group bx-sm as' style="align-self:center;"></i> <p>Teams</p> </a>
     }
     @if (ViewBag.AgentSidebar == "KnowledgeBase")
     {
-        <a asp-controller="Article" asp-action="Index" data-admin-btn class=" admin-sb-active-button margin-0"><i class='bx bx-group bx-sm as' style="align-self:center;"></i> <p>Knowledge Base</p> </a>
+        <a asp-controller="Article" data-td-none asp-action="Index" data-admin-btn class=" admin-sb-active-button margin-0"><i class='bx bx-group bx-sm as' style="align-self:center;"></i> <p>Knowledge Base</p> </a>
     }
     else
     {
-        <a asp-controller="Article" asp-action="Index" data-admin-btn class=" admin-sb-inactive-button margin-0"><i class='bx bx-group bx-sm as' style="align-self:center;"></i> <p>Knowledge Base</p> </a>
+        <a asp-controller="Article" data-td-none asp-action="Index" data-admin-btn class=" admin-sb-inactive-button margin-0"><i class='bx bx-group bx-sm as' style="align-self:center;"></i> <p>Knowledge Base</p> </a>
     }
 
   

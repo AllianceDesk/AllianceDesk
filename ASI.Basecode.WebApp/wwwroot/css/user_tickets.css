@@ -619,3 +619,75 @@ hr {
 .pagination-controls .page-link:hover {
   text-decoration: underline;
 }
+
+
+.feedback {
+    background-color: var(--active-button);
+    color: var(--active-button-text);
+    margin-top: 2em;
+    font-size: 14px;
+}
+
+    .feedback:hover {
+        background-color: var(--hover-background);
+        color: var(--active-button-text);
+    }
+
+.feedbackIcon {
+    transform: scale(1.28);
+    margin-right: 0.2em;
+}
+
+.agent-container {
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+    margin-top: 2em;
+}
+
+.image {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.agent-image {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.name {
+    color: #2F3645;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.agent-name {
+    color: #2F3645;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.date {
+    color: #808080;
+    font-size: 12px;
+}
+
+.agent-date {
+    color: #808080;
+    font-size: 12px;
+}
+
+
+.assign-agent {
+    color: #3818D9;
+    border: 1px solid #9B86BD;
+    border-radius: 10px;
+    padding: 0.5em;
+    font-size: 12px;
+    height: 2.5em;
+    background-color: rgba(226, 187, 233, 0.3);
+}

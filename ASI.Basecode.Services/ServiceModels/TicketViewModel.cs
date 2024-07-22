@@ -31,6 +31,7 @@ namespace ASI.Basecode.Services.ServiceModels
         public string AgentId { get; set; }
 
         public string TeamId { get; set; }
+        public string TicketNumber {  get; set; }
 
         public DateTime DateCreated { get; set; }
 
@@ -52,7 +53,7 @@ namespace ASI.Basecode.Services.ServiceModels
 
         public string TeamName { get; set; }
 
-        public IEnumerable<TicketActivityViewModel> TicketActivities { get; set; }
+        public IEnumerable<TicketActivityViewModel> TicketHistory { get; set; }
 
         public IEnumerable<TicketMessageViewModel> TicketMessages { get; set; }
 
@@ -61,5 +62,28 @@ namespace ASI.Basecode.Services.ServiceModels
         public DateTime DateAssigned { get; set; }
 
         public TicketActivity LatestUpdate { get; set; }
+
+        public string RelativeTime
+        {
+            get
+            {
+                var timespan = DateTime.Now - DateCreated;
+                if (timespan.TotalMinutes < 1)
+                    return "Just now";
+                if (timespan.TotalMinutes < 60)
+                    return $"{timespan.Minutes} minutes ago";
+                if (timespan.TotalHours < 24)
+                    return $"{timespan.Hours} hours ago";
+                if (timespan.TotalDays < 7)
+                    return $"{timespan.Days} days ago";
+                if (timespan.TotalDays < 30)
+                    return $"{timespan.Days / 7} weeks ago";
+                if (timespan.TotalDays < 365)
+                    return $"{timespan.Days / 30} months ago";
+                return $"{timespan.Days / 365} years ago";
+            }
+        }
+
+        public FeedbackViewModel Feedback { get; set; }
     }
 }

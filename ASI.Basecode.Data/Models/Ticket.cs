@@ -15,6 +15,7 @@ namespace ASI.Basecode.Data.Models
         }
 
         public Guid TicketId { get; set; }
+        public string TicketNumber { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public byte CategoryId { get; set; }

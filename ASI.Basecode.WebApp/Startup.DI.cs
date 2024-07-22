@@ -38,7 +38,7 @@ namespace ASI.Basecode.WebApp
             this._services.AddScoped<ITicketService, TicketService>();
             this._services.AddScoped<IArticleService, ArticleService>();
             this._services.AddScoped<INotificationService, NotificationService>();
-            
+           
             // Repositories
             this._services.AddScoped<IUserRepository, UserRepository>();
             this._services.AddScoped<ITicketRepository, TicketRepository>();
@@ -48,11 +48,13 @@ namespace ASI.Basecode.WebApp
             this._services.AddScoped<ITicketActivityOperationRepository, TicketActivityOperationRepository>();
             this._services.AddScoped<ITicketActivityRepository, TicketActivityRepository>();
             this._services.AddScoped<ITicketMessageRepository, TicketMessageRepository>();
+            this._services.AddScoped<IUserPreferenceRepository, UserPreferenceRepository>();
             this._services.AddScoped<IUserRoleRepository, UserRoleRepository>();
             this._services.AddScoped<ITeamRepository, TeamRepository>();
             this._services.AddScoped<IArticleRepository, ArticleRepository>();
             this._services.AddScoped<INotificationRepository, NotificationRepository>();
             this._services.AddScoped<IFavoriteRepository, FavoriteRepository>();
+            this._services.AddScoped<IFeedbackRepository, FeedbackRepository>();
 
             // Manager Class
             this._services.AddScoped<SignInManager>();

@@ -20,18 +20,26 @@ namespace ASI.Basecode.Services.Services
     {
         private readonly IUserRepository _repository;
         private readonly IUserRoleRepository _userRoleRepository;
+        private readonly IUserPreferenceRepository _userPreferenceRepository;
         private readonly ITeamRepository _teamRepository;
         private readonly IMapper _mapper;
         private readonly ITicketActivityRepository _ticketActivityRepository;
         private readonly ITicketActivityOperationRepository _ticketActivityOperationRepository;
         private readonly ITicketRepository _ticketRepository;
         private static readonly Random Random = new Random();
+        private readonly ISessionHelper _sessionHelper;
 
-        public UserService(IUserRepository repository, IMapper mapper, IUserRoleRepository userRoleRepository, ITeamRepository teamRepository, ITicketActivityRepository ticketActivityRepository, ITicketActivityOperationRepository ticketActivityOperationRepository, ITicketRepository ticketRepository)
+        public UserService(IUserRepository repository,
+            ITicketActivityRepository ticketActivityRepository,
+            ITicketActivityOperationRepository ticketActivityOperationRepository,
+            ITicketRepository ticketRepository,
+            IMapper mapper, ISessionHelper sessionHelper, IUserRoleRepository userRoleRepository, IUserPreferenceRepository userPreferenceRepository, ITeamRepository teamRepository)
         {
             _mapper = mapper;
+            _sessionHelper = sessionHelper;
             _repository = repository;
             _userRoleRepository = userRoleRepository;
+            _userPreferenceRepository = userPreferenceRepository;
             _teamRepository = teamRepository;
             _ticketActivityRepository = ticketActivityRepository;
             _ticketActivityOperationRepository = ticketActivityOperationRepository;
@@ -75,13 +83,23 @@ namespace ASI.Basecode.Services.Services
                 user.UpdatedBy = System.Environment.UserName;*/
                 user.RoleId = model.RoleId;
                 _repository.AddUser(user);
+
+                // Create User Preference
+                var preference = new UserPreference();
+                preference.PreferenceId = Guid.NewGuid();
+                preference.UserId = user.UserId;
+                preference.InAppNotifications = true;
+                preference.EmailNotifications = true;
+                preference.DefaultTicketView = "Open";
+                preference.DefaultTicketPerPage = 5;
+                _userPreferenceRepository.Add(preference);
             }
             else
             {
                 throw new InvalidDataException(Resources.Messages.Errors.UserExists);
             }
         }
-        
+
         public void UpdateUser(UserViewModel model)
         {
             var existingData = _repository.GetUsers().Where(u => u.UserId.ToString() == model.UserId).FirstOrDefault();
@@ -105,7 +123,7 @@ namespace ASI.Basecode.Services.Services
 
                 _repository.UpdateUser(existingData);
             }
-            
+
         }
 
         public void DeleteUser(string userId)
@@ -116,12 +134,13 @@ namespace ASI.Basecode.Services.Services
         public void AddTeam(UserViewModel model)
         {
             var team = new Team();
-            if (!_teamRepository.TeamExists(model.TeamName)){
+            if (!_teamRepository.TeamExists(model.TeamName))
+            {
                 team.TeamId = Guid.NewGuid();
                 team.TeamName = model.TeamName;
                 _teamRepository.AddTeam(team);
             }
-        } 
+        }
 
         public IEnumerable<UserRole> GetUserRoles()
         {
@@ -142,11 +161,11 @@ namespace ASI.Basecode.Services.Services
         {
             User user = _repository.GetUsers().Where(x => x.UserId.ToString() == id).FirstOrDefault();
 
-            if (user !=  null)
+            if (user != null)
             {
                 return user;
             }
-        
+
             return null;
         }
 
@@ -191,7 +210,7 @@ namespace ASI.Basecode.Services.Services
             return new string(password.ToString().ToCharArray().OrderBy(s => (Random.Next(2) % 2) == 0).ToArray());
         }
 
-        public List<TicketActivityViewModel> GetRecentUserActivity ()
+        public List<TicketActivityViewModel> GetRecentUserActivity()
         {
             var userActivity = _ticketActivityRepository.RetrieveAll()
                                 .OrderByDescending(a => a.ModifiedAt).Take(5)
@@ -209,6 +228,46 @@ namespace ASI.Basecode.Services.Services
                                     message = t.Message,
                                 }).ToList();
             return userActivity;
+        }
+       /* public PreferenceViewModel GetPreferenceView(Guid guid)
+        {
+            Guid userId = _sessionHelper.GetUserIdFromSession();
+            var user = _repository.GetUserById(userId);
+
+            if (user != null)
+            {
+                var preference = _userPreferenceRepository.GetUserPreferencesByUserId(userId);
+                var model = _mapper.Map<UserPreferenceViewModel>(preference);
+                return model;
+            }
+
+            return null;
+        }*/
+
+        public void UpdatePreference(UserPreferenceViewModel model)
+        {
+            var user = _repository.GetUserById(model.UserId);
+            if (user != null)
+            {
+                user.Name = model.User.Name;
+                user.Email = model.User.Email;
+                _repository.UpdateUser(user);
+            }
+
+            var preference = _userPreferenceRepository.GetUserPreferencesByUserId(model.UserId);
+            if (preference != null)
+            {
+                preference.InAppNotifications = model.InAppNotifications;
+                preference.EmailNotifications = model.EmailNotifications;
+                preference.DefaultTicketView = model.DefaultTicketView;
+                preference.DefaultTicketPerPage = model.DefaultTicketPerPage;
+                _userPreferenceRepository.Update(preference);
+            }
+        }
+
+        public UserPreferenceViewModel GetPreferenceView()
+        {
+            throw new NotImplementedException();
         }
     }
 }

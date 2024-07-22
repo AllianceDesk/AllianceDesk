@@ -1,4 +1,5 @@
-﻿using ASI.Basecode.Services.Interfaces;
+﻿using ASI.Basecode.Data.Models;
+using ASI.Basecode.Services.Interfaces;
 using ASI.Basecode.Services.ServiceModels;
 using ASI.Basecode.WebApp.Mvc;
 using AutoMapper;
@@ -8,6 +9,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
+using System.Drawing.Printing;
 using System.Linq;
 
 namespace ASI.Basecode.WebApp.Controllers
@@ -18,6 +21,7 @@ namespace ASI.Basecode.WebApp.Controllers
         private readonly IUserService _userService;
         private readonly ITicketService _ticketService;
         private readonly ISessionHelper _sessionHelper;
+        private readonly INotificationService _notificationService;
         /// <summary>
         /// Constructor
         /// </summary>
@@ -32,87 +36,100 @@ namespace ASI.Basecode.WebApp.Controllers
                               IUserService userService,
                               ITicketService ticketService,
                               ISessionHelper sessionHelper,
+                              INotificationService notificationService,
                               IMapper mapper = null) : base(httpContextAccessor, loggerFactory, configuration, mapper)
         {
             this._userService = userService;
             this._ticketService = ticketService;
+            this._notificationService = notificationService;
             _sessionHelper = sessionHelper;
         }
 
-        [HttpGet("Tickets")]
-        public IActionResult Tickets(string? status, int? page, string? searchTerm)
+        [HttpGet("Preferences")]
+        public IActionResult GetPreference()
         {
+            var preference = _userService.GetPreferenceView();
 
-            var tickets = _ticketService.RetrieveAll();
+            return Json(new
+            {
+                InAppNotifications = preference.InAppNotifications,
+                EmailNotifications = preference.EmailNotifications,
+                DefaultTicketView = preference.DefaultTicketView,
+                DefaultTicketPerPage = preference.DefaultTicketPerPage,
+                Name = preference.User.Name,
+                Email = preference.User.Email
+             });
+        }
 
-            var userTickets = tickets
-                .Where(t => t.CreatorId == _sessionHelper.GetUserIdFromSession().ToString())
-                .OrderByDescending(t => t.DateCreated)
-                .AsEnumerable();
+       /* [HttpPost("UpdatePreferences")]
+        public IActionResult UpdatePreferencePost([FromBody] UserPreferenceViewModel model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    _userService.UpdatePreference(model);
+                    // TODO: Add Toastr notification for this
+                    return Ok(new { message = "Preferences updated successfully" });
+                }
+                else
+                {
+                    var errors = ModelState.Values.SelectMany(v => v.Errors)
+                                                 .Select(e => e.ErrorMessage);
+                    return BadRequest(new { errors });
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating user preferences");
+                return StatusCode(500, "Error updating user preferences"); // Internal Server Error
+            }
+        }*/
 
-            // Replace this later to retrieve from the user preferences
+        [HttpGet("Tickets")]
+        public IActionResult Tickets(byte? status, string? searchTerm, string? sortOrder, int? page)
+        {
+            var tickets = _ticketService.GetUserTickets(_sessionHelper.GetUserIdFromSession(), status, searchTerm, sortOrder, page);
+
+            var currentPage = page ?? 1;
+            var currentStatus = status ?? 0;
+            var currentSearchTerm = searchTerm ?? "";
+            var count = tickets.Count();
             var pageSize = 5;
 
             var statuses = _ticketService.GetStatuses()
-                                   .Select(c => new SelectListItem
-                                   {
-                                       Value = c.StatusId.ToString(),
-                                       Text = c.StatusName
-                                   })
-                                   .ToList();
+                .Select(c => new KeyValuePair<string, string>(c.StatusId.ToString(), c.StatusName))
+                .ToList();
 
             var categories = _ticketService.GetCategories()
-                                      .Select(c => new SelectListItem
-                                      {
-                                          Value = c.CategoryId.ToString(),
-                                          Text = c.CategoryName
-                                      })
-                                      .ToList();
+                .Select(c => new KeyValuePair<string, string>(c.CategoryId.ToString(), c.CategoryName))
+                .ToList();
 
             var priorities = _ticketService.GetPriorities()
-                                           .Select(p => new SelectListItem
-                                           {
-                                               Value = p.PriorityId.ToString(),
-                                               Text = p.PriorityName
-                                           })
-                                           .ToList();
+                .Select(p => new KeyValuePair<string, string>(p.PriorityId.ToString(), p.PriorityName))
+                .ToList();
 
+            var agents = _userService.GetAgents();
 
-            if (!string.IsNullOrEmpty(status) && status != "All")
+            if (Math.Ceiling(tickets.Count() / (double )pageSize) > 1)
             {
-                userTickets = userTickets.Where(t => t.StatusId == status);
-            }
-
-            if (!string.IsNullOrEmpty(searchTerm))
-            {
-                userTickets = userTickets.Where(t => t.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
-                                                     t.Description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
-            }
-
-            var CurrentPage = page ?? 1;
-            var count = userTickets.Count();
-
-
-            if (Math.Ceiling(userTickets.Count() / (double)pageSize) > 1)
-            {
-                userTickets = userTickets.Skip((CurrentPage - 1) * pageSize)
+                tickets = tickets.Skip((currentPage - 1) * pageSize)
                                          .Take(pageSize)
                                          .ToList();
             }
 
-            // Pass data to ViewBag
-            ViewBag.Statuses = new SelectList(statuses, "Value", "Text");
-            ViewBag.Categories = new SelectList(categories, "Value", "Text");
-            ViewBag.Priorities = new SelectList(priorities, "Value", "Text");
-            ViewBag.CurrentStatus = string.IsNullOrEmpty(status) ? "All" : status;
-            ViewBag.CurrentPage = CurrentPage;
-            ViewBag.TotalPages = Math.Ceiling(count / (double)pageSize);
-            ViewBag.CurrentSearchTerm = searchTerm;
-
-            var model = new UserTicketViewModel
+            // Create view model and return view
+            var model = new UserTicketsViewModel
             {
-                Tickets = userTickets,
-                Ticket = new TicketViewModel(),
+                Tickets = tickets,
+                CurrentPage = currentPage,
+                TotalPages = (int)Math.Ceiling(count / (double)pageSize),
+                CurrentStatus = currentStatus,
+                CurrentSearchTerm = currentSearchTerm,
+                Statuses = statuses,
+                Categories = categories,
+                Priorities = priorities,
+                Agents = agents
             };
 
             return View(model);
@@ -140,7 +157,6 @@ namespace ASI.Basecode.WebApp.Controllers
 
             return RedirectToAction("Tickets");
         }
-
 
         [HttpGet("Tickets/{id}/Edit")]
         public IActionResult TicketEdit(string id)
@@ -182,8 +198,8 @@ namespace ASI.Basecode.WebApp.Controllers
         }
 
 
-        [HttpPost("Tickets/{id}/Edit"), ActionName("TicketEdit")]
-        public IActionResult TicketEditPost(string id, UserTicketViewModel model)
+        /*[HttpPost("Tickets/{id}/Edit"), ActionName("TicketEdit")]
+        public IActionResult TicketEditPost(string id, UserTicketsViewModel model)
         {
             var ticket = _ticketService.GetById(id); // Ensure this matches with the ID being passed
             if (ticket == null)
@@ -191,12 +207,62 @@ namespace ASI.Basecode.WebApp.Controllers
                 return NotFound();
             }
 
+            // Update ticket properties from the model
             ticket.Title = model.Ticket.Title;
             ticket.Description = model.Ticket.Description;
             ticket.CategoryId = model.Ticket.CategoryId;
             ticket.PriorityId = model.Ticket.PriorityId;
 
+            // Call service to update the ticket
             _ticketService.Update(ticket);
+
+            // Redirect to the Tickets action
+            return RedirectToAction("Tickets");
+        }
+*/
+        /*[HttpPost("Tickets/{id}/Feedback")]
+        public IActionResult TicketFeedback(string id, UserTicketsViewModel model)
+        {
+            model.Feedback.TicketId = Guid.Parse(id);
+            var ticket = _ticketService.GetById(id);
+
+            if (ticket == null)
+            {
+                return NotFound();
+            }
+
+            _ticketService.AddFeedback(model.Feedback);
+
+            return RedirectToAction("Tickets");
+        }*/
+
+        [HttpPost("Tickets/{id}/Close")]
+        public IActionResult TicketClose(string id)
+        {
+            var ticket = _ticketService.GetById(id);
+
+            if (ticket == null)
+            {
+                return NotFound();
+            }
+
+            _ticketService.UpdateStatus(id, 5);
+
+            return RedirectToAction("Tickets");
+        }
+
+        [HttpPost("Tickets/{id}/Reopen")]
+        public IActionResult TicketReopen(string id)
+        {
+            var ticket = _ticketService.GetById(id);
+
+            if (ticket == null)
+            {
+                return NotFound();
+            }
+
+            _ticketService.UpdateStatus(id, 3);
+
             return RedirectToAction("Tickets");
         }
     }

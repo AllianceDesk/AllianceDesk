@@ -8,41 +8,41 @@
 
     @if (ViewBag.AdminSidebar == "Overview")
     {
-        <a asp-controller="Admin" asp-action="Dashboard" data-admin-btn class=" admin-sb-active-button margin-0"><i class='bx bx-grid-alt bx-sm as' style="align-self:center;"></i>  <p>Overview</p> </a>
+        <a asp-controller="Admin" data-td-none asp-action="Dashboard" data-admin-btn class=" admin-sb-active-button margin-0"><i class='bx bx-grid-alt bx-sm as' style="align-self:center;"></i>  <p>Overview</p> </a>
     }
     else
     {
-        <a asp-controller="Admin" asp-action="Dashboard" data-admin-btn class=" admin-sb-inactive-button margin-0"><i class='bx bx-grid-alt bx-sm as' style="align-self:center;"></i>  <p>Overview</p> </a>
+        <a asp-controller="Admin" data-td-none asp-action="Dashboard" data-admin-btn class=" admin-sb-inactive-button margin-0"><i class='bx bx-grid-alt bx-sm as' style="align-self:center;"></i>  <p>Overview</p> </a>
     }
     @if (ViewBag.AdminSidebar == "Tickets") {
-        <a asp-controller="Admin" asp-action="Tickets" data-admin-btn class=" admin-sb-active-button margin-0"><i class='bx bx-purchase-tag-alt bx-sm as' style="align-self:center;"></i> <p>Tickets</p> </a>
-    } else {
-        <a asp-controller="Admin" asp-action="Tickets" data-admin-btn class=" admin-sb-inactive-button margin-0"><i class='bx bx-purchase-tag-alt bx-sm as' style="align-self:center;"></i> <p>Tickets</p> </a>
+        <a asp-controller="Admin" data-td-none asp-action="Tickets" data-admin-btn class=" admin-sb-active-button margin-0"><i class='bx bx-purchase-tag-alt bx-sm as' style="align-self:center;"></i> <p>Tickets</p> </a>
+    } else { 
+        <a asp-controller="Admin" data-td-none asp-action="Tickets" data-admin-btn class=" admin-sb-inactive-button margin-0"><i class='bx bx-purchase-tag-alt bx-sm as' style="align-self:center;"></i> <p>Tickets</p> </a>
     } 
     @if (ViewBag.AdminSidebar == "ViewUser")
     {
-        <a asp-controller="Admin" asp-action="ViewUser" data-admin-btn class=" admin-sb-active-button margin-0"><i class='bx bx-group bx-sm as' style="align-self:center;"></i> <p>Directory</p> </a>
+        <a asp-controller="Admin" data-td-none asp-action="ViewUser" data-admin-btn class=" admin-sb-active-button margin-0"><i class='bx bx-group bx-sm as' style="align-self:center;"></i> <p>Directory</p> </a>
     }
     else
     {
-        <a asp-controller="Admin" asp-action="ViewUser" data-admin-btn class=" admin-sb-inactive-button margin-0"><i class='bx bx-group bx-sm as' style="align-self:center;"></i> <p>Directory</p> </a>
+        <a asp-controller="Admin" data-td-none asp-action="ViewUser" data-admin-btn class=" admin-sb-inactive-button margin-0"><i class='bx bx-group bx-sm as' style="align-self:center;"></i> <p>Directory</p> </a>
     }
     @if (ViewBag.AdminSidebar == "KnowledgeBase")
     {
-        <a asp-controller="Article" asp-action="Index" data-admin-btn class=" admin-sb-active-button margin-0"><i class='bx bx-group bx-sm as' style="align-self:center;"></i> <p>Knowledge Base</p> </a>
+        <a asp-controller="Article" data-td-none asp-action="Index" data-admin-btn class=" admin-sb-active-button margin-0"><i class='bx bx-group bx-sm as' style="align-self:center;"></i> <p>Knowledge Base</p> </a>
     }
     else
     {
-        <a asp-controller="Article" asp-action="Index" data-admin-btn class=" admin-sb-inactive-button margin-0"><i class='bx bx-group bx-sm as' style="align-self:center;"></i> <p>Knowledge Base</p> </a>
+        <a asp-controller="Article" data-td-none asp-action="Index" data-admin-btn class=" admin-sb-inactive-button margin-0"><i class='bx bx-group bx-sm as' style="align-self:center;"></i> <p>Knowledge Base</p> </a>
     }
     
     @if (ViewBag.AdminSidebar == "Analytics")
     {
-        <a asp-controller="Admin" asp-action="AnalyticsOverallMetrics" data-admin-btn class=" admin-sb-active-button margin-0"><i class='bx bx-objects-vertical-bottom bx-sm as' style="align-self:center;"></i> <p>Analytics</p> </a>
+        <a asp-controller="Admin" data-td-none asp-action="AnalyticsOverallMetrics" data-admin-btn class=" admin-sb-active-button margin-0"><i class='bx bx-objects-vertical-bottom bx-sm as' style="align-self:center;"></i> <p>Analytics</p> </a>
     }
     else
     {
-        <a asp-controller="Admin" asp-action="AnalyticsOverallMetrics" data-admin-btn class=" admin-sb-inactive-button margin-0"><i class='bx bx-objects-vertical-bottom bx-sm as' style="align-self:center;"></i> <p>Analytics</p> </a>
+        <a asp-controller="Admin" data-td-none asp-action="AnalyticsOverallMetrics" data-admin-btn class=" admin-sb-inactive-button margin-0"><i class='bx bx-objects-vertical-bottom bx-sm as' style="align-self:center;"></i> <p>Analytics</p> </a>
     }
     
         
