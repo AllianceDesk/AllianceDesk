@@ -5,7 +5,8 @@
 }
 @section styles {
     <link rel="stylesheet" href="~/css/functionalities.css" />
-    <link rel="stylesheet" href="~/css/Admin.css" />
+    <link rel="stylesheet" href="~/css/Admin.css" />    
+    
 }
 
 @Html.Partial("Admin_Header")
@@ -48,7 +49,7 @@
                     @foreach (var article in Model.FavoriteArticles)
                     {
 
-                        <li class="text-sm" data-article-detail-btn data-article-id="@article.ArticleId">@article.Title</li>
+                        <li class="text-sm" data-article-detail-btn data-article-id="@article.ArticleId" data-bs-toggle="modal" data-bs-target="#detail">@article.Title</li>
                     }
                 </ul>
            </div>

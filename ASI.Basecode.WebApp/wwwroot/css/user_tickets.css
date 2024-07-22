@@ -691,3 +691,7 @@ hr {
     height: 2.5em;
     background-color: rgba(226, 187, 233, 0.3);
 }
+
+.ticket-modal1 {
+    padding: 1em;
+}
