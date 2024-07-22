@@ -29,11 +29,15 @@ namespace ASI.Basecode.Services.Services
         private static readonly Random Random = new Random();
         private readonly ISessionHelper _sessionHelper;
 
-        public UserService(IUserRepository repository,
-            ITicketActivityRepository ticketActivityRepository,
-            ITicketActivityOperationRepository ticketActivityOperationRepository,
-            ITicketRepository ticketRepository,
-            IMapper mapper, ISessionHelper sessionHelper, IUserRoleRepository userRoleRepository, IUserPreferenceRepository userPreferenceRepository, ITeamRepository teamRepository)
+        public UserService(IUserRepository repository, 
+                            IMapper mapper, 
+                            ISessionHelper sessionHelper, 
+                            IUserRoleRepository userRoleRepository, 
+                            IUserPreferenceRepository userPreferenceRepository, 
+                            ITeamRepository teamRepository,
+                            ITicketActivityOperationRepository ticketActivityOperationRepository,
+                            ITicketActivityRepository ticketActivityRepository,
+                            ITicketRepository ticketRepository)
         {
             _mapper = mapper;
             _sessionHelper = sessionHelper;
@@ -229,7 +233,7 @@ namespace ASI.Basecode.Services.Services
                                 }).ToList();
             return userActivity;
         }
-       /* public PreferenceViewModel GetPreferenceView(Guid guid)
+        public UserPreferenceViewModel GetPreferenceView()
         {
             Guid userId = _sessionHelper.GetUserIdFromSession();
             var user = _repository.GetUserById(userId);
@@ -242,7 +246,7 @@ namespace ASI.Basecode.Services.Services
             }
 
             return null;
-        }*/
+        }
 
         public void UpdatePreference(UserPreferenceViewModel model)
         {
@@ -265,9 +269,6 @@ namespace ASI.Basecode.Services.Services
             }
         }
 
-        public UserPreferenceViewModel GetPreferenceView()
-        {
-            throw new NotImplementedException();
-        }
+   
     }
 }
