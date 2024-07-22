@@ -176,7 +176,7 @@
                                     <a class="page-link" href="@Url.Action("Tickets", new { page = Model.CurrentPage - 1, status = Model.CurrentStatus })">&lt;</a>
                                 </li>
 
-                                <li class="page-item @(Model.CurrentPage == 1 ? "active" : "")">
+                                <li class="page-item active">
                                     <span class="page-link">@Model.CurrentPage</span>
                                 </li>
 
@@ -559,7 +559,6 @@
                     var ticketId = this.getAttribute('data-ticket-id');
                     document.querySelector('#Feedback_TicketId').value = ticketId;
                     document.querySelector('#fillFeedbackForm').action = `/User/Tickets/${ticketId}/Feedback`;
-
                     feedbackModal.show();
                 } else if (target === '#ticketActionModal') {
                     var actionType = this.getAttribute('data-action-type');
