@@ -94,7 +94,7 @@ namespace ASI.Basecode.Services.Services
             return data;
         }
 
-        public IQueryable<TicketViewModel> GetUserTickets(Guid userId, byte? status, string? searchTerm, string? sortOrder, int? page)
+        public IEnumerable<TicketViewModel> GetUserTickets(Guid userId, byte? status, string? searchTerm, string? sortOrder, int? page)
         {
             // Retrieve IQueryable from repository
             var ticketsQuery = _ticketRepository.GetUserTicketsById(userId);
@@ -108,10 +108,6 @@ namespace ASI.Basecode.Services.Services
             var ticketActivities = _ticketActivityRepository.GetActivitiesByTicketIds(ticketIds).ToList();
             var feedbacks = _feedbackRepository.GetFeedbackByTicketIds(ticketIds)
                 .ToDictionary(f => f.TicketId, f => _mapper.Map<FeedbackViewModel>(f));
-
-            var activitiesByTicketId = ticketActivities
-                .GroupBy(a => a.TicketId)
-                .ToDictionary(g => g.Key, g => g.OrderByDescending(a => a.ModifiedAt).ToList());
 
             // Apply filters
             if (status.HasValue && status != 0)
@@ -127,9 +123,23 @@ namespace ASI.Basecode.Services.Services
 
 
             //Sorting order
-            ticketsQuery = ticketsQuery.OrderBy(t => t.DateCreated);
+            ticketsQuery = ticketsQuery.OrderBy(t => t.Title);
 
-            var model = ticketsQuery.Select(s => new TicketViewModel
+
+            // Pagination
+            var pageSize = 5;
+            var currentPage = page ?? 1;
+            var count = ticketsQuery.Count();
+            var tickets = ticketsQuery.Skip((currentPage - 1) * pageSize)
+                                      .Take(pageSize)
+                                      .ToList();
+
+            var activitiesByTicketId = ticketActivities
+                .GroupBy(a => a.TicketId)
+                .ToDictionary(g => g.Key, g => g.OrderByDescending(a => a.ModifiedAt).ToList());
+
+            // Transform to view model
+            var model = tickets.Select(s => new TicketViewModel
             {
                 TicketId = s.TicketId.ToString(),
                 Title = s.Title,
@@ -148,7 +158,7 @@ namespace ASI.Basecode.Services.Services
                 Feedback = feedbacks.TryGetValue(s.TicketId, out var feedback) ? feedback : null
             });
 
-            return model.AsQueryable();
+            return model;
         }
         public IEnumerable<TicketViewModel> GetAgentTickets(Guid id)
         {
