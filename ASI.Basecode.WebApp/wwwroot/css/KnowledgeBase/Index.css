@@ -431,9 +431,9 @@ main {
     transition: background-color 0.3s;
 }
 
-    #button-container:hover {
+/*    #button-container:hover {
         background-color: darken(var(--active-button), 10%);
-    }
+    }*/
 
     #button-container i {
         margin-right: 10px;
