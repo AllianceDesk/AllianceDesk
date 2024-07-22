@@ -1,17 +1,19 @@
 ﻿@model ASI.Basecode.Services.ServiceModels.UserViewModel
 
 <div class="bg-modal delete-modal-container" data-admin-delete-modal-container>
-    <div class="delete-modal flex flex-col gap-1 justify-content-center align-items-center" data-admin-delete-modal>
-        <i class="text-md fa-regular fa-circle-xmark hover-pointer align-self-end" data-admin-delete-close-btn></i>
-        <div class="flex-between flex-col align-items-center justify-content-center">
-            <i class="fa-solid fa-circle-exclamation color-error text-3"></i>
-            <h1>Are you sure?</h1>
-            <p>Do you really want to delete this user? This process cannot be undone</p>
-        </div>
-        <div class="flex-Row gap-2">
-            <button class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-delete-cancel-btn>Cancel</button>
-            <button class="mbtn-primary color-white bg-red align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-delete-save-btn>Save</button>
-        </div>
+    <form asp-action="PostUserDelete" asp-controller="Admin">
         @Html.HiddenFor(model => model.UserId) <!-- Hidden field for UserId -->
-    </div>
+        <div class="delete-modal flex flex-col gap-1 justify-content-center align-items-center" data-admin-delete-modal>
+            <i class="text-md fa-regular fa-circle-xmark hover-pointer align-self-end" data-admin-delete-close-btn></i>
+            <div class="flex-between flex-col align-items-center justify-content-center">
+                <i class="fa-solid fa-circle-exclamation color-error text-3"></i>
+                <h1>Are you sure?</h1>
+                <p>Do you really want to delete this user? This process cannot be undone</p>
+            </div>
+            <div class="flex-Row gap-2">
+                <button type="button" class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-delete-cancel-btn>Cancel</button>
+                <button type="submit" class="mbtn-primary color-white bg-red align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-delete-save-btn>Save</button>
+            </div>
+        </div>
+    </form>
 </div>

@@ -22,6 +22,7 @@ namespace ASI.Basecode.Services.Services
         private readonly ITicketMessageRepository _ticketMessageRepository;
         private readonly ISessionHelper _sessionHelper;
         private readonly IMapper _mapper;
+        private readonly ITeamRepository _teamRepository;
 
         public TicketService(
             ITicketRepository ticketRepository,
@@ -33,7 +34,8 @@ namespace ASI.Basecode.Services.Services
             ITicketActivityOperationRepository ticketActivityOperationRepository,
             ITicketMessageRepository ticketMessageRepository,
             IMapper mapper,
-            ISessionHelper sessionHelper)
+            ISessionHelper sessionHelper,
+            ITeamRepository teamRepository)
         {
             _ticketRepository = ticketRepository;
             _userRepository = userRepository;
@@ -45,6 +47,7 @@ namespace ASI.Basecode.Services.Services
             _ticketMessageRepository = ticketMessageRepository;
             _mapper = mapper;
             _sessionHelper = sessionHelper;
+            _teamRepository = teamRepository;
         }
 
         public IEnumerable<TicketViewModel> RetrieveAll()
@@ -262,6 +265,53 @@ namespace ASI.Basecode.Services.Services
             existingTicket.AssignedAgent = Guid.Parse(userId);
             existingTicket.StatusId = 2;
             _ticketRepository.Update(existingTicket);
+        }
+
+        public Dictionary<string, int> GetTicketVolume()
+        {
+            var startDate = DateTime.Today.AddDays(-6);
+            var endDate = DateTime.Today.AddDays(1);
+
+            var dailyCounts = _ticketRepository.RetrieveAll()
+                            .Where(t => t.DateCreated >= startDate && t.DateCreated <= endDate)
+                            .GroupBy(t => t.DateCreated.Date)
+                            .Select (g => new {Date = g.Key, Count = g.Count()})
+                            .ToList();
+
+            var result = Enumerable.Range(0, 7)
+                        .Select(i => DateTime.Today.AddDays(-i))
+                        .ToDictionary(date => date.ToString("dddd"), date => 0);
+
+            foreach (var dailyCount in dailyCounts)
+            {
+                result[dailyCount.Date.ToString("dddd")] = dailyCount.Count;
+            }
+            return result;
+        }
+
+        public List <UserViewModel> GetWeeklyTopResolvers()
+        {
+            var startDate = DateTime.Today.AddDays(-6);
+            var endDate = DateTime.Today.AddDays(1);
+
+            var topResolvers = _ticketRepository.RetrieveAll()
+                                .Where (t => t.StatusId == 4 && t.DateClosed >= startDate && t.DateClosed <= endDate)
+                                .GroupBy(t => t.AssignedAgent)
+                                .Select(g => new {UserId = g.Key, ResolvedCount = g.Count()})
+                                .OrderByDescending (g=> g.ResolvedCount)
+                                .Take (5)
+                                .ToList();
+            var result = topResolvers.Select(tr => new UserViewModel
+            {
+                UserId = tr.UserId.ToString(),
+                TeamName = _teamRepository.RetrieveAll().Where(t => t.TeamId == 
+                            _userRepository.GetUsers().Where(u => u.UserId == tr.UserId).FirstOrDefault().TeamId)
+                            .FirstOrDefault().TeamName,
+                Name = _userRepository.GetUsers().Where(u => u.UserId == tr.UserId).FirstOrDefault().Name,
+                TicketResolved = tr.ResolvedCount,
+            }).ToList();
+
+            return result;
         }
     }
 }

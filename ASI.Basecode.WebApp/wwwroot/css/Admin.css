@@ -328,3 +328,10 @@ a[data-a-btn] {
     overflow: hidden;
     width: 100%;
 }
+
+.fbtn {
+    background-color: #ccc;
+    font-size: 14px;
+    padding: 0.5em;
+    height: 2.7em;
+}

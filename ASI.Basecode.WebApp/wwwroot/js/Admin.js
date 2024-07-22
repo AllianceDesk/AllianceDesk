@@ -1,25 +1,22 @@
-﻿/*const adminBody = document.querySelector(".admin-body");
+﻿const adminBody = document.querySelector(".admin-body");
 const agentsContainer = document.querySelector(".agents-container");
 const editDetails = document.querySelector('[data-admin-edit-details]');
 const agentsList = document.querySelectorAll("[data-viewuser-agent]")
 const modalContainer = document.querySelector("[data-admin-modal-container]")
 const deleteModalContainer = document.querySelector("[data-admin-delete-modal-container]")
 
-const navItems = document.querySelectorAll("[data-nav-item]")*/
+const navItems = document.querySelectorAll("[data-nav-item]")
 
-/* BTNS */
+ BTNS 
 
-/*const adminEditCloseBtn = document.querySelector("[data-admin-edit-close-btn]")
+const adminEditCloseBtn = document.querySelector("[data-admin-edit-close-btn]")
 const adminEditCancelBtn = document.querySelector("[data-admin-edit-cancel-btn]")
-const adminEditSaveBtn = document.querySelector("[data-admin-edit-save-btn]")
 
 const adminAddCloseBtn = document.querySelector("[data-admin-add-close-btn]")
 const adminAddCancelBtn = document.querySelector("[data-admin-add-cancel-btn]")
-const adminAddSaveBtn = document.querySelector("[data-admin-add-save-btn]")
 
 const adminDelCloseBtn = document.querySelector("[data-admin-delete-close-btn]")
 const adminDelCancelBtn = document.querySelector("[data-admin-delete-cancel-btn]")
-const adminDelSaveBtn = document.querySelector("[data-admin-delete-save-btn]")
 
 const adminEditBtn = document.querySelector("[data-admin-edit-btn]")
 const adminEditForm = document.querySelector("[data-modal-edit-form]")
@@ -29,10 +26,10 @@ const adminAddForm = document.querySelector("[data-modal-add-form]")
 
 const adminDelBtn = document.querySelector("[data-admin-delete-btn]")
 const adminDelForm = document.querySelector("[data-admin-delete-modal]")
-*/
-/* DELETE */
 
-/*adminDelBtn.addEventListener("click", () => {
+ DELETE 
+
+adminDelBtn.addEventListener("click", () => {
     console.log("clicking open btn", modalContainer, adminEditBtn)
     deleteModalContainer.classList.remove("hidden")
     adminDelForm.classList.remove("hidden")
@@ -51,15 +48,9 @@ adminDelCloseBtn.addEventListener("click", () => {
     adminDelForm.classList.add("hidden")
 })
 
-adminDelSaveBtn.addEventListener("click", () => {
-    console.log("clicking save btn", modalContainer)
-    deleteModalContainer.classList.add("hidden")
-    adminDelForm.classList.add("hidden")
-})*/
+ ADD 
 
-/* ADD */
-
-/*adminAddForm.addEventListener("submit", (e) => {
+adminAddForm.addEventListener("submit", (e) => {
     e.preventDefault();
 })
 
@@ -82,16 +73,9 @@ adminAddCloseBtn.addEventListener("click", () => {
     adminAddForm.classList.add("hidden")
 })
 
-adminAddSaveBtn.addEventListener("click", () => {
-    console.log("clicking save btn", modalContainer);
-    modalContainer.classList.add("hidden");
-    adminAddForm.classList.add("hidden");
-   
-});*/
 
-
-/* EDIT */
-/*adminEditForm.addEventListener("submit", (e) => {
+ EDIT 
+adminEditForm.addEventListener("submit", (e) => {
     e.preventDefault();
 })
 
@@ -114,13 +98,7 @@ adminEditCloseBtn.addEventListener("click", () => {
     adminEditForm.classList.add("hidden")
 })
 
-adminEditSaveBtn.addEventListener("click", () => {
-    console.log("clicking save btn", modalContainer)
-    modalContainer.classList.add("hidden")
-    adminEditForm.classList.add("hidden")
-})
-
-/*agentsList.forEach(agent => {
+agentsList.forEach(agent => {
     agent.addEventListener("click", () => {
         console.log("agent clicked");
         if (agent.classList.contains("selected-agent")) {
@@ -134,12 +112,12 @@ adminEditSaveBtn.addEventListener("click", () => {
         adminBody.classList.add("edit-active");
         editDetails.classList.remove("hidden");
     })
-})*/
+})
 
 
-/*navItems.forEach(navItem => {
+navItems.forEach(navItem => {
     navItem.addEventListener("click", () => {
         navItems.forEach(a => a.classList.remove("active"));
         navItem.classList.add("active");
     })
-})*/
+})

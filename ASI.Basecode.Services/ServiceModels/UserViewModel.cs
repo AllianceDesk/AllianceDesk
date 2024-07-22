@@ -35,6 +35,7 @@ namespace ASI.Basecode.Services.ServiceModels
         public string TeamId { get; set; }
 
         public List<UserViewModel> Users { get; set; }
+        public int TicketResolved { get; set; }
 
     }
 }

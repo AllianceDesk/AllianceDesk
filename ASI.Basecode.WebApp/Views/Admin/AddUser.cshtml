@@ -23,8 +23,8 @@
                 <span asp-validation-for="Email" class="text-danger"></span>
             </label>
             <label class="modal-input relative flex">
-                <span>Password</span>
-                <input asp-for="Password" type="password" placeholder="Enter password" />
+                <span>Randomly Generated Password</span>
+                <input asp-for="Password" class="form-control" type="text" value="@ViewBag.Password" readonly />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </label>
             <label class="modal-input relative flex">

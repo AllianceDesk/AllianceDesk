@@ -1,4 +1,4 @@
-﻿@model ASI.Basecode.Services.ServiceModels.OverallTicketCountViewModel
+﻿@model ASI.Basecode.Services.ServiceModels.OverAllTicketCountViewModel
 
 @{
     ViewData["Title"] = "Tickets";
@@ -20,15 +20,16 @@
         <p class="hidden" data-aom-inprogress>@Model.TicketCountsByStatus["In Progress"]</p>
         <p class="hidden" data-aom-closed>@Model.TicketCountsByStatus["Closed"]</p>
         @* Category *@
-        <p class="hidden" data-aom-technical>1</p>
-        <p class="hidden" data-aom-billing>3</p>
-        <p class="hidden" data-aom-generalInquiry>5</p>
-        <p class="hidden" data-aom-others>6</p>
+        <p class="hidden" data-aom-technical>@Model.TicketCountsByCategory["Technical"]</p>
+        <p class="hidden" data-aom-billing>@Model.TicketCountsByCategory["Billing"]</p>
+        <p class="hidden" data-aom-generalInquiry>@Model.TicketCountsByCategory["General Questions"]</p>
+        <p class="hidden" data-aom-accountManagement>@Model.TicketCountsByCategory["Account Management"]</p>
+        <p class="hidden" data-aom-customerSupport>@Model.TicketCountsByCategory["Customer Support"]</p>
+        <p class="hidden" data-aom-others>@Model.TicketCountsByCategory["Others"]</p>
         @* Priority *@
-        <p class="hidden" data-aom-low>5</p>
-        <p class="hidden" data-aom-medium>10</p>
-        <p class="hidden" data-aom-high>15</p>
-        <p class="hidden" data-aom-urgent>16</p>
+        <p class="hidden" data-aom-low>@Model.TicketCountsByPriority["Low"]</p>
+        <p class="hidden" data-aom-medium>@Model.TicketCountsByPriority["Mid"]</p>
+        <p class="hidden" data-aom-high>@Model.TicketCountsByPriority["High"]</p>
         <h2>Analytics</h2>
         <div class="view-user-nav">
             <div class="agent-nav pt-4">
@@ -93,19 +94,20 @@
         const aomTechnical = document.querySelector('[data-aom-technical]').textContent.trim()
         const aomBilling = document.querySelector('[data-aom-billing]').textContent.trim()
         const aomGeneralInquiry = document.querySelector('[data-aom-generalInquiry]').textContent.trim()
+        const aomAccountManagement = document.querySelector('[data-aom-accountManagement]').textContent.trim()
+        const aomCustomerSupport = document.querySelector('[data-aom-customerSupport]').textContent.trim()
         const aomOthers = document.querySelector('[data-aom-others]').textContent.trim()
 
         const aomLow = document.querySelector('[data-aom-low]').textContent.trim()
         const aomMedium = document.querySelector('[data-aom-medium]').textContent.trim()
         const aomHigh = document.querySelector('[data-aom-high]').textContent.trim()
-        const aomUrgent = document.querySelector('[data-aom-urgent]').textContent.trim()
     
         new Chart(ctx, {
             type: 'line',
             data: {
-                labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+                labels: @Html.Raw(Json.Serialize(Model.TicketCountsByDay.Keys)),
                 datasets: [{
-                    data: [12, 19, 3, 5, 2, 3, 7],
+                    data: @Html.Raw(Json.Serialize(Model.TicketCountsByDay.Values)),
                     label: "Ticket Volume",
                     borderWidth: 1,
                     borderColor: 'rgba(75, 192, 192, 1)',
@@ -139,10 +141,10 @@
         new Chart(pieChartCategory, {
             type: 'doughnut',
             data: {
-                labels: ['Technical', 'Billing', 'General Inquiry', 'Others'],
+                labels: ['Technical', 'Billing', 'General Questions', 'Account Management', 'Customer Support', 'Others'],
                 datasets: [{
-                    data: [aomTechnical, aomBilling, aomGeneralInquiry, aomOthers], // Replace with your actual data
-                    backgroundColor: ['#40A6D8', '#E68F36', '#6DB971', '#DA5D5B']
+                    data: [aomTechnical, aomBilling, aomGeneralInquiry, aomAccountManagement, aomCustomerSupport, aomOthers], // Replace with your actual data
+                    backgroundColor: ['#40A6D8', '#E68F36', '#6DB971', '#C34886', '#F9C224', '#DA5D5B']
                 }]
             }
         });
@@ -151,10 +153,10 @@
         new Chart(pieChartPriority, {
             type: 'doughnut',
             data: {
-                labels: ['Low', 'High', 'Medium', 'Urgent'],
+                labels: ['Low', 'Medium', 'High'],
                 datasets: [{
-                    data: [aomLow, aomMedium, aomHigh, aomUrgent], // Replace with your actual data
-                    backgroundColor: ['#40A6D8', '#6DB971', '#E68F36', '#DA5D5B']
+                    data: [aomLow, aomMedium, aomHigh], // Replace with your actual data
+                    backgroundColor: ['#6DB971', '#E68F36', '#DA5D5B']
                 }]
             }
         });

@@ -135,7 +135,7 @@ nav {
 .filter_button {
     display: flex;
     flex-direction: row;
-    gap: 0.5em;
+    gap: 1em;
     align-items: flex-start;
     justify-content: flex-start;
 }
@@ -149,13 +149,13 @@ nav {
 
 .badge {
     border-radius: 50%;
-    background-color: #E21818;
+/*    background-color: #E21818;*/
     width: 20px;
     height: 20px;
     color: white;
     line-height: 12px;
     font-size: 12px;
-    padding-right: 1.4em;
+    /*padding-right: 1.4em;*/
     margin-left: 0.1em;
 }
 
@@ -286,6 +286,11 @@ main {
     color: black;
 }
 
+.link_card:hover {
+    text-decoration: none;
+    color: red;
+}
+
 .article_card {
     display: flex;
     flex-direction: column;
@@ -303,10 +308,11 @@ main {
 .article_category {
     color: #2417BA;
     border: 1px solid #2417BA;
-    width: 10.5%;
+    width: 14em;
     padding: 0.5em;
     border-radius: 10px;
     background-color: rgba(36, 23, 186, 0.2);
+    text-align: center;
 }
 
 #card_content {

@@ -25,5 +25,7 @@ namespace ASI.Basecode.Services.Interfaces
         IEnumerable<TicketActivityViewModel> GetHistory(string id);
         IEnumerable<TicketMessageViewModel> GetMessages(string id);
         void AssignAgent(string ticketId, string userId);
+        Dictionary<string, int> GetTicketVolume();
+        List<UserViewModel> GetWeeklyTopResolvers();
     }
 }

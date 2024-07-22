@@ -1,7 +1,7 @@
 ﻿@model ASI.Basecode.Services.ServiceModels.UserViewModel
 
 <div class="modal-container br-1 bg-white p-y-1 p-x-2" data-modal-edit-form>
-    <form asp-action="PostUserUpdate" class="modal-container br-1 bg-white p-y-1 p-x-2">
+    <form asp-action="PostUserEdit" class="modal-container br-1 bg-white p-y-1 p-x-2">
         @Html.HiddenFor(model => model.UserId) <!-- Add this line to include the hidden field for UserId -->
         <div class="flex-Row justify-content-between">
             <h2>Edit User</h2>
@@ -9,14 +9,20 @@
         </div>
         <div class="agents-details | margin-1 bg-white flex-Row gap-2 flex-between p-y-1 p-x-1 align-center">
             <div class="flex-Row gap-1">
-                <div class="user-img-profile br-50 bg-grey"></div>
+                <div class="user-img-profile br-50 bg-grey mr-3"></div>
                 <div class="flex-col justify-content-center align-center">
-                    <p class="fw-semi">@Html.DisplayFor(model => model.Name)</p>
+                    <p class="fw-semi" style="font-size: 24px;">@Html.DisplayFor(model => model.Name)</p>
                     <p class="text-sm">@Html.DisplayFor(model => model.Email)</p>
                 </div>
             </div>
-            <div class="delete-btn fw-semi cursor-pointer" data-admin-delete-btn>
-                DELETE ACCOUNT
+            <div>
+                <div type="button" class="delete-btn fw-semi cursor-pointer mb-3" data-admin-resetPassword-btn>
+                    RESET PASSWORD
+                    <input type="hidden" id="resetPasswordFlag" value="false"/>
+                </div>
+                <div class="delete-btn fw-semi cursor-pointer" data-admin-delete-btn>
+                    DELETE ACCOUNT
+                </div>
             </div>
         </div>
         <div class="modal-input-container">
@@ -35,9 +41,9 @@
                 <input asp-for="Email" type="text" placeholder="@Html.DisplayFor(model => model.Email)" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </label>
-            <label class="modal-input relative flex">
+            <label class="modal-input relative flex" style="background-color: #EAEAEA;">
                 <span>Password</span>
-                <input asp-for="Password" type="text" placeholder="@Html.DisplayFor(model => model.Password)" />
+                <input asp-for="Password" class="form-control" type="text" placeholder="@Html.DisplayFor(model => model.Password)" readonly/>
                 <span asp-validation-for="Password" class="text-danger"></span>
             </label>
             <label class="modal-input relative flex">
