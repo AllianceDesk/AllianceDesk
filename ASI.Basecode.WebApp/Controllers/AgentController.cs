@@ -99,15 +99,20 @@ namespace ASI.Basecode.WebApp.Controllers
 
             ViewBag.UserRoles = userRoles;
 
-            var viewModel = new UserViewModel
+            var userModel = new UserViewModel
             {
                 UserId = user.UserId.ToString(),
+                UserName = user.Username,
                 Name = user.Name,
                 Email = user.Email,
-                RoleId = user.RoleId
+                Password = PasswordManager.DecryptPassword(user.Password),
+                RoleId = user.RoleId,
+                TeamId = user.TeamId.ToString(),
+                RoleName = _userService.GetUserRoles().FirstOrDefault(r => r.RoleId == user.RoleId)?.RoleName,
+                TeamName = _userService.GetTeams().FirstOrDefault(t => t.TeamId == user.TeamId.ToString())?.TeamName
             };
 
-            return View(viewModel);
+            return View(userModel);
         }
 
 
@@ -239,7 +244,7 @@ namespace ASI.Basecode.WebApp.Controllers
                 Name = data.Name,
                 Email = data.Email,
                 RoleId = data.RoleId,
-                TeamName = team?.TeamName 
+                TeamName = _userService.GetTeams().FirstOrDefault(t => t.TeamId == data.TeamId.ToString())?.TeamName
             };
 
             return PartialView("AgentDetails", userModel);

@@ -50,3 +50,8 @@
         </div>
     </div>
 </div>
+
+<script>
+    const teams = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+    console.log("DETAILS ", teams)
+</script>

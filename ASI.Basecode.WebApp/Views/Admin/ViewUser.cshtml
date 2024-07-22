@@ -17,16 +17,11 @@
 @Html.Partial("Admin_Header")
 <div class="main">
     @Html.Partial("Admin_Sidebar")
-    <div class="admin-body p-y-3 relative bg-grey">
+    <div class="admin-body p-y-3 relative bg-grey flex flex-col gap-1">
+
         <div style="padding-right: 2rem; border-right: 1.5px solid #9E9E9E;">
-            <div class="flex-Row justify-content-between mb-3">
-                <h1>User Directory</h1>
-                <button class="mbtn-primary flex-Row gap-1 color-white bg-red align-center justify-content-center border-0 p-x-1 br-1-5" data-admin-add-btn>
-                    <i class="fa-solid fa-user-plus"></i>
-                    <p class="br-1-5 p-y-1">Add</p>
-                </button>
-            </div>
-            <div class="view-user-nav">
+            <h1>Agents and Team</h1>
+            <div class="flex-Row flex-between">
                 <div class="agent-nav pt-4">
                     <ul class="flex-Row gap-2">
                         <a asp-action="ViewUser" class="nav-item active-admin-nav" data-nav-item>Agents</a>
@@ -38,9 +33,9 @@
                         <i class="fa-solid fa-magnifying-glass text-1-5"></i>
                         <input class="bg-transparent" type="text" placeholder="Search" />
                     </div>
-                    <button class="mbtn-primary flex-Row gap-1 color-white bg-red align-center justify-content-center border-0 p-x-1 br-1-5">
-                        <i class="fa-solid fa-filter"></i>
-                        <p class="br-1-5 p-y-1">Filter</p>
+                    <button class="mbtn-primary flex-Row gap-1 color-white bg-red align-center justify-content-center border-0 p-x-1 br-1-5" data-admin-add-btn>
+                        <i class="fa-solid fa-user-plus"></i>
+                        <p class="br-1-5 p-y-1">Add</p>
                     </button>
                 </div>
             </div>
@@ -58,223 +53,395 @@
                     <p>Role</p>
                 </div>
             </div>
-            @if (Model != null && Model.Users != null && Model.Users.Any())
-            {
-                <ul class="agents-container bg-white">
+            <div class="agents-container bg-white">
+                @if (Model != null && Model.Users != null && Model.Users.Any())
+                {
                     @foreach (var item in Model.Users)
                     {
-                        <li class="agents | flex-Row flex-between p-y-1 p-x-1 align-center" data-viewuser-agent data-agents-1 data-user-id="@item.UserId">
+                        <div class="agents | cursor-pointer flex-Row flex-between p-y-1 p-x-1 align-center" data-agent-teams-agent data-user-id="@item.UserId">
                             <div class="user-img-profile br-50 bg-red"></div>
                             <div class="flex-col justify-content-center align-center">
                                 <p class="fw-semi text-1-5">@Html.DisplayFor(modelItem => item.Name)</p>
                                 <p>@Html.DisplayFor(modelItem => item.Email)</p>
                             </div>
                             <div class="role-container role-agent fw-semi text-0-5">@roleMappings[item.RoleId]</div>
-                        </li>
+                        </div>
                     }
-                </ul>
-            }
-            else
-            {
-                <p>No agents available.</p>
-            }
+                }
+                else
+                {
+                    <p>No agents available.</p>
+                }
+            </div>
         </div>
         <div class="p-x-1 hidden" data-admin-edit-details>
-            <!-- User Details Content Will Be Loaded Here -->
-            asdasd
+            <div class="flex-Row  align-center justify-content-between p-y-2 border-b-2">
+                <h2>Detail</h2>
+                <u class="fa-solid fa-pen-to-square text-1-5 cursor-pointer color-inactive" data-admin-edit-btn></u>
+            </div>
+            <div class="flex p-t-1">
+                <div class="agents-details | margin-1 bg-white flex-Row flex-between p-y-1 p-x-1 align-center">
+                    <div class="user-img-profile br-50 bg-grey"></div>
+                    <div class="flex-col justify-content-center align-center">
+                        <p class="fw-semi">Agent Name</p>
+                        <p class="text-sm">agentemail@gmail.com</p>
+                    </div>
+                    <div class="role-container role-agent fw-semi text-0-5">Agent</div>
+                </div>
+                <div>
+                    <h4>Team</h4>
+                    <div class="agents-details | margin-1 bg-white flex-Row gap-2 p-y-1 p-x-1 align-center">
+                        <div class="user-img-profile br-50 bg-grey"></div>
+                        <div class="flex-col align-center">
+                            <p class="fw-semi">Team2</p>
+                            <p class="text-sm">a@team2</p>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h4>Recent Activity</h4>
+                    <div class="agents-details | margin-1 bg-white flex-Row flex-between p-y-1 p-x-1 align-center">
+                        <div class="user-img-profile br-50 bg-grey"></div>
+                        <div class="flex-col justify-content-center align-center">
+                            <p class="fw-semi">Agent Name</p>
+                            <p class="text-sm">agentemail@gmail.com</p>
+                        </div>
+                        <div class="role-container role-agent fw-semi text-0-5">Agent</div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="hidden modal-admin bg-modal" data-admin-modal-container>
-            <div class="hidden modal-container br-1 bg-white p-y-1 p-x-2" data-modal-edit-form>
-                <!-- Edit User Form Content Will Be Loaded Here -->
-            </div>
+            <form class="hidden modal-container br-1 bg-white p-y-1 p-x-2" data-modal-edit-form>
+                <div class="flex-Row justify-content-between">
+                    <h2>Edit User</h2>
+                    <i class="text-md fa-regular fa-circle-xmark hover-pointer" data-admin-edit-close-btn></i>
+                </div>
+                <div class="agents-details | margin-1 bg-white flex-Row gap-2 flex-between p-y-1 p-x-1 align-center">
+                    <div class="flex-Row gap-1">
+                        <div class="user-img-profile br-50 bg-grey"></div>
+                        <div class="flex-col justify-content-center align-center">
+                            <p class="fw-semi">Agent Name</p>
+                            <p class="text-sm">agentemail@gmail.com</p>
+                        </div>
+                    </div>
+                    <div class="delete-btn fw-semi cursor-pointer" data-admin-delete-btn>
+                        DELETE ACCOUNT
+                    </div>
+                </div>
+                <div class="modal-input-container">
+                    <label class="modal-input relative flex">
+                        <span>First Name</span>
+                        <input type="text" placeholder="John" />
+                    </label>
+                    <label class="modal-input relative flex">
+                        <span>Last Name</span>
+                        <input type="text" placeholder="Doe" />
+                    </label>
+                    <label class="modal-input relative flex">
+                        <span>Email</span>
+                        <input type="text" placeholder="johndoe@gmail.com" />
+                    </label>
+                    <label class="modal-input relative flex">
+                        <span>Contact Number</span>
+                        <input type="text" placeholder="+123456789" />
+                    </label>
+                    <label class="modal-input relative flex">
+                        <select>
+                            <option value="none" selected disabled>Role</option>
+                            <option value="agent">Agent</option>
+                            <option value="admin">Admin</option>
+                            <option value="manager">Manager</option>
+                        </select>
+                    </label>
+                    <label class="modal-input relative flex">
+                        <select>
+                            <option value="none" selected disabled>Team</option>
+                            <option value="team1">Team 1</option>
+                            <option value="team2">Team 2</option>
+                            <option value="team3">Team 3</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="flex-Row gap-1">
+                    <button class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-edit-cancel-btn>Cancel</button>
+                    <button class="mbtn-primary color-white bg-red align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-edit-save-btn>Save</button>
+                </div>
+
+
+
+            </form>
             <div class="hidden modal-container br-1 bg-white p-y-1 p-x-2" data-modal-add-form>
-                <!-- Add User Form Content Will Be Loaded Here -->
+                <form asp-action="PostUserAdd" class="hidden modal-container br-1 bg-white p-y-1 p-x-2" data-modal-add-form>
+                </form>
             </div>
         </div>
-
         <div class="hidden bg-modal delete-modal-container" data-admin-delete-modal-container>
-            <!-- Delete User Content Will Be Loaded Here -->
+            <div class="delete-modal flex flex-col gap-1 justify-content-center align-items-center" data-admin-delete-modal>
+                <i class="text-md fa-regular fa-circle-xmark hover-pointer align-self-end" data-admin-delete-close-btn></i>
+                <div class="flex-between flex-col align-items-center justify-content-center">
+                    <i class="fa-solid fa-circle-exclamation color-error text-3"></i>
+                    <h1>Are you sure?</h1>
+                    <p>Do you really want to delete this user? This process cannot be undone</p>
+                </div>
+                <div class="flex-Row gap-2">
+                    <button class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-delete-cancel-btn>Cancel</button>
+                    <button class=" mbtn-primary color-white bg-red align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-delete-save-btn>Save</button>
+                </div>
+            </div>
         </div>
     </div>
-    }
+</div>
+
+
 
     @section scripts {
-        <script>
-            $(document).ready(function () {
-                // Open modal on button click
-                $('[data-admin-add-btn]').on('click', function () {
-                    $.ajax({
-                        url: '/AddUser',
-                        type: 'GET',
-                        success: function (data) {
-                            // Populate the modal with the data returned from AddUser action
-                            $('[data-modal-add-form]').html(data).closest('.modal-admin').removeClass('hidden');
-                            $('[data-modal-add-form]').removeClass('hidden');
-                        },
-                        error: function (xhr, status, error) {
-                            console.error('Error fetching AddUser view:', status, error);
-                        }
-                    });
-                });
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        //VARIABLES
+        let userId = null
 
-                // Handle form submission
-                $(document).on('submit', '[data-modal-add-form]', function (e) {
-                    e.preventDefault();
-                    var form = $(this);
-                    $.ajax({
-                        url: form.attr('action'),
-                        type: 'POST',
-                        data: form.serialize(),
-                        success: function (response) {
-                            // Handle successful form submission, such as closing the modal and updating the list
-                            alert('User added successfully');
-                            $('[data-modal-add-form]').closest('.modal-admin').addClass('hidden');
-                            $('[data-modal-add-form]').addClass('hidden');
-                            // You may also want to update the user list here
-                            window.location.reload(); // Reload the page to reflect changes
-                        },
-                        error: function (xhr, status, error) {
-                            console.error('Error submitting form:', status, error);
-                        }
-                    });
-                });
+        const teams = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        console.log("TEAMS ", teams)
 
-                // Close modal
-                $(document).on('click', '[data-admin-add-close-btn], [data-admin-add-cancel-btn]', function () {
+        const adminBody = document.querySelector(".admin-body");
+        const agentsContainer = document.querySelector(".agents-container");
+        const editDetails = document.querySelector('[data-admin-edit-details]');
+        const agentsList = document.querySelectorAll("[data-agent-teams-agent]")
+        const modalContainer = document.querySelector("[data-admin-modal-container]")
+        const deleteModalContainer = document.querySelector("[data-admin-delete-modal-container]")
+
+        const navItems = document.querySelectorAll("[data-nav-item]")
+
+        /* BTNS */
+
+        const adminEditCloseBtn = document.querySelector("[data-admin-edit-close-btn]")
+        const adminEditCancelBtn = document.querySelector("[data-admin-edit-cancel-btn]")
+        const adminEditSaveBtn = document.querySelector("[data-admin-edit-save-btn]")
+
+        const adminAddCloseBtn = document.querySelector("[data-admin-add-close-btn]")
+        const adminAddCancelBtn = document.querySelector("[data-admin-add-cancel-btn]")
+        const adminAddSaveBtn = document.querySelector("[data-admin-add-save-btn]")
+
+        const adminDelCloseBtn = document.querySelector("[data-admin-delete-close-btn]")
+        const adminDelCancelBtn = document.querySelector("[data-admin-delete-cancel-btn]")
+        const adminDelSaveBtn = document.querySelector("[data-admin-delete-save-btn]")
+
+        const adminEditBtn = document.querySelector("[data-admin-edit-btn]")
+        const adminEditForm = document.querySelector("[data-modal-edit-form]")
+
+        const adminAddBtn = document.querySelector("[data-admin-add-btn]")
+        const adminAddForm = document.querySelector("[data-modal-add-form]")
+
+        const adminDelBtn = document.querySelector("[data-admin-delete-btn]")
+        const adminDelForm = document.querySelector("[data-admin-delete-modal]")
+
+        /* DELETE */
+
+        $(document).on('click', '[data-admin-delete-btn]', function () {
+            console.log("correct delete")
+            deleteModalContainer.classList.remove("hidden")
+            adminDelForm.classList.remove("hidden")
+        });
+
+        //POST request for deleting a user
+        $(document).on('click', '[data-admin-delete-save-btn]', function (e) {
+            e.preventDefault();
+            console.log("USERD ID ", userId)
+            $.ajax({
+                url: '/UserDelete',
+                type: 'POST',
+                data: { UserId: userId },
+                success: function (response) {
+                    // Handle successful deletion
+                    alert('User deleted successfully');
+                    $('[data-admin-delete-modal-container]').addClass('hidden');
+                    // You may also want to update the user list here
+                    window.location.reload(); // Reload the page to reflect changes
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error deleting user:', status, error);
+                }
+            });
+        });
+
+        adminDelBtn.addEventListener("click", () => {
+            console.log("clicking open btn", modalContainer, adminEditBtn)
+            deleteModalContainer.classList.remove("hidden")
+            adminDelForm.classList.remove("hidden")
+        })
+
+
+        adminDelCancelBtn.addEventListener("click", () => {
+            console.log("clicking cancel btn", modalContainer)
+            deleteModalContainer.classList.add("hidden")
+            adminDelForm.classList.add("hidden")
+        })
+
+        adminDelCloseBtn.addEventListener("click", () => {
+            console.log("clicking close btn", modalContainer)
+            deleteModalContainer.classList.add("hidden")
+            adminDelForm.classList.add("hidden")
+        })
+
+        adminDelSaveBtn.addEventListener("click", () => {
+            console.log("clicking save btn", modalContainer)
+            deleteModalContainer.classList.add("hidden")
+            adminDelForm.classList.add("hidden")
+        })
+
+        /* ADD */
+
+        // Handle form submission
+        $(document).on('submit', '[data-modal-add-form]', function (e) {
+            e.preventDefault();
+            var form = $(this);
+            $.ajax({
+                url: form.attr('action'),
+                type: 'POST',
+                data: form.serialize(),
+                success: function (response) {
+                    // Handle successful form submission, such as closing the modal and updating the list
+                    alert('User added successfully');
                     $('[data-modal-add-form]').closest('.modal-admin').addClass('hidden');
                     $('[data-modal-add-form]').addClass('hidden');
-                });
-
-                const agentList = document.querySelectorAll("[data-viewuser-agent]")
-
-                agentList.forEach(agent => {
-                    agent.addEventListener('click', () => {
-                        console.log("whats happening")
-                        $('[data-admin-edit-details]').removeClass('hidden');
-                        var userId = $(this).data('user-id');
-                        $.ajax({
-                            url: '/UserDetails',
-                            type: 'GET',
-                            data: { UserId: userId },
-                            success: function (response) {
-                                $('[data-admin-edit-details]').html(response).removeClass('hidden');
-                            },
-                            error: function (xhr, status, error) {
-                                console.error('Error fetching user details:', status, error);
-                            }
-                        });
-                    })
-                })
-
-                // Show user details on list item click
-                /*$(document).on('click', '[data-viewuser-agent]', function () {
-                    console.log("whats happening")
-                    var userId = $(this).data('user-id');
-                    $.ajax({
-                        url: '/UserDetails',
-                        type: 'GET',
-                        data: { UserId: userId },
-                        success: function (response) {
-                            $('[data-admin-edit-details]').html(response).removeClass('hidden');
-                        },
-                        error: function (xhr, status, error) {
-                            console.error('Error fetching user details:', status, error);
-                        }
-                    });
-                });*/
-
-                // Show user edit details on edit button click
-                $(document).on('click', '[data-admin-edit-btn]', function () {
-                    var userId = $(this).data('user-id');
-                    console.log('Edit button clicked. UserId:', userId);
-
-                    $.ajax({
-                        url: '/UserEdit',
-                        type: 'GET',
-                        data: { UserId: userId },
-                        success: function (response) {
-                            console.log('AJAX request successful');
-                            $('[data-admin-edit-details]').html(response).removeClass('hidden');
-                        },
-                        error: function (xhr, status, error) {
-                            console.error('Error fetching user details:', status, error);
-                        }
-                    });
-                });
-
-                //POST req for submitting form when user details are edited
-                $(document).on('submit', '[data-modal-edit-form] form', function (e) {
-                    e.preventDefault();
-                    var form = $(this);
-                    $.ajax({
-                        url: '/UserEdit',
-                        type: 'POST',
-                        data: form.serialize(),
-                        success: function (response) {
-                            // Handle successful form submission, such as closing the modal and updating the list
-                            alert('User updated successfully');
-                            $('[data-modal-edit-form]').closest('.modal-container').addClass('hidden');
-                            $('[data-modal-edit-form]').addClass('hidden');
-                            // You may also want to update the user list here
-                            window.location.reload(); // Reload the page to reflect changes
-                        },
-                        error: function (xhr, status, error) {
-                            console.error('Error submitting form:', status, error);
-                        }
-                    });
-                });
-
-                // Delete User GET request
-                $(document).on('click', '[data-admin-delete-btn]', function () {
-                    var userId = $('[data-modal-edit-form] input[name="UserId"]').val();
-                    console.log('Delete button clicked. UserId:', userId);
-
-                    $.ajax({
-                        url: '/UserDelete',
-                        type: 'GET',
-                        data: { UserId: userId },
-                        success: function (response) {
-                            console.log('AJAX request successful');
-                            $('[data-admin-delete-modal-container]').html(response).removeClass('hidden');
-                        },
-                        error: function (xhr, status, error) {
-                            console.error('Error deleting user:', status, error);
-                        }
-                    });
-                });
-
-                // Handle closing the modal
-                $(document).on('click', '[data-admin-edit-close-btn], [data-admin-delete-cancel-btn]', function () {
-                    $('[data-modal-edit-form]').closest('.modal-container').addClass('hidden');
-                });
-
-                //POST request for deleting a user
-                $(document).on('click', '[data-admin-delete-save-btn]', function (e) {
-                    e.preventDefault();
-
-                    var userId = $('[data-admin-delete-modal-container] input[name="UserId"]').val();
-
-                    $.ajax({
-                        url: '/UserDelete',
-                        type: 'POST',
-                        data: { UserId: userId },
-                        success: function (response) {
-                            // Handle successful deletion
-                            alert('User deleted successfully');
-                            $('[data-admin-delete-modal-container]').addClass('hidden');
-                            // You may also want to update the user list here
-                            window.location.reload(); // Reload the page to reflect changes
-                        },
-                        error: function (xhr, status, error) {
-                            console.error('Error deleting user:', status, error);
-                        }
-                    });
-                });
-
-                // Handle closing the modal
-                $(document).on('click', '[data-admin-delete-close-btn], [data-admin-delete-cancel-btn]', function () {
-                    $('[data-admin-delete-modal-container]').addClass('hidden');
-                });
+                    // You may also want to update the user list here
+                    window.location.reload(); // Reload the page to reflect changes
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error submitting form:', status, error);
+                }
             });
-        </script>
+        });
+
+        adminAddBtn.addEventListener("click", () => {
+            fetch('/AddUser')
+                .then(response => response.text())
+                .then(data => {
+                    document.querySelector("[data-modal-add-form]").innerHTML = data;
+                    document.querySelector("[data-admin-modal-container]").classList.remove("hidden");
+                    document.querySelector("[data-modal-add-form]").classList.remove("hidden");
+                })
+                .catch(error => console.error('Error:', error));
+            console.log("clicking open btn", modalContainer, adminEditBtn)
+        })
+
+        $(document).on('click', '[data-admin-add-close-btn]', function () {
+            $('[data-admin-modal-container]').addClass('hidden');
+        });
+
+
+        $(document).on('click', '[data-admin-add-cancel-btn]', function (e) {
+            e.preventDefault(); // Prevent form submission if button is inside a form
+            $('[data-admin-modal-container]').addClass('hidden');
+        });
+
+        /* EDIT */
+        adminEditForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+        })
+
+        $(document).on('click', '[data-admin-edit-btn]', function (e) {
+
+            $.ajax({
+                url: '/UserEdit',
+                type: 'GET',
+                data: { UserId: userId },
+                success: function (response) {
+                    $('[data-modal-edit-form]').html(response).removeClass('hidden');
+                    document.querySelector("[data-admin-modal-container]").classList.remove("hidden");
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching user details:', status, error);
+                }
+            });
+        });
+
+        //POST req for submitting form when user details are edited
+        $(document).on('submit', '[data-modal-edit-form]', function (e) {
+            e.preventDefault();
+            var form = $(this);
+            $.ajax({
+                url: '/UserEdit',
+                type: 'POST',
+                data: form.serialize(),
+                success: function (response) {
+                    // Handle successful form submission, such as closing the modal and updating the list
+                    alert('User updated successfully');
+                    $('[data-modal-edit-form]').closest('.modal-container').addClass('hidden');
+                    $('[data-modal-edit-form]').addClass('hidden');
+                    // You may also want to update the user list here
+                    window.location.reload(); // Reload the page to reflect changes
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error submitting form:', status, error);
+                }
+            });
+        });
+
+
+
+        $(document).on('click', '[data-admin-edit-cancel-btn], [data-admin-edit-close-btn], [data-admin-edit-save-btn]', function () {
+            $('[data-admin-modal-container]').addClass('hidden');
+            $('[data-modal-edit-form]').addClass('hidden');
+        });
+
+
+
+        /*adminEditCancelBtn.addEventListener("click", () => {
+            console.log("clicking cancel btn", modalContainer)
+            modalContainer.classList.add("hidden")
+            adminEditForm.classList.add("hidden")
+        })
+
+        adminEditCloseBtn.addEventListener("click", () => {
+            console.log("clicking close btn", modalContainer)
+            modalContainer.classList.add("hidden")
+            adminEditForm.classList.add("hidden")
+        })
+
+        adminEditSaveBtn.addEventListener("click", () => {
+            console.log("clicking save btn", modalContainer)
+            modalContainer.classList.add("hidden")
+            adminEditForm.classList.add("hidden")
+        })*/
+
+        agentsList.forEach(agent => {
+            agent.addEventListener("click", () => {
+                console.log("agent clicked");
+                if (agent.classList.contains("selected-agent")) {
+                    adminBody.classList.remove("edit-active");
+                    agent.classList.remove("selected-agent");
+                    editDetails.classList.add("hidden");
+                    return;
+                }
+                userId = agent.getAttribute('data-user-id');
+                console.log("User Id", userId);
+                $.ajax({
+                    url: '/UserDetails',
+                    type: 'GET',
+                    data: { UserId: userId },
+                    success: function (response) {
+                        $('[data-admin-edit-details]').html(response).removeClass('hidden');
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error fetching user details:', status, error);
+                    }
+                });
+                agentsList.forEach(a => a.classList.remove("selected-agent"));
+                agent.classList.add("selected-agent");
+                adminBody.classList.add("edit-active");
+                editDetails.classList.remove("hidden");
+            })
+        })
+
+
+        navItems.forEach(navItem => {
+            navItem.addEventListener("click", () => {
+                navItems.forEach(a => a.classList.remove("active-admin-nav"));
+                navItem.classList.add("active-admin-nav");
+            })
+        })
+    </script>
+
     }

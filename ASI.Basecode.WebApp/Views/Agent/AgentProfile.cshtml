@@ -44,8 +44,9 @@
                         <input type="text" name="FirstName" value="@Model.Name" placeholder="John" />
                     </label>
                     <label class="modal-input relative flex">
-                        <span>Last Name</span>
-                        <input type="text" name="LastName" value="@Model.UserName" placeholder="Doe" />
+                        <span>UserName</span>
+                        <input asp-for="UserName" type="text" placeholder="@Model.UserName)" />
+                        <span asp-validation-for="UserName" class="text-danger"></span>
                     </label>
                     <label class="modal-input relative flex">
                         <span>Email</span>
@@ -75,3 +76,8 @@
         </div>
     </div>
 </div>
+
+<script>
+    const teams = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+    console.log("TEAMS", teams)
+</script>

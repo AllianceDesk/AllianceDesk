@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using System.Linq;
 using System;
 using System.Collections.Generic;
+using ASI.Basecode.Data.Models;
 
 namespace ASI.Basecode.WebApp.Controllers
 {
@@ -40,6 +41,13 @@ namespace ASI.Basecode.WebApp.Controllers
             this._ticketService = ticketService;
         }
 
+        [HttpGet("Dashboard")]
+        [AllowAnonymous]
+        public ActionResult Dashboard()
+        {
+            ViewBag.AdminSidebar = "Overview";
+            return this.View();
+        }
 
         [HttpGet("AnalyticsOverallMetrics")]
         [AllowAnonymous]
@@ -281,23 +289,30 @@ namespace ASI.Basecode.WebApp.Controllers
         }
 
         [HttpGet("/UserDetails")]
+        [AllowAnonymous]
         /// <summary>
         /// Go to the User Details View
         /// </summary>
         /// <returns> User Details</returns>
         /// 
-        public IActionResult UserDetails(string id)
+        public IActionResult UserDetails(string UserId)
         {
-            var data = _userService.GetAllUsers().Where(x => x.UserId.ToString() == UserId).FirstOrDefault();
-            var team = _userService.GetTeams().Where(t => t.TeamId.Equals(data.TeamId)).FirstOrDefault();
+          
 
+            var data = _userService.GetAllUsers().FirstOrDefault(x => x.UserId.ToString() == UserId);
+            if (data == null)
+            {
+                return NotFound(); 
+            }
+
+            var team = _userService.GetTeams().FirstOrDefault(t => t.TeamId.Equals(data.TeamId));
             var userModel = new UserViewModel
             {
-                UserId = id,
+                UserId = UserId,
                 Name = data.Name,
                 Email = data.Email,
                 RoleId = data.RoleId,
-                TeamName = team?.TeamName // This will be null if team is null
+                TeamName = _userService.GetTeams().FirstOrDefault(t => t.TeamId == data.TeamId.ToString())?.TeamName
             };
 
             return PartialView("UserDetails", userModel);
@@ -335,8 +350,8 @@ namespace ASI.Basecode.WebApp.Controllers
             return PartialView("AddUser");
         }
 
-        [HttpPost]
-        [Route("/AddUser")]
+        [HttpPost("/AddUser")]
+        [AllowAnonymous]
         /// <summary>
         /// Post Request for Adding a User
         /// </summary>

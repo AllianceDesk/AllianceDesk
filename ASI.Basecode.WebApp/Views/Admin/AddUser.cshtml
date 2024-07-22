@@ -1,7 +1,7 @@
 ﻿@model ASI.Basecode.Services.ServiceModels.UserViewModel
 
 <div class="modal-container br-1 bg-white p-y-1 p-x-2" data-admin-modal-container>
-    <form asp-action="PostUserAdd" class="modal-container br-1 bg-white p-y-1 p-x-2">
+    <form asp-action="PostUserAdd" method="post" class="modal-container br-1 bg-white p-y-1 p-x-2" data-modal-add-form>
         <div class="flex-Row justify-content-between">
             <h2>Add User</h2>
             <i class="text-md fa-regular fa-circle-xmark hover-pointer" data-admin-add-close-btn></i>
@@ -9,68 +9,42 @@
         <div class="modal-input-container">
             <label class="modal-input relative flex">
                 <span>Name</span>
-                <input asp-for="Name" class="form-control" type="text" placeholder="John Doe" />
+                <input asp-for="Name" type="text" placeholder="John Doe" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </label>
             <label class="modal-input relative flex">
                 <span>Username</span>
-                <input asp-for="UserName" class="form-control" type="text" placeholder="johndoe" />
+                <input asp-for="UserName" type="text" placeholder="johndoe" />
                 <span asp-validation-for="UserName" class="text-danger"></span>
             </label>
             <label class="modal-input relative flex">
                 <span>Email</span>
-                <input asp-for="Email" class="form-control" type="text" placeholder="johndoe@email.com" />
+                <input asp-for="Email" type="text" placeholder="johndoe@email.com" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </label>
             <label class="modal-input relative flex">
                 <span>Password</span>
-                <input asp-for="Password" class="form-control" type="password" placeholder="Enter password" />
+                <input asp-for="Password" type="password" placeholder="Enter password" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </label>
             <label class="modal-input relative flex">
                 <span>Role</span>
-                <select asp-for="RoleId" class="form-control" asp-items="ViewBag.UserRoles">
-                    <option value="">-- Select Role --</option>
+                <select class="pl-2" asp-for="RoleId" asp-items="ViewBag.UserRoles">
+                    <option selected disabled hidden value="">-- Select Role --</option>
                 </select>
                 <span asp-validation-for="RoleId" class="text-danger"></span>
             </label>
             <label class="modal-input relative flex">
                 <span>Team</span>
-                <select asp-for="TeamId" class="form-control" asp-items="ViewBag.Teams">
-                    <option value="">-- Select Team --</option>
+                <select class="pl-2" asp-for="TeamId" asp-items="ViewBag.Teams">
+                    <option selected disabled hidden value="">-- Select Team --</option>
                 </select>
-                <span asp-validation-for="TeamId" class="text-danger"></span>
             </label>
         </div>
         <div class="flex-Row gap-1">
-            <button type="button" class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-add-cancel-btn>Cancel</button>
-            <button type="submit" class="mbtn-primary color-white bg-red align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5">Save</button>
+            <button class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-add-cancel-btn>Cancel</button>
+            <button type="submit" class="mbtn-primary color-white bg-red align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-add-save-btn>Save</button>
         </div>
     </form>
 </div>
 
-@section scripts {
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        // Close the modal on clicking close button
-        $(document).on('click', '[data-admin-add-close-btn]', function () {
-            $('[data-admin-modal-container]').addClass('hidden');
-        });
-
-        // Close the modal on clicking cancel button
-        $(document).on('click', '[data-admin-add-cancel-btn]', function (e) {
-            e.preventDefault(); // Prevent form submission if button is inside a form
-            $('[data-admin-modal-container]').addClass('hidden');
-        });
-
-        // Prevent modal close on click inside the modal
-        $('[data-modal-add-form]').on('click', function (e) {
-            e.stopPropagation();
-        });
-
-        // Close the modal on clicking outside of it
-        $('[data-admin-modal-container]').on('click', function () {
-            $(this).addClass('hidden');
-        });
-    </script>
-}

@@ -41,18 +41,18 @@
                 <span asp-validation-for="Password" class="text-danger"></span>
             </label>
             <label class="modal-input relative flex">
-                <select asp-for="RoleId" class="form-control" asp-items="ViewBag.UserRoles">
+                <select asp-for="RoleId"  asp-items="ViewBag.UserRoles">
                 </select>
                 <span asp-validation-for="RoleId" class="text-danger"></span>
             </label>
             <label class="modal-input relative flex">
-                <select asp-for="TeamId" class="form-control" asp-items="ViewBag.Teams">
+                <select asp-for="TeamId" asp-items="ViewBag.Teams">
                 </select>
                 <span asp-validation-for="TeamId" class="text-danger"></span>
             </label>
         </div>
         <div class="flex-Row gap-1">
-            <button class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-edit-cancel-btn>Cancel</button>
+            <button type="button" class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-edit-cancel-btn>Cancel</button>
             <button class="mbtn-primary color-white bg-red align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-edit-save-btn type="submit">Save</button>
         </div>
     </form>
