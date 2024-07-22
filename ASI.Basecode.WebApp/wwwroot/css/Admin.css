@@ -240,7 +240,8 @@
 
 a[data-admin-btn],
 a[data-a-btn],
-a[data-td-none]{
+a[data-td-none],
+a[data-td-none]:hover {
     text-decoration: none;
 }
 

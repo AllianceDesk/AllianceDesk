@@ -67,6 +67,8 @@ namespace ASI.Basecode.WebApp.Controllers
         [AllowAnonymous]
         public IActionResult AnalyticsOverallMetrics()
         {
+
+            ViewBag.AdminSidebar = "Analytics";
             var tickets = _ticketService.RetrieveAll();
 
             var now = DateTime.Now;
@@ -107,6 +109,7 @@ namespace ASI.Basecode.WebApp.Controllers
                 RecentUserActivities = _userService.GetRecentUserActivity(),
             };
 
+
             return View("Views/Admin/AnalyticsOverallMetrics.cshtml", model);
         }
 
@@ -114,7 +117,7 @@ namespace ASI.Basecode.WebApp.Controllers
         [AllowAnonymous]
         public IActionResult AgentMetric()
         {
-
+            ViewBag.AdminSidebar = "Analytics";
             var tickets = _ticketService.RetrieveAll();
 
             var now = DateTime.Now;
@@ -180,6 +183,7 @@ namespace ASI.Basecode.WebApp.Controllers
         [AllowAnonymous]
         public IActionResult TeamMetrics()
         {
+            ViewBag.AdminSidebar = "Analytics";
             var tickets = _ticketService.RetrieveAll();
 
             var now = DateTime.Now;
