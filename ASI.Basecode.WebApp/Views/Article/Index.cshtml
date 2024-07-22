@@ -93,11 +93,11 @@
         <div class="nav_two">
             <div class="d-flex" style="gap:2em;">
                 <a class="active_link" asp-controller="Article" asp-action="Index" style="text-decoration: none;">Articles</a>
-                <a class="inactive_link" asp-controller="Article" asp-action="MyFavorites" style="text-decoration: none;">
+                <a class="inactive_link d-flex" asp-controller="Article" asp-action="MyFavorites" style="text-decoration: none; ">
                     My Favorites
                     @if (ViewBag.FavoriteCount != null && ViewBag.FavoriteCount > 0)
                     {
-                        <span>(@ViewBag.FavoriteCount)</span>
+                        <span class="article_badge ml-2">@ViewBag.FavoriteCount</span>
                     }
                 </a>
             </div>

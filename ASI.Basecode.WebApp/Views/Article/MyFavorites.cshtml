@@ -78,11 +78,11 @@
 
             <div class="d-flex" style="gap:2em;">
                 <a class="inactive_link" asp-controller="Article" asp-action="Index">Articles</a>
-                <a class="active_link" asp-controller="Article" asp-action="MyFavorites">
+                <a class="active_link d-flex" asp-controller="Article" asp-action="MyFavorites">
                     My Favorites
                     @if (ViewBag.FavoriteCount != null && ViewBag.FavoriteCount > 0)
                     {
-                        <span>(@ViewBag.FavoriteCount)</span>
+                        <span class ="article_badge ml-2">@ViewBag.FavoriteCount</span>
                     }
                 </a>
             </div>
@@ -96,10 +96,6 @@
                 </form>
 
                 <select class="form-select" aria-label="Default select example" style="width: 15em; outline: none; box-shadow: none; border: 1px solid #ccc; background-color: whitesmoke;">
-                    <option value="title" selected>Sort by Title (Ascending)</option>
-                    <option value="title_desc">Sort by Title (Descending)</option>
-                    <option value="date">Sort by Date (Ascending)</option>
-                    <option value="date_desc">Sort by Date (Descending)</option>
                     <option value="Technical">Technical</option>
                     <option value="Billing">Billing</option>
                     <option value="General Questions">General Questions</option>
