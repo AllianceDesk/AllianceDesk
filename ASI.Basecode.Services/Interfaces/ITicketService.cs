@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ASI.Basecode.Data.Models;
 using ASI.Basecode.Services.ServiceModels;
 using ASI.Basecode.Services.Services;
@@ -10,7 +11,7 @@ namespace ASI.Basecode.Services.Interfaces
         public interface ITicketService
         {
                 IEnumerable<TicketViewModel> RetrieveAll();
-                IEnumerable<TicketViewModel> GetUserTickets(Guid id, byte? status, string? searchTerm, string? sortOrder, int? page);
+                IQueryable<TicketViewModel> GetUserTickets(Guid id, byte? status, string? searchTerm, string? sortOrder, int? page);
                 IEnumerable<TicketViewModel> GetAgentTickets(Guid id);
                 void Add(TicketViewModel ticket);
                 void Update(TicketViewModel ticket);
