@@ -29,12 +29,13 @@
                     </ul>
                 </div>
                 <div class="flex-Row gap-2 justify-content-center align-center">
+                    <form asp-controller="Admin" asp-action="ViewUser" method="get" id="searchForm">
                         <div class="j-search-container | flex-Row align-center justify-content-center">
                             <i class="fa-solid fa-magnifying-glass text-1-5"></i>
                             <input name="searchString" id="searchInput" class="bg-transparent" type="text" placeholder="Search" value="@ViewBag.SearchString"/>
                         </div>
-                    
-                    <button class="mbtn-primary flex-Row gap-1 color-white bg-red align-center justify-content-center border-0 p-x-1 br-1-5">
+                    </form>
+                    <button class="mbtn-primary flex-Row gap-1 color-white bg-red align-center justify-content-center border-0 p-x-1 br-1-5" data-admin-add-btn>
                         <i class="fa-solid fa-filter"></i>
                         <p class="br-1-5 p-y-1">Filter</p>
                     </button>
@@ -196,7 +197,7 @@
 
 
 
-    @section scripts {
+@section scripts {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         //VARIABLES
@@ -445,4 +446,4 @@
         })
     </script>
 
-    }
+}
