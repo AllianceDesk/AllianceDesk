@@ -66,8 +66,6 @@
 
             <a asp-controller="Agent" asp-action="Dashboard" data-admin-btn class="inactive-button" style="text-decoration: none;"><i class='bx bx-grid-alt bx-sm as' style="align-self:center; text-decoration: none;"></i>  <p>Overview</p> </a>
 
-            <a asp-controller="Agent" asp-action="AssignedTickets" data-admin-btn class="inactive-button" style="text-decoration: none;"><i class='bx bx-purchase-tag-alt bx-sm as' style="align-self:center; text-decoration: none;"></i> <p>Assigned Tickets</p> </a>
-
             <a asp-controller="Agent" asp-action="Teams" data-admin-btn class="inactive-button" style="text-decoration: none;"><i class='bx bx-group bx-sm as' style="align-self:center; text-decoration: none;"></i> <p>Team</p> </a>
 
             <a asp-controller="Article" asp-action="Index" data-admin-btn class="active-button" style="text-decoration: none;"><i class='bx bx-group bx-sm as' style="align-self:center; text-decoration: none;"></i> <p>Knowledge Base</p> </a>
@@ -101,8 +99,9 @@
 
         <div class="nav_two">
             <div class="d-flex" style="gap:2em;">
-                <a class="active_link" asp-controller="Article" asp-action="Index">Articles</a>
-                <a class="inactive_link" asp-controller="Article" asp-action="MyFavorites">My Favorites
+                <a class="active_link" asp-controller="Article" asp-action="Index" style="text-decoration: none;">Articles</a>
+                <a class="inactive_link" asp-controller="Article" asp-action="MyFavorites" style="text-decoration: none;">
+                    My Favorites
                     @if (ViewBag.FavoriteCount != null && ViewBag.FavoriteCount > 0)
                     {
                         <span>(@ViewBag.FavoriteCount)</span>

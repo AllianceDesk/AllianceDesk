@@ -176,6 +176,10 @@ nav {
     background-color: red;
 }
 
+    .active_link:hover, .inactive_link:hover {
+        color: #E21818;
+    }
+
 .inactive_link {
     text-decoration: none;
     color: black;
