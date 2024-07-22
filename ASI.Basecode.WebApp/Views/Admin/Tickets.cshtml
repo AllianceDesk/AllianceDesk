@@ -4,28 +4,8 @@
     ViewData["Title"] = "Tickets";
     Layout = "_Layout";
 
-    Func<DateTime, string> toRelativeTime = (DateTime dateTime) =>
-    {
-        var timeSpan = DateTime.Now - dateTime;
-
-        if (timeSpan.TotalSeconds < 60)
-        {
-            return $"{timeSpan.Seconds} seconds ago";
-        }
-        else if (timeSpan.TotalMinutes < 60)
-        {
-            return $"{timeSpan.Minutes} minutes ago";
-        }
-        else if (timeSpan.TotalHours < 24)
-        {
-            return $"{timeSpan.Hours} hours ago";
-        }
-        else
-        {
-            return $"{timeSpan.Days} days ago";
-        }
-    };
 }
+
 @section styles {
     <link rel="stylesheet" href="~/css/functionalities.css" />
     <link rel="stylesheet" href="~/css/Admin.css" />
@@ -66,11 +46,9 @@
             @foreach (var item in Model)
             {
                 <button onclick="window.location.href = '@Url.Action("Tickets", "Admin", new { id = item.TicketId })'" class=" agents cursor-pointer p-y-1 p-x-1 flex-col ">
-                    
                         <p class="text-1-5 fw-semi">@item.Title</p>
-                        <p class="mb-3" style="font-size: 12px;">@toRelativeTime(@item.DateCreated)</p>
-                    
-                    <p>@item.Description</p>
+                        <p class="text-1-5 fw-semi">@item.RelativeTime)</p>
+                        <p>@item.Description</p>
                 </button>
             }
         </div>

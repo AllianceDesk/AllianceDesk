@@ -101,9 +101,7 @@
                 alert("Please select an agent to assign the ticket to.");
                 return;
             }
-
-            console.log("clicking open btn", modalContainer, adminEditBtn);
-
+            
             const agentName = selectedAgent.querySelector("h6").textContent.trim();
             document.querySelector("#agentNameDisplay").textContent = agentName;
             assignModalContainer.classList.remove("hidden");
@@ -111,13 +109,11 @@
         });
 
         adminAsgnCancelBtn.addEventListener("click", () => {
-            console.log("clicking cancel btn", modalContainer)
             assignModalContainer.classList.add("hidden")
             adminAsgnForm.classList.add("hidden")
         })
 
         adminAsgnCloseBtn.addEventListener("click", () => {
-            console.log("clicking close btn", modalContainer)
             assignModalContainer.classList.add("hidden")
             adminAsgnForm.classList.add("hidden")
         })
@@ -125,7 +121,6 @@
         adminAsgnSaveBtn.addEventListener("click", () => {
             const selectedAgent = document.querySelector(".selected-agent");
 
-            console.log("clicking save btn", modalContainer);
 
             const agentId = selectedAgent.querySelector("#agentId").value;
             const ticketId = '@Model.TicketId';

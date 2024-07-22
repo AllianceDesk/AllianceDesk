@@ -20,5 +20,10 @@ namespace ASI.Basecode.Data.Repositories
         {
             return this.GetDbSet<TicketPriority>();
         }
+
+        public TicketPriority GetPriorityById(byte priorityId)
+        {
+           return this.GetDbSet<TicketPriority>().FirstOrDefault(x => x.PriorityId == priorityId);
+        }
     }
 }

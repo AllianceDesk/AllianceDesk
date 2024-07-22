@@ -7,17 +7,17 @@ using System.Threading.Tasks;
 
 namespace ASI.Basecode.Services.ServiceModels
 {
-        public class TicketActivityViewModel
-        {
-                public string HistoryId { get; set; }
-                public string TicketId { get; set; }
-                public string Title { get; set; }
-                public string ModifiedBy { get; set; }
-                public string ModifiedByName { get; set; }
-                public DateTime ModifiedAt { get; set; }
-                public string Date { get; set; }
-                public byte OperationId { get; set; }
-                public string OperationName { get; set; }
-                public string message { get; set; }
-        }
+    public class TicketActivityViewModel
+    {
+        public string HistoryId { get; set; }
+        public string TicketId { get; set; }
+        public string Title { get; set; }
+        public string ModifiedBy { get; set; }
+        public string ModifiedByName { get; set; }
+        public DateTime ModifiedAt { get; set; }
+        public string Date { get; set; }
+        public byte OperationId { get; set; }
+        public string OperationName { get; set; }
+        public string message { get; set; }
+    }
 }
