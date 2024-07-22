@@ -103,7 +103,8 @@ namespace ASI.Basecode.WebApp.Controllers
                 TicketCountsByStatus = ticketCountsByStatus,
                 TicketCountsByPriority = ticketCountsByPriority,
                 TicketCountsByDay = _ticketService.GetTicketVolume(),
-                TotalTicketCount = weeklyTickets.Count()
+                TotalTicketCount = weeklyTickets.Count(),
+                RecentUserActivities = _userService.GetRecentUserActivity(),
             };
 
             return View("Views/Admin/AnalyticsOverallMetrics.cshtml", model);
@@ -281,7 +282,7 @@ namespace ASI.Basecode.WebApp.Controllers
         /// <returns> Home View </returns>
         [HttpGet("ViewUser")]
         [AllowAnonymous]
-        public ActionResult ViewUser()
+        public ActionResult ViewUser(string searchString)
         {
             ViewBag.IsLoginOrRegister = false;
             ViewBag.AdminSidebar = "ViewUser";
@@ -294,11 +295,25 @@ namespace ASI.Basecode.WebApp.Controllers
                                             UserId = u.UserId.ToString(),
                                         })
                                         .ToList();
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                users = _userService.GetAllUsers()
+                                        .Where (u => u.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                                        .Select(u => new UserViewModel
+                                        {
+                                            Name = u.Name,
+                                            Email = u.Email,
+                                            RoleId = u.RoleId,
+                                            UserId = u.UserId.ToString(),
+                                        })
+                                        .ToList();
+            }
 
             var viewModel = new UserViewModel
             {
                 Users = users
             };
+            ViewBag.SearchString = searchString;
 
             return View(viewModel);
         }
