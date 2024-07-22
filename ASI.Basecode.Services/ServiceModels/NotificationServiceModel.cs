@@ -15,6 +15,7 @@ namespace ASI.Basecode.Services.ServiceModels
         public string Title { get; set; }
         public string Body { get; set; }
         public string TicketId { get; set; }
+        public string TicketNumber { get; set; }
         public string DateCreated { get; set; }
         public string RecipientId { get; set; }
     }

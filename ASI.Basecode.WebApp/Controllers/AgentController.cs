@@ -121,7 +121,42 @@ namespace ASI.Basecode.WebApp.Controllers
         [AllowAnonymous]
         public ActionResult PerformanceReport()
         {
-            return this.View();
+            var userId = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userId))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var user = _userService.GetUserById(Guid.Parse(userId).ToString());
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var userRoles = _userService.GetUserRoles()
+                                        .Select(u => new SelectListItem
+                                        {
+                                            Value = u.RoleId.ToString(),
+                                            Text = u.RoleName
+                                        })
+                                        .ToList();
+
+            ViewBag.UserRoles = userRoles;
+
+            var userModel = new UserViewModel
+            {
+                UserId = user.UserId.ToString(),
+                UserName = user.Username,
+                Name = user.Name,
+                Email = user.Email,
+                Password = PasswordManager.DecryptPassword(user.Password),
+                RoleId = user.RoleId,
+                TeamId = user.TeamId.ToString(),
+                RoleName = _userService.GetUserRoles().FirstOrDefault(r => r.RoleId == user.RoleId)?.RoleName,
+                TeamName = _userService.GetTeams().FirstOrDefault(t => t.TeamId == user.TeamId.ToString())?.TeamName
+            };
+
+            return View(userModel);
         }
 
         [HttpGet("Teams")]

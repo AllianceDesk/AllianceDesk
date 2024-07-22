@@ -14,6 +14,7 @@ namespace ASI.Basecode.WebApp.Controllers
     public class NotificationController : ControllerBase<NotificationController>
     {
         private readonly INotificationService _notificationService;
+        private readonly ITicketService _ticketService;
         private readonly ISessionHelper _sessionHelper;
         /// <param name = "httpContextAccessor" ></ param >
         /// <param name="loggerFactory"></param>
@@ -24,6 +25,7 @@ namespace ASI.Basecode.WebApp.Controllers
         public NotificationController(
             INotificationService notificationService,
             ISessionHelper sessionHelper,
+            ITicketService ticketService,
             IHttpContextAccessor httpContextAccessor,
             ILoggerFactory loggerFactory,
             IConfiguration configuration,
@@ -31,6 +33,7 @@ namespace ASI.Basecode.WebApp.Controllers
         {
             _notificationService = notificationService;
             _sessionHelper = sessionHelper;
+            _ticketService = ticketService;
         }
 
         /// <summary>
@@ -39,7 +42,17 @@ namespace ASI.Basecode.WebApp.Controllers
         /// <returns></returns>
         public IActionResult Index()
         {
-            var data = _notificationService.RetrieveAll().Where(u => u.RecipientId == _sessionHelper.GetUserIdFromSession().ToString());
+            var data = _notificationService.RetrieveAll().Where(u => u.RecipientId == _sessionHelper.GetUserIdFromSession().ToString())
+                        .Select(u => new NotificationServiceModel
+                        {
+                            NotificationId = u.NotificationId,
+                            Title = u.Title,
+                            Body = u.Body,
+                            TicketId = u.TicketId,
+                            RecipientId = u.RecipientId,
+                            DateCreated = u.DateCreated,
+                            TicketNumber = _ticketService.RetrieveAll().Where(t => t.TicketId.ToString() == u.TicketId).FirstOrDefault().TicketNumber,
+                        });
             return View(data);
         }
     }

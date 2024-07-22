@@ -23,6 +23,7 @@ namespace ASI.Basecode.Services.Services
         private readonly ISessionHelper _sessionHelper;
         private readonly IMapper _mapper;
         private readonly ITeamRepository _teamRepository;
+        private readonly INotificationRepository _notificationRepository;
 
         public TicketService(
             ITicketRepository ticketRepository,
@@ -35,6 +36,7 @@ namespace ASI.Basecode.Services.Services
             ITicketMessageRepository ticketMessageRepository,
             IMapper mapper,
             ISessionHelper sessionHelper,
+            INotificationRepository notificationRepository,
             ITeamRepository teamRepository)
         {
             _ticketRepository = ticketRepository;
@@ -48,6 +50,7 @@ namespace ASI.Basecode.Services.Services
             _mapper = mapper;
             _sessionHelper = sessionHelper;
             _teamRepository = teamRepository;
+            _notificationRepository = notificationRepository;
         }
 
         public IEnumerable<TicketViewModel> RetrieveAll()
@@ -100,6 +103,17 @@ namespace ASI.Basecode.Services.Services
             newActivity.ModifiedAt = DateTime.Now;
             newActivity.Message = "Ticket created";
             _ticketActivityRepository.Add(newActivity);
+
+            Notification newNotification = new Notification();
+            newNotification.NotificationId = Guid.NewGuid();
+            newNotification.TicketId = newTicket.TicketId;
+            newNotification.Title = ticket.Title;
+            newNotification.Body = ticket.Description;
+            newNotification.DateCreated = DateTime.Now;
+            newNotification.Status = true;
+            newNotification.RecipientId = newTicket.CreatedBy;
+            _notificationRepository.Add(newNotification);
+
         }
 
         public void Update(TicketViewModel ticket)

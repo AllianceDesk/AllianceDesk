@@ -1,4 +1,5 @@
-﻿using ASI.Basecode.Services.Interfaces;
+﻿using ASI.Basecode.Data.Models;
+using ASI.Basecode.Services.Interfaces;
 using ASI.Basecode.Services.ServiceModels;
 using ASI.Basecode.WebApp.Mvc;
 using AutoMapper;
@@ -18,6 +19,7 @@ namespace ASI.Basecode.WebApp.Controllers
         private readonly IUserService _userService;
         private readonly ITicketService _ticketService;
         private readonly ISessionHelper _sessionHelper;
+        private readonly INotificationService _notificationService;
         /// <summary>
         /// Constructor
         /// </summary>
@@ -32,10 +34,12 @@ namespace ASI.Basecode.WebApp.Controllers
                               IUserService userService,
                               ITicketService ticketService,
                               ISessionHelper sessionHelper,
+                              INotificationService notificationService,
                               IMapper mapper = null) : base(httpContextAccessor, loggerFactory, configuration, mapper)
         {
             this._userService = userService;
             this._ticketService = ticketService;
+            this._notificationService = notificationService;
             _sessionHelper = sessionHelper;
         }
 
