@@ -26,6 +26,7 @@ namespace ASI.Basecode.WebApp.Controllers
         private readonly IArticleService _articleService;
         private readonly IFavoriteRepository _favoriteRepository;
         private readonly ISessionHelper _sessionHelper;
+        private readonly IUserRepository _userRepository;
 
         /// <summary>
         /// Constructor
@@ -40,12 +41,14 @@ namespace ASI.Basecode.WebApp.Controllers
                               ILoggerFactory loggerFactory,
                               IConfiguration configuration,
                               IFavoriteRepository favoriteRepository,
+                              IUserRepository userRepository,
                               ISessionHelper sessionHelper,
                               IMapper mapper = null) : base(httpContextAccessor, loggerFactory, configuration, mapper)
         {
             _articleService = articleService;
             _favoriteRepository = favoriteRepository;
             _sessionHelper = sessionHelper;
+            _userRepository = userRepository;
         }
 
         /// <summary>
@@ -55,6 +58,7 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpGet ("/KnowledgeBase")]
         public IActionResult Index(string searchString, string category)
         {
+            ViewBag.RoleId = _userRepository.GetUsers().Where(u => u.UserId == _sessionHelper.GetUserIdFromSession()).FirstOrDefault().RoleId;
             ViewBag.AdminSidebar = "Index";
             ViewBag.SearchString = searchString;
             ViewBag.CategoryString = category;
