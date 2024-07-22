@@ -52,20 +52,22 @@ namespace ASI.Basecode.WebApp.Controllers
 
             return Json(new
             {
+                Name = preference.Name,
+                Email = preference.Email,
                 InAppNotifications = preference.InAppNotifications,
                 EmailNotifications = preference.EmailNotifications,
                 DefaultTicketView = preference.DefaultTicketView,
                 DefaultTicketPerPage = preference.DefaultTicketPerPage,
-                Name = preference.User.Name,
-                Email = preference.User.Email
-             });
+            });
         }
 
-       /* [HttpPost("UpdatePreferences")]
+        [HttpPost("UpdatePreferences")]
         public IActionResult UpdatePreferencePost([FromBody] UserPreferenceViewModel model)
         {
             try
             {
+                Console.WriteLine("UpdatePreferences was called");
+
                 if (ModelState.IsValid)
                 {
                     _userService.UpdatePreference(model);
@@ -82,9 +84,9 @@ namespace ASI.Basecode.WebApp.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error updating user preferences");
-                return StatusCode(500, "Error updating user preferences"); // Internal Server Error
+                return StatusCode(500, "Error updating user preferences");
             }
-        }*/
+        }
 
         [HttpGet("Tickets")]
         public IActionResult Tickets(byte? status, string? searchTerm, string? sortOrder, int? page)
@@ -96,7 +98,7 @@ namespace ASI.Basecode.WebApp.Controllers
             var currentSearchTerm = searchTerm ?? "";
             var count = tickets.Count();
             var pageSize = 5;
-
+           
             var statuses = _ticketService.GetStatuses()
                 .Select(c => new KeyValuePair<string, string>(c.StatusId.ToString(), c.StatusName))
                 .ToList();
@@ -111,11 +113,12 @@ namespace ASI.Basecode.WebApp.Controllers
 
             var agents = _userService.GetAgents();
 
-            if (Math.Ceiling(tickets.Count() / (double )pageSize) > 1)
+            if (Math.Ceiling(tickets.Count() / (double)pageSize) > 1)
             {
                 tickets = tickets.Skip((currentPage - 1) * pageSize)
-                                         .Take(pageSize)
-                                         .ToList();
+                                 .Take(pageSize)
+                                 .ToList()
+                                 .AsQueryable();
             }
 
             // Create view model and return view
@@ -198,7 +201,7 @@ namespace ASI.Basecode.WebApp.Controllers
         }
 
 
-        /*[HttpPost("Tickets/{id}/Edit"), ActionName("TicketEdit")]
+        [HttpPost("Tickets/{id}/Edit"), ActionName("TicketEdit")]
         public IActionResult TicketEditPost(string id, UserTicketsViewModel model)
         {
             var ticket = _ticketService.GetById(id); // Ensure this matches with the ID being passed
@@ -219,8 +222,8 @@ namespace ASI.Basecode.WebApp.Controllers
             // Redirect to the Tickets action
             return RedirectToAction("Tickets");
         }
-*/
-        /*[HttpPost("Tickets/{id}/Feedback")]
+
+        [HttpPost("Tickets/{id}/Feedback")]
         public IActionResult TicketFeedback(string id, UserTicketsViewModel model)
         {
             model.Feedback.TicketId = Guid.Parse(id);
@@ -234,7 +237,7 @@ namespace ASI.Basecode.WebApp.Controllers
             _ticketService.AddFeedback(model.Feedback);
 
             return RedirectToAction("Tickets");
-        }*/
+        }
 
         [HttpPost("Tickets/{id}/Close")]
         public IActionResult TicketClose(string id)
