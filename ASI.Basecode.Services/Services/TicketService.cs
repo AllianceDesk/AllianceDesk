@@ -168,6 +168,15 @@ namespace ASI.Basecode.Services.Services
             newTicket.StatusId = 1;
             newTicket.PriorityId = Convert.ToByte(ticket.PriorityId);
             newTicket.CategoryId = Convert.ToByte(ticket.CategoryId);
+
+
+            // Generate Ticket Number
+
+            var count = _ticketRepository.RetrieveAll().Count() + 1;
+            string year = DateTime.Now.Year.ToString();
+            string paddedCount = count.ToString().PadLeft(5, '0'); 
+            newTicket.TicketNumber = $"TCK-{year}-{paddedCount}";
+
             _ticketRepository.Add(newTicket);
 
             // Add ticket activity

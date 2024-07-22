@@ -66,8 +66,6 @@ namespace ASI.Basecode.WebApp.Controllers
         {
             try
             {
-                Console.WriteLine("UpdatePreferences was called");
-
                 if (ModelState.IsValid)
                 {
                     _userService.UpdatePreference(model);

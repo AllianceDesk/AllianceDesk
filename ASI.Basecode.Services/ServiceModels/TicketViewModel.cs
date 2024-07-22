@@ -10,6 +10,8 @@ namespace ASI.Basecode.Services.ServiceModels
     {
         public string TicketId { get; set; }
 
+        public string TicketNumber { get; set; }
+
         [Required(ErrorMessage = "Title is required")]
         [StringLength(100, ErrorMessage = "Title cannot be longer than 100 characters")]
         public string Title { get; set; }
@@ -31,8 +33,6 @@ namespace ASI.Basecode.Services.ServiceModels
         public string AgentId { get; set; }
 
         public string TeamId { get; set; }
-        public string TicketNumber {  get; set; }
-
         public DateTime DateCreated { get; set; }
 
         public List<Attachment> Attachments { get; set; } = new List<Attachment>();
