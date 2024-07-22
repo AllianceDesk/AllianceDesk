@@ -21,5 +21,10 @@ namespace ASI.Basecode.Data.Repositories
         {
             return this.GetDbSet<TicketStatus>();
         }
+
+        public TicketStatus GetStatusById(byte statusId)
+        {
+            return this.GetDbSet<TicketStatus>().FirstOrDefault(x => x.StatusId == statusId);
+        }
     }
 }

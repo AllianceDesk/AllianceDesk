@@ -5,7 +5,6 @@ using ASI.Basecode.Data.Interfaces;
 using ASI.Basecode.Data.Models;
 using Basecode.Data.Repositories;
 
-
 namespace ASI.Basecode.Data.Repositories
 {
     public class TicketRepository : BaseRepository, ITicketRepository
@@ -42,6 +41,21 @@ namespace ASI.Basecode.Data.Repositories
                 this.GetDbSet<Ticket>().Remove(ticketToDelete);
                 UnitOfWork.SaveChanges();
             }
+        }
+
+        public Ticket GetTicketById(Guid id)
+        {
+            return this.GetDbSet<Ticket>().FirstOrDefault(x => x.TicketId == id);
+        }
+
+        public IEnumerable<Ticket> GetUserTicketsById(Guid id)
+        {
+           return this.GetDbSet<Ticket>().Where(x => x.CreatedBy == id);
+        }
+
+        public IEnumerable<Ticket> GetAgentTicketsById(Guid id)
+        {
+            return this.GetDbSet<Ticket>().Where(x => x.AssignedAgent != null && x.AssignedAgent == id);
         }
     }
 }
