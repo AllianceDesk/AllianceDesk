@@ -7,7 +7,7 @@ const deleteModalContainer = document.querySelector("[data-admin-delete-modal-co
 
 const navItems = document.querySelectorAll("[data-nav-item]")
 
- BTNS 
+ /*BTNS*/ 
 
 const adminEditCloseBtn = document.querySelector("[data-admin-edit-close-btn]")
 const adminEditCancelBtn = document.querySelector("[data-admin-edit-cancel-btn]")
@@ -27,7 +27,7 @@ const adminAddForm = document.querySelector("[data-modal-add-form]")
 const adminDelBtn = document.querySelector("[data-admin-delete-btn]")
 const adminDelForm = document.querySelector("[data-admin-delete-modal]")
 
- DELETE 
+ /*DELETE*/ 
 
 adminDelBtn.addEventListener("click", () => {
     console.log("clicking open btn", modalContainer, adminEditBtn)
@@ -48,7 +48,7 @@ adminDelCloseBtn.addEventListener("click", () => {
     adminDelForm.classList.add("hidden")
 })
 
- ADD 
+ /*ADD*/ 
 
 adminAddForm.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -74,7 +74,7 @@ adminAddCloseBtn.addEventListener("click", () => {
 })
 
 
- EDIT 
+ /*EDIT*/ 
 adminEditForm.addEventListener("submit", (e) => {
     e.preventDefault();
 })

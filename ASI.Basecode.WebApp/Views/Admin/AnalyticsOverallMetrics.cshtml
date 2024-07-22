@@ -63,14 +63,13 @@
             </div>
             <div class="bg-White p-x-0-5 p-y-0-5 br-1-5 h-100 flex flex-col gap-1">
                 <p>User Activity</p>
-                
-                @for (int i = 0; i < 4; i++)
+                @foreach (var activity in Model.RecentUserActivities)
                 {
                     <div class="flex-Row gap-1 align-items-center">
                         <div class="p-y-2 p-x-2 br-50 bg-grey"></div>
                         <div class="flex flex-col gap-0-5">
-                            <p>Sonal closed “How to do my password?”</p>
-                            <p class="text-sm color-inactive">14 Nov 2022, 5:26 PM</p>
+                            <p>@activity.ModifiedByName @activity.OperationName "@activity.Title"</p>
+                            <p class="text-sm color-inactive">@activity.Date</p>
                         </div>
                     </div>
                 }

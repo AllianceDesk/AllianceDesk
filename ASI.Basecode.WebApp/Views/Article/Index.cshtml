@@ -87,26 +87,23 @@
 
             <div class="filter_button">
 
-                <form asp-action="Index" method="get" asp-controller="Article" id="searchForm">
-                    <div class="input-group">
+                <form asp-action="Index" method="get" asp-controller="Article" id="searchForm" class="d-flex">
+                    <div class="input-group mr-3">
                         <button class="btn btn-outline-secondary" type="submit" id="button-search" style="background-color: whitesmoke; border: 1px solid #ccc; outline: none; box-shadow: none;"><i class='bx bx-search bx-xs bx-fw' style="color: #45474B; cursor: pointer;"></i></button>
                         <input name="searchString" id="searchInput" type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="button-search" style="background-color: whitesmoke; border: 1px solid #ccc; outline: none; box-shadow: none;" value="@ViewBag.SearchString">
                     </div>
+                
+                    @Html.DropDownList("category", new Microsoft.AspNetCore.Mvc.Rendering.SelectList(new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>
+                    {
+                    new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Default", Value = "default" },
+                    new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Technical", Value = "Technical" },
+                    new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Billing", Value = "Billing" },
+                    new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "General Questions", Value = "General Questions" },
+                    new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Account Management", Value = "Account Management" },
+                    new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Customer Support", Value = "Customer Support" },
+                    new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Others", Value = "Others" }
+                    }, "Value", "Text", ViewBag.CategoryString), new { @class = "form-select", @aria_label = "Default select example", @style = "width: 16em; outline: none; box-shadow: none; border: 1px solid #ccc; background-color: whitesmoke;", @onchange = "document.getElementById('searchForm').submit();" })
                 </form>
-
-                <select class="form-select" aria-label="Default select example" style="width: 16em; outline: none; box-shadow: none; border: 1px solid #ccc; background-color: whitesmoke;">
-                    <option value="title" selected>Sort by Title (Ascending)</option>
-                    <option value="title_desc">Sort by Title (Descending)</option>
-                    <option value="date">Sort by Date (Ascending)</option>
-                    <option value="date_desc">Sort by Date (Descending)</option>
-                    <option value="Technical">Technical</option>
-                    <option value="Billing">Billing</option>
-                    <option value="General Questions">General Questions</option>
-                    <option value="Account Management">Account Management</option>
-                    <option value="Customer Support">Customer Support</option>
-                    <option value="Others">Others</option>
-                </select>
-
             </div>
         </div>
     </nav>

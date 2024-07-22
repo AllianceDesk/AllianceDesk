@@ -20,5 +20,6 @@ namespace ASI.Basecode.Services.Interfaces
         IEnumerable<User> GetAllUsers();
         IEnumerable<UserViewModel> GetAgents();
         string GeneratePassword();
+        List <TicketActivityViewModel> GetRecentUserActivity ();
     }
 }

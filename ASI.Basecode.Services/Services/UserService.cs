@@ -22,14 +22,20 @@ namespace ASI.Basecode.Services.Services
         private readonly IUserRoleRepository _userRoleRepository;
         private readonly ITeamRepository _teamRepository;
         private readonly IMapper _mapper;
+        private readonly ITicketActivityRepository _ticketActivityRepository;
+        private readonly ITicketActivityOperationRepository _ticketActivityOperationRepository;
+        private readonly ITicketRepository _ticketRepository;
         private static readonly Random Random = new Random();
 
-        public UserService(IUserRepository repository, IMapper mapper, IUserRoleRepository userRoleRepository, ITeamRepository teamRepository)
+        public UserService(IUserRepository repository, IMapper mapper, IUserRoleRepository userRoleRepository, ITeamRepository teamRepository, ITicketActivityRepository ticketActivityRepository, ITicketActivityOperationRepository ticketActivityOperationRepository, ITicketRepository ticketRepository)
         {
             _mapper = mapper;
             _repository = repository;
             _userRoleRepository = userRoleRepository;
             _teamRepository = teamRepository;
+            _ticketActivityRepository = ticketActivityRepository;
+            _ticketActivityOperationRepository = ticketActivityOperationRepository;
+            _ticketRepository = ticketRepository;
         }
 
         public LoginResult AuthenticateUser(string userName, string password, ref User user)
@@ -183,6 +189,26 @@ namespace ASI.Basecode.Services.Services
 
             // Shuffle the password to ensure randomness
             return new string(password.ToString().ToCharArray().OrderBy(s => (Random.Next(2) % 2) == 0).ToArray());
+        }
+
+        public List<TicketActivityViewModel> GetRecentUserActivity ()
+        {
+            var userActivity = _ticketActivityRepository.RetrieveAll()
+                                .OrderByDescending(a => a.ModifiedAt).Take(5)
+                                .Select(t => new TicketActivityViewModel
+                                {
+                                    HistoryId = t.HistoryId.ToString(),
+                                    TicketId = t.TicketId.ToString(),
+                                    Title = _ticketRepository.RetrieveAll().Where(i => i.TicketId == t.TicketId).FirstOrDefault().Title,
+                                    ModifiedBy = t.ModifiedBy.ToString(),
+                                    ModifiedByName = _repository.GetUsers().Where(u => u.UserId == t.ModifiedBy).FirstOrDefault().Name,
+                                    ModifiedAt = t.ModifiedAt,
+                                    Date = t.ModifiedAt.ToString("dd MMM yyyy, h:mm tt"),
+                                    OperationId = t.OperationId,
+                                    OperationName = _ticketActivityOperationRepository.RetrieveAll().Where(o => o.OperationId == t.OperationId).FirstOrDefault().Name,
+                                    message = t.Message,
+                                }).ToList();
+            return userActivity;
         }
     }
 }

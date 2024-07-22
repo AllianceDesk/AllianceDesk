@@ -53,10 +53,11 @@ namespace ASI.Basecode.WebApp.Controllers
         /// </summary>
         /// <returns> Article View </returns>
         [HttpGet ("/KnowledgeBase")]
-        public IActionResult Index(string searchString)
+        public IActionResult Index(string searchString, string category)
         {
             ViewBag.AdminSidebar = "Index";
             ViewBag.SearchString = searchString;
+            ViewBag.CategoryString = category;
             ViewBag.FavoriteCount = _articleService.GetUserFavoriteCount();
 
             var data = _articleService.RetrieveAll()
@@ -68,6 +69,7 @@ namespace ASI.Basecode.WebApp.Controllers
                                             CategoryNavigation = u.CategoryNavigation,
                                             DateUpdated = u.DateUpdated,
                                         })
+                                        .OrderBy(u => u.Title)
                                         .ToList();
             if (!String.IsNullOrEmpty(searchString)){
                 data = _articleService.RetrieveAll()
@@ -81,6 +83,24 @@ namespace ASI.Basecode.WebApp.Controllers
                                             DateUpdated = u.DateUpdated,
                                         })
                                         .ToList();
+            }
+            
+            if (category != "default")
+            {
+                if (!String.IsNullOrEmpty(category))
+                {
+                    data = _articleService.RetrieveAll()
+                                            .Where(u => u.CategoryNavigation.Contains(category, StringComparison.OrdinalIgnoreCase))
+                                            .Select(u => new ArticleViewModel
+                                            {
+                                                ArticleId = u.ArticleId,
+                                                Title = u.Title,
+                                                Body = u.Body,
+                                                CategoryNavigation = u.CategoryNavigation,
+                                                DateUpdated = u.DateUpdated,
+                                            })
+                                            .ToList();
+                }
             }
 
             var viewModel = new ArticleViewModel
