@@ -121,7 +121,7 @@ nav {
     grid-area: nav;
     display: flex;
     flex-direction: column;
-    padding: 1em;
+    padding: 1em 5.2em;
     justify-content: space-between;
     gap: 0.7em;
 }
@@ -279,8 +279,7 @@ nav {
 main {
     background-color: whitesmoke;
     grid-area: main;
-    padding-left: 5em;
-    padding-right: 5em;
+    padding: 2em 5em;
     gap: 2em;
     overflow-y: auto;
 }
