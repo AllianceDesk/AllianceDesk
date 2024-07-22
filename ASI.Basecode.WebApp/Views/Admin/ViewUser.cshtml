@@ -29,16 +29,21 @@
                     </ul>
                 </div>
                 <div class="flex-Row gap-2 justify-content-center align-center">
-                    <form asp-controller="Admin" asp-action="ViewUser" method="get" id="searchForm">
+                    <form asp-controller="Admin" asp-action="ViewUser" method="get" id="searchForm" class="flex-Row gap-2 align-items-center justify-content-center">
                         <div class="j-search-container | flex-Row align-center justify-content-center">
                             <i class="fa-solid fa-magnifying-glass text-1-5"></i>
                             <input name="searchString" id="searchInput" class="bg-transparent" type="text" placeholder="Search" value="@ViewBag.SearchString"/>
                         </div>
+                        <button class="mbtn-primary flex-Row gap-1 color-white bg-red align-center justify-content-center border-0 p-x-1 br-1-5">
+                            <i class="fa-solid fa-filter"></i>
+                            <p class="br-1-5 p-y-1">Filter</p>
+                        </button>
                     </form>
                     <button class="mbtn-primary flex-Row gap-1 color-white bg-red align-center justify-content-center border-0 p-x-1 br-1-5" data-admin-add-btn>
-                        <i class="fa-solid fa-filter"></i>
-                        <p class="br-1-5 p-y-1">Filter</p>
+                        <i class="fa-solid fa-user-plus"></i>
+                        <p class="br-1-5 p-y-1">Add</p>
                     </button>
+                    
                 </div>
             </div>
             <div class="flex-Row flex-between p-y-1 p-x-1 border-b-2 text-1-5 mb-3">
