@@ -242,8 +242,6 @@ namespace ASI.Basecode.Services.Services
             {
                 var preference = _userPreferenceRepository.GetUserPreferencesByUserId(userId);
                 var model = _mapper.Map<UserPreferenceViewModel>(preference);
-                model.Name = user.Name;
-                model.Email = user.Email;
                 return model;
             }
 
@@ -252,21 +250,15 @@ namespace ASI.Basecode.Services.Services
 
         public void UpdatePreference(UserPreferenceViewModel model)
         {
-            var user = _repository.GetUserById(_sessionHelper.GetUserIdFromSession());
+            var user = _repository.GetUserById(model.UserId);
             if (user != null)
             {
-                user.Name = model.Name;
-                user.Email = model.Email;
-
-                if (model.Password != "")
-                {
-                    user.Password = PasswordManager.EncryptPassword(model.Password);
-                }
-
+                user.Name = model.User.Name;
+                user.Email = model.User.Email;
                 _repository.UpdateUser(user);
             }
 
-            var preference = _userPreferenceRepository.GetUserPreferencesByUserId(_sessionHelper.GetUserIdFromSession());
+            var preference = _userPreferenceRepository.GetUserPreferencesByUserId(model.UserId);
             if (preference != null)
             {
                 preference.InAppNotifications = model.InAppNotifications;
