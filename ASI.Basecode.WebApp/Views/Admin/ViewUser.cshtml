@@ -492,7 +492,12 @@
         $(document).on('click', '[data-agent-teams-agent]', function () {
             console.log("agent clicked");
 
+       
+
+
             const agent = $(this); // Get the clicked agent element
+
+           
             const adminBody = $(".admin-body");
             const editDetails = $('[data-admin-edit-details]');
 
@@ -503,7 +508,7 @@
                 return;
             }
 
-            const userId = agent.data('user-id');
+            const userId = agent.attr('data-user-id'); 
             console.log("User Id", userId);
 
             $.ajax({

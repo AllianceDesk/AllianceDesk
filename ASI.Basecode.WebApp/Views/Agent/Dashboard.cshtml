@@ -29,51 +29,11 @@
 }
 
 <div id="container">
-    <header class="flex-Row" style="border-bottom: 2px solid grey;">
-        <div class="logosec hover-pointer">
-            <img src="~/img/alliancedesk-logo.png"
-                 style="width: 185px;" alt="logo"
-                 onclick="window.location.href = '@Url.Action("Index", "Home")';">
-        </div>
-
-        <div class="logosec">
-            <a asp-action="Index" asp-controller="Notification">
-                <i class='bx bx-bell bx-sm' style="color: #45474B; cursor: pointer;"></i>
-            </a>
-            <i class='bx bx-cog bx-sm' style="color: #45474B; cursor: pointer;"></i>
-
-            <div class="mr-20 hover-pointer" style="position: relative">
-
-                <div data-agent-header class="dp">
-                    <img src="~/img/profile-logo.png" class="dpicn hover-pointer" alt="dp">
-                </div>
-
-                <div data-agent-settings class="hidden absolute" style="top:2rem; left:-5rem; background: white; z-index: 10; border: 1px solid black; border-radius: 3px; padding: 0.5rem 1rem;">
-
-                    <div>
-                        <a asp-action="AgentProfile" asp-controller="Agent" class="flex flex-Row align-items-center gap-2">
-                            <i class="bx bx-user bx-xs bx-fw" style="color: #3D3B40;"></i>
-                            <p class="text-black-50">Profile</p>
-                        </a>
-                    </div>
-                    <div>
-                        <i class="bx bx-log-out bx-xs bx-fw" style="color: #3D3B40;"></i>
-                        <a asp-action="SignOutUser" asp-controller="Account" class="text-black-50">Logout</a>
-                    </div>
-
-                </div>
-
-            </div>
-        </div>
-    </header>
+    @Html.Partial("Agent_Header")
 
     <nav>
         <div id="buttonContainer">
-
             <a asp-action="Tickets" class="btn btn-primary @(ViewBag.CurrentStatus == "All" ? "activeButton" : "inactiveButton")">All</a>
-
-
-       
         </div>
 
         <select class="form-select nav-select" id="floatingSelect" aria-label="Floating label select example">
@@ -287,4 +247,6 @@
     </div>
 
 </div>
+
+
 
