@@ -14,5 +14,6 @@ namespace ASI.Basecode.Services.ServiceModels
         public List<KeyValuePair<string, string>> Statuses { get; set; }
         public List<KeyValuePair<string, string>> Categories { get; set; }
         public List<KeyValuePair<string, string>> Priorities { get; set; }
+        public IEnumerable<UserViewModel> Agents { get; set; }
     }
 }

@@ -10,9 +10,8 @@ namespace ASI.Basecode.Services.Interfaces
         public interface ITicketService
         {
                 IEnumerable<TicketViewModel> RetrieveAll();
-                IEnumerable<TicketViewModel> GetUserTickets(Guid id);
+                IEnumerable<TicketViewModel> GetUserTickets(Guid id, byte? status, string? searchTerm, string? sortOrder, int? page);
                 IEnumerable<TicketViewModel> GetAgentTickets(Guid id);
-
                 void Add(TicketViewModel ticket);
                 void Update(TicketViewModel ticket);
                 void Delete(string id);
@@ -20,11 +19,9 @@ namespace ASI.Basecode.Services.Interfaces
                 IEnumerable<Category> GetCategories();
                 IEnumerable<TicketPriority> GetPriorities();
                 IEnumerable<TicketStatus> GetStatuses();
-
                 Category GetCategoryById(byte id);
                 TicketPriority GetPriorityById(byte id);
                 TicketStatus GetStatusById(byte id);
-
                 void SendMessage(TicketMessageViewModel message);
                 IEnumerable<TicketActivityViewModel> GetHistory(string id);
                 IEnumerable<TicketMessageViewModel> GetMessages(string id);

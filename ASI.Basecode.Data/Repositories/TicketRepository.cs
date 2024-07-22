@@ -5,7 +5,6 @@ using ASI.Basecode.Data.Interfaces;
 using ASI.Basecode.Data.Models;
 using Basecode.Data.Repositories;
 
-
 namespace ASI.Basecode.Data.Repositories
 {
     public class TicketRepository : BaseRepository, ITicketRepository

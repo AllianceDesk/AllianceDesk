@@ -81,7 +81,7 @@ namespace ASI.Basecode.Services.Services
                 throw new InvalidDataException(Resources.Messages.Errors.UserExists);
             }
         }
-        
+
         public void UpdateUser(UserViewModel model)
         {
             var existingData = _repository.GetUsers().Where(u => u.UserId.ToString() == model.UserId).FirstOrDefault();
@@ -105,7 +105,7 @@ namespace ASI.Basecode.Services.Services
 
                 _repository.UpdateUser(existingData);
             }
-            
+
         }
 
         public void DeleteUser(string userId)
@@ -116,12 +116,13 @@ namespace ASI.Basecode.Services.Services
         public void AddTeam(UserViewModel model)
         {
             var team = new Team();
-            if (!_teamRepository.TeamExists(model.TeamName)){
+            if (!_teamRepository.TeamExists(model.TeamName))
+            {
                 team.TeamId = Guid.NewGuid();
                 team.TeamName = model.TeamName;
                 _teamRepository.AddTeam(team);
             }
-        } 
+        }
 
         public IEnumerable<UserRole> GetUserRoles()
         {
@@ -142,11 +143,11 @@ namespace ASI.Basecode.Services.Services
         {
             User user = _repository.GetUsers().Where(x => x.UserId.ToString() == id).FirstOrDefault();
 
-            if (user !=  null)
+            if (user != null)
             {
                 return user;
             }
-        
+
             return null;
         }
 
@@ -191,7 +192,7 @@ namespace ASI.Basecode.Services.Services
             return new string(password.ToString().ToCharArray().OrderBy(s => (Random.Next(2) % 2) == 0).ToArray());
         }
 
-        public List<TicketActivityViewModel> GetRecentUserActivity ()
+        public List<TicketActivityViewModel> GetRecentUserActivity()
         {
             var userActivity = _ticketActivityRepository.RetrieveAll()
                                 .OrderByDescending(a => a.ModifiedAt).Take(5)
@@ -209,6 +210,16 @@ namespace ASI.Basecode.Services.Services
                                     message = t.Message,
                                 }).ToList();
             return userActivity;
+        }
+        public PreferenceViewModel GetPreferenceView(Guid guid)
+        {
+            var user = _repository.GetUsers().Where(x => x.UserId == guid).FirstOrDefault();
+            var preference = new PreferenceViewModel();
+            if (user != null)
+            {
+                preference.UserId = user.UserId;
+            }
+            return preference;
         }
     }
 }

@@ -23,6 +23,7 @@ namespace ASI.Basecode.Services.Services
         private readonly ITicketActivityOperationRepository _ticketActivityOperationRepository;
         private readonly ITicketMessageRepository _ticketMessageRepository;
         private readonly IFeedbackRepository _feedbackRepository;
+        private readonly ITeamRepository _teamRepository;
         private readonly ISessionHelper _sessionHelper;
         private readonly IMapper _mapper;
         private readonly ITeamRepository _teamRepository;
@@ -52,6 +53,7 @@ namespace ASI.Basecode.Services.Services
             _ticketActivityOperationRepository = ticketActivityOperationRepository;
             _ticketMessageRepository = ticketMessageRepository;
             _feedbackRepository = feedbackRepository;
+            _teamRepository = teamRepository;
             _mapper = mapper;
             _sessionHelper = sessionHelper;
             _teamRepository = teamRepository;

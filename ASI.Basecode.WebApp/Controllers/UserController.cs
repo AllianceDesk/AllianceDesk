@@ -67,6 +67,8 @@ namespace ASI.Basecode.WebApp.Controllers
                 .Select(p => new KeyValuePair<string, string>(p.PriorityId.ToString(), p.PriorityName))
                 .ToList();
 
+            var agents = _userService.GetAgents();
+
             if (Math.Ceiling(tickets.Count() / (double )pageSize) > 1)
             {
                 tickets = tickets.Skip((currentPage - 1) * pageSize)
@@ -85,6 +87,7 @@ namespace ASI.Basecode.WebApp.Controllers
                 Statuses = statuses,
                 Categories = categories,
                 Priorities = priorities,  
+                Agents = agents
             };
 
             return View(model);
