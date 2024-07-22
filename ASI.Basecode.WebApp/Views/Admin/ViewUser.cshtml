@@ -80,7 +80,7 @@
                 }
             </div> *@
             <div class="agents-container bg-white" id="agents-container"></div>
-            <div class="pagination-container justify-content-center">
+            <div class="pagination-container justify-content-center" data-pagination-container>
                 <button id="prev-page" disabled>Previous</button>
                 <span id="page-info"></span>
                 <button id="next-page">Next</button>
@@ -234,6 +234,7 @@
         const prevPageBtn = document.getElementById('prev-page');
         const nextPageBtn = document.getElementById('next-page');
         const pageInfo = document.getElementById('page-info');
+        const pagenationCtnr = document.querySelector('[data-pagination-container]')
 
         const usersPerPage = 5;
         let currentPage = 1;
@@ -242,6 +243,10 @@
 
         function updatePaginationControls() {
             const totalPages = Math.ceil(teams.Users.length / usersPerPage);
+
+            if (totalPages == 1) {
+                pagenationCtnr.classList.add('hidden')
+            }
 
             prevPageBtn.disabled = currentPage === 1;
             nextPageBtn.disabled = currentPage === totalPages;
