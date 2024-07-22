@@ -9,47 +9,72 @@
 }
 
 <div id="container">
-    <header>
-        <div class="logo">
-            <img src="~/img/alliancedesk-logo.png" style="width: 185px;" alt="logo" onclick="window.location.href = '@Url.Action("Index", "Home")';">
+    @if (ViewBag.RoleId == 1)
+    {
+        <header>
+            <div class="logo">
+                <img src="~/img/alliancedesk-logo.png" style="width: 185px;" alt="logo" onclick="window.location.href = '@Url.Action("Index", "Home")';">
+            </div>
+
+            <div class="header-buttons">
+
+                <a asp-action="Index" asp-controller="Notification" class="mt-1"><i class='bx bx-bell bx-sm icon' style="color: #45474B; cursor: pointer;"></i></a>
+                <i class='bx bx-cog bx-sm icon' style="color: #45474B; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#settings"></i>
+
+                <a class="profile" href="#">
+                    <img src="~/img/profile-logo.png" class="dpicn hover-pointer" alt="dp">
+                </a>
+
+                <ul class="dropdown" id="dropdownMenu">
+                    <li>
+
+                        <a class="dropdown-item" href="#"><i class="bx bx-user bx-xs bx-fw" style="color: #3D3B40;"></i> Profile</a>
+                    </li>
+                    <li>
+
+                        <a class="dropdown-item" asp-action="SignOutUser" asp-controller="Account"><i class="bx bx-log-out bx-xs bx-fw" style="color: #3D3B40;"></i> Logout</a>
+                    </li>
+                </ul>
+
+            </div>
+        </header>
+    }
+    else
+    {
+        @Html.Partial("Agent_Header")
+    }
+
+    @if (ViewBag.RoleId == 1)
+    {
+        <div id="sidebar">
+
+            <a asp-controller="Admin" asp-action="Dashboard" data-admin-btn class="inactive-button" style="text-decoration: none;"><i class='bx bx-grid-alt bx-sm as' style="align-self:center; text-decoration: none;"></i>  <p>Overview</p> </a>
+
+            <a asp-controller="Admin" asp-action="Tickets" data-admin-btn class="inactive-button" style="text-decoration: none;"><i class='bx bx-purchase-tag-alt bx-sm as' style="align-self:center; text-decoration: none;"></i> <p>Tickets</p> </a>
+
+            <a asp-controller="Admin" asp-action="ViewUser" data-admin-btn class="inactive-button" style="text-decoration: none;"><i class='bx bx-group bx-sm as' style="align-self:center; text-decoration: none;"></i> <p>Directory</p> </a>
+
+            <a asp-controller="Article" asp-action="Index" data-admin-btn class="active-button" style="text-decoration: none;"><i class='bx bx-group bx-sm as' style="align-self:center; text-decoration: none;"></i> <p>Knowledge Base</p> </a>
+
+            <a asp-controller="Admin" asp-action="AnalyticsOverallMetrics" data-admin-btn class="inactive-button" style="text-decoration: none;"><i class='bx bx-objects-vertical-bottom bx-sm as' style="align-self:center; text-decoration: none;"></i> <p>Analytics</p> </a>
+
         </div>
+    }
+    else
+    {
+        <div id="sidebar">
 
-        <div class="header-buttons">
-            
-            <a asp-action="Index" asp-controller="Notification" class="mt-1"><i class='bx bx-bell bx-sm icon' style="color: #45474B; cursor: pointer;"></i></a>
-            <i class='bx bx-cog bx-sm icon' style="color: #45474B; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#settings"></i>
+            <a asp-controller="Agent" asp-action="Dashboard" data-admin-btn class="inactive-button" style="text-decoration: none;"><i class='bx bx-grid-alt bx-sm as' style="align-self:center; text-decoration: none;"></i>  <p>Overview</p> </a>
 
-            <a class="profile" href="#">
-                <img src="~/img/profile-logo.png" class="dpicn hover-pointer" alt="dp">
-            </a>
+            <a asp-controller="Agent" asp-action="AssignedTickets" data-admin-btn class="inactive-button" style="text-decoration: none;"><i class='bx bx-purchase-tag-alt bx-sm as' style="align-self:center; text-decoration: none;"></i> <p>Assigned Tickets</p> </a>
 
-            <ul class="dropdown" id="dropdownMenu">
-                <li>
+            <a asp-controller="Agent" asp-action="Teams" data-admin-btn class="inactive-button" style="text-decoration: none;"><i class='bx bx-group bx-sm as' style="align-self:center; text-decoration: none;"></i> <p>Team</p> </a>
 
-                    <a class="dropdown-item" href="#"><i class="bx bx-user bx-xs bx-fw" style="color: #3D3B40;"></i> Profile</a>
-                </li>
-                <li>
-
-                    <a class="dropdown-item" asp-action="SignOutUser" asp-controller="Account"><i class="bx bx-log-out bx-xs bx-fw" style="color: #3D3B40;"></i> Logout</a>
-                </li>
-            </ul>
+            <a asp-controller="Article" asp-action="Index" data-admin-btn class="active-button" style="text-decoration: none;"><i class='bx bx-group bx-sm as' style="align-self:center; text-decoration: none;"></i> <p>Knowledge Base</p> </a>
 
         </div>
-    </header>
+    }
 
-    <div id="sidebar">
-
-        <a asp-controller="Admin" asp-action="Dashboard" data-admin-btn class="inactive-button" style="text-decoration: none;"><i class='bx bx-grid-alt bx-sm as' style="align-self:center; text-decoration: none;"></i>  <p>Overview</p> </a>
-       
-        <a asp-controller="Admin" asp-action="Tickets" data-admin-btn class="inactive-button" style="text-decoration: none;"><i class='bx bx-purchase-tag-alt bx-sm as' style="align-self:center; text-decoration: none;"></i> <p>Tickets</p> </a>
-       
-        <a asp-controller="Admin" asp-action="ViewUser" data-admin-btn class="inactive-button" style="text-decoration: none;"><i class='bx bx-group bx-sm as' style="align-self:center; text-decoration: none;"></i> <p>Directory</p> </a>
-
-        <a asp-controller="Article" asp-action="Index" data-admin-btn class="active-button" style="text-decoration: none;"><i class='bx bx-group bx-sm as' style="align-self:center; text-decoration: none;"></i> <p>Knowledge Base</p> </a>
-
-        <a asp-controller ="Admin" asp-action="AnalyticsOverallMetrics" data-admin-btn class="inactive-button" style="text-decoration: none;"><i class='bx bx-objects-vertical-bottom bx-sm as' style="align-self:center; text-decoration: none;"></i> <p>Analytics</p> </a>
-
-    </div>
 
     <nav>
 

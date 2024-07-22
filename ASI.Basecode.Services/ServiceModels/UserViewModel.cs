@@ -18,6 +18,7 @@ namespace ASI.Basecode.Services.ServiceModels
         public string UserName { get; set; }
 
         [Required(ErrorMessage = "Email is required.")]
+        [RegularExpression(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", ErrorMessage = "Invalid email format.")]
         public string Email { get; set; }
 
         [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$",

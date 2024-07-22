@@ -132,7 +132,7 @@ namespace ASI.Basecode.Data
 
             modelBuilder.Entity<Favorite>(entity =>
             {
-                entity.HasIndex(e => new { e.UserId, e.ArticleId }, "UQ__Favorite__A57D5868A0249C59")
+                entity.HasIndex(e => new { e.UserId, e.ArticleId }, "UQ__Favorite__A57D586818612FA4")
                     .IsUnique();
 
                 entity.Property(e => e.FavoriteId)
@@ -189,7 +189,7 @@ namespace ASI.Basecode.Data
 
             modelBuilder.Entity<Notification>(entity =>
             {
-                entity.HasIndex(e => new { e.RecipientId, e.TicketId }, "UQ__Notifica__57532FB016B87ACA")
+                entity.HasIndex(e => new { e.RecipientId, e.TicketId }, "UQ__Notifica__57532FB0E7D187FE")
                     .IsUnique();
 
                 entity.Property(e => e.NotificationId)
@@ -312,7 +312,7 @@ namespace ASI.Basecode.Data
             modelBuilder.Entity<TicketActivity>(entity =>
             {
                 entity.HasKey(e => e.HistoryId)
-                    .HasName("PK__TicketAc__096AA2E9FDC338F9");
+                    .HasName("PK__TicketAc__096AA2E99F9DD6D9");
 
                 entity.Property(e => e.HistoryId)
                     .ValueGeneratedNever()
@@ -352,7 +352,7 @@ namespace ASI.Basecode.Data
             modelBuilder.Entity<TicketActivityOperation>(entity =>
             {
                 entity.HasKey(e => e.OperationId)
-                    .HasName("PK__TicketAc__9DE1712363B8AFD1");
+                    .HasName("PK__TicketAc__9DE17123DC282778");
 
                 entity.Property(e => e.OperationId).HasColumnName("operation_id");
 
@@ -365,7 +365,7 @@ namespace ASI.Basecode.Data
             modelBuilder.Entity<TicketMessage>(entity =>
             {
                 entity.HasKey(e => e.MessageId)
-                    .HasName("PK__TicketMe__0BBF6EE668D02300");
+                    .HasName("PK__TicketMe__0BBF6EE6786C1961");
 
                 entity.Property(e => e.MessageId)
                     .ValueGeneratedNever()
@@ -399,7 +399,7 @@ namespace ASI.Basecode.Data
             modelBuilder.Entity<TicketPriority>(entity =>
             {
                 entity.HasKey(e => e.PriorityId)
-                    .HasName("PK__TicketPr__EE32578506EC8EE3");
+                    .HasName("PK__TicketPr__EE32578550FF576F");
 
                 entity.Property(e => e.PriorityId).HasColumnName("priority_id");
 
@@ -412,7 +412,7 @@ namespace ASI.Basecode.Data
             modelBuilder.Entity<TicketStatus>(entity =>
             {
                 entity.HasKey(e => e.StatusId)
-                    .HasName("PK__TicketSt__3683B5319B1D8EAC");
+                    .HasName("PK__TicketSt__3683B531A8BAF645");
 
                 entity.Property(e => e.StatusId).HasColumnName("status_id");
 
@@ -469,13 +469,18 @@ namespace ASI.Basecode.Data
             modelBuilder.Entity<UserPreference>(entity =>
             {
                 entity.HasKey(e => e.PreferenceId)
-                    .HasName("PK__UserPref__FB41DBCFB569F577");
+                    .HasName("PK__UserPref__FB41DBCF7F922848");
 
                 entity.Property(e => e.PreferenceId)
                     .ValueGeneratedNever()
                     .HasColumnName("preference_id");
 
-                entity.Property(e => e.DefaultTicketView).HasColumnName("default_ticket_view");
+                entity.Property(e => e.DefaultTicketPerPage).HasColumnName("default_ticket_per_page");
+
+                entity.Property(e => e.DefaultTicketView)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasColumnName("default_ticket_view");
 
                 entity.Property(e => e.EmailNotifications).HasColumnName("email_notifications");
 
@@ -493,7 +498,7 @@ namespace ASI.Basecode.Data
             modelBuilder.Entity<UserRole>(entity =>
             {
                 entity.HasKey(e => e.RoleId)
-                    .HasName("PK__UserRole__760965CC8AA3A988");
+                    .HasName("PK__UserRole__760965CCCDA01BF7");
 
                 entity.Property(e => e.RoleId).HasColumnName("role_id");
 
