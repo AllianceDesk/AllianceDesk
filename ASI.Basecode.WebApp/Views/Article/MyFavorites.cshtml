@@ -2,114 +2,74 @@
 
 @section styles {
     <link rel="stylesheet" href="~/css/KnowledgeBase/Index.css" />
+    <link rel="stylesheet" href="~/css/Admin.css" />
 }
 
 @{
     ViewData["Title"] = "My Favorites";
 }
 
-<div id="container">
-    <header>
-        <div class="logo">
-            <img src="~/img/alliancedesk-logo.png" style="width: 185px;" alt="logo" onclick="window.location.href = '@Url.Action("Index", "Home")';">
-        </div>
+@Html.Partial("Agent_Header")
+<div class="main">
+    @Html.Partial("Agent_Sidebar")
+    <div class="admin-body p-y-3 relative bg-grey flex flex-col gap-1">
 
-        <div class="header-buttons">
+    <div class="nav_one mb-3">
 
-            <a asp-action="Index" asp-controller="Notification" class="mt-1"><i class='bx bx-bell bx-sm icon' style="color: #45474B; cursor: pointer;"></i></a>
-            <i class='bx bx-cog bx-sm icon' style="color: #45474B; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#settings"></i>
+        <h3>Knowledge Base</h3>
 
-            <a class="profile" href="#">
-                <img src="~/img/profile-logo.png" class="dpicn hover-pointer" alt="dp">
-            </a>
+        <div class="add_button">
 
-            <ul class="dropdown" id="dropdownMenu">
-                <li>
-
-                    <a class="dropdown-item" href="#"><i class="bx bx-user bx-xs bx-fw" style="color: #3D3B40;"></i> Profile</a>
-                </li>
-                <li>
-
-                    <a class="dropdown-item" asp-action="SignOutUser" asp-controller="Account"><i class="bx bx-log-out bx-xs bx-fw" style="color: #3D3B40;"></i> Logout</a>
-                </li>
-            </ul>
+            <div class="btn-group">
+                <button type="button" class="btn btn-danger me-1" data-bs-toggle="modal" data-bs-target="#create" id="addArticleBtn">Add Article</button>
+                <button type="button" class="btn btn-danger dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                    <span class="visually-hidden">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Document</a></li>
+                    <li><a class="dropdown-item" href="#">PDF</a></li>
+                </ul>
+            </div>
 
         </div>
-    </header>
-
-    <div id="sidebar">
-
-        <a data-admin-btn class="inactive-button"><i class='bx bx-grid-alt bx-sm as' style="align-self:center;"></i>  <p>Overview</p> </a>
-
-        <a asp-controller="Admin" asp-action="Tickets" data-admin-btn class="inactive-button"><i class='bx bx-purchase-tag-alt bx-sm as' style="align-self:center;"></i> <p>Tickets</p> </a>
-
-        <a asp-controller="Admin" asp-action="ViewUser" data-admin-btn class="inactive-button"><i class='bx bx-group bx-sm as' style="align-self:center;"></i> <p>Directory</p> </a>
-
-        <a asp-controller="Article" asp-action="Index" data-admin-btn class="active-button"><i class='bx bx-group bx-sm as' style="align-self:center;"></i> <p>Knowledge Base</p> </a>
-
-        <a data-admin-btn class="inactive-button"><i class='bx bx-objects-vertical-bottom bx-sm as' style="align-self:center;"></i> <p>Analytics</p> </a>
 
     </div>
 
-    <nav>
+    <div class="nav_two">
 
-        <div class="nav_one mb-3">
+        <div class="d-flex" style="gap:2em;">
+            <a class="inactive_link" asp-controller="Article" asp-action="Index">Articles</a>
+            <a class="active_link" asp-controller="Article" asp-action="MyFavorites">
+                My Favorites
+                @if (ViewBag.FavoriteCount != null && ViewBag.FavoriteCount > 0)
+                {
+                    <span>(@ViewBag.FavoriteCount)</span>
+                }
+            </a>
+        </div>
 
-            <h3>Knowledge Base</h3>
-
-            <div class="add_button">
-
-                <div class="btn-group">
-                    <button type="button" class="btn btn-danger me-1" data-bs-toggle="modal" data-bs-target="#create" id="addArticleBtn">Add Article</button>
-                    <button type="button" class="btn btn-danger dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="visually-hidden">Toggle Dropdown</span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Document</a></li>
-                        <li><a class="dropdown-item" href="#">PDF</a></li>
-                    </ul>
+        <div class="filter_button">
+            <form asp-action="MyFavorites" method="get" asp-controller="Article" id="searchForm">
+                <div class="input-group">
+                    <button class="btn btn-outline-secondary" type="submit" id="button-search" style="background-color: whitesmoke; border: 1px solid #ccc;"><i class='bx bx-search bx-xs bx-fw' style="color: #45474B; cursor: pointer;"></i></button>
+                    <input name="searchString" id="searchInput" type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="button-search" style="background-color: whitesmoke; border: 1px solid #ccc;" value="@ViewBag.SearchString">
                 </div>
+            </form>
 
-            </div>
-
+            <select class="form-select" aria-label="Default select example" style="width: 15em; outline: none; box-shadow: none; border: 1px solid #ccc; background-color: whitesmoke;">
+                <option value="title" selected>Sort by Title (Ascending)</option>
+                <option value="title_desc">Sort by Title (Descending)</option>
+                <option value="date">Sort by Date (Ascending)</option>
+                <option value="date_desc">Sort by Date (Descending)</option>
+                <option value="Technical">Technical</option>
+                <option value="Billing">Billing</option>
+                <option value="General Questions">General Questions</option>
+                <option value="Account Management">Account Management</option>
+                <option value="Customer Support">Customer Support</option>
+                <option value="Others">Others</option>
+            </select>
         </div>
-
-        <div class="nav_two">
-
-            <div class="d-flex" style="gap:2em;">
-                <a class="inactive_link" asp-controller="Article" asp-action="Index">Articles</a>
-                <a class="active_link" asp-controller="Article" asp-action="MyFavorites">
-                    My Favorites
-                    @if (ViewBag.FavoriteCount != null && ViewBag.FavoriteCount > 0)
-                    {
-                        <span>(@ViewBag.FavoriteCount)</span>
-                    }
-                </a>
-            </div>
-
-            <div class="filter_button">
-                <form asp-action="MyFavorites" method="get" asp-controller="Article" id="searchForm">
-                    <div class="input-group">
-                        <button class="btn btn-outline-secondary" type="submit" id="button-search" style="background-color: whitesmoke; border: 1px solid #ccc;"><i class='bx bx-search bx-xs bx-fw' style="color: #45474B; cursor: pointer;"></i></button>
-                        <input name="searchString" id="searchInput" type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="button-search" style="background-color: whitesmoke; border: 1px solid #ccc;" value="@ViewBag.SearchString">
-                    </div>
-                </form>
-
-                <select class="form-select" aria-label="Default select example" style="width: 15em; outline: none; box-shadow: none; border: 1px solid #ccc; background-color: whitesmoke;">
-                    <option value="title" selected>Sort by Title (Ascending)</option>
-                    <option value="title_desc">Sort by Title (Descending)</option>
-                    <option value="date">Sort by Date (Ascending)</option>
-                    <option value="date_desc">Sort by Date (Descending)</option>
-                    <option value="Technical">Technical</option>
-                    <option value="Billing">Billing</option>
-                    <option value="General Questions">General Questions</option>
-                    <option value="Account Management">Account Management</option>
-                    <option value="Customer Support">Customer Support</option>
-                    <option value="Others">Others</option>
-                </select>
-            </div>
-        </div>
-    </nav>
+    </div>
 
     <main>
         @foreach (var item in Model.Articles)
@@ -128,44 +88,8 @@
             </a>
         }
     </main>
-
-</div>
-
-<div class="modal fade" id="create" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <!-- The content for Create Article Modal will be loaded here-->
         </div>
     </div>
-</div>
-
-<div class="modal fade" id="detail" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <!-- The content for Article Detail Modal will be loaded here-->
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="edit" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <!-- The content for Article Edit Modal will be loaded here-->
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="delete">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <!-- The content for Article Edit Modal will be loaded here-->
-        </div>
-    </div>
-</div>
-
-@Html.Partial("SettingsModal")
-
-
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var dpIcon = document.querySelector('.dpicn');

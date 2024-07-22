@@ -145,6 +145,15 @@
     padding: 1rem 2rem;
 }
 
+.generate-report-btn {
+    border-radius: 4px;
+    border: 1.5px solid black;
+    background-color: white;
+    color: black;
+    padding: 1rem 2rem;
+    text-decoration: none;
+}
+
 .delete-btn:focus {
     outline: 2px solid #E21818;
 }
@@ -230,8 +239,9 @@
     }
 
 a[data-admin-btn],
-a[data-a-btn] {
-    text-decoration: none; 
+a[data-a-btn],
+a[data-td-none]{
+    text-decoration: none;
 }
 
 .admin-ticket {
@@ -335,3 +345,26 @@ a[data-a-btn] {
     padding: 0.5em;
     height: 2.7em;
 }
+
+
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+    .pagination-container button {
+        padding: 0.5rem 1rem;
+        margin: 0 0.5rem;
+        border: none;
+        background-color: #E21818;
+        color: white;
+        cursor: pointer;
+        border-radius: 3px;
+    }
+
+    .pagination-container button:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+    }

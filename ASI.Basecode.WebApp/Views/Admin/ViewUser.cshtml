@@ -24,8 +24,8 @@
             <div class="flex-Row flex-between">
                 <div class="agent-nav pt-4">
                     <ul class="flex-Row gap-2">
-                        <a asp-action="ViewUser" class="nav-item active-admin-nav" data-nav-item>Agents</a>
-                        <a asp-action="ViewTeams" class="nav-item" data-nav-item>Team</a>
+                        <a asp-action="ViewUser" class="nav-item active-admin-nav" data-td-none data-nav-item>Agents</a>
+                        <a asp-action="ViewTeams" class="nav-item" data-td-none data-nav-item>Team</a>
                     </ul>
                 </div>
                 <div class="flex-Row gap-2 justify-content-center align-center">
@@ -43,7 +43,6 @@
                         <i class="fa-solid fa-user-plus"></i>
                         <p class="br-1-5 p-y-1">Add</p>
                     </button>
-                    
                 </div>
             </div>
             <div class="flex-Row flex-between p-y-1 p-x-1 border-b-2 text-1-5 mb-3">
@@ -60,7 +59,7 @@
                     <p>Role</p>
                 </div>
             </div>
-            <div class="agents-container bg-white">
+            @* <div class="agents-container bg-white">
                 @if (Model != null && Model.Users != null && Model.Users.Any())
                 {
                     @foreach (var item in Model.Users)
@@ -79,6 +78,12 @@
                 {
                     <p>No agents available.</p>
                 }
+            </div> *@
+            <div class="agents-container bg-white" id="agents-container"></div>
+            <div class="pagination-container justify-content-center">
+                <button id="prev-page" disabled>Previous</button>
+                <span id="page-info"></span>
+                <button id="next-page">Next</button>
             </div>
         </div>
         <div class="p-x-1 hidden" data-admin-edit-details>
@@ -204,12 +209,18 @@
 
 @section scripts {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <script>
         //VARIABLES
         let userId = null
+        const roleMappings = {
+            1: "Admin",
+            2: "Agent",
+            3: "User"
+        }
 
         const teams = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
-        console.log("TEAMS ", teams)
+        console.log("TEAMS ", teams.Users)
 
         const adminBody = document.querySelector(".admin-body");
         const agentsContainer = document.querySelector(".agents-container");
@@ -218,7 +229,72 @@
         const modalContainer = document.querySelector("[data-admin-modal-container]")
         const deleteModalContainer = document.querySelector("[data-admin-delete-modal-container]")
 
-        const navItems = document.querySelectorAll("[data-nav-item]")
+        const navItems = document.querySelectorAll("[data-nav-item]");
+
+        const prevPageBtn = document.getElementById('prev-page');
+        const nextPageBtn = document.getElementById('next-page');
+        const pageInfo = document.getElementById('page-info');
+
+        const usersPerPage = 5;
+        let currentPage = 1;
+
+        /* PAGINATION */
+
+        function updatePaginationControls() {
+            const totalPages = Math.ceil(teams.Users.length / usersPerPage);
+
+            prevPageBtn.disabled = currentPage === 1;
+            nextPageBtn.disabled = currentPage === totalPages;
+            pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+        }
+
+        prevPageBtn.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderPage(currentPage);
+            }
+        });
+
+        nextPageBtn.addEventListener('click', () => {
+            const totalPages = Math.ceil(teams.Users.length / usersPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderPage(currentPage);
+            }
+        });
+
+        function renderPage(page) {
+            agentsContainer.innerHTML = '';
+            const start = (page - 1) * usersPerPage;
+            const end = start + usersPerPage;
+            const usersToShow = teams.Users.slice(start, end);
+
+            if (usersToShow.length > 0) {
+                usersToShow.forEach(item => {
+                    const userDiv = document.createElement('div');
+                    userDiv.classList.add('agents', 'cursor-pointer', 'flex-Row', 'flex-between', 'p-y-1', 'p-x-1', 'align-center');
+                    userDiv.dataset.agentTeamsAgent = '';
+                    userDiv.dataset.userId = item.UserId;
+
+                    userDiv.innerHTML = `
+                                <div class="user-img-profile br-50 bg-red"></div>
+                                <div class="flex-col justify-content-center align-center">
+                                    <p class="fw-semi text-1-5">${item.Name}</p>
+                                    <p>${item.Email}</p>
+                                </div>
+                                <div class="role-container role-agent fw-semi text-0-5">${roleMappings[item.RoleId]}</div>
+                            `;
+                    agentsContainer.appendChild(userDiv);
+                });
+            } else {
+                agentsContainer.innerHTML = '<p>No agents available.</p>';
+            }
+
+            updatePaginationControls();
+        }
+
+        renderPage(currentPage);
+
 
         /* BTNS */
 
@@ -413,34 +489,41 @@
             adminEditForm.classList.add("hidden")
         })*/
 
-        agentsList.forEach(agent => {
-            agent.addEventListener("click", () => {
-                console.log("agent clicked");
-                if (agent.classList.contains("selected-agent")) {
-                    adminBody.classList.remove("edit-active");
-                    agent.classList.remove("selected-agent");
-                    editDetails.classList.add("hidden");
-                    return;
+        $(document).on('click', '[data-agent-teams-agent]', function () {
+            console.log("agent clicked");
+
+            const agent = $(this); // Get the clicked agent element
+            const adminBody = $(".admin-body");
+            const editDetails = $('[data-admin-edit-details]');
+
+            if (agent.hasClass("selected-agent")) {
+                adminBody.removeClass("edit-active");
+                agent.removeClass("selected-agent");
+                editDetails.addClass("hidden");
+                return;
+            }
+
+            const userId = agent.data('user-id');
+            console.log("User Id", userId);
+
+            $.ajax({
+                url: '/UserDetails',
+                type: 'GET',
+                data: { UserId: userId },
+                success: function (response) {
+                    $('[data-admin-edit-details]').html(response).removeClass('hidden');
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching user details:', status, error);
                 }
-                userId = agent.getAttribute('data-user-id');
-                console.log("User Id", userId);
-                $.ajax({
-                    url: '/UserDetails',
-                    type: 'GET',
-                    data: { UserId: userId },
-                    success: function (response) {
-                        $('[data-admin-edit-details]').html(response).removeClass('hidden');
-                    },
-                    error: function (xhr, status, error) {
-                        console.error('Error fetching user details:', status, error);
-                    }
-                });
-                agentsList.forEach(a => a.classList.remove("selected-agent"));
-                agent.classList.add("selected-agent");
-                adminBody.classList.add("edit-active");
-                editDetails.classList.remove("hidden");
-            })
-        })
+            });
+
+            $('[data-agent-teams-agent]').removeClass("selected-agent");
+            agent.addClass("selected-agent");
+            adminBody.addClass("edit-active");
+            editDetails.removeClass("hidden");
+        });
+
 
 
         navItems.forEach(navItem => {

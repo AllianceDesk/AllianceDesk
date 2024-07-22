@@ -11,10 +11,10 @@
 
 @Html.Partial("Agent_Header")
 <div class="main">
-    @Html.Partial("Admin_Sidebar")
-    <div class="admin-body p-y-3 relative bg-grey flex flex-col gap-1">
-        <div class="modal-admin bg-modal" data-admin-modal-container>
-            <form class="modal-container w-75 br-1 bg-white p-y-1 p-x-2" data-modal-edit-form>
+    @Html.Partial("Agent_Sidebar")
+    <div class="admin-body p-y-3 relative bg-modal flex flex-col gap-1">
+        <div class=" mx-auto bg-modal" data-admin-modal-container>
+            <div class="modal-container br-1 bg-white p-y-1 p-x-2" >
                 <div class="agents-details | margin-1 bg-white flex-Row gap-2 p-y-1 p-x-1 align-center">
                     <div class="flex flex-col gap-4">
                         <h2>Your Performance</h2>
@@ -28,21 +28,20 @@
                     </div>
                 </div>
                 <h3>Performance: </h3>
-                <div class="flex flex-col gap-2">
-                    <div class="agent-performance-row bg-sayan">
-                        <p>Ticket Resolved</p>
-                        <p>Customer’s Rating</p>
-                        <p>Resolution time</p>
+                <div class="overflow-hidden flex flex-col gap-2 ">
+
+                    <div class="bg-White  p-x-0-5 p-y-0-5 br-1-5">
+                        <canvas id="LineTicketVolumeMetric"></canvas>
                     </div>
-                    <div class="agent-performance-row bg-blue">
-                        <p>Billing</p>
-                        <p>4/5</p>
-                        <p>24 hours</p>
-                    </div>
-                    <div class="agent-performance-row bg-blue">
-                        <p>Ticket Resolved</p>
-                        <p>4/5</p>
-                        <p>24 hours</p>
+                    <div class="bg-White p-x-0-5 p-y-0-5 br-1-5 h-100 flex flex-Row justify-content-between ">
+                        <div class="bg-White  p-x-0-5 p-y-0-5 br-1-5">
+                            <p class="text-center">Ticket Status</p>
+                            <canvas id="pieChartStatus"></canvas>
+                        </div>
+                        <div class="bg-White  p-x-0-5 p-y-0-5 br-1-5">
+                            <p class="text-center">Ticket Category</p>
+                            <canvas id="pieChartCategory"></canvas>
+                        </div>
                     </div>
                 </div>
                 <div class="flex-Row gap-2 w-100 justify-content-center">
@@ -51,7 +50,63 @@
                  
                     <button class="mbtn-primary color-white bg-red align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-edit-save-btn>Export</button>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
+
+
+@section scripts {
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+    const ctx = document.getElementById('LineTicketVolumeMetric').getContext('2d');
+    const lineChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['1star', '2star', '3star', '4star', '5star'],
+            datasets: [{
+                data: [5,10,15,20,25],
+                label: "Ticket Volume",
+                borderWidth: 1,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    const pieChartStatus = document.getElementById('pieChartStatus').getContext('2d');
+    const statusChart = new Chart(pieChartStatus, {
+        type: 'doughnut',
+        data: {
+            labels: ['Open', 'Resolved', 'In Progress', 'Closed'],
+            datasets: [{
+                data: [5, 10, 15, 20, 25],
+                backgroundColor: ['#40A6D8', '#6DB971', '#E68F36', '#DA5D5B']
+            }]
+        }
+    });
+
+    const pieChartCategory = document.getElementById('pieChartCategory').getContext('2d');
+    const categoryChart = new Chart(pieChartCategory, {
+        type: 'doughnut',
+        data: {
+            labels: ['Technical', 'Billing', 'General Inquiry', 'Others'],
+            datasets: [{
+                data: [5, 10, 15, 20, 25],
+                backgroundColor: ['#40A6D8', '#E68F36', '#6DB971', '#DA5D5B']
+            }]
+        }
+    });
+    </script>
+}

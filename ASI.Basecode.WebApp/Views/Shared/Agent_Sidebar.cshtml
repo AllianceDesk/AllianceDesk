@@ -4,7 +4,7 @@
 @section styles {
     <link rel="stylesheet" href="~/css/Admin.css" />
 }
-<nav class="admin-sidebar flex flex-col gap-1 bg-White">
+<div class="admin-sidebar flex flex-col gap-1 bg-White">
 
     @if (ViewBag.AgentSidebar == "Overview")
     {
@@ -39,18 +39,11 @@
         <a asp-controller="Article" asp-action="Index" data-admin-btn class=" admin-sb-inactive-button margin-0"><i class='bx bx-group bx-sm as' style="align-self:center;"></i> <p>Knowledge Base</p> </a>
     }
 
-    @if (ViewBag.AgentSidebar == "Analytics")
-    {
-        <a asp-controller="Agent" asp-action="TicketSummary" data-admin-btn class=" admin-sb-active-button margin-0"><i class='bx bx-objects-vertical-bottom bx-sm as' style="align-self:center;"></i> <p>Analytics</p> </a>
-    }
-    else
-    {
-        <a asp-controller="Agent" asp-action="TicketSummary" data-admin-btn class=" admin-sb-inactive-button margin-0"><i class='bx bx-objects-vertical-bottom bx-sm as' style="align-self:center;"></i> <p>Analytics</p> </a>
-    }
+  
 
 
 
-</nav>
+</div>
 
 <script>
     // Function to handle toggle button active-inactive states

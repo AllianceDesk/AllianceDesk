@@ -28,8 +28,8 @@
                         </div>
                     </div>
                     <div class="flex flex-col gap-1">
-                        <a asp-action="PerformanceReport" asp-controller="Agent">
-                            <div class="delete-btn fw-semi cursor-pointer" data-admin-delete-btn>
+                        <a asp-action="PerformanceReport" data-td-none asp-controller="Agent">
+                            <div class="generate-report-btn fw-semi cursor-pointer"  data-admin-delete-btn>
                                 GENERATE REPORT
                             </div>
                         </a>
@@ -54,8 +54,8 @@
                     </label>
                     <label class="modal-input relative flex">
                         <span>Role</span>
-                        <select asp-for="RoleId" asp-items="ViewBag.UserRoles">
-                            <option selected disabled hidden value="">-- Select Role --</option>
+                        <select asp-for="RoleId" class="pl-2" asp-items="ViewBag.UserRoles">
+                            <option selected disabled hidden  value="">-- Select Role --</option>
                         </select>
                         <span asp-validation-for="RoleId" class="text-danger"></span>
                     </label>

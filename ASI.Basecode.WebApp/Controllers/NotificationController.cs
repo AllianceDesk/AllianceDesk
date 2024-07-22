@@ -40,6 +40,8 @@ namespace ASI.Basecode.WebApp.Controllers
         public IActionResult Index()
         {
             var data = _notificationService.RetrieveAll().Where(u => u.RecipientId == _sessionHelper.GetUserIdFromSession().ToString());
+
+            ViewBag.Role = 1;
             return View(data);
         }
     }

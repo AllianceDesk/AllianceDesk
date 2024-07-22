@@ -347,3 +347,7 @@ p {
     .pagination-button:hover {
         background-color: #e0e0e0;
     }
+
+a[asp-action] {
+    text-decoration: none;
+}
