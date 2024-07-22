@@ -237,7 +237,11 @@
 							<span asp-validation-for="Ticket.Description" class="text-danger"></span>
 
 							<div class="button_card mb-3 d-flex justify-content-between">
-								<button type="button" class="btn attachment custom-button" style="background-color: #7E7E7E; color: white;"><i class='bx bx-image-add bx-xs bx-fw uh' style="align-self:center;"></i> Add Attachment </button>
+                                <!-- Attachment input -->
+                                <div class="form-group mb-3">
+                                    <input type="file" asp-for="Ticket.Attachments" class="btn attachment custom-button" multiple />
+                                    <span asp-validation-for="Ticket.Attachments" class="text-danger"></span>
+                                </div>
 								<button type="submit" class="btn attachment custom-button" style="background-color: #E21818; color: white;"><i class='bx bxl-telegram bx-xs bx-fw uh' style="align-self:center;"></i> Submit </button>
 							</div>
                         </form>
