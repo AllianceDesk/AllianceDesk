@@ -48,7 +48,7 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpGet("Preferences")]
         public IActionResult GetPreference()
         {
-            var preference = _userService.GetPreferenceView();
+            var preference = _userService.GetUserPreference();
 
             return Json(new
             {
@@ -91,13 +91,37 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpGet("Tickets")]
         public IActionResult Tickets(byte? status, string? searchTerm, string? sortOrder, int? page)
         {
+            var userPreference = _userService.GetUserPreference();
+
+            if (status == null)
+            {
+                switch (userPreference.DefaultTicketView)
+                {
+                    case "Open":
+                        status = 1;
+                        break;
+                    case "Assigned":
+                        status = 2;
+                        break;
+                    case "In Progress":
+                        status = 3;
+                        break;
+                    case "Resolved":
+                        status = 4;
+                        break;
+                    case "Closed":
+                        status = 5;
+                        break;
+                }
+            }
+
             var tickets = _ticketService.GetUserTickets(_sessionHelper.GetUserIdFromSession(), status, searchTerm, sortOrder, page);
 
+            var pageSize = userPreference.DefaultTicketPerPage;
             var currentPage = page ?? 1;
             var currentStatus = status ?? 0;
             var currentSearchTerm = searchTerm ?? "";
             var count = tickets.Count();
-            var pageSize = 5;
            
             var statuses = _ticketService.GetStatuses()
                 .Select(c => new KeyValuePair<string, string>(c.StatusId.ToString(), c.StatusName))

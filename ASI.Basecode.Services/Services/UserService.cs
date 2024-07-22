@@ -233,7 +233,7 @@ namespace ASI.Basecode.Services.Services
                                 }).ToList();
             return userActivity;
         }
-        public UserPreferenceViewModel GetPreferenceView()
+        public UserPreferenceViewModel GetUserPreference()
         {
             Guid userId = _sessionHelper.GetUserIdFromSession();
             var user = _repository.GetUserById(userId);
