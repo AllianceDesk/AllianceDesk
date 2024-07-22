@@ -31,6 +31,7 @@ namespace ASI.Basecode.Services.ServiceModels
         public string AgentId { get; set; }
 
         public string TeamId { get; set; }
+        public string TicketNumber {  get; set; }
 
         public DateTime DateCreated { get; set; }
 
