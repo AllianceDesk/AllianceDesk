@@ -1,4 +1,4 @@
-﻿@model ASI.Basecode.Services.ServiceModels.TicketViewModel
+﻿@model ASI.Basecode.Services.ServiceModels.UserViewModel
 
 @{
     ViewData["Title"] = "Tickets";
@@ -21,8 +21,8 @@
                         <div class="flex-Row gap-2">
                             <div class="user-img-profile br-50 bg-grey"></div>
                             <div class="flex-col justify-content-center align-center">
-                                <p class="fw-semi">Agent Name</p>
-                                <p class="text-sm">agentemail@gmail.com</p>
+                                <p class="fw-semi">@Model.Name</p>
+                                <p class="text-sm">@Model.Email</p>
                             </div>
                         </div>
                     </div>
