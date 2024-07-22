@@ -123,6 +123,7 @@ namespace ASI.Basecode.WebApp.Controllers
         {
             ViewBag.AdminSidebar = "Index";
             ViewBag.SearchString = searchString;
+            ViewBag.RoleId = _userRepository.GetUsers().Where(u => u.UserId == _sessionHelper.GetUserIdFromSession()).FirstOrDefault().RoleId;
             ViewBag.FavoriteCount = _articleService.GetUserFavoriteCount();
             var data = _articleService.RetrieveFavorites()
                                         .Select(u => new ArticleViewModel
