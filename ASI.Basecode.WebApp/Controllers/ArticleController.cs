@@ -288,7 +288,7 @@ namespace ASI.Basecode.WebApp.Controllers
             }
             _articleService.AddFavorite(articleId);
 
-            return Ok(new { message = "Article added to favorites successfully." });
+            return RedirectToAction("DetailModal", new { articleId });
         }
 
         [HttpPost("/KnowledgeBase/Article-DeleteFavorite")]
@@ -300,7 +300,7 @@ namespace ASI.Basecode.WebApp.Controllers
             }
             _articleService.DeleteFavorite(articleId);
 
-            return Ok(new { message = "Article added to favorites successfully." });
+            return RedirectToAction("DetailModal", new { articleId });
         }
     }
 }

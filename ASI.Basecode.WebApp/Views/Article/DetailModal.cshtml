@@ -8,7 +8,9 @@
 <div class="ticket-modal1" style="padding: 1em;">
     @Html.HiddenFor(model => model.ArticleId)
     <div class="top_modal d-flex justify-content-between align-items-center mb-4">
-        <button type="button" class="btn closebtn1" data-bs-dismiss="modal"><i class='bx bx-left-arrow-alt bx-sm icon' style="color: #45474B; cursor: pointer;"></i></button>
+        <form asp-controller="Article" asp-action="Index" method="get">
+            <button type="submit" class="btn closebtn1" data-bs-dismiss="modal"><i class='bx bx-left-arrow-alt bx-sm icon' style="color: #45474B; cursor: pointer;"></i></button>
+        </form>
     </div>
 
     <div class="top-container mb-3 d-flex justify-content-between">
@@ -18,24 +20,25 @@
             <p class="email mb-4" style="font-size:12px;">Last Edited by:  @Html.DisplayFor(model => model.UpdatedBy)</p>
         </div>
         <div class="btn-group d-flex justify-content-end" style="height: 3.5em; width: 25em; font-size: 10px;">
-            <button type="button" class="btn btn-danger me-1" data-bs-toggle="modal" data-bs-target="#edit" data-article-edit-btn data-article-id="@Model.ArticleId">
-                <i class='bx bxs-edit bx-xs bx-fw' style="color: white; cursor: pointer;"></i> Edit Article
-            </button>
+            @if (Model.IsFavorite)
+            {
+                <button type="button" class="btn btn-danger me-1" data-article-removeFavorites-btn data-article-id="@Model.ArticleId">
+                    <i class="fa-solid fa-star" style="color: white; cursor: pointer;"></i>
+                </button>
+            }
+            else
+            {
+                <button type="button" class="btn btn-danger me-1" data-article-addfavorites-btn data-article-id="@Model.ArticleId">
+                    <i class="fa-regular fa-star" style="color: white; cursor: pointer;"></i>
+                </button>
+            }
 
             <button type="button" class="btn btn-danger" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class='bx bx-dots-horizontal-rounded bx-sm icon' style="color: white; cursor: pointer;"></i>
             </button>
 
             <ul class="dropdown-menu">
-                @if (Model.IsFavorite)
-                {
-                    <li><a class="dropdown-item" href="#" data-article-removefavorites-btn data-article-id="@Model.ArticleId">Remove from my Favorites</a></li>
-                }
-                else
-                {
-                    <li><a class="dropdown-item" href="#" data-article-addfavorites-btn data-article-id="@Model.ArticleId">Add to my Favorites</a></li>
-                }
-                
+                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#edit" data-article-edit-btn data-article-id="@Model.ArticleId">Edit</a></li>
                 <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete" data-article-delete-btn data-article-id="@Model.ArticleId">Delete</a></li>
             </ul>
         </div>
