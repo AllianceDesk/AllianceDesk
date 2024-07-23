@@ -48,9 +48,15 @@ namespace ASI.Basecode.WebApp.Controllers
         }
 
         [HttpGet("/Dashboard")]
-        [AllowAnonymous]
         public ActionResult Dashboard()
         {
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
+
+            if (userRole != 1)
+            {
+                return RedirectToAction("Index", "AccessDenied");
+            }
+
             ViewBag.Name = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).Name;
             ViewBag.AdminSidebar = "Overview";
             var model = new AdminDashboardViewModel
@@ -64,9 +70,15 @@ namespace ASI.Basecode.WebApp.Controllers
         }
 
         [HttpGet("AnalyticsOverallMetrics")]
-        [AllowAnonymous]
         public IActionResult AnalyticsOverallMetrics()
         {
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
+
+            if (userRole != 1)
+            {
+                return RedirectToAction("Index", "AccessDenied");
+            }
+
 
             ViewBag.AdminSidebar = "Analytics";
             var tickets = _ticketService.RetrieveAll();
@@ -115,9 +127,15 @@ namespace ASI.Basecode.WebApp.Controllers
         }
 
         [HttpGet("AnalyticsAgentMetric")]
-        [AllowAnonymous]
         public IActionResult AgentMetric()
         {
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
+
+            if (userRole != 1)
+            {
+                return RedirectToAction("Index", "AccessDenied");
+            }
+
             ViewBag.AdminSidebar = "Analytics";
             var tickets = _ticketService.RetrieveAll();
 
@@ -181,9 +199,15 @@ namespace ASI.Basecode.WebApp.Controllers
         }
 
         [HttpGet("AnalyticsTeamMetric")]
-        [AllowAnonymous]
         public IActionResult TeamMetrics()
         {
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
+
+            if (userRole != 1)
+            {
+                return RedirectToAction("Index", "AccessDenied");
+            }
+
             ViewBag.AdminSidebar = "Analytics";
             var tickets = _ticketService.RetrieveAll();
 
@@ -285,11 +309,16 @@ namespace ASI.Basecode.WebApp.Controllers
         /// Returns User View
         /// </summary>
         /// <returns> Home View </returns>
-        [Authorize(Roles = "Admin")]
         [HttpGet("ViewUser")]
-        [AllowAnonymous]
         public ActionResult ViewUser(string searchString)
         {
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
+
+            if (userRole != 1)
+            {
+                return RedirectToAction("Index", "AccessDenied");
+            }
+
             ViewBag.IsLoginOrRegister = false;
             ViewBag.AdminSidebar = "ViewUser";
             var users = _userService.GetAllUsers()
@@ -325,7 +354,6 @@ namespace ASI.Basecode.WebApp.Controllers
         }
 
         [HttpGet("/UserDetails")]
-        [AllowAnonymous]
         /// <summary>
         /// Go to the User Details View
         /// </summary>
@@ -333,7 +361,12 @@ namespace ASI.Basecode.WebApp.Controllers
         /// 
         public IActionResult UserDetails(string UserId)
         {
-          
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
+
+            if (userRole != 1)
+            {
+                return RedirectToAction("Index", "AccessDenied");
+            }
 
             var data = _userService.GetAllUsers().FirstOrDefault(x => x.UserId.ToString() == UserId);
             if (data == null)
@@ -356,13 +389,19 @@ namespace ASI.Basecode.WebApp.Controllers
 
 
         [HttpGet("/AddUser")]
-        [AllowAnonymous]
         /// <summary>
         /// Go to the Add a User View
         /// </summary>
         /// <returns> Add User</returns>
         public IActionResult AddUser()
         {
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
+
+            if (userRole != 1)
+            {
+                return RedirectToAction("Index", "AccessDenied");
+            }
+
             var teams = _userService.GetTeams()
                                    .Select(t => new SelectListItem
                                    {
@@ -387,9 +426,7 @@ namespace ASI.Basecode.WebApp.Controllers
             return PartialView("AddUser");
         }
 
-        [Authorize(Policy = "RequireAdmin")]
         [HttpPost("/AddUser")]
-        [AllowAnonymous]
         /// <summary>
         /// Post Request for Adding a User
         /// </summary>
@@ -409,6 +446,13 @@ namespace ASI.Basecode.WebApp.Controllers
         /// 
         public IActionResult UserEdit(string UserId, bool resetPassword)
         {
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
+
+            if (userRole != 1)
+            {
+                return RedirectToAction("Index", "AccessDenied");
+            }
+
             // Fetch user data
             var user = _userService.GetAllUsers().FirstOrDefault(x => x.UserId.ToString() == UserId);
             if (user == null)
@@ -477,6 +521,13 @@ namespace ASI.Basecode.WebApp.Controllers
         /// <returns> View User </returns>
         public IActionResult UserDelete(string UserId)
         {
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
+
+            if (userRole != 1)
+            {
+                return RedirectToAction("Index", "AccessDenied");
+            }
+
             var userToDelete = new UserViewModel
             {
                 UserId = UserId,
@@ -500,6 +551,13 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpGet("/ViewTeams")]
         public IActionResult ViewTeams()
         {
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
+
+            if (userRole != 1)
+            {
+                return RedirectToAction("Index", "AccessDenied");
+            }
+
             ViewBag.IsLoginOrRegister = false;
             var teams = _userService.GetTeams()
                                    .Select(t => new SelectListItem
@@ -520,6 +578,13 @@ namespace ASI.Basecode.WebApp.Controllers
         /// <returns> Add User</returns>
         public IActionResult AddTeam()
         {
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
+
+            if (userRole != 1)
+            {
+                return RedirectToAction("Index", "AccessDenied");
+            }
+
             return PartialView("AddTeam");
         }
 
@@ -543,10 +608,16 @@ namespace ASI.Basecode.WebApp.Controllers
         /// </summary>
         /// <returns> Tickets View </returns>
         [HttpGet]
-        [AllowAnonymous]
         [Route("Tickets/{id?}")]
         public IActionResult Tickets(string? id, string? status)
         {
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
+
+            if (userRole != 1)
+            {
+                return RedirectToAction("Index", "AccessDenied");
+            }
+
             ViewBag.IsLoginOrRegister = false;
             ViewBag.AdminSidebar = "Tickets";
 
@@ -585,9 +656,15 @@ namespace ASI.Basecode.WebApp.Controllers
         }
 
         [HttpGet("Tickets/Assignment")]
-        [AllowAnonymous]
         public IActionResult TicketAssignment(string id)
         {
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
+
+            if (userRole != 1)
+            {
+                return RedirectToAction("Index", "AccessDenied");
+            }
+
             var ticket = _ticketService.RetrieveAll()
                 .Where(t => t.TicketId.ToString() == id)
                 .FirstOrDefault();
@@ -640,7 +717,6 @@ namespace ASI.Basecode.WebApp.Controllers
 
 
         [HttpPost("Tickets/Assignment"), ActionName("TicketAssignment")]
-        [AllowAnonymous]
         public IActionResult PostTicketAssignment([FromBody] AgentAssignmentViewModel model)
         {
             _ticketService.AssignAgent(model.TicketId, model.SelectedAgentId);

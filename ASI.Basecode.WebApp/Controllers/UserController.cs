@@ -48,6 +48,13 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpGet("Preferences")]
         public IActionResult GetPreference()
         {
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
+            
+            if(userRole != 3)
+            {
+                return RedirectToAction("Index", "AccessDenied");
+            }
+
             var preference = _userService.GetUserPreference();
 
             return Json(new
@@ -89,6 +96,13 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpGet("Tickets")]
         public IActionResult Tickets(byte? status, string? searchTerm, string? sortOrder, int? page)
         {
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
+
+            if (userRole != 3)
+            {
+                return RedirectToAction("Index", "AccessDenied");
+            }
+
             var userPreference = _userService.GetUserPreference();
 
             if (status == null)
@@ -186,6 +200,13 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpGet("Tickets/{id}/Edit")]
         public IActionResult TicketEdit(string id)
         {
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
+
+            if (userRole != 3)
+            {
+                return RedirectToAction("Index", "AccessDenied");
+            }
+
             var ticket = _ticketService.GetById(id);
 
             if (ticket == null)

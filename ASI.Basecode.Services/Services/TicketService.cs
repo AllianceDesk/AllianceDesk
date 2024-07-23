@@ -440,7 +440,7 @@ namespace ASI.Basecode.Services.Services
             var endDate = DateTime.Today.AddDays(1);
 
             var topResolvers = _ticketRepository.RetrieveAll()
-                                .Where(t => t.StatusId == 4 && t.DateClosed >= startDate && t.DateClosed <= endDate)
+                                .Where(t => t.StatusId == 5 && t.DateClosed >= startDate && t.DateClosed <= endDate)
                                 .GroupBy(t => t.AssignedAgent)
                                 .Select(g => new { UserId = g.Key, ResolvedCount = g.Count() })
                                 .OrderByDescending(g => g.ResolvedCount)
@@ -450,8 +450,8 @@ namespace ASI.Basecode.Services.Services
             {
                 UserId = tr.UserId.ToString(),
                 TeamName = _teamRepository.RetrieveAll().Where(t => t.TeamId ==
-                            _userRepository.GetUsers().Where(u => u.UserId == tr.UserId).FirstOrDefault().TeamId)
-                            .FirstOrDefault().TeamName,
+                            _userRepository.GetUsers().Where(u => u.UserId == tr.UserId).FirstOrDefault()?.TeamId)
+                            .FirstOrDefault()?.TeamName ?? "No Team",
                 Name = _userRepository.GetUsers().Where(u => u.UserId == tr.UserId).FirstOrDefault().Name,
                 TicketResolved = tr.ResolvedCount,
             }).ToList();
