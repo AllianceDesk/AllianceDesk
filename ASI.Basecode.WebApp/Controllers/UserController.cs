@@ -32,7 +32,7 @@ namespace ASI.Basecode.WebApp.Controllers
         /// <param name="configuration"></param>
         /// <param name="localizer"></param>
         /// <param name="mapper"></param>
-        
+
         public UserController(IHttpContextAccessor httpContextAccessor,
                               ILoggerFactory loggerFactory,
                               IConfiguration configuration,
@@ -52,8 +52,8 @@ namespace ASI.Basecode.WebApp.Controllers
         public IActionResult GetPreference()
         {
             var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
-            
-            if(userRole != 3)
+
+            if (userRole != 3)
             {
                 return RedirectToAction("Index", "AccessDenied");
             }
@@ -109,10 +109,10 @@ namespace ASI.Basecode.WebApp.Controllers
             var userPreference = _userService.GetUserPreference();
             var pageSize = 10;
 
-            if(userPreference != null)
+            if (userPreference != null)
             {
                 pageSize = userPreference.DefaultTicketPerPage;
-                
+
                 if (status == null)
                 {
                     switch (userPreference.DefaultTicketView)
@@ -208,7 +208,7 @@ namespace ASI.Basecode.WebApp.Controllers
         public async Task<IActionResult> TicketCreate(TicketViewModel ticket)
         {
 
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 await _ticketService.AddAsync(ticket);
                 return RedirectToAction("Tickets");
@@ -222,7 +222,7 @@ namespace ASI.Basecode.WebApp.Controllers
         {
 
             var ticket = _ticketService.GetById(id);
- 
+
             if (ticket == null)
             {
                 return NotFound();

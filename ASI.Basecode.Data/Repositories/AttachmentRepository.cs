@@ -15,7 +15,6 @@ namespace ASI.Basecode.Data.Repositories
         {
 
         }
-
         public IEnumerable<Attachment> GetAttachments()
         {
             return this.GetDbSet<Attachment>();
@@ -26,7 +25,6 @@ namespace ASI.Basecode.Data.Repositories
             this.GetDbSet<Attachment>().Add(attachment);
             UnitOfWork.SaveChanges();
         }
-
         public IEnumerable<Attachment> GetAttachmentsByTicketId(Guid ticketId)
         {
             return this.GetDbSet<Attachment>().Where(u => u.TicketId == ticketId);

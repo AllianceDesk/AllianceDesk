@@ -177,7 +177,7 @@ namespace ASI.Basecode.Services.Services
             // Call Async Tasks here
             await FileUploadAsync(ticket.AttachmentFiles, _sessionHelper.GetUserIdFromSession(), newTicket.TicketId);
         }
-       
+
         public void Update(TicketViewModel ticket)
         {
             var existingTicket = _ticketRepository.GetTicketById(Guid.Parse(ticket.TicketId));
