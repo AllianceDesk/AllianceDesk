@@ -56,6 +56,7 @@ namespace ASI.Basecode.Services.ServiceModels
         public string TeamName { get; set; }
 
         [FileSize(5)]
+        [FileTypes(new[] { "image/jpeg", "image/png", "image/gif" })]
         public IEnumerable<TicketActivityViewModel> TicketHistory { get; set; }
 
         public IEnumerable<TicketMessageViewModel> TicketMessages { get; set; }
