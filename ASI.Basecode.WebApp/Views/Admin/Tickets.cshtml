@@ -45,11 +45,11 @@
         <div class="flex-col rounded-md">
             @foreach (var item in Model)
             {
-                <button onclick="window.location.href = '@Url.Action("Tickets", "Admin", new { id = item.TicketId })'" class=" agents cursor-pointer p-y-1 p-x-1 flex-col ">
+                <div onclick="window.location.href = '@Url.Action("Tickets", "Admin", new { id = item.TicketId })'" class=" agents p-y-1 p-x-1 flex-col ">
                         <p class="text-1-5 fw-semi">@item.Title</p>
                         <p class="text-1-5 fw-semi">@item.RelativeTime)</p>
                         <p>@item.Description</p>
-                </button>
+                </div>
             }
         </div>
     </div>
