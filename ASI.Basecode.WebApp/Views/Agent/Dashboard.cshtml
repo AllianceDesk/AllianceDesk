@@ -84,46 +84,6 @@
             
         </div>
 
-        <div class="modal fade" id="createTicket" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                <div class="modal-content p-3">
-                    <div id="main_createcard">
-
-                        <div class="top_modal d-flex justify-content-between align-items-center mb-3">
-                            <h3>New Ticket</h3>
-                            <button type="button" class="btn" data-bs-dismiss="modal"><i class='bx bx-x bx-sm icon' style="color: #45474B; cursor: pointer;"></i></button>
-                        </div>
-
-                        <form asp-controller="User" asp-action="TicketCreate" method="post">
-                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                            <div class="form-group mb-3">
-                                <input asp-for="Ticket.Title" class="form-control" placeholder="Ticket Title" aria-label="Title" />
-                                <span asp-validation-for="Ticket.Title" class="text-danger"></span>
-                            </div>
-
-                            <div class="form-group">
-                                <select asp-for="Ticket.CategoryId" class="form-select" asp-items="ViewBag.Categories" id="inputGroupSelect04" aria-label="Category Options"></select>
-                                <span asp-validation-for="Ticket.CategoryId" class="text-danger"></span>
-                            </div>
-
-                            <div class="form-group">
-                                <select asp-for="Ticket.PriorityId" class="form-select" asp-items="ViewBag.Priorities" id="inputGroupSelect04" aria-label="Priority Options"></select>
-                                <span asp-validation-for="Ticket.PriorityId" class="text-danger"></span>
-                            </div>
-
-                            <textarea asp-for="Ticket.Description" class="form-control mb-3" id="largeTextField" rows="10" cols="50" placeholder="Description"></textarea>
-                            <span asp-validation-for="Ticket.Description" class="text-danger"></span>
-
-                            <div class="button_card mb-3 d-flex justify-content-between">
-                                <button type="button" class="btn attachment custom-button" style="background-color: #7E7E7E; color: white;"><i class='bx bx-image-add bx-xs bx-fw uh' style="align-self:center;"></i> Add Attachment </button>
-                                <button type="submit" class="btn attachment custom-button" style="background-color: #E21818; color: white;"><i class='bx bxl-telegram bx-xs bx-fw uh' style="align-self:center;"></i> Submit </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div class="modal fade" id="editTicket" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content p-3">
