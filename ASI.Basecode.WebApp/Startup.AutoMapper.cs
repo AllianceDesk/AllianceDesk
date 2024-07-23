@@ -38,7 +38,7 @@ namespace ASI.Basecode.WebApp
                     .ForMember(dest => dest.ModifiedBy, opt => opt.MapFrom(src => src.ModifiedBy.ToString()))
                     .ForMember(dest => dest.ModifiedByName, opt => opt.MapFrom(src => src.ModifiedByNavigation.Name))
                     .ForMember(dest => dest.OperationName, opt => opt.MapFrom(src => src.Operation.Name))
-                    .ForMember(dest => dest.message, opt => opt.MapFrom(src => src.Message));
+                    .ForMember(dest => dest.Message, opt => opt.MapFrom(src => src.Message));
 
                 CreateMap<FeedbackViewModel, Feedback>()
                     .ForMember(dest => dest.FeedbackId, opt => opt.Ignore()) // Ignore properties not directly mapped

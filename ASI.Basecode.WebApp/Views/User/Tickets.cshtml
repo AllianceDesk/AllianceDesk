@@ -58,17 +58,8 @@
                 @foreach (var item in Model.Tickets)
                 {
 					<div class="ticket-container">
-						<a href="#" class="ticket-link"
-							data-bs-toggle="modal"
-							data-bs-target="#viewTicket"
-							data-creator-name="@item.CreatorName"
-							data-date-created="@item.DateCreated"
-							data-title="@item.Title"
-							data-description="@item.Description"
-                            data-latest-update="@(@item.LatestUpdate?.Message ?? "No update available")
-                            data-latest-update-date="@(@item.LatestUpdate?.ModifiedAt.ToString("yyyy-MM-ddTHH:mm:ss") ?? "No update available")>
+						<a href="#" class="ticket-link" data-bs-toggle="modal" data-bs-target="#viewTicket" data-ticket-id="@item.TicketId">
                             <div class="top-container">
-								@*  <img class="image" src="@item.Image" alt="image"> *@
 								<div class="nameDateContainer">
 
 									<h5 class="name">
@@ -305,17 +296,19 @@
                         <div class="top-container">
                             <img class="image" src="/img/profile-logo.png" alt="image">
                             <div class="nameDateContainer">
-                                <h5 class="name"></h5>
-                                <p class="date"></p>
+                                <h5 class="name" id="ViewName">Name</h5>
+                                <p class="date" id="ViewDate">Date</p>
                             </div>
                         </div>
-                        <h2 class="question"></h2>
-                        <p class="details"></p>
+                        <h2 class="question" id="ViewTitle">Title</h2>
+                        <p class="details" id="ViewDetails">Details</p>
                     </div>
 
+                    <div class="gallery" id="ViewGallery"></div>
+
                     <div class="status-container">
-                        <div class="status1"></div>
-                        <div class="statusdate"></div>
+                        <div class="status" id="ViewStatus"></div>
+                        <div class="statusdate" id="ViewStatusDate"></div>
                     </div>
                 </div>
             </div>
@@ -479,28 +472,7 @@
         const viewTicketModal = new bootstrap.Modal(document.getElementById('viewTicket'));
         const editTicketModal = new bootstrap.Modal(document.getElementById('editTicket'));
         const feedbackModal = new bootstrap.Modal(document.getElementById('fillFeedback'));
-        const ticketActionModal = new bootstrap.Modal(document.getElementById('ticketActionModal'));
-        
-        const ticketLinks = document.querySelectorAll('.ticket-link');
-
-        ticketLinks.forEach(link => {
-            link.addEventListener('click', function (event) {
-                var modal = document.querySelector('#viewTicket');
-                var creatorName = link.getAttribute('data-creator-name');
-                var dateCreated = link.getAttribute('data-date-created');
-                var title = link.getAttribute('data-title');
-                var description = link.getAttribute('data-description');
-                var latestUpdate = link.getAttribute('data-latest-update');
-                var latestUpdateDate = link.getAttribute('data-latest-update-date');
-
-                modal.querySelector('.name').textContent = creatorName;
-                modal.querySelector('.date').textContent = dateCreated;
-                modal.querySelector('.question').textContent = title;
-                modal.querySelector('.details').textContent = description;
-                modal.querySelector('.status1').textContent = latestUpdate;
-                modal.querySelector('.statusdate').textContent = latestUpdateDate;
-            });
-        });
+        const ticketActionModal = new bootstrap.Modal(document.getElementById('ticketActionModal')); 
 
         var dpIcon = document.querySelector('.dpicn');
         var dropdownMenu = document.getElementById('dropdownMenu');
@@ -515,7 +487,6 @@
             }
         });
 
-        // Add a keypress event listener to handle search input
         document.getElementById('search-input').addEventListener('keypress', function (event) {
             if (event.keyCode === 13) {
                 event.preventDefault(); // Prevent form submission
@@ -540,6 +511,7 @@
         document.querySelectorAll('[data-bs-toggle="modal"]').forEach(element => {
             element.addEventListener('click', function () {
                 const target = this.getAttribute('data-bs-target');
+                
                 if (target === '#editTicket') {
                     var ticketId = this.getAttribute('data-ticket-id');
                     document.querySelector('#editTicketForm').action = `/User/Tickets/${ticketId}/Edit`;
@@ -555,13 +527,15 @@
                             editTicketModal.show();
                         })
                         .catch(error => console.error('Error fetching ticket data:', error));
-                } else if (target === '#fillFeedback') {
+                }
+                else if (target === '#fillFeedback') {
 
                     var ticketId = this.getAttribute('data-ticket-id');
                     document.querySelector('#Feedback_TicketId').value = ticketId;
                     document.querySelector('#fillFeedbackForm').action = `/User/Tickets/${ticketId}/Feedback`;
                     feedbackModal.show();
-                } else if (target === '#ticketActionModal') {
+                }
+                else if (target === '#ticketActionModal') {
                     var actionType = this.getAttribute('data-action-type');
                     var ticketId = this.getAttribute('data-ticket-id');
 
@@ -588,20 +562,42 @@
                     document.getElementById('ticketActionForm').action = formAction;
                 }
                 else if(target == '#viewTicket') {
-                    var creatorName = link.getAttribute('data-creator-name');
-                    var dateCreated = link.getAttribute('data-date-created');
-                    var title = link.getAttribute('data-title');
-                    var description = link.getAttribute('data-description');
-                    var latestUpdate = link.getAttribute('data-latest-update');
-                    var latestUpdateDate = link.getAttribute('data-latest-update-date');
-                     
-                    viewTicketModal.querySelector('.name').textContent = creatorName;
-                    viewTicketModal.querySelector('.date').textContent = dateCreated;
-                    viewTicketModal.querySelector('.question').textContent = title;
-                    viewTicketModal.querySelector('.details').textContent = description;
-                    viewTicketModal.querySelector('.status1').textContent = latestUpdate;
-                    viewTicketModal.querySelector('.statusdate').textContent = latestUpdateDate;
-                    viewTicketModal.show();
+                    var ticketId = this.getAttribute('data-ticket-id');
+
+                    fetch(`/User/Tickets/${ticketId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                                       
+                            console.log(data);
+                            document.querySelector('#ViewName').textContent = data.user;
+                            document.querySelector('#ViewDate').textContent = data.dateCreated;
+                            document.querySelector('#ViewTitle').textContent = data.title;
+                            document.querySelector('#ViewDetails').textContent = data.description;
+                            document.querySelector('#ViewStatus').textContent = data.latestUpdate;
+                            document.querySelector('#ViewStatusDate').textContent = data.latestUpdateDate;
+
+                            const gallery = document.querySelector('#ViewGallery');
+                            gallery.innerHTML = '';
+
+                            data.files.forEach(image => {
+                                const anchor = document.createElement('a');
+                                anchor.href = image;
+                                anchor.setAttribute('data-lightbox', 'ticket-gallery');
+                                anchor.setAttribute('data-title', data.title);
+
+                                const img = document.createElement('img');
+                                img.src = image;
+                                img.alt = data.title
+                                img.classList.add('gallery-thumbnail');
+
+                                anchor.appendChild(img);
+                                gallery.appendChild(anchor);
+                            });
+
+                            viewTicketModal.show();
+
+                        })
+                        .catch(error => console.error('Error fetching ticket data:', error));
                 } else {
                     const modal = new bootstrap.Modal(document.querySelector(target));
                     modal.show();

@@ -32,6 +32,7 @@ namespace ASI.Basecode.WebApp.Controllers
         /// <param name="configuration"></param>
         /// <param name="localizer"></param>
         /// <param name="mapper"></param>
+        
         public UserController(IHttpContextAccessor httpContextAccessor,
                               ILoggerFactory loggerFactory,
                               IConfiguration configuration,
@@ -106,37 +107,42 @@ namespace ASI.Basecode.WebApp.Controllers
             }
 
             var userPreference = _userService.GetUserPreference();
+            var pageSize = 10;
 
-            if (status == null)
+            if(userPreference != null)
             {
-                switch (userPreference.DefaultTicketView)
+                pageSize = userPreference.DefaultTicketPerPage;
+                
+                if (status == null)
                 {
-                    case "Open":
-                        status = 1;
-                        break;
-                    case "Assigned":
-                        status = 2;
-                        break;
-                    case "In Progress":
-                        status = 3;
-                        break;
-                    case "Resolved":
-                        status = 4;
-                        break;
-                    case "Closed":
-                        status = 5;
-                        break;
+                    switch (userPreference.DefaultTicketView)
+                    {
+                        case "Open":
+                            status = 1;
+                            break;
+                        case "Assigned":
+                            status = 2;
+                            break;
+                        case "In Progress":
+                            status = 3;
+                            break;
+                        case "Resolved":
+                            status = 4;
+                            break;
+                        case "Closed":
+                            status = 5;
+                            break;
+                    }
                 }
             }
 
             var tickets = _ticketService.GetUserTickets(_sessionHelper.GetUserIdFromSession(), status, searchTerm, sortOrder, page);
 
-            var pageSize = userPreference.DefaultTicketPerPage;
             var currentPage = page ?? 1;
             var currentStatus = status ?? 0;
             var currentSearchTerm = searchTerm ?? "";
+
             var count = tickets.Count();
-           
             var statuses = _ticketService.GetStatuses()
                 .Select(c => new KeyValuePair<string, string>(c.StatusId.ToString(), c.StatusName))
                 .ToList();
@@ -174,6 +180,28 @@ namespace ASI.Basecode.WebApp.Controllers
             };
 
             return View(model);
+        }
+
+        [HttpGet("Tickets/{id}")]
+        public IActionResult Ticket(string id)
+        {
+            var ticket = _ticketService.GetById(id);
+
+            if (ticket == null)
+            {
+                return NotFound(); // Handle ticket not found scenario
+            }
+
+            return Json(new
+            {
+                user = ticket.CreatorName,
+                title = ticket.Title,
+                description = ticket.Description,
+                dateCreated = ticket.DateCreated.ToString("MM/dd/yyyy hh:mm tt"),
+                latestUpdateMessage = ticket.LatestUpdate.Message,
+                latestUpdateDate = ticket.LatestUpdate.ModifiedAt.ToString("MM/dd/yyyy hh:mm tt"),
+                files = ticket.AttachmentStrings
+            });
         }
 
         [HttpPost("Tickets/Create")]
@@ -250,7 +278,6 @@ namespace ASI.Basecode.WebApp.Controllers
                 priorityId = ticket.PriorityId
             });
         }
-
 
         [HttpPost("Tickets/{id}/Edit"), ActionName("TicketEdit")]
         public IActionResult TicketEditPost(string id, UserTicketsViewModel model)

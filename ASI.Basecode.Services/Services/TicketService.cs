@@ -128,9 +128,7 @@ namespace ASI.Basecode.Services.Services
                                                         t.Description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
             }
 
-
-            //Sorting order
-            ticketsQuery = ticketsQuery.OrderBy(t => t.DateCreated);
+            ticketsQuery = ticketsQuery.OrderByDescending(t => t.DateCreated);
 
             var model = ticketsQuery.Select(s => new TicketViewModel
             {
@@ -173,12 +171,11 @@ namespace ASI.Basecode.Services.Services
             newTicket.PriorityId = Convert.ToByte(ticket.PriorityId);
             newTicket.CategoryId = Convert.ToByte(ticket.CategoryId);
 
-
             // Add Synchronous Tasks here
             Add(newTicket);
 
             // Call Async Tasks here
-            await FileUploadAsync(ticket.Attachments, _sessionHelper.GetUserIdFromSession(), newTicket.TicketId);
+            await FileUploadAsync(ticket.AttachmentFiles, _sessionHelper.GetUserIdFromSession(), newTicket.TicketId);
         }
        
         public void Update(TicketViewModel ticket)
@@ -263,12 +260,39 @@ namespace ASI.Basecode.Services.Services
             var priorities = _priorityRepository.RetrieveAll().ToDictionary(p => p.PriorityId, p => p.PriorityName);
             var statuses = _statusRepository.RetrieveAll().ToDictionary(st => st.StatusId, st => st.StatusName);
             var users = _userRepository.GetUsersByIds(userIds).ToDictionary(u => u.UserId, u => u.Name);
+            var ticketActivities = _ticketActivityRepository.GetActivitiesByTicketId(guid).ToList();
+
+            var latestUpdate = ticketActivities.FirstOrDefault();
+            var latestUpdateDate = DateTime.Now;
+            var latestUpdateMessage = "No Ticket Activity";
+
+            if (latestUpdate != null)
+            {
+                latestUpdateMessage = latestUpdate.Message;
+                latestUpdateDate = latestUpdate.ModifiedAt;
+            }
+
+
+            var attachments = _attachmentRepository.GetAttachmentsByTicketId(ticket.TicketId);
+
+            List<string> attachmentFilePaths = new List<string>();
+
+            if (attachments != null)
+            {
+                foreach (var attachment in attachments)
+                {
+                    attachmentFilePaths.Add(attachment.FilePath);
+                }
+            }
+
+            TicketActivityViewModel ticketActivityViewModel = new TicketActivityViewModel { Message = latestUpdateMessage, ModifiedAt = latestUpdateDate };
 
             var ticketViewModel = new TicketViewModel
             {
                 TicketId = ticket.TicketId.ToString(),
                 Title = ticket.Title,
                 Description = ticket.Description,
+                DateCreated = ticket.DateCreated,
                 CategoryId = ticket.CategoryId.ToString(),
                 PriorityId = ticket.PriorityId.ToString(),
                 Category = categories.TryGetValue(ticket.CategoryId, out var categoryName) ? categoryName : "Unknown",
@@ -276,10 +300,9 @@ namespace ASI.Basecode.Services.Services
                 Status = statuses.TryGetValue(ticket.StatusId, out var statusName) ? statusName : "Unknown",
                 CreatorName = users.TryGetValue(ticket.CreatedBy, out var creatorName) ? creatorName : "Unknown",
                 AgentName = ticket.AssignedAgent.HasValue && users.TryGetValue(ticket.AssignedAgent.Value, out var agentName) ? agentName : "Unknown",
-                TeamName = null
-
-                // Attachments = ticket.Attachments.ToString(),
-                // Feedback = ticket.Feedback // Uncomment and implement if needed
+                TeamName = null,
+                LatestUpdate = new TicketActivity { Message = latestUpdateMessage, ModifiedAt = latestUpdateDate },
+                AttachmentStrings = attachmentFilePaths
             };
 
             return ticketViewModel;
@@ -510,9 +533,10 @@ namespace ASI.Basecode.Services.Services
                     //After moving add the filePath to the database
                     Attachment attachment = new Attachment();
                     attachment.AttachmentId = Guid.NewGuid();
-                    attachment.FilePath = filePath;
+                    attachment.FilePath = "/uploads/" + userId.ToString() + "/" + ticketId.ToString() + "/" + file.FileName;
                     attachment.UploadedBy = userId;
                     attachment.UploadedAt = DateTime.Now;
+                    attachment.TicketId = ticketId;
 
                     _attachmentRepository.AddAttachment(attachment);
                 }

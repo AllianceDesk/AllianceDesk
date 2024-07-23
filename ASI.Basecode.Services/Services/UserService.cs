@@ -229,7 +229,7 @@ namespace ASI.Basecode.Services.Services
                                     Date = t.ModifiedAt.ToString("dd MMM yyyy, h:mm tt"),
                                     OperationId = t.OperationId,
                                     OperationName = _ticketActivityOperationRepository.RetrieveAll().Where(o => o.OperationId == t.OperationId).FirstOrDefault().Name,
-                                    message = t.Message,
+                                    Message = t.Message,
                                 }).ToList();
             return userActivity;
         }

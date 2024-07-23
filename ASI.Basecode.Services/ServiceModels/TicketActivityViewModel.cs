@@ -18,6 +18,6 @@ namespace ASI.Basecode.Services.ServiceModels
         public string Date { get; set; }
         public byte OperationId { get; set; }
         public string OperationName { get; set; }
-        public string message { get; set; }
+        public string Message { get; set; }
     }
 }
