@@ -26,6 +26,22 @@ namespace ASI.Basecode.Services.Services
         {
             _logger.LogInformation("TicketCleanupBackgroundService is starting.");
 
+            try
+            {
+                // Perform the ticket cleanup within a scope
+                using (var scope = _serviceScopeFactory.CreateScope())
+                {
+                    var ticketCleanupService = scope.ServiceProvider.GetRequiredService<ITicketCleanupService>();
+                    _logger.LogInformation("Running ticket cleanup...");
+                    await ticketCleanupService.CleanupTicketsAsync();
+                    _logger.LogInformation("Ticket cleanup completed.");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while cleaning up tickets.");
+            }
+
             while (!stoppingToken.IsCancellationRequested)
             {
                 try
