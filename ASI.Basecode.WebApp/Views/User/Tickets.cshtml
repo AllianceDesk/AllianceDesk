@@ -216,7 +216,7 @@
 
 							<div class="button_card mb-3 d-flex justify-content-between">
                                 <div class="form-group mb-3">
-                                    <input type="file" asp-for="Ticket.AttachmentFiles" class="btn attachment custom-button" multiple />
+                                    <input type="file" asp-for="Ticket.AttachmentFiles" class="btn attachment custom-button" multiple accept="image/*" />
                                     <span asp-validation-for="Ticket.AttachmentFiles" class="text-danger"></span>
                                 </div>
 
