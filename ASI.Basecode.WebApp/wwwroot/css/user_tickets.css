@@ -772,3 +772,20 @@ hr {
 .ticket-modal1 {
     padding: 1em;
 }
+
+/* Style for the modal content */
+.modal-content {
+    padding: 20px;
+}
+
+/* Style for images in the gallery */
+.gallery-thumbnail {
+    max-width: 100px; /* Adjust as needed */
+    margin: 5px;
+    border-radius: 4px;
+    transition: transform 0.3s;
+}
+
+    .gallery-thumbnail:hover {
+        transform: scale(1.1);
+    }

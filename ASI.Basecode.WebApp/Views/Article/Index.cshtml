@@ -419,16 +419,17 @@ else if (ViewBag.RoleId == 2)
         $(document).on('click', '[data-article-addFavorites-btn]', function () {
             var articleId = $(this).data('article-id');
 
-            // Perform AJAX request to fetch article details
+            // Perform AJAX request to add to favorites
             $.ajax({
                 url: '/KnowledgeBase/Article-AddFavorite',
-                type: 'Post',
+                type: 'POST',
                 data: { articleId: articleId },
                 success: function (result) {
-                    alert('Article added to favorites successfully!');
+                    // Refresh the article detail modal
+                    loadArticleDetails(articleId);
                 },
                 error: function (error) {
-                    console.error('Error loading article details:', error);
+                    console.error('Error adding article to favorites:', error);
                 }
             });
         });
@@ -436,19 +437,37 @@ else if (ViewBag.RoleId == 2)
         $(document).on('click', '[data-article-removeFavorites-btn]', function () {
             var articleId = $(this).data('article-id');
 
-            // Perform AJAX request to fetch article details
+            // Perform AJAX request to remove from favorites
             $.ajax({
                 url: '/KnowledgeBase/Article-DeleteFavorite',
-                type: 'Post',
+                type: 'POST',
                 data: { articleId: articleId },
                 success: function (result) {
-                    alert('Article remove from favorites successfully!');
+                    // Refresh the article detail modal
+                    loadArticleDetails(articleId);
+                },
+                error: function (error) {
+                    console.error('Error removing article from favorites:', error);
+                }
+            });
+        });
+
+        // Function to load article details
+        function loadArticleDetails(articleId) {
+            $.ajax({
+                url: '/KnowledgeBase/Article-Detail',
+                type: 'GET',
+                data: { articleId: articleId },
+                success: function (result) {
+                    $('#detail .modal-content').html(result);
+                    $('#detail').modal('show');
+                    console.log('Article details successfully loaded!');
                 },
                 error: function (error) {
                     console.error('Error loading article details:', error);
                 }
             });
-        });
+        }
     });
 
 </script>

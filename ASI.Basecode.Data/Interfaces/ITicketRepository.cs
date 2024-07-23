@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using ASI.Basecode.Data.Models;
 
 namespace ASI.Basecode.Data.Interfaces
@@ -19,5 +20,6 @@ namespace ASI.Basecode.Data.Interfaces
         IEnumerable<Ticket> GetUserTicketsById(Guid id);
 
         IEnumerable<Ticket> GetAgentTicketsById(Guid id);
+
     }
 }
