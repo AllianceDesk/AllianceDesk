@@ -207,7 +207,6 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpPost("Tickets/Create")]
         public async Task<IActionResult> TicketCreate(TicketViewModel ticket)
         {
-
             if (ModelState.IsValid)
             {
                 await _ticketService.AddAsync(ticket);
