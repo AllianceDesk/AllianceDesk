@@ -61,6 +61,7 @@ namespace ASI.Basecode.WebApp.Controllers
         {
             ViewBag.RoleId = _userRepository.GetUsers().Where(u => u.UserId == _sessionHelper.GetUserIdFromSession()).FirstOrDefault().RoleId;
             ViewBag.AdminSidebar = "Index";
+            ViewBag.AgentSidebar = "Index";
             ViewBag.SearchString = searchString;
             ViewBag.CategoryString = category;
             ViewBag.FavoriteCount = _articleService.GetUserFavoriteCount();
@@ -123,6 +124,7 @@ namespace ASI.Basecode.WebApp.Controllers
         public IActionResult MyFavorites(string searchString)
         {
             ViewBag.AdminSidebar = "Index";
+            ViewBag.AgentSidebar = "Index";
             ViewBag.SearchString = searchString;
             ViewBag.RoleId = _userRepository.GetUsers().Where(u => u.UserId == _sessionHelper.GetUserIdFromSession()).FirstOrDefault().RoleId;
             ViewBag.FavoriteCount = _articleService.GetUserFavoriteCount();
@@ -288,7 +290,7 @@ namespace ASI.Basecode.WebApp.Controllers
             }
             _articleService.AddFavorite(articleId);
 
-            return Ok(new { message = "Article added to favorites successfully." });
+            return RedirectToAction("DetailModal", new { articleId });
         }
 
         [HttpPost("/KnowledgeBase/Article-DeleteFavorite")]
@@ -300,7 +302,7 @@ namespace ASI.Basecode.WebApp.Controllers
             }
             _articleService.DeleteFavorite(articleId);
 
-            return Ok(new { message = "Article added to favorites successfully." });
+            return RedirectToAction("DetailModal", new { articleId });
         }
     }
 }

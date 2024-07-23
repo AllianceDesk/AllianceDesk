@@ -1,8 +1,10 @@
 ﻿using ASI.Basecode.Data.Models;
-using NUlid;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+
 
 namespace ASI.Basecode.Services.ServiceModels
 {
@@ -25,25 +27,25 @@ namespace ASI.Basecode.Services.ServiceModels
 
         [Required(ErrorMessage = "Priority is required")]
         public string PriorityId { get; set; }
-        
+
         public string StatusId { get; set; }
 
         public string CreatorId { get; set; }
-        
+
         public string AgentId { get; set; }
 
         public string TeamId { get; set; }
         public DateTime DateCreated { get; set; }
 
-        public List<Attachment> Attachments { get; set; } = new List<Attachment>();
+        public List<IFormFile> AttachmentFiles { get; set; } = new List<IFormFile>();
+
+        public List<string> AttachmentStrings { get; set; } = new List<string>();
 
         public string Priority { get; set; }
 
         public string Status { get; set; }
 
         public string Category { get; set; }
-
-        public string Attachment { get; set; }
 
         public string FeedbackId { get; set; }
 
@@ -53,6 +55,8 @@ namespace ASI.Basecode.Services.ServiceModels
 
         public string TeamName { get; set; }
 
+        [FileSize(5)]
+        [FileTypes(new[] { "image/jpeg", "image/png", "image/gif" })]
         public IEnumerable<TicketActivityViewModel> TicketHistory { get; set; }
 
         public IEnumerable<TicketMessageViewModel> TicketMessages { get; set; }
@@ -86,4 +90,62 @@ namespace ASI.Basecode.Services.ServiceModels
 
         public FeedbackViewModel Feedback { get; set; }
     }
+
+
+    public class FileSizeAttribute : ValidationAttribute
+    {
+        private readonly int _maxSizeInMb;
+
+        public FileSizeAttribute(int maxSizeInMb)
+        {
+            _maxSizeInMb = maxSizeInMb;
+        }
+
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            var files = value as List<IFormFile>;
+            if (files == null)
+                return ValidationResult.Success;
+
+            foreach (var file in files)
+            {
+                if (file.Length > _maxSizeInMb * 1024 * 1024)
+                {
+                    return new ValidationResult($"Each file cannot be larger than {_maxSizeInMb} MB.");
+                }
+            }
+
+            return ValidationResult.Success;
+        }
+
+
+    }
+
+    public class FileTypesAttribute : ValidationAttribute
+    {
+        private readonly string[] _allowedTypes;
+
+        public FileTypesAttribute(string[] allowedTypes)
+        {
+            _allowedTypes = allowedTypes;
+        }
+
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            var files = value as List<IFormFile>;
+            if (files == null)
+                return ValidationResult.Success;
+
+            foreach (var file in files)
+            {
+                if (file.Length > 0 && !_allowedTypes.Contains(file.ContentType))
+                {
+                    return new ValidationResult("Only image files are allowed (JPEG, PNG, GIF).");
+                }
+            }
+
+            return ValidationResult.Success;
+        }
+    }
 }
+

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using ASI.Basecode.Data.Models;
 using ASI.Basecode.Services.ServiceModels;
 using ASI.Basecode.Services.Services;
@@ -13,7 +14,7 @@ namespace ASI.Basecode.Services.Interfaces
                 IEnumerable<TicketViewModel> RetrieveAll();
                 IQueryable<TicketViewModel> GetUserTickets(Guid id, byte? status, string? searchTerm, string? sortOrder, int? page);
                 IEnumerable<TicketViewModel> GetAgentTickets(Guid id);
-                void Add(TicketViewModel ticket);
+                Task AddAsync(TicketViewModel ticket);
                 void Update(TicketViewModel ticket);
                 void Delete(string id);
                 TicketViewModel GetById(string id);

@@ -49,6 +49,7 @@
   <ItemGroup>
     <Folder Include="wwwroot\css\Agent\" />
     <Folder Include="wwwroot\img\" />
+    <Folder Include="wwwroot\uploads\5811c8f9-8f83-402b-b14d-1301f50b590c\82481c90-311f-4e2f-9cc2-64cebce10162\" />
   </ItemGroup>
 
   <ItemGroup>

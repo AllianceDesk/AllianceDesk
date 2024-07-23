@@ -39,25 +39,11 @@
 
     <nav>
         <div id="buttonContainer">
-
-            <a asp-action="Tickets"
-               class="btn btn-primary @(Model.CurrentStatus == 0 ? "activeButton" : "inactiveButton")">
-                All
-            </a>
-
             @foreach (var status in Model.Statuses)
             {
                 <a asp-action="Tickets" asp-route-status=@status.Key class="btn btn-primary @(status.Key == Model.CurrentStatus.ToString() ? "activeButton" : "inactiveButton")">@status.Value</a>
             }
-        </div>
-
-        <div class="flex-Row gap-2 justify-content-center align-center">
-            <div class="j-search-container | flex-Row align-center justify-content-center">
-                <div class="input-group">
-                    <input class="bg-transparent search-input" type="text" placeholder="Search" id="searchTerm" value="@Model.CurrentSearchTerm" />
-                </div>
-            </div>
-        </div>
+        </div> 
 
         <select class="form-select nav-select" id="floatingSelect" aria-label="Floating label select example">
             <option selected>Date</option>
@@ -72,17 +58,8 @@
                 @foreach (var item in Model.Tickets)
                 {
 					<div class="ticket-container">
-						<a href="#" class="ticket-link"
-							data-bs-toggle="modal"
-							data-bs-target="#viewTicket"
-							data-creator-name="@item.CreatorName"
-							data-date-created="@item.DateCreated"
-							data-title="@item.Title"
-							data-description="@item.Description"
-                            data-latest-update="@(@item.LatestUpdate?.Message ?? "No update available")
-                            data-latest-update-date="@(@item.LatestUpdate?.ModifiedAt.ToString("yyyy-MM-ddTHH:mm:ss") ?? "No update available")>
+						<a href="#" class="ticket-link" data-bs-toggle="modal" data-bs-target="#viewTicket" data-ticket-id="@item.TicketId">
                             <div class="top-container">
-								@*  <img class="image" src="@item.Image" alt="image"> *@
 								<div class="nameDateContainer">
 
 									<h5 class="name">
@@ -201,19 +178,18 @@
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content p-3">
                     <div id="main_createcard">
-
                         <div class="top_modal d-flex justify-content-between align-items-center mb-3 pl-2">
                             <h3>New Ticket</h3>
                             <button type="button" class="btn x_button" data-bs-dismiss="modal"><i class='bx bx-x bx-sm x_icon'></i></button>
                         </div>
-
-                        <form asp-controller="User" asp-action="TicketCreate" method="post">
+                        
+                        <form asp-controller="User" asp-action="TicketCreate" method="post" enctype="multipart/form-data">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <div class="form-floating mb-3">
                                 <input asp-for="Ticket.Title" type="text" class="form-control" id="floatingInput" placeholder="Ticket Title">
                                 <span asp-validation-for="Ticket.Title" class="text-danger"></span>
                                 <label for="floatingInput">Ticket Title</label>
-                            </div>                           
+                            </div>
 
                             <div class="form-floating mb-3">
                                 <select asp-for="Ticket.CategoryId" class="form-select" id="floatingSelect1" aria-label="Category Options">
@@ -224,7 +200,7 @@
                                 </select>
                                 <span asp-validation-for="Ticket.CategoryId" class="text-danger"></span>
                                 <label for="floatingSelect1">Category Options</label>
-                            </div>                            
+                            </div>
 
                             <div class="form-floating mb-3">
                                 <select asp-for="Ticket.PriorityId" class="form-select" id="floatingSelect2" aria-label="Priority Options">
@@ -235,33 +211,31 @@
                                 </select>
                                 <span asp-validation-for="Ticket.PriorityId" class="text-danger"></span>
                                 <label for="floatingSelect2">Priority Options</label>
-                            </div>							
+                            </div>
 
                             <div class="form-floating mb-3">
                                 <textarea asp-for="Ticket.Description" class="form-control" placeholder="Description" id="floatingTextarea2" style="height: 100px"></textarea>
                                 <span asp-validation-for="Ticket.Description" class="text-danger"></span>
                                 <label for="floatingTextarea2">Description</label>
-                            </div>							                            
+                            </div>
 
-							<div class="d-flex pr-3">
+                            <div class="d-flex pr-3">
 
                                 <div class="form-group">
-                                    <input type="file" asp-for="Ticket.Attachments" class="btn  file_button" multiple />
-                                    <span asp-validation-for="Ticket.Attachments" class="text-danger"></span>
+                                    <input type="file" asp-for="Ticket.AttachmentFiles" class="btn  file_button" multiple accept="image/*" />
+                                    <span asp-validation-for="Ticket.AttachmentFiles" class="text-danger"></span>
                                 </div>
 
-								<button type="submit" class="btn button button_size">                                    
-                                    Submit 
+                                <button type="submit" class="btn button button_size">
+                                    Submit
                                 </button>
-
-							</div>
-
+                            </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-
+        
         <div class="modal fade" id="editTicket" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content p-3">
@@ -322,17 +296,19 @@
                         <div class="top-container">
                             <img class="image" src="/img/profile-logo.png" alt="image">
                             <div class="nameDateContainer">
-                                <h5 class="name"></h5>
-                                <p class="date"></p>
+                                <h5 class="name" id="ViewName">Name</h5>
+                                <p class="date" id="ViewDate">Date</p>
                             </div>
                         </div>
-                        <h2 class="question"></h2>
-                        <p class="details"></p>
+                        <h2 class="question" id="ViewTitle">Title</h2>
+                        <p class="details" id="ViewDetails">Details</p>
                     </div>
 
+                    <div class="gallery" id="ViewGallery"></div>
+
                     <div class="status-container">
-                        <div class="status1"></div>
-                        <div class="statusdate"></div>
+                        <div class="status" id="ViewStatus"></div>
+                        <div class="statusdate" id="ViewStatusDate"></div>
                     </div>
                 </div>
             </div>
@@ -441,7 +417,7 @@
 
         <div id="search-container">
             <i class='bx bx-search'></i>
-            <input type="text" id="search-input" placeholder="Search Tickets">
+            <input type="text" id="search-input" placeholder="Search Tickets" value="@Model.CurrentSearchTerm">
         </div>
 
         <div id="button-container">
@@ -496,28 +472,7 @@
         const viewTicketModal = new bootstrap.Modal(document.getElementById('viewTicket'));
         const editTicketModal = new bootstrap.Modal(document.getElementById('editTicket'));
         const feedbackModal = new bootstrap.Modal(document.getElementById('fillFeedback'));
-        const ticketActionModal = new bootstrap.Modal(document.getElementById('ticketActionModal'));
-        
-        const ticketLinks = document.querySelectorAll('.ticket-link');
-
-        ticketLinks.forEach(link => {
-            link.addEventListener('click', function (event) {
-                var modal = document.querySelector('#viewTicket');
-                var creatorName = link.getAttribute('data-creator-name');
-                var dateCreated = link.getAttribute('data-date-created');
-                var title = link.getAttribute('data-title');
-                var description = link.getAttribute('data-description');
-                var latestUpdate = link.getAttribute('data-latest-update');
-                var latestUpdateDate = link.getAttribute('data-latest-update-date');
-
-                modal.querySelector('.name').textContent = creatorName;
-                modal.querySelector('.date').textContent = dateCreated;
-                modal.querySelector('.question').textContent = title;
-                modal.querySelector('.details').textContent = description;
-                modal.querySelector('.status1').textContent = latestUpdate;
-                modal.querySelector('.statusdate').textContent = latestUpdateDate;
-            });
-        });
+        const ticketActionModal = new bootstrap.Modal(document.getElementById('ticketActionModal')); 
 
         var dpIcon = document.querySelector('.dpicn');
         var dropdownMenu = document.getElementById('dropdownMenu');
@@ -532,8 +487,7 @@
             }
         });
 
-        // Add a keypress event listener to handle search input
-        document.getElementById('searchTerm').addEventListener('keypress', function (event) {
+        document.getElementById('search-input').addEventListener('keypress', function (event) {
             if (event.keyCode === 13) {
                 event.preventDefault(); // Prevent form submission
 
@@ -557,6 +511,7 @@
         document.querySelectorAll('[data-bs-toggle="modal"]').forEach(element => {
             element.addEventListener('click', function () {
                 const target = this.getAttribute('data-bs-target');
+                
                 if (target === '#editTicket') {
                     var ticketId = this.getAttribute('data-ticket-id');
                     document.querySelector('#editTicketForm').action = `/User/Tickets/${ticketId}/Edit`;
@@ -572,13 +527,15 @@
                             editTicketModal.show();
                         })
                         .catch(error => console.error('Error fetching ticket data:', error));
-                } else if (target === '#fillFeedback') {
+                }
+                else if (target === '#fillFeedback') {
 
                     var ticketId = this.getAttribute('data-ticket-id');
                     document.querySelector('#Feedback_TicketId').value = ticketId;
                     document.querySelector('#fillFeedbackForm').action = `/User/Tickets/${ticketId}/Feedback`;
                     feedbackModal.show();
-                } else if (target === '#ticketActionModal') {
+                }
+                else if (target === '#ticketActionModal') {
                     var actionType = this.getAttribute('data-action-type');
                     var ticketId = this.getAttribute('data-ticket-id');
 
@@ -605,20 +562,42 @@
                     document.getElementById('ticketActionForm').action = formAction;
                 }
                 else if(target == '#viewTicket') {
-                    var creatorName = link.getAttribute('data-creator-name');
-                    var dateCreated = link.getAttribute('data-date-created');
-                    var title = link.getAttribute('data-title');
-                    var description = link.getAttribute('data-description');
-                    var latestUpdate = link.getAttribute('data-latest-update');
-                    var latestUpdateDate = link.getAttribute('data-latest-update-date');
-                     
-                    viewTicketModal.querySelector('.name').textContent = creatorName;
-                    viewTicketModal.querySelector('.date').textContent = dateCreated;
-                    viewTicketModal.querySelector('.question').textContent = title;
-                    viewTicketModal.querySelector('.details').textContent = description;
-                    viewTicketModal.querySelector('.status1').textContent = latestUpdate;
-                    viewTicketModal.querySelector('.statusdate').textContent = latestUpdateDate;
-                    viewTicketModal.show();
+                    var ticketId = this.getAttribute('data-ticket-id');
+
+                    fetch(`/User/Tickets/${ticketId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                                       
+                            console.log(data);
+                            document.querySelector('#ViewName').textContent = data.user;
+                            document.querySelector('#ViewDate').textContent = data.dateCreated;
+                            document.querySelector('#ViewTitle').textContent = data.title;
+                            document.querySelector('#ViewDetails').textContent = data.description;
+                            document.querySelector('#ViewStatus').textContent = data.latestUpdate;
+                            document.querySelector('#ViewStatusDate').textContent = data.latestUpdateDate;
+
+                            const gallery = document.querySelector('#ViewGallery');
+                            gallery.innerHTML = '';
+
+                            data.files.forEach(image => {
+                                const anchor = document.createElement('a');
+                                anchor.href = image;
+                                anchor.setAttribute('data-lightbox', 'ticket-gallery');
+                                anchor.setAttribute('data-title', data.title);
+
+                                const img = document.createElement('img');
+                                img.src = image;
+                                img.alt = data.title
+                                img.classList.add('gallery-thumbnail');
+
+                                anchor.appendChild(img);
+                                gallery.appendChild(anchor);
+                            });
+
+                            viewTicketModal.show();
+
+                        })
+                        .catch(error => console.error('Error fetching ticket data:', error));
                 } else {
                     const modal = new bootstrap.Modal(document.querySelector(target));
                     modal.show();

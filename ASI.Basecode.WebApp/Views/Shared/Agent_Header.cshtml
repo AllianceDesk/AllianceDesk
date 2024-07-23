@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Http
 
 @inject IHttpContextAccessor HttpContextAccessor
-<div class="flex-Row justify-content-between py-2" style="border-bottom: 2px solid grey; position: sticky;">
+<div class="flex-Row justify-content-between py-2" style="border-bottom: 2px solid grey;">
     <div class="logosec hover-pointer">
         <img src="~/img/alliancedesk-logo.png"
              style="width: 185px;" alt="logo"
@@ -20,7 +20,7 @@
                 <img src="~/img/profile-logo.png" class="dpicn hover-pointer" alt="dp">           
             </div>
 
-            <div data-agent-settings class="hidden absolute" style="top:2rem; left:-5rem; background: white; z-index: 10; border: 1px solid black; border-radius: 3px; padding: 0.5rem 1rem;">
+            <div data-agent-settings class="hidden absolute" style="top:2rem; left:-5rem; background: white; z-index: 100; border: 1px solid black; border-radius: 3px; padding: 0.5rem 1rem;">
                            
                     <div>
                         <a asp-action="AgentProfile" asp-controller="Agent" class="flex flex-Row align-items-center gap-2">

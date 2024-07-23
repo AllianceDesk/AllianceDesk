@@ -11,10 +11,14 @@
 @if (ViewBag.RoleId == 1) {
     @Html.Partial("Admin_Header")
 }
+else if (ViewBag.RoleId == 2)
+{
+    @Html.Partial("Agent_Header")
+}
 <div @(ViewBag.RoleId == 3 ? "id=container" : "class=main")>
     @if (ViewBag.RoleId == 3)
     {
-        <header>
+        <header class="py-2">
             <div class="logo">
                 <img src="~/img/alliancedesk-logo.png" style="width: 185px;" alt="logo" onclick="window.location.href = '@Url.Action("Index", "Home")';">
             </div>
@@ -124,10 +128,84 @@
                 </a>
             }
         </main>
-    } 
-        else
+    }
+    else if (ViewBag.RoleId == 1)
     {
         @Html.Partial("Admin_Sidebar")
+        <div class="admin-body p-y-3 relative bg-grey flex flex-col gap-1">
+            <nav>
+
+                <div class="nav_one mb-3">
+
+                    <h3>Knowledge Base</h3>
+
+                    <div class="add_button">
+
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-danger me-1" data-bs-toggle="modal" data-bs-target="#create" id="addArticleBtn">Add Article</button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="nav_two">
+                    <div class="d-flex" style="gap:2em;">
+                        <a class="active_link" asp-controller="Article" asp-action="Index" style="text-decoration: none;">Articles</a>
+                        <a class="inactive_link d-flex" asp-controller="Article" asp-action="MyFavorites" style="text-decoration: none; ">
+                            My Favorites
+                            @if (ViewBag.FavoriteCount != null && ViewBag.FavoriteCount > 0)
+                            {
+                                <span class="article_badge ml-2">@ViewBag.FavoriteCount</span>
+                            }
+                        </a>
+                    </div>
+
+                    <div class="filter_button">
+
+                        <form asp-action="Index" method="get" asp-controller="Article" id="searchForm" class="d-flex">
+                            <div class="input-group mr-3">
+                                <button class="btn btn-outline-secondary" type="submit" id="button-search" style="background-color: whitesmoke; border: 1px solid #ccc; outline: none; box-shadow: none;"><i class='bx bx-search bx-xs bx-fw' style="color: #45474B; cursor: pointer;"></i></button>
+                                <input name="searchString" id="searchInput" type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="button-search" style="background-color: whitesmoke; border: 1px solid #ccc; outline: none; box-shadow: none;" value="@ViewBag.SearchString">
+                            </div>
+
+                            @Html.DropDownList("category", new Microsoft.AspNetCore.Mvc.Rendering.SelectList(new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>
+                        {
+                        new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Default", Value = "default" },
+                        new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Technical", Value = "Technical" },
+                        new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Billing", Value = "Billing" },
+                        new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "General Questions", Value = "General Questions" },
+                        new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Account Management", Value = "Account Management" },
+                        new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Customer Support", Value = "Customer Support" },
+                        new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Others", Value = "Others" }
+                        }, "Value", "Text", ViewBag.CategoryString), new { @class = "form-select", @aria_label = "Default select example", @style = "width: 16em; outline: none; box-shadow: none; border: 1px solid #ccc; background-color: whitesmoke;", @onchange = "document.getElementById('searchForm').submit();" })
+                        </form>
+                    </div>
+                </div>
+            </nav>
+
+            <main>
+                @foreach (var item in Model.Articles)
+                {
+                    <a href="#" class="link_card" style="text-decoration: none; color: inherit;">
+                        <div class="article_card" data-bs-toggle="modal" data-bs-target="#detail" data-article-detail-btn data-article-id="@item.ArticleId">
+                            <div class="article_top mb-4">
+                                <h5>@Html.DisplayFor(modelItem => item.Title)</h5>
+                                <p>@Html.DisplayFor(modelItem => item.DateUpdated)</p>
+                            </div>
+
+                            <p class="mb-3" style="font-size: 14px;">@Html.DisplayFor(modelItem => item.Body)</p>
+
+                            <h6 class="article_category" style="width: 14em; text-align: center;">@Html.DisplayFor(modelItem => item.CategoryNavigation)</h6>
+
+                        </div>
+                    </a>
+                }
+            </main>
+        </div>
+    } else
+    {
+        @Html.Partial("Agent_Sidebar")
         <div class="admin-body p-y-3 relative bg-grey flex flex-col gap-1">
             <nav>
 
@@ -341,16 +419,17 @@
         $(document).on('click', '[data-article-addFavorites-btn]', function () {
             var articleId = $(this).data('article-id');
 
-            // Perform AJAX request to fetch article details
+            // Perform AJAX request to add to favorites
             $.ajax({
                 url: '/KnowledgeBase/Article-AddFavorite',
-                type: 'Post',
+                type: 'POST',
                 data: { articleId: articleId },
                 success: function (result) {
-                    alert('Article added to favorites successfully!');
+                    // Refresh the article detail modal
+                    loadArticleDetails(articleId);
                 },
                 error: function (error) {
-                    console.error('Error loading article details:', error);
+                    console.error('Error adding article to favorites:', error);
                 }
             });
         });
@@ -358,19 +437,37 @@
         $(document).on('click', '[data-article-removeFavorites-btn]', function () {
             var articleId = $(this).data('article-id');
 
-            // Perform AJAX request to fetch article details
+            // Perform AJAX request to remove from favorites
             $.ajax({
                 url: '/KnowledgeBase/Article-DeleteFavorite',
-                type: 'Post',
+                type: 'POST',
                 data: { articleId: articleId },
                 success: function (result) {
-                    alert('Article remove from favorites successfully!');
+                    // Refresh the article detail modal
+                    loadArticleDetails(articleId);
+                },
+                error: function (error) {
+                    console.error('Error removing article from favorites:', error);
+                }
+            });
+        });
+
+        // Function to load article details
+        function loadArticleDetails(articleId) {
+            $.ajax({
+                url: '/KnowledgeBase/Article-Detail',
+                type: 'GET',
+                data: { articleId: articleId },
+                success: function (result) {
+                    $('#detail .modal-content').html(result);
+                    $('#detail').modal('show');
+                    console.log('Article details successfully loaded!');
                 },
                 error: function (error) {
                     console.error('Error loading article details:', error);
                 }
             });
-        });
+        }
     });
 
 </script>
