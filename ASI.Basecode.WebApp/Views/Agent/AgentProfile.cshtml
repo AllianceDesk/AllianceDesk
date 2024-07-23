@@ -15,7 +15,7 @@
     @Html.Partial("Agent_Sidebar")
     <div class="admin-body p-y-3 relative bg-grey flex flex-col gap-1">
         <div class="modal-admin bg-modal" data-admin-modal-container>
-            <form class="modal-container w-75 br-1 bg-white p-y-1 p-x-2" asp-action="AgentProfile" method="post">
+            <form class="modal-container w-75 br-1 bg-white p-y-1 p-x-2" asp-action="AgentProfile" method="post" data-profile-edit-form>
                 <div class="agents-details | margin-1 bg-white flex-Row gap-2 flex-between p-y-1 p-x-1 align-center">
                     <div class="flex flex-col gap-4">
                         <h2>Agent Profile</h2>
@@ -77,7 +77,30 @@
     </div>
 </div>
 
-<script>
-    const teams = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
-    console.log("TEAMS", teams)
-</script>
+@section scripts {
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        const teams = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        console.log("TEAMS", teams)
+
+        //POST req for submitting form when user details are edited
+        $(document).on('submit', '[data-profile-edit-form]', function (e) {
+            e.preventDefault();
+            var form = $(this);
+            $.ajax({
+                url: '/AgentProfileEdit',
+                type: 'POST',
+                data: form.serialize(),
+                success: function (response) {
+                    // Handle successful form submission, such as closing the modal and updating the list
+                    alert('User updated successfully');
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error submitting form:', status, error);
+                }
+            });
+        });
+    </script>
+
+}

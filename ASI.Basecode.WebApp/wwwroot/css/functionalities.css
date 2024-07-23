@@ -35,6 +35,11 @@ p, .H1, .H2, .H3, .H4, .H5, .H6 {
     background-color: rgba(217, 217, 217, 0.9);
 }
 
+
+.bg-green {
+    background-color: green;
+}
+
 .bg-red {   
     background-color: #E21818;
 }

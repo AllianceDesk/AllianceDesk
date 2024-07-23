@@ -28,21 +28,22 @@
     };
 }
 
-<div id="container">
-    @Html.Partial("Agent_Header")
+@Html.Partial("Agent_Header")
+<div class="main">
 
-    <nav>
-        <div id="buttonContainer">
-            <a asp-action="Tickets" class="btn btn-primary @(ViewBag.CurrentStatus == "All" ? "activeButton" : "inactiveButton")">All</a>
+    @Html.Partial("Agent_Sidebar")
+    <div class="admin-body p-y-3 relative bg-grey flex flex-col gap-1">
+
+        <div class="flex-Row justify-content-between">
+            <div id="buttonContainer">
+                <a asp-action="Tickets" class="btn btn-primary @(ViewBag.CurrentStatus == "All" ? "activeButton" : "inactiveButton")">All</a>
+            </div>
+
+            <select class="form-select nav-select" id="floatingSelect" aria-label="Floating label select example">
+                <option selected>Date</option>
+                <option value="1">Category</option>
+            </select>
         </div>
-
-        <select class="form-select nav-select" id="floatingSelect" aria-label="Floating label select example">
-            <option selected>Date</option>
-            <option value="1">Category</option>
-        </select>
-    </nav>
-
-    <main>
         <div id="card_content">
        
                 <div class="ticket-container">
@@ -207,9 +208,9 @@
             </div>
         </div>
 
-    </main>
+    </div>
 
-    <div id="sidebar">
+@*     <div id="sidebar">
 
         <nav class="admin-sidebar flex flex-col gap-1 bg-White">
 
@@ -244,7 +245,7 @@
 
         </div>
 
-    </div>
+    </div> *@
 
 </div>
 

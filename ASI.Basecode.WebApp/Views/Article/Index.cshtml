@@ -8,8 +8,11 @@
     ViewData["Title"] = "Knowledge Base";
 }
 
-<div id="container">
-    @if (ViewBag.RoleId == 1)
+@if (ViewBag.RoleId == 1) {
+    @Html.Partial("Admin_Header")
+}
+<div @(ViewBag.RoleId == 3 ? "id=container" : "class=main")>
+    @if (ViewBag.RoleId == 3)
     {
         <header>
             <div class="logo">
@@ -38,14 +41,6 @@
 
             </div>
         </header>
-    }
-    else
-    {
-        @Html.Partial("Agent_Header")
-    }
-
-    @if (ViewBag.RoleId == 1)
-    {
         <div id="sidebar">
 
             <a asp-controller="Admin" asp-action="Dashboard" data-admin-btn class="inactive-button" style="text-decoration: none;"><i class='bx bx-grid-alt bx-sm as' style="align-self:center; text-decoration: none;"></i>  <p>Overview</p> </a>
@@ -59,58 +54,44 @@
             <a asp-controller="Admin" asp-action="AnalyticsOverallMetrics" data-admin-btn class="inactive-button" style="text-decoration: none;"><i class='bx bx-objects-vertical-bottom bx-sm as' style="align-self:center; text-decoration: none;"></i> <p>Analytics</p> </a>
 
         </div>
-    }
-    else
-    {
-        <div id="sidebar">
 
-            <a asp-controller="Agent" asp-action="Dashboard" data-admin-btn class="inactive-button" style="text-decoration: none;"><i class='bx bx-grid-alt bx-sm as' style="align-self:center; text-decoration: none;"></i>  <p>Overview</p> </a>
+        <nav>
 
-            <a asp-controller="Agent" asp-action="Teams" data-admin-btn class="inactive-button" style="text-decoration: none;"><i class='bx bx-group bx-sm as' style="align-self:center; text-decoration: none;"></i> <p>Team</p> </a>
+            <div class="nav_one mb-3">
 
-            <a asp-controller="Article" asp-action="Index" data-admin-btn class="active-button" style="text-decoration: none;"><i class='bx bx-group bx-sm as' style="align-self:center; text-decoration: none;"></i> <p>Knowledge Base</p> </a>
+                <h3>Knowledge Base</h3>
 
-        </div>
-    }
+                <div class="add_button">
 
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-danger me-1" data-bs-toggle="modal" data-bs-target="#create" id="addArticleBtn">Add Article</button>
+                    </div>
 
-    <nav>
-
-        <div class="nav_one mb-3">
-
-            <h3>Knowledge Base</h3>
-
-            <div class="add_button">
-
-                <div class="btn-group">
-                    <button type="button" class="btn btn-danger me-1" data-bs-toggle="modal" data-bs-target="#create" id="addArticleBtn">Add Article</button>
                 </div>
 
             </div>
 
-        </div>
+            <div class="nav_two">
+                <div class="d-flex" style="gap:2em;">
+                    <a class="active_link" asp-controller="Article" asp-action="Index" style="text-decoration: none;">Articles</a>
+                    <a class="inactive_link d-flex" asp-controller="Article" asp-action="MyFavorites" style="text-decoration: none; ">
+                        My Favorites
+                        @if (ViewBag.FavoriteCount != null && ViewBag.FavoriteCount > 0)
+                        {
+                            <span class="article_badge ml-2">@ViewBag.FavoriteCount</span>
+                        }
+                    </a>
+                </div>
 
-        <div class="nav_two">
-            <div class="d-flex" style="gap:2em;">
-                <a class="active_link" asp-controller="Article" asp-action="Index" style="text-decoration: none;">Articles</a>
-                <a class="inactive_link d-flex" asp-controller="Article" asp-action="MyFavorites" style="text-decoration: none; ">
-                    My Favorites
-                    @if (ViewBag.FavoriteCount != null && ViewBag.FavoriteCount > 0)
-                    {
-                        <span class="article_badge ml-2">@ViewBag.FavoriteCount</span>
-                    }
-                </a>
-            </div>
+                <div class="filter_button">
 
-            <div class="filter_button">
+                    <form asp-action="Index" method="get" asp-controller="Article" id="searchForm" class="d-flex">
+                        <div class="input-group mr-3">
+                            <button class="btn btn-outline-secondary" type="submit" id="button-search" style="background-color: whitesmoke; border: 1px solid #ccc; outline: none; box-shadow: none;"><i class='bx bx-search bx-xs bx-fw' style="color: #45474B; cursor: pointer;"></i></button>
+                            <input name="searchString" id="searchInput" type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="button-search" style="background-color: whitesmoke; border: 1px solid #ccc; outline: none; box-shadow: none;" value="@ViewBag.SearchString">
+                        </div>
 
-                <form asp-action="Index" method="get" asp-controller="Article" id="searchForm" class="d-flex">
-                    <div class="input-group mr-3">
-                        <button class="btn btn-outline-secondary" type="submit" id="button-search" style="background-color: whitesmoke; border: 1px solid #ccc; outline: none; box-shadow: none;"><i class='bx bx-search bx-xs bx-fw' style="color: #45474B; cursor: pointer;"></i></button>
-                        <input name="searchString" id="searchInput" type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="button-search" style="background-color: whitesmoke; border: 1px solid #ccc; outline: none; box-shadow: none;" value="@ViewBag.SearchString">
-                    </div>
-                
-                    @Html.DropDownList("category", new Microsoft.AspNetCore.Mvc.Rendering.SelectList(new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>
+                        @Html.DropDownList("category", new Microsoft.AspNetCore.Mvc.Rendering.SelectList(new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>
                     {
                     new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Default", Value = "default" },
                     new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Technical", Value = "Technical" },
@@ -120,29 +101,113 @@
                     new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Customer Support", Value = "Customer Support" },
                     new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Others", Value = "Others" }
                     }, "Value", "Text", ViewBag.CategoryString), new { @class = "form-select", @aria_label = "Default select example", @style = "width: 16em; outline: none; box-shadow: none; border: 1px solid #ccc; background-color: whitesmoke;", @onchange = "document.getElementById('searchForm').submit();" })
-                </form>
+                    </form>
+                </div>
             </div>
-        </div>
-    </nav>
-        
-    <main>
-        @foreach (var item in Model.Articles){
-            <a href="#" class="link_card" style="text-decoration: none; color: inherit;">
-                <div class="article_card" data-bs-toggle="modal" data-bs-target="#detail" data-article-detail-btn data-article-id="@item.ArticleId">
-                    <div class="article_top mb-4">
-                        <h5>@Html.DisplayFor(modelItem => item.Title)</h5>
-                        <p>@Html.DisplayFor(modelItem => item.DateUpdated)</p>
+        </nav>
+
+        <main>
+            @foreach (var item in Model.Articles)
+            {
+                <a href="#" class="link_card" style="text-decoration: none; color: inherit;">
+                    <div class="article_card" data-bs-toggle="modal" data-bs-target="#detail" data-article-detail-btn data-article-id="@item.ArticleId">
+                        <div class="article_top mb-4">
+                            <h5>@Html.DisplayFor(modelItem => item.Title)</h5>
+                            <p>@Html.DisplayFor(modelItem => item.DateUpdated)</p>
+                        </div>
+
+                        <p class="mb-3" style="font-size: 14px;">@Html.DisplayFor(modelItem => item.Body)</p>
+
+                        <h6 class="article_category" style="width: 14em; text-align: center;">@Html.DisplayFor(modelItem => item.CategoryNavigation)</h6>
+
+                    </div>
+                </a>
+            }
+        </main>
+    } 
+        else
+    {
+        @Html.Partial("Admin_Sidebar")
+        <div class="admin-body p-y-3 relative bg-grey flex flex-col gap-1">
+            <nav>
+
+                <div class="nav_one mb-3">
+
+                    <h3>Knowledge Base</h3>
+
+                    <div class="add_button">
+
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-danger me-1" data-bs-toggle="modal" data-bs-target="#create" id="addArticleBtn">Add Article</button>
+                        </div>
+
                     </div>
 
-                    <p class="mb-3" style="font-size: 14px;">@Html.DisplayFor(modelItem => item.Body)</p>
-
-                    <h6 class="article_category" style="width: 14em; text-align: center;">@Html.DisplayFor(modelItem => item.CategoryNavigation)</h6>
-                    
                 </div>
-            </a>
-        }
-    </main>
+
+                <div class="nav_two">
+                    <div class="d-flex" style="gap:2em;">
+                        <a class="active_link" asp-controller="Article" asp-action="Index" style="text-decoration: none;">Articles</a>
+                        <a class="inactive_link d-flex" asp-controller="Article" asp-action="MyFavorites" style="text-decoration: none; ">
+                            My Favorites
+                            @if (ViewBag.FavoriteCount != null && ViewBag.FavoriteCount > 0)
+                            {
+                                <span class="article_badge ml-2">@ViewBag.FavoriteCount</span>
+                            }
+                        </a>
+                    </div>
+
+                    <div class="filter_button">
+
+                        <form asp-action="Index" method="get" asp-controller="Article" id="searchForm" class="d-flex">
+                            <div class="input-group mr-3">
+                                <button class="btn btn-outline-secondary" type="submit" id="button-search" style="background-color: whitesmoke; border: 1px solid #ccc; outline: none; box-shadow: none;"><i class='bx bx-search bx-xs bx-fw' style="color: #45474B; cursor: pointer;"></i></button>
+                                <input name="searchString" id="searchInput" type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="button-search" style="background-color: whitesmoke; border: 1px solid #ccc; outline: none; box-shadow: none;" value="@ViewBag.SearchString">
+                            </div>
+
+                            @Html.DropDownList("category", new Microsoft.AspNetCore.Mvc.Rendering.SelectList(new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>
+                        {
+                        new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Default", Value = "default" },
+                        new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Technical", Value = "Technical" },
+                        new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Billing", Value = "Billing" },
+                        new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "General Questions", Value = "General Questions" },
+                        new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Account Management", Value = "Account Management" },
+                        new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Customer Support", Value = "Customer Support" },
+                        new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Others", Value = "Others" }
+                        }, "Value", "Text", ViewBag.CategoryString), new { @class = "form-select", @aria_label = "Default select example", @style = "width: 16em; outline: none; box-shadow: none; border: 1px solid #ccc; background-color: whitesmoke;", @onchange = "document.getElementById('searchForm').submit();" })
+                        </form>
+                    </div>
+                </div>
+            </nav>
+
+            <main>
+                @foreach (var item in Model.Articles)
+                {
+                    <a href="#" class="link_card" style="text-decoration: none; color: inherit;">
+                        <div class="article_card" data-bs-toggle="modal" data-bs-target="#detail" data-article-detail-btn data-article-id="@item.ArticleId">
+                            <div class="article_top mb-4">
+                                <h5>@Html.DisplayFor(modelItem => item.Title)</h5>
+                                <p>@Html.DisplayFor(modelItem => item.DateUpdated)</p>
+                            </div>
+
+                            <p class="mb-3" style="font-size: 14px;">@Html.DisplayFor(modelItem => item.Body)</p>
+
+                            <h6 class="article_category" style="width: 14em; text-align: center;">@Html.DisplayFor(modelItem => item.CategoryNavigation)</h6>
+
+                        </div>
+                    </a>
+                }
+            </main>
+        </div>
+    }
+
+
+
+
+   
     
+
+
 </div>
 
 <div class="modal fade" id="create" tabindex="-1">

@@ -13,7 +13,7 @@
 @Html.Partial("Admin_Header")
 <div class="main">
     @Html.Partial("Admin_Sidebar")
-    <div class="admin-body p-y-3 relative bg-grey">
+    <div class="admin-body py-3 relative bg-grey">
         @* Status *@
         <p class="hidden" data-aom-open>@Model.TicketCountsByStatus["Open"]</p>
         <p class="hidden" data-aom-resolved>@Model.TicketCountsByStatus["Resolved"]</p>

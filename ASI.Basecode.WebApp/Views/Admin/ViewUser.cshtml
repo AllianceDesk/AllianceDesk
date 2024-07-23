@@ -17,7 +17,7 @@
 @Html.Partial("Admin_Header")
 <div class="main">
     @Html.Partial("Admin_Sidebar")
-    <div class="admin-body p-y-3 relative bg-grey flex flex-col gap-1">
+    <div class="admin-body py-3 relative bg-grey flex flex-col gap-1">
 
         <div style="padding-right: 2rem; border-right: 1.5px solid #9E9E9E;">
             <h1>User Directory</h1>
@@ -236,7 +236,7 @@
         const pageInfo = document.getElementById('page-info');
         const pagenationCtnr = document.querySelector('[data-pagination-container]')
 
-        const usersPerPage = 5;
+        const usersPerPage = 10;
         let currentPage = 1;
 
         /* PAGINATION */

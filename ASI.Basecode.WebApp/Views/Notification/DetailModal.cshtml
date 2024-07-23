@@ -4,14 +4,19 @@
     <link rel="stylesheet" href="~/css/user_tickets.css" />
 }
 
-<div class="ticket-modal1">
-    <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Ticket Created Successfully - #@Model.TicketNumber</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        <h6>Ticket Number: @Model.TicketNumber</h6>
-        <h6>Title: @Model.Title</h6>
-        <h6>Date: @Model.DateCreated</h6>
-        <h6>Description: @Model.Body</h6>
-        <h6>Our team is currently reviewing your request, and we will get back to you as soon as possible. </h6>
+<div class="ticket-modal1" style="padding: 0;">
+    <div class="modal-header flex flex-col gap-1">
+        <div class="flex-Row justify-content-between w-100 align-items-center pb-2 mb-3" style="border-bottom: 2px solid grey;">
+            <h5 class="modal-title font-weight-bold " id="exampleModalLabel">
+               #@Model.TicketNumber
+            </h5>
+            <button type="button" class="btn-close cursor-pointer " data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <p><span class="font-weight-bold">Ticket Number:</span> @Model.TicketNumber</p>
+        <p><span class="font-weight-bold">Title:</span> @Model.Title</p>
+        <p><span class="font-weight-bold mb-3">Date:</span> @Model.DateCreated</p>
+        <p><span class="font-weight-bold">Description:</span> @Model.Body</p>
+        <p>Our team is currently reviewing your request, and we will get back to you as soon as possible. </p>
     </div>
+    <p class="py-1 px-4 color-white " style="background-color: green;">Ticket Created Successfully</p>
 </div>

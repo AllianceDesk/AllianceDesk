@@ -115,6 +115,18 @@ namespace ASI.Basecode.WebApp.Controllers
             return View(userModel);
         }
 
+        [HttpPost("/AgentProfileEdit")]
+        [AllowAnonymous]
+        /// <summary>
+        /// Post Request for Adding a User
+        /// </summary>
+        /// <returns> View User </returns>
+        public IActionResult AgentProfileEdit(UserViewModel user)
+        {
+            _userService.UpdateUser(user);
+
+            return RedirectToAction("AgentProfile");
+        }
 
 
         [HttpGet("PerformanceReport")]
