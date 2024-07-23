@@ -223,7 +223,10 @@ namespace ASI.Basecode.WebApp.Controllers
 
             ViewBag.IsLoginOrRegister = false;
             ViewBag.AgentSidebar = "ViewUser";
-            var users = _userService.GetUsers()
+            var teamId = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).TeamId;
+
+            var agents = _userService.GetAgents()
+                                        .Where(t => t.TeamId == teamId.ToString())
                                         .Select(u => new UserViewModel
                                         {
                                             Name = u.Name,
@@ -235,8 +238,13 @@ namespace ASI.Basecode.WebApp.Controllers
 
             var viewModel = new UserViewModel
             {
-                Users = users
+                Users = agents
             };
+
+            if (teamId == null)
+            {
+                viewModel = null;
+            }
 
             return View(viewModel);
         }
@@ -347,7 +355,7 @@ namespace ASI.Basecode.WebApp.Controllers
                 return RedirectToAction("Index", "AccessDenied");
             }
 
-            var data = _userService.GetUsers().FirstOrDefault(x => x.UserId.ToString() == UserId);
+            var data = _userService.GetUserById(UserId);
             if (data == null)
             {
                 return NotFound(); 
@@ -359,7 +367,8 @@ namespace ASI.Basecode.WebApp.Controllers
                 Name = data.Name,
                 Email = data.Email,
                 RoleId = data.RoleId,
-                TeamName = _userService.GetTeams().FirstOrDefault(t => t.TeamId == data.TeamId.ToString())?.TeamName
+                TeamName = _userService.GetTeams().FirstOrDefault(t => t.TeamId == data.TeamId.ToString())?.TeamName,
+                RecentUserActivities = _userService.GetUserActivity(UserId),
             };
 
             return PartialView("AgentDetails", userModel);
