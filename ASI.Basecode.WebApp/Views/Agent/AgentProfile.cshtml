@@ -16,6 +16,7 @@
     <div class="admin-body p-y-3 relative bg-grey flex flex-col gap-1">
         <div class="modal-admin bg-modal" data-admin-modal-container>
             <form class="modal-container w-75 br-1 bg-white p-y-1 p-x-2" asp-action="AgentProfile" method="post" data-profile-edit-form>
+                @Html.HiddenFor(model => model.UserId)
                 <div class="agents-details | margin-1 bg-white flex-Row gap-2 flex-between p-y-1 p-x-1 align-center">
                     <div class="flex flex-col gap-4">
                         <h2>Agent Profile</h2>
@@ -45,7 +46,7 @@
                     </label>
                     <label class="modal-input relative flex">
                         <span>UserName</span>
-                        <input asp-for="UserName" type="text" placeholder="@Model.UserName)" />
+                        <input asp-for="UserName" type="text" value="@Model.UserName" placeholder="" />
                         <span asp-validation-for="UserName" class="text-danger"></span>
                     </label>
                     <label class="modal-input relative flex">

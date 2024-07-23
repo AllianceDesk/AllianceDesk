@@ -153,9 +153,13 @@ namespace ASI.Basecode.WebApp.Controllers
         /// <returns> View User </returns>
         public IActionResult AgentProfileEdit(UserViewModel user)
         {
+            if (user == null)
+            {
+                return NotFound();
+            }
             _userService.UpdateUser(user);
 
-            return RedirectToAction("AgentProfile");
+            return RedirectToAction("Teams");
         }
 
 
