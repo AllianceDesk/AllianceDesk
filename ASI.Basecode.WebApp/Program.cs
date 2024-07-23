@@ -1,11 +1,14 @@
-﻿using System.IO;
-using ASI.Basecode.Data;
+﻿using System;
+using System.IO;
+using ASI.Basecode.Services.Interfaces;
 using ASI.Basecode.WebApp;
 using ASI.Basecode.WebApp.Extensions.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+
 
 var appBuilder = WebApplication.CreateBuilder(new WebApplicationOptions
 {
@@ -35,6 +38,7 @@ app.MapControllerRoute(
     pattern: "{controller=Account}/{action=Login}");
 app.MapControllers();
 app.MapRazorPages();
+
 
 // Run application
 app.Run();

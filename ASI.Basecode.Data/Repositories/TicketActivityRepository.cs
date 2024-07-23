@@ -22,7 +22,7 @@ namespace ASI.Basecode.Data.Repositories
             UnitOfWork.SaveChanges();
         }
 
-        public IEnumerable<TicketActivity> RetrieveAll()
+        public IQueryable<TicketActivity> RetrieveAll()
         {
             return this.GetDbSet<TicketActivity>();
         }

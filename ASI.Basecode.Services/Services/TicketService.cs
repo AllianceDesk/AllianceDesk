@@ -476,7 +476,6 @@ namespace ASI.Basecode.Services.Services
             }
         }
 
-
         #region private methods
         private void Add(Ticket ticket)
         {
@@ -510,6 +509,7 @@ namespace ASI.Basecode.Services.Services
             newNotification.RecipientId = ticket.CreatedBy;
             _notificationRepository.Add(newNotification);
         }
+        
         private async Task FileUploadAsync(List<IFormFile> files, Guid userId, Guid ticketId)
         {
             var folderPath = Path.Combine("wwwroot/uploads", userId.ToString(), ticketId.ToString());
