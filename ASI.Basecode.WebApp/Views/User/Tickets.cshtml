@@ -49,15 +49,7 @@
             {
                 <a asp-action="Tickets" asp-route-status=@status.Key class="btn btn-primary @(status.Key == Model.CurrentStatus.ToString() ? "activeButton" : "inactiveButton")">@status.Value</a>
             }
-        </div>
-
-        <div class="flex-Row gap-2 justify-content-center align-center">
-            <div class="j-search-container | flex-Row align-center justify-content-center">
-                <div class="input-group">
-                    <input class="bg-transparent search-input" type="text" placeholder="Search" id="searchTerm" value="@Model.CurrentSearchTerm" />
-                </div>
-            </div>
-        </div>
+        </div> 
 
         <select class="form-select nav-select" id="floatingSelect" aria-label="Floating label select example">
             <option selected>Date</option>
@@ -441,7 +433,7 @@
 
         <div id="search-container">
             <i class='bx bx-search'></i>
-            <input type="text" id="search-input" placeholder="Search Tickets">
+            <input type="text" id="search-input" placeholder="Search Tickets" id="searchTerm" value="@Model.CurrentSearchTerm">
         </div>
 
         <div id="button-container">

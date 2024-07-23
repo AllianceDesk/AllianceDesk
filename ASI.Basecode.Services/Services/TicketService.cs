@@ -150,6 +150,7 @@ namespace ASI.Basecode.Services.Services
 
             return model.AsQueryable();
         }
+
         public IEnumerable<TicketViewModel> GetAgentTickets(Guid id)
         {
             var tickets = _ticketRepository.GetAgentTicketsById(id);
