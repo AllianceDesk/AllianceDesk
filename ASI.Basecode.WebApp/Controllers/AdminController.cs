@@ -119,8 +119,8 @@ namespace ASI.Basecode.WebApp.Controllers
             var tickets = _ticketService.RetrieveAll();
 
             var now = DateTime.Now;
-            var startOfWeek = now.AddDays(-(int)now.DayOfWeek + (int)DayOfWeek.Monday - 7).Date;
-            var endOfWeek = startOfWeek.AddDays(6);
+            var startOfWeek = now.AddDays(-(int)now.DayOfWeek + (int)DayOfWeek.Monday - 4).Date;
+            var endOfWeek = now.Date.AddDays(1);
 
             var weeklyTickets = tickets.
                 Where(t => t.DateCreated >= startOfWeek && t.DateCreated <= endOfWeek).ToList();
@@ -184,8 +184,8 @@ namespace ASI.Basecode.WebApp.Controllers
             var tickets = _ticketService.RetrieveAll();
 
             var now = DateTime.Now;
-            var startOfWeek = now.AddDays(-(int)now.DayOfWeek + (int)DayOfWeek.Monday - 7).Date;
-            var endOfWeek = startOfWeek.AddDays(6);
+            var startOfWeek = now.AddDays(-(int)now.DayOfWeek + (int)DayOfWeek.Monday - 4).Date;
+            var endOfWeek = now.Date.AddDays(1);
 
             var weeklyTickets = tickets.
                 Where(t => t.DateCreated >= startOfWeek && t.DateCreated <= endOfWeek).ToList();

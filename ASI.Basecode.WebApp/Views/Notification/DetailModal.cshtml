@@ -1,0 +1,17 @@
+﻿@model ASI.Basecode.Services.ServiceModels.NotificationServiceModel
+
+@section styles {
+    <link rel="stylesheet" href="~/css/user_tickets.css" />
+}
+
+<div class="ticket-modal1">
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Ticket Created Successfully - #@Model.TicketNumber</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h6>Ticket Number: @Model.TicketNumber</h6>
+        <h6>Title: @Model.Title</h6>
+        <h6>Date: @Model.DateCreated</h6>
+        <h6>Description: @Model.Body</h6>
+        <h6>Our team is currently reviewing your request, and we will get back to you as soon as possible. </h6>
+    </div>
+</div>

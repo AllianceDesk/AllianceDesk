@@ -46,17 +46,21 @@ namespace ASI.Basecode.WebApp.Controllers
         /// <returns></returns>
         public IActionResult Index()
         {
-            var data = _notificationService.RetrieveAll().Where(u => u.RecipientId == _sessionHelper.GetUserIdFromSession().ToString())
-                        .Select(u => new NotificationServiceModel
-                        {
-                            NotificationId = u.NotificationId,
-                            Title = u.Title,
-                            Body = u.Body,
-                            TicketId = u.TicketId,
-                            RecipientId = u.RecipientId,
-                            DateCreated = u.DateCreated,
-                            TicketNumber = _ticketService.RetrieveAll().Where(t => t.TicketId.ToString() == u.TicketId).FirstOrDefault().TicketNumber,
-                        });
+            var currentUser = _sessionHelper.GetUserIdFromSession().ToString();
+
+            var data = _notificationService.RetrieveAll()
+                .Where(u => u.RecipientId == currentUser)
+                .Select(u => new NotificationServiceModel
+                {
+                    NotificationId = u.NotificationId,
+                    Title = u.Title,
+                    Body = u.Body,
+                    TicketId = u.TicketId,
+                    RecipientId = u.RecipientId,
+                    DateCreated = u.DateCreated,
+                    TicketNumber = u.TicketNumber,
+                })
+                .ToList();
 
             var userId = HttpContext.Session.GetString("UserId");
             if (string.IsNullOrEmpty(userId))
@@ -70,8 +74,43 @@ namespace ASI.Basecode.WebApp.Controllers
                 return NotFound();
             }
 
+            var notifList = new NotificationServiceModel
+            {
+                UserNotifications = data
+            };
+
             ViewBag.Role = user.RoleId;
-            return View(data);
+
+            return View(notifList);
+        }
+
+        [HttpGet("/Notification/DetailModal")]
+        public IActionResult DetailModal(string notificationId)
+        {
+            var data = _notificationService.RetrieveAll().Where(n => n.NotificationId == notificationId).FirstOrDefault();
+
+            if (data == null)
+            {
+                return NotFound();
+            }
+
+            var viewModal = new NotificationServiceModel
+            {
+                NotificationId = data.NotificationId,
+                Title = data.Title,
+                Body = data.Body,
+                TicketId = data.TicketId,
+                RecipientId = data.RecipientId,
+                DateCreated = data.DateCreated,
+                TicketNumber = data.TicketNumber,
+            };
+
+            return PartialView("DetailModal", viewModal);
+        }
+
+        public IActionResult Notif()
+        {
+            return View();
         }
     }
 }
