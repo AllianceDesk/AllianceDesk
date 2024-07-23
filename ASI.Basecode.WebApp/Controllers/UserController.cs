@@ -200,6 +200,13 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpGet("Tickets/{id}/Edit")]
         public IActionResult TicketEdit(string id)
         {
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
+
+            if (userRole != 3)
+            {
+                return RedirectToAction("Index", "AccessDenied");
+            }
+
             var ticket = _ticketService.GetById(id);
 
             if (ticket == null)
