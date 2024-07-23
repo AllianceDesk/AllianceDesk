@@ -53,10 +53,10 @@ else if (ViewBag.Role == 1) {
             <input type="text" id="search-input" placeholder="Search Tickets">
         </div>
 
-        <div id="button-container">
+        <a asp-aciton="" id="button-container">
             <i class='bx bx-list-ul'></i>
             <span class="label-1">Tickets</span>
-        </div>
+        </a>
 
         <div id="instruction-container">
 
@@ -98,7 +98,6 @@ else if (ViewBag.Role == 1) {
             <div class="card-body">
                 <div class="top-content">
                     <h3>Notifications</h3>
-                    <i class='bx bx-x'></i>
                 </div>
 
                 <div class="card-content" id="card_content">
@@ -222,6 +221,19 @@ else if (ViewBag.Role == 1) {
                     console.error('Error loading article details:', error);
                 }
             });
+        });
+        
+        var dpIcon = document.querySelector('.dpicn');
+        var dropdownMenu = document.getElementById('dropdownMenu');
+
+        dpIcon.addEventListener('click', function (event) {
+            event.stopPropagation();
+
+            if (dropdownMenu.style.display === 'block') {
+                dropdownMenu.style.display = 'none';
+            } else {
+                dropdownMenu.style.display = 'block';
+            }
         });
     });
 </script>
