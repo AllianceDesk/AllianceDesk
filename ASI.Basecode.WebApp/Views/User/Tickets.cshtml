@@ -308,7 +308,7 @@
                     <div class="gallery" id="ViewGallery"></div>
 
                     <div class="status-container">
-                        <div class="status" id="ViewStatus"></div>
+                        <div class="status1" id="ViewStatus"></div>
                         <div class="statusdate" id="ViewStatusDate"></div>
                     </div>
                 </div>
@@ -579,7 +579,7 @@
                             document.querySelector('#ViewDate').textContent = data.dateCreated;
                             document.querySelector('#ViewTitle').textContent = data.title;
                             document.querySelector('#ViewDetails').textContent = data.description;
-                            document.querySelector('#ViewStatus').textContent = data.latestUpdate;
+                            document.querySelector('#ViewStatus').textContent = data.latestUpdateMessage;
                             document.querySelector('#ViewStatusDate').textContent = data.latestUpdateDate;
 
                             const gallery = document.querySelector('#ViewGallery');

@@ -46,5 +46,14 @@ namespace ASI.Basecode.Data.Repositories
         {
             return this.GetDbSet<TicketActivity>().Where(x => ticketId.Contains(x.TicketId));
         }
+
+        public async Task AddTicketActivitiesAsync(List<TicketActivity> ticketActivities)
+        {
+            foreach (var ticketActivity in ticketActivities)
+            {
+                this.GetDbSet<TicketActivity>().Add(ticketActivity);
+                await UnitOfWork.SaveChangesAsync();
+            }
+        }
     }
 }

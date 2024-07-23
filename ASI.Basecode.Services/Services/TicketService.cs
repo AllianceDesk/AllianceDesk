@@ -260,11 +260,13 @@ namespace ASI.Basecode.Services.Services
             var priorities = _priorityRepository.RetrieveAll().ToDictionary(p => p.PriorityId, p => p.PriorityName);
             var statuses = _statusRepository.RetrieveAll().ToDictionary(st => st.StatusId, st => st.StatusName);
             var users = _userRepository.GetUsersByIds(userIds).ToDictionary(u => u.UserId, u => u.Name);
-            var ticketActivities = _ticketActivityRepository.GetActivitiesByTicketId(guid).ToList();
+            var ticketActivities = _ticketActivityRepository.GetActivitiesByTicketId(guid)
+                .OrderByDescending(activity => activity.ModifiedAt)
+                .ToList();
 
             var latestUpdate = ticketActivities.FirstOrDefault();
-            var latestUpdateDate = DateTime.Now;
-            var latestUpdateMessage = "No Ticket Activity";
+            var latestUpdateDate = DateTime.Now; // Default value
+            var latestUpdateMessage = "No Ticket Activity"; // Default message
 
             if (latestUpdate != null)
             {

@@ -13,7 +13,7 @@ namespace ASI.Basecode.Data.Interfaces
         IQueryable<TicketActivity> RetrieveAll();
         void Delete(Guid id);
         IEnumerable<TicketActivity> GetActivitiesByTicketId(Guid ticketId);
-
         IEnumerable<TicketActivity> GetActivitiesByTicketIds(List<Guid> ticketId);
+        Task AddTicketActivitiesAsync(List<TicketActivity> ticketActivities);
     }
 }

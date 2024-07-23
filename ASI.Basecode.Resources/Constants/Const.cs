@@ -34,5 +34,10 @@
         /// authentication Issuer
         /// </summary>
         public const string Issuer = "asi.basecode";
+
+        /// <summary>
+        /// System's Guid
+        /// </summary>
+        public static readonly Guid SystemId = new Guid("f70950f4-910a-44f2-9819-70f38f27249e");
     }
 }

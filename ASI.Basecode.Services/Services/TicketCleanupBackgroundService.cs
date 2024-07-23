@@ -26,10 +26,39 @@ namespace ASI.Basecode.Services.Services
         {
             _logger.LogInformation("TicketCleanupBackgroundService is starting.");
 
+            try
+            {
+                // Perform the ticket cleanup within a scope
+                using (var scope = _serviceScopeFactory.CreateScope())
+                {
+                    var ticketCleanupService = scope.ServiceProvider.GetRequiredService<ITicketCleanupService>();
+                    _logger.LogInformation("Running ticket cleanup...");
+                    await ticketCleanupService.CleanupTicketsAsync();
+                    _logger.LogInformation("Ticket cleanup completed.");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while cleaning up tickets.");
+            }
+
             while (!stoppingToken.IsCancellationRequested)
             {
                 try
                 {
+                    var now = DateTime.Now;
+                    var nextRun = now.Date.AddDays(1);
+
+                    if (now > nextRun) // If we've already passed midnight, execute the task immediately
+                    {
+                        nextRun = nextRun.AddDays(1); // Schedule for the next midnight instead
+                    }
+
+                    var delay = nextRun - now; // Calculate the delay until the next 12:00 AM
+
+                    await Task.Delay(delay, stoppingToken); // Wait until the scheduled time
+
+                    // Perform the ticket cleanup within a scope
                     using (var scope = _serviceScopeFactory.CreateScope())
                     {
                         var ticketCleanupService = scope.ServiceProvider.GetRequiredService<ITicketCleanupService>();
@@ -42,8 +71,6 @@ namespace ASI.Basecode.Services.Services
                 {
                     _logger.LogError(ex, "An error occurred while cleaning up tickets.");
                 }
-
-                await Task.Delay(TimeSpan.FromHours(1), stoppingToken); // Adjust delay as needed
             }
 
             _logger.LogInformation("TicketCleanupBackgroundService is stopping.");
