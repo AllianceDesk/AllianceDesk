@@ -85,7 +85,7 @@ namespace ASI.Basecode.Services.Services
                 Category = categories.TryGetValue(s.CategoryId, out var categoryName) ? categoryName : "Unknown",
                 Priority = priorities.TryGetValue(s.PriorityId, out var priorityName) ? priorityName : "Unknown",
                 Status = statuses.TryGetValue(s.StatusId, out var statusName) ? statusName : "Unknown",
-                AgentName = s.AssignedAgent.HasValue && users.TryGetValue(s.AssignedAgent.Value, out var agentName) ? agentName : "Unknown",
+                AgentName = s.AssignedAgent.HasValue && users.TryGetValue(s.AssignedAgent.Value, out var agentName) ? agentName : "Not yet Assigned",
                 CreatorName = users.TryGetValue(s.CreatedBy, out var creatorName) ? creatorName : "Unknown",
                 TicketHistory = activitiesByTicketId.TryGetValue(s.TicketId, out var activities) ?
                     _mapper.Map<IEnumerable<TicketActivityViewModel>>(activities) : Enumerable.Empty<TicketActivityViewModel>()
@@ -423,13 +423,14 @@ namespace ASI.Basecode.Services.Services
                             .ToList();
 
             var result = Enumerable.Range(0, 7)
-                        .Select(i => DateTime.Today.AddDays(-i))
+                        .Select(i => DateTime.Today.AddDays(-6 + i))
                         .ToDictionary(date => date.ToString("dddd"), date => 0);
 
             foreach (var dailyCount in dailyCounts)
             {
                 result[dailyCount.Date.ToString("dddd")] = dailyCount.Count;
             }
+
             return result;
         }
 

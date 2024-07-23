@@ -11,6 +11,7 @@ namespace ASI.Basecode.Data.Models
         public bool EmailNotifications { get; set; }
         public string DefaultTicketView { get; set; }
         public byte DefaultTicketPerPage { get; set; }
+
         public virtual User User { get; set; }
     }
 }
