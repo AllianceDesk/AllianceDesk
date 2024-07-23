@@ -73,7 +73,7 @@ namespace ASI.Basecode.Services.Services
         public void AddUser(UserViewModel model)
         {
             var user = new User();
-            if (!_repository.UserExists(model.Email))
+            if (!_repository.UserExists(model.Email) && !_repository.UserExists(model.UserName))
             {
                 _mapper.Map(model, user);
                 user.UserId = Guid.NewGuid();
@@ -233,7 +233,7 @@ namespace ASI.Basecode.Services.Services
                                 }).ToList();
             return userActivity;
         }
-        public UserPreferenceViewModel GetPreferenceView()
+        public UserPreferenceViewModel GetUserPreference()
         {
             Guid userId = _sessionHelper.GetUserIdFromSession();
             var user = _repository.GetUserById(userId);
@@ -242,6 +242,8 @@ namespace ASI.Basecode.Services.Services
             {
                 var preference = _userPreferenceRepository.GetUserPreferencesByUserId(userId);
                 var model = _mapper.Map<UserPreferenceViewModel>(preference);
+                model.Name = user.Name;
+                model.Email = user.Email;
                 return model;
             }
 
@@ -250,15 +252,21 @@ namespace ASI.Basecode.Services.Services
 
         public void UpdatePreference(UserPreferenceViewModel model)
         {
-            var user = _repository.GetUserById(model.UserId);
+            var user = _repository.GetUserById(_sessionHelper.GetUserIdFromSession());
             if (user != null)
             {
-                user.Name = model.User.Name;
-                user.Email = model.User.Email;
+                user.Name = model.Name;
+                user.Email = model.Email;
+
+                if (model.Password != "")
+                {
+                    user.Password = PasswordManager.EncryptPassword(model.Password);
+                }
+
                 _repository.UpdateUser(user);
             }
 
-            var preference = _userPreferenceRepository.GetUserPreferencesByUserId(model.UserId);
+            var preference = _userPreferenceRepository.GetUserPreferencesByUserId(_sessionHelper.GetUserIdFromSession());
             if (preference != null)
             {
                 preference.InAppNotifications = model.InAppNotifications;

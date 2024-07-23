@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ASI.Basecode.Services.ServiceModels.NotificationServiceModel>
+﻿@model ASI.Basecode.Services.ServiceModels.NotificationServiceModel
 
 @{
     ViewData["Title"] = "Notification";
@@ -102,29 +102,15 @@ else if (ViewBag.Role == 1) {
                 </div>
 
                 <div class="card-content" id="card_content">
-                    @foreach (var item in Model)
+                    @foreach (var item in Model.UserNotifications)
                     {
-                        <div class="notification-container">
-                            <h6 class="notification_title">@item.Title</h6>
-                            @* <a href="@item.Link" class="notification-link" data-bs-toggle="modal" data-bs-target="#viewNotification">Preview</a> *@
-                        </div>
-                    }
-                </div>
-
-            </div>
-
-            <div class="modal fade" id="viewNotification" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                    <div class="modal-content p-3">
-                        <div id="main_createcard">
-
-                            <div class="top_modal d-flex justify-content-between align-items-center mb-3">
-                                <h3>Notification 1</h3>
-                                <button type="button" class="btn" data-bs-dismiss="modal"><i class='bx bx-x bx-sm icon' style="color: #45474B; cursor: pointer;"></i></button>
+                        <a href="#" class="link_card" style="text-decoration: none; color: inherit;">
+                            <div class="notification-container" data-bs-toggle="modal" data-bs-target="#viewNotification" user-notif-btn data-notification-id="@item.NotificationId">
+                                <h6 class="notification_title">Ticket Number #@item.TicketNumber</h6>
+                                <h6 class="notification_title">@item.Title</h6>
                             </div>
-
-                        </div>
-                    </div>
+                        </a>
+                    }
                 </div>
             </div>
         </main>
@@ -143,7 +129,7 @@ else if (ViewBag.Role == 1) {
                 </div>
 
                 <div class="card-content" id="card_content">
-                    @foreach (var item in Model)
+                    @foreach (var item in Model.UserNotifications)
                     {
                         <div class="notification-container">
                             <h6 class="notification_title">@item.Title</h6>
@@ -180,7 +166,7 @@ else if (ViewBag.Role == 1) {
                 </div>
 
                 <div class="card-content" id="card_content">
-                    @foreach (var item in Model)
+                    @foreach (var item in Model.UserNotifications)
                     {
                         <div class="notification-container">
                             <h6 class="notification_title">@item.Title</h6>
@@ -207,46 +193,36 @@ else if (ViewBag.Role == 1) {
             </div>
         </div>
     }
-
-
-   @*  <div class="modal fade" id="createTicket" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content p-3">
-                <div id="main_createcard">
-
-                    <div class="top_modal d-flex justify-content-between align-items-center mb-3">
-                        <h3>New Ticket</h3>
-                        <button type="button" class="btn" data-bs-dismiss="modal"><i class='bx bx-x bx-sm icon' style="color: #45474B; cursor: pointer;"></i></button>
-                    </div>
-
-                    <form asp-controller="User" asp-action="TicketCreate" method="post">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <div class="form-group mb-3">
-                            <input asp-for="Ticket.Title" class="form-control" placeholder="Ticket Title" aria-label="Title" />
-                            <span asp-validation-for="Ticket.Title" class="text-danger"></span>
-                        </div>
-
-                        <div class="form-group">
-                            <select asp-for="Ticket.CategoryId" class="form-select" asp-items="ViewBag.Categories" id="inputGroupSelect04" aria-label="Category Options"></select>
-                            <span asp-validation-for="Ticket.CategoryId" class="text-danger"></span>
-                        </div>
-
-                        <div class="form-group">
-                            <select asp-for="Ticket.PriorityId" class="form-select" asp-items="ViewBag.Priorities" id="inputGroupSelect04" aria-label="Priority Options"></select>
-                            <span asp-validation-for="Ticket.PriorityId" class="text-danger"></span>
-                        </div>
-
-                        <textarea asp-for="Ticket.Description" class="form-control mb-3" id="largeTextField" rows="10" cols="50" placeholder="Description"></textarea>
-                        <span asp-validation-for="Ticket.Description" class="text-danger"></span>
-
-                        <div class="button_card mb-3 d-flex justify-content-between">
-                            <button type="button" class="btn attachment custom-button" style="background-color: #7E7E7E; color: white;"><i class='bx bx-image-add bx-xs bx-fw uh' style="align-self:center;"></i> Add Attachment </button>
-                            <button type="submit" class="btn attachment custom-button" style="background-color: #E21818; color: white;"><i class='bx bxl-telegram bx-xs bx-fw uh' style="align-self:center;"></i> Submit </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div> *@
 </div>
+
+<div class="modal fade" id="notif" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <!-- The content for Create Article Modal will be loaded here-->
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        $(document).on('click', '[user-notif-btn]', function () {
+            var notificationId = $(this).data('notification-id');
+
+            // Perform AJAX request to fetch article details
+            $.ajax({
+                url: '/Notification/DetailModal',
+                type: 'GET',
+                data: { notificationId: notificationId },
+                success: function (result) {
+                    $('#notif .modal-content').html(result);
+                    $('#notif').modal('show');
+                    console.log('Notification details successfully loaded!');
+                },
+                error: function (error) {
+                    console.error('Error loading article details:', error);
+                }
+            });
+        });
+    });
+</script>
 

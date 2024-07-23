@@ -85,7 +85,7 @@ namespace ASI.Basecode.Services.Services
                 Category = categories.TryGetValue(s.CategoryId, out var categoryName) ? categoryName : "Unknown",
                 Priority = priorities.TryGetValue(s.PriorityId, out var priorityName) ? priorityName : "Unknown",
                 Status = statuses.TryGetValue(s.StatusId, out var statusName) ? statusName : "Unknown",
-                AgentName = s.AssignedAgent.HasValue && users.TryGetValue(s.AssignedAgent.Value, out var agentName) ? agentName : "Unknown",
+                AgentName = s.AssignedAgent.HasValue && users.TryGetValue(s.AssignedAgent.Value, out var agentName) ? agentName : "Not yet Assigned",
                 CreatorName = users.TryGetValue(s.CreatedBy, out var creatorName) ? creatorName : "Unknown",
                 TicketHistory = activitiesByTicketId.TryGetValue(s.TicketId, out var activities) ?
                     _mapper.Map<IEnumerable<TicketActivityViewModel>>(activities) : Enumerable.Empty<TicketActivityViewModel>()
@@ -94,7 +94,7 @@ namespace ASI.Basecode.Services.Services
             return data;
         }
 
-        public IEnumerable<TicketViewModel> GetUserTickets(Guid userId, byte? status, string? searchTerm, string? sortOrder, int? page)
+        public IQueryable<TicketViewModel> GetUserTickets(Guid userId, byte? status, string? searchTerm, string? sortOrder, int? page)
         {
             // Retrieve IQueryable from repository
             var ticketsQuery = _ticketRepository.GetUserTicketsById(userId);
@@ -108,6 +108,10 @@ namespace ASI.Basecode.Services.Services
             var ticketActivities = _ticketActivityRepository.GetActivitiesByTicketIds(ticketIds).ToList();
             var feedbacks = _feedbackRepository.GetFeedbackByTicketIds(ticketIds)
                 .ToDictionary(f => f.TicketId, f => _mapper.Map<FeedbackViewModel>(f));
+
+            var activitiesByTicketId = ticketActivities
+                .GroupBy(a => a.TicketId)
+                .ToDictionary(g => g.Key, g => g.OrderByDescending(a => a.ModifiedAt).ToList());
 
             // Apply filters
             if (status.HasValue && status != 0)
@@ -123,23 +127,9 @@ namespace ASI.Basecode.Services.Services
 
 
             //Sorting order
-            ticketsQuery = ticketsQuery.OrderBy(t => t.Title);
+            ticketsQuery = ticketsQuery.OrderBy(t => t.DateCreated);
 
-
-            // Pagination
-            var pageSize = 5;
-            var currentPage = page ?? 1;
-            var count = ticketsQuery.Count();
-            var tickets = ticketsQuery.Skip((currentPage - 1) * pageSize)
-                                      .Take(pageSize)
-                                      .ToList();
-
-            var activitiesByTicketId = ticketActivities
-                .GroupBy(a => a.TicketId)
-                .ToDictionary(g => g.Key, g => g.OrderByDescending(a => a.ModifiedAt).ToList());
-
-            // Transform to view model
-            var model = tickets.Select(s => new TicketViewModel
+            var model = ticketsQuery.Select(s => new TicketViewModel
             {
                 TicketId = s.TicketId.ToString(),
                 Title = s.Title,
@@ -158,7 +148,7 @@ namespace ASI.Basecode.Services.Services
                 Feedback = feedbacks.TryGetValue(s.TicketId, out var feedback) ? feedback : null
             });
 
-            return model;
+            return model.AsQueryable();
         }
         public IEnumerable<TicketViewModel> GetAgentTickets(Guid id)
         {
@@ -178,6 +168,15 @@ namespace ASI.Basecode.Services.Services
             newTicket.StatusId = 1;
             newTicket.PriorityId = Convert.ToByte(ticket.PriorityId);
             newTicket.CategoryId = Convert.ToByte(ticket.CategoryId);
+
+
+            // Generate Ticket Number
+
+            var count = _ticketRepository.RetrieveAll().Count() + 1;
+            string year = DateTime.Now.Year.ToString();
+            string paddedCount = count.ToString().PadLeft(5, '0'); 
+            newTicket.TicketNumber = $"TCK-{year}-{paddedCount}";
+
             _ticketRepository.Add(newTicket);
 
             // Add ticket activity
@@ -424,13 +423,14 @@ namespace ASI.Basecode.Services.Services
                             .ToList();
 
             var result = Enumerable.Range(0, 7)
-                        .Select(i => DateTime.Today.AddDays(-i))
+                        .Select(i => DateTime.Today.AddDays(-6 + i))
                         .ToDictionary(date => date.ToString("dddd"), date => 0);
 
             foreach (var dailyCount in dailyCounts)
             {
                 result[dailyCount.Date.ToString("dddd")] = dailyCount.Count;
             }
+
             return result;
         }
 

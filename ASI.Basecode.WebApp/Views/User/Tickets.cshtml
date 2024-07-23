@@ -17,6 +17,7 @@
         <div class="header-buttons">
             <button type="button" class="btn button" data-bs-toggle="modal" data-bs-target="#createTicket"><i class='bx bx-plus-circle bx-xs bx-fw uh' style="align-self:center;"></i> Create Ticket </button>
             <a asp-action="Index" asp-controller="Notification"><i class='bx bx-bell bx-sm icon' style="color: #45474B; cursor: pointer;"></i></a>
+            <a asp-action="Index" asp-controller="AccessDenied">403 Page</a>
             <i class='bx bx-cog bx-sm icon' style="color: #45474B; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#settings"></i>
                         
 
@@ -176,7 +177,7 @@
                                     <a class="page-link" href="@Url.Action("Tickets", new { page = Model.CurrentPage - 1, status = Model.CurrentStatus })">&lt;</a>
                                 </li>
 
-                                <li class="page-item @(Model.CurrentPage == 1 ? "active" : "")">
+                                <li class="page-item active">
                                     <span class="page-link">@Model.CurrentPage</span>
                                 </li>
 
@@ -236,7 +237,11 @@
 							<span asp-validation-for="Ticket.Description" class="text-danger"></span>
 
 							<div class="button_card mb-3 d-flex justify-content-between">
-								<button type="button" class="btn attachment custom-button" style="background-color: #7E7E7E; color: white;"><i class='bx bx-image-add bx-xs bx-fw uh' style="align-self:center;"></i> Add Attachment </button>
+                                <!-- Attachment input -->
+                                <div class="form-group mb-3">
+                                    <input type="file" asp-for="Ticket.Attachments" class="btn attachment custom-button" multiple />
+                                    <span asp-validation-for="Ticket.Attachments" class="text-danger"></span>
+                                </div>
 								<button type="submit" class="btn attachment custom-button" style="background-color: #E21818; color: white;"><i class='bx bxl-telegram bx-xs bx-fw uh' style="align-self:center;"></i> Submit </button>
 							</div>
                         </form>
@@ -559,7 +564,6 @@
                     var ticketId = this.getAttribute('data-ticket-id');
                     document.querySelector('#Feedback_TicketId').value = ticketId;
                     document.querySelector('#fillFeedbackForm').action = `/User/Tickets/${ticketId}/Feedback`;
-
                     feedbackModal.show();
                 } else if (target === '#ticketActionModal') {
                     var actionType = this.getAttribute('data-action-type');

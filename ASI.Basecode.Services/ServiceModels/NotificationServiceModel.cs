@@ -18,5 +18,6 @@ namespace ASI.Basecode.Services.ServiceModels
         public string TicketNumber { get; set; }
         public string DateCreated { get; set; }
         public string RecipientId { get; set; }
+        public List<NotificationServiceModel> UserNotifications { get; set; }
     }
 }
