@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Http
 
 @inject IHttpContextAccessor HttpContextAccessor
-<header class="flex-Row" style="border-bottom: 2px solid grey;">
+<div class="flex-Row justify-content-between py-2" style="border-bottom: 2px solid grey;">
     <div class="logosec hover-pointer">
         <img src="~/img/alliancedesk-logo.png"
              style="width: 185px;" alt="logo"
@@ -30,7 +30,7 @@
 
         </div>
     </div>
-</header>
+</div>
 
 <script>
     const agentHeader = document.querySelector("[data-agent-header]")
