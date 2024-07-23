@@ -16,7 +16,7 @@
 
         <div class="view-user-nav mb-4">
             <div class="flex-Row justify-content-between align-items-center gap-1 ml-2">
-                <a asp-controller="Admin" asp-action="Tickets" asp-route-id=""><i class="fa-solid fa-arrow-left" style="color: black; transform: scale(1.5)"></i></a>
+                <a asp-controller="Admin" asp-action="Tickets" asp-route-id=""><i class="fa-solid fa-arrow-left" style="color: #45474B; transform: scale(1.5)"></i></a>
             </div>
 
             @if(Model.StatusId != "4" && Model.StatusId != "5")
@@ -37,21 +37,24 @@
             
         </div>
 
-        <div class="h-29 p-x-1 p-y-1 br-1 bg-white flex flex-col gap-1">
+        <div class="h-29 p-x-1 p-y-1 br-1 bg-white gap-1 overflow-auto">
             <h2>@Model.Title</h2>
             <div class="flex-Row justify-content-between w-100 mb-4">
                 <div class="flex-Row gap-0-5">
                     <div class="ticket-tag | tag-border bg-btn-grey p-x-1 br-1 text-sm">@Model.Category</div>
-@*                     <div class="ticket-tag | tag-border bg-btn-grey p-x-1 br-1 text-sm">flag</div>
-                    <div class="ticket-tag | tag-border bg-btn-grey p-x-1 br-1 text-sm">flag</div> *@
+                    <div class="ticket-tag | tag-border bg-btn-grey p-x-1 br-1 text-sm">@Model.Status</div>
+                    <div class="  tag-border  p-x-1  text-sm" style="border-radius: 10px; color: #BA1717; border-color: #E2A1A1; background-color: rgba(186, 23, 23, 0.2);">@Model.Priority</div>
                 </div>
-                <div class="  tag-border  p-x-1  text-sm" style="border-radius: 10px; color: #BA1717; border-color: #E2A1A1; background-color: rgba(186, 23, 23, 0.2);">@Model.Priority</div>
+                
             </div>
             <p class="mb-3">@Model.Description</p>
-            <button class="registerBtn mbtn-primary align-self-start">@Model.Status</button>
+            @* <button class="registerBtn mbtn-primary align-self-start">@Model.Status</button> *@
 
             @if (!string.IsNullOrWhiteSpace(Model.AgentName)) {
-                <button class="registerBtn mbtn-primary align-self-start">@Model.AgentName</button>
+                @* <button class="registerBtn mbtn-primary align-self-start">@Model.AgentName</button> *@
+                <div class="p-3 agent_name">
+                    <span class="label">Agent:</span>  @Model.AgentName
+                </div>
             }
         </div>
     </div>
