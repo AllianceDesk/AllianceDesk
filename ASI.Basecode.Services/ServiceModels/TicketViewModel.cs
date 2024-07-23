@@ -1,4 +1,5 @@
 ﻿using ASI.Basecode.Data.Models;
+using Microsoft.AspNetCore.Http;
 using NUlid;
 using System;
 using System.Collections.Generic;
@@ -35,7 +36,7 @@ namespace ASI.Basecode.Services.ServiceModels
         public string TeamId { get; set; }
         public DateTime DateCreated { get; set; }
 
-        public List<Attachment> Attachments { get; set; } = new List<Attachment>();
+        public List<IFormFile> Attachments { get; set; } = new List<IFormFile>();
 
         public string Priority { get; set; }
 

@@ -11,7 +11,9 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Drawing.Printing;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ASI.Basecode.WebApp.Controllers
 {
@@ -175,10 +177,16 @@ namespace ASI.Basecode.WebApp.Controllers
         }
 
         [HttpPost("Tickets/Create")]
-        public IActionResult TicketCreate(TicketViewModel ticket)
+        public async Task<IActionResult> TicketCreate(TicketViewModel ticket)
         {
-            _ticketService.Add(ticket);
-            return RedirectToAction("Tickets");
+
+            if(ModelState.IsValid)
+            {
+                await _ticketService.AddAsync(ticket);
+                return RedirectToAction("Tickets");
+            }
+
+            return View(ticket);
         }
 
         [HttpPost("Tickets/{id}/Delete")]

@@ -39,12 +39,6 @@
 
     <nav>
         <div id="buttonContainer">
-
-            <a asp-action="Tickets"
-               class="btn btn-primary @(Model.CurrentStatus == 0 ? "activeButton" : "inactiveButton")">
-                All
-            </a>
-
             @foreach (var status in Model.Statuses)
             {
                 <a asp-action="Tickets" asp-route-status=@status.Key class="btn btn-primary @(status.Key == Model.CurrentStatus.ToString() ? "activeButton" : "inactiveButton")">@status.Value</a>
@@ -199,7 +193,7 @@
                             <button type="button" class="btn x_button" data-bs-dismiss="modal"><i class='bx bx-x bx-sm x_icon'></i></button>
                         </div>
 
-                        <form asp-controller="User" asp-action="TicketCreate" method="post">
+                        <form asp-controller="User" asp-action="TicketCreate" method="post" enctype="multipart/form-data">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <div class="form-floating mb-3">
                                 <input asp-for="Ticket.Title" type="text" class="form-control" id="floatingInput" placeholder="Ticket Title">
@@ -236,7 +230,6 @@
                             </div>							                            
 
 							<div class="d-flex pr-3">
-
                                 <div class="form-group">
                                     <input type="file" asp-for="Ticket.Attachments" class="btn  file_button" multiple />
                                     <span asp-validation-for="Ticket.Attachments" class="text-danger"></span>
@@ -245,9 +238,7 @@
 								<button type="submit" class="btn button button_size">                                    
                                     Submit 
                                 </button>
-
 							</div>
-
                         </form>
                     </div>
                 </div>
@@ -433,7 +424,7 @@
 
         <div id="search-container">
             <i class='bx bx-search'></i>
-            <input type="text" id="search-input" placeholder="Search Tickets" id="searchTerm" value="@Model.CurrentSearchTerm">
+            <input type="text" id="search-input" placeholder="Search Tickets" value="@Model.CurrentSearchTerm">
         </div>
 
         <div id="button-container">
@@ -525,7 +516,7 @@
         });
 
         // Add a keypress event listener to handle search input
-        document.getElementById('searchTerm').addEventListener('keypress', function (event) {
+        document.getElementById('search-input').addEventListener('keypress', function (event) {
             if (event.keyCode === 13) {
                 event.preventDefault(); // Prevent form submission
 

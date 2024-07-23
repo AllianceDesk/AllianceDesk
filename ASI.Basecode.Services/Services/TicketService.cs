@@ -6,9 +6,9 @@ using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Sockets;
-using static ASI.Basecode.Resources.Constants.Enums;
-using NUlid;
+using Microsoft.AspNetCore.Http;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace ASI.Basecode.Services.Services
 {
@@ -27,6 +27,7 @@ namespace ASI.Basecode.Services.Services
         private readonly ISessionHelper _sessionHelper;
         private readonly IMapper _mapper;
         private readonly INotificationRepository _notificationRepository;
+        private readonly IAttachmentRepository _attachmentRepository;
 
         public TicketService(
             ITicketRepository ticketRepository,
@@ -41,7 +42,8 @@ namespace ASI.Basecode.Services.Services
             IMapper mapper,
             ISessionHelper sessionHelper,
             INotificationRepository notificationRepository,
-            ITeamRepository teamRepository)
+            ITeamRepository teamRepository,
+            IAttachmentRepository attachmentRepository)
         {
             _ticketRepository = ticketRepository;
             _userRepository = userRepository;
@@ -57,6 +59,7 @@ namespace ASI.Basecode.Services.Services
             _sessionHelper = sessionHelper;
             _teamRepository = teamRepository;
             _notificationRepository = notificationRepository;
+            _attachmentRepository = attachmentRepository;
         }
 
         public IEnumerable<TicketViewModel> RetrieveAll()
@@ -158,7 +161,7 @@ namespace ASI.Basecode.Services.Services
             return _mapper.Map<IEnumerable<TicketViewModel>>(tickets);
         }
 
-        public void Add(TicketViewModel ticket)
+        public async Task AddAsync(TicketViewModel ticket)
         {
             Ticket newTicket = new Ticket();
             newTicket.TicketId = Guid.NewGuid();
@@ -171,37 +174,13 @@ namespace ASI.Basecode.Services.Services
             newTicket.CategoryId = Convert.ToByte(ticket.CategoryId);
 
 
-            // Generate Ticket Number
+            // Add Synchronous Tasks here
+            Add(newTicket);
 
-            var count = _ticketRepository.RetrieveAll().Count() + 1;
-            string year = DateTime.Now.Year.ToString();
-            string paddedCount = count.ToString().PadLeft(5, '0'); 
-            newTicket.TicketNumber = $"TCK-{year}-{paddedCount}";
-
-            _ticketRepository.Add(newTicket);
-
-            // Add ticket activity
-            TicketActivity newActivity = new TicketActivity();
-            newActivity.HistoryId = Guid.NewGuid();
-            newActivity.TicketId = newTicket.TicketId;
-            newActivity.OperationId = 1;
-            newActivity.ModifiedBy = newTicket.CreatedBy;
-            newActivity.ModifiedAt = DateTime.Now;
-            newActivity.Message = "Ticket created";
-            _ticketActivityRepository.Add(newActivity);
-
-            Notification newNotification = new Notification();
-            newNotification.NotificationId = Guid.NewGuid();
-            newNotification.TicketId = newTicket.TicketId;
-            newNotification.Title = ticket.Title;
-            newNotification.Body = ticket.Description;
-            newNotification.DateCreated = DateTime.Now;
-            newNotification.Status = true;
-            newNotification.RecipientId = newTicket.CreatedBy;
-            _notificationRepository.Add(newNotification);
-
+            // Call Async Tasks here
+            await FileUploadAsync(ticket.Attachments, _sessionHelper.GetUserIdFromSession(), newTicket.TicketId);
         }
-
+       
         public void Update(TicketViewModel ticket)
         {
             var existingTicket = _ticketRepository.GetTicketById(Guid.Parse(ticket.TicketId));
@@ -473,5 +452,72 @@ namespace ASI.Basecode.Services.Services
                 _feedbackRepository.Add(feedback);
             }
         }
+
+
+        #region private methods
+        private void Add(Ticket ticket)
+        {
+            // Generate Ticket Number
+            var count = _ticketRepository.RetrieveAll().Count() + 1;
+            string year = DateTime.Now.Year.ToString();
+            string paddedCount = count.ToString().PadLeft(5, '0');
+            ticket.TicketNumber = $"TCK-{year}-{paddedCount}";
+
+            _ticketRepository.Add(ticket);
+
+            // Add ticket activity
+            TicketActivity newActivity = new TicketActivity();
+            newActivity.HistoryId = Guid.NewGuid();
+            newActivity.TicketId = ticket.TicketId;
+            newActivity.OperationId = 1;
+            newActivity.ModifiedBy = ticket.CreatedBy;
+            newActivity.ModifiedAt = DateTime.Now;
+            newActivity.Message = "Ticket created";
+            _ticketActivityRepository.Add(newActivity);
+
+
+            // Add notification
+            Notification newNotification = new Notification();
+            newNotification.NotificationId = Guid.NewGuid();
+            newNotification.TicketId = ticket.TicketId;
+            newNotification.Title = ticket.Title;
+            newNotification.Body = ticket.Description;
+            newNotification.DateCreated = DateTime.Now;
+            newNotification.Status = true;
+            newNotification.RecipientId = ticket.CreatedBy;
+            _notificationRepository.Add(newNotification);
+        }
+        private async Task FileUploadAsync(List<IFormFile> files, Guid userId, Guid ticketId)
+        {
+            var folderPath = Path.Combine("wwwroot/uploads", userId.ToString(), ticketId.ToString());
+            foreach (var file in files)
+            {
+                if (file.Length > 0)
+                {
+                    var filePath = Path.Combine(folderPath, Path.GetFileName(file.FileName));
+
+                    // Ensure the directory exists
+                    if (!Directory.Exists(folderPath))
+                    {
+                        Directory.CreateDirectory(folderPath);
+                    }
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(stream);
+                    }
+
+                    //After moving add the filePath to the database
+                    Attachment attachment = new Attachment();
+                    attachment.AttachmentId = Guid.NewGuid();
+                    attachment.FilePath = filePath;
+                    attachment.UploadedBy = userId;
+                    attachment.UploadedAt = DateTime.Now;
+
+                    _attachmentRepository.AddAttachment(attachment);
+                }
+            }
+        }
+        #endregion
     }
 }

@@ -26,7 +26,6 @@ namespace ASI.Basecode.Data.Models
         public Guid? AssignedTeam { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime? DateClosed { get; set; }
-
         public virtual User AssignedAgentNavigation { get; set; }
         public virtual Team AssignedTeamNavigation { get; set; }
         public virtual Category Category { get; set; }
