@@ -13,14 +13,14 @@
 @Html.Partial("Admin_Header")
 <div class="main">
     @Html.Partial("Admin_Sidebar")
-    <div class="admin-body p-y-3 relative bg-grey">
+    <div class="admin-body py-3 relative bg-grey">
         <h2>Analytics</h2>
         <div class="view-user-nav">
             <div class="agent-nav pt-4">
                 <ul class="flex-Row gap-2">
-                    <a asp-action="AnalyticsOverallMetrics" asp-controller="Admin" class="nav-item" data-ticketsall-nav-item data-status="unresolved">Overall Metrics</a>
-                    <a asp-action="AnalyticsTeamMetric" asp-controller="Admin" class="nav-item active-admin-nav" data-ticketsall-nav-item data-status="resolved">Team Metric</a>
-                    <a asp-action="AgentMetric" asp-controller="Admin" class="nav-item" data-ticketsall-nav-item data-status="resolved">Agent Metrics</a>
+                    <a asp-action="AnalyticsOverallMetrics" data-td-none asp-controller="Admin" class="nav-item" data-ticketsall-nav-item data-status="unresolved">Overall Metrics</a>
+                    <a asp-action="AnalyticsTeamMetric" data-td-none asp-controller="Admin" class="nav-item active-admin-nav" data-ticketsall-nav-item data-status="resolved">Team Metric</a>
+                    <a asp-action="AgentMetric" data-td-none asp-controller="Admin" class="nav-item" data-ticketsall-nav-item data-status="resolved">Agent Metrics</a>
                 </ul>
             </div>
         </div>

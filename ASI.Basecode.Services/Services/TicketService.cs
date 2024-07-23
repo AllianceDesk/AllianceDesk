@@ -85,7 +85,7 @@ namespace ASI.Basecode.Services.Services
                 Category = categories.TryGetValue(s.CategoryId, out var categoryName) ? categoryName : "Unknown",
                 Priority = priorities.TryGetValue(s.PriorityId, out var priorityName) ? priorityName : "Unknown",
                 Status = statuses.TryGetValue(s.StatusId, out var statusName) ? statusName : "Unknown",
-                AgentName = s.AssignedAgent.HasValue && users.TryGetValue(s.AssignedAgent.Value, out var agentName) ? agentName : "Unknown",
+                AgentName = s.AssignedAgent.HasValue && users.TryGetValue(s.AssignedAgent.Value, out var agentName) ? agentName : "Not yet Assigned",
                 CreatorName = users.TryGetValue(s.CreatedBy, out var creatorName) ? creatorName : "Unknown",
                 TicketHistory = activitiesByTicketId.TryGetValue(s.TicketId, out var activities) ?
                     _mapper.Map<IEnumerable<TicketActivityViewModel>>(activities) : Enumerable.Empty<TicketActivityViewModel>()
@@ -423,13 +423,14 @@ namespace ASI.Basecode.Services.Services
                             .ToList();
 
             var result = Enumerable.Range(0, 7)
-                        .Select(i => DateTime.Today.AddDays(-i))
+                        .Select(i => DateTime.Today.AddDays(-6 + i))
                         .ToDictionary(date => date.ToString("dddd"), date => 0);
 
             foreach (var dailyCount in dailyCounts)
             {
                 result[dailyCount.Date.ToString("dddd")] = dailyCount.Count;
             }
+
             return result;
         }
 
@@ -439,7 +440,7 @@ namespace ASI.Basecode.Services.Services
             var endDate = DateTime.Today.AddDays(1);
 
             var topResolvers = _ticketRepository.RetrieveAll()
-                                .Where(t => t.StatusId == 4 && t.DateClosed >= startDate && t.DateClosed <= endDate)
+                                .Where(t => t.StatusId == 5 && t.DateClosed >= startDate && t.DateClosed <= endDate)
                                 .GroupBy(t => t.AssignedAgent)
                                 .Select(g => new { UserId = g.Key, ResolvedCount = g.Count() })
                                 .OrderByDescending(g => g.ResolvedCount)
@@ -449,8 +450,8 @@ namespace ASI.Basecode.Services.Services
             {
                 UserId = tr.UserId.ToString(),
                 TeamName = _teamRepository.RetrieveAll().Where(t => t.TeamId ==
-                            _userRepository.GetUsers().Where(u => u.UserId == tr.UserId).FirstOrDefault().TeamId)
-                            .FirstOrDefault().TeamName,
+                            _userRepository.GetUsers().Where(u => u.UserId == tr.UserId).FirstOrDefault()?.TeamId)
+                            .FirstOrDefault()?.TeamName ?? "No Team",
                 Name = _userRepository.GetUsers().Where(u => u.UserId == tr.UserId).FirstOrDefault().Name,
                 TicketResolved = tr.ResolvedCount,
             }).ToList();

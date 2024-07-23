@@ -1,4 +1,28 @@
-﻿<div class="text-center flex-col justify-content-center align-items-center vh-100" >
-    <img src="~/img/403.png"  alt="logo" style="height: 20rem; width: 20rem;">
-    <button type="button" class="btn" style="background-color: #E21818; color: white; box-shadow: none;">Back to Dashboard</button>
-</div>
+﻿@if (ViewBag.RoleId == 1)
+{
+    <form asp-controller="Admin" asp-action="Dashboard" method="get">
+        <div class="text-center flex-col justify-content-center align-items-center vh-100">
+            <img src="~/img/403.png" alt="logo" style="height: 20rem; width: 20rem;">
+            <button type="submit" class="btn" style="background-color: #E21818; color: white; box-shadow: none;">Back to Dashboard</button>
+        </div>
+    </form>
+}
+else if (ViewBag.RoleId == 2)
+{
+    <form asp-controller="Agent" asp-action="Dashboard" method="get">
+        <div class="text-center flex-col justify-content-center align-items-center vh-100">
+            <img src="~/img/403.png" alt="logo" style="height: 20rem; width: 20rem;">
+            <button type="submit" class="btn" style="background-color: #E21818; color: white; box-shadow: none;">Back to Dashboard</button>
+        </div>
+    </form>
+}
+else if (ViewBag.RoleId == 3)
+{
+    <form asp-controller="User" asp-action="Tickets" method="get">
+        <div class="text-center flex-col justify-content-center align-items-center vh-100">
+            <img src="~/img/403.png" alt="logo" style="height: 20rem; width: 20rem;">
+            <button type="submit" class="btn" style="background-color: #E21818; color: white; box-shadow: none;">Back to Dashboard</button>
+        </div>
+    </form>
+}
+    

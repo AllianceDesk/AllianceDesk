@@ -73,7 +73,7 @@ namespace ASI.Basecode.Services.Services
         public void AddUser(UserViewModel model)
         {
             var user = new User();
-            if (!_repository.UserExists(model.Email))
+            if (!_repository.UserExists(model.Email) && !_repository.UserExists(model.UserName))
             {
                 _mapper.Map(model, user);
                 user.UserId = Guid.NewGuid();

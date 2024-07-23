@@ -17,14 +17,14 @@
 @Html.Partial("Admin_Header")
 <div class="main">
     @Html.Partial("Admin_Sidebar")
-    <div class="admin-body p-y-3 relative bg-grey flex flex-col gap-1">
+    <div class="admin-body py-3 relative bg-grey flex flex-col gap-1">
 
         <div style="padding-right: 2rem; border-right: 1.5px solid #9E9E9E;">
-            <h1>Agents and Team</h1>
+            <h1>User Directory</h1>
             <div class="flex-Row flex-between">
                 <div class="agent-nav pt-4">
                     <ul class="flex-Row gap-2">
-                        <a asp-action="ViewUser" class="nav-item active-admin-nav" data-td-none data-nav-item>Agents</a>
+                        <a asp-action="ViewUser" class="nav-item active-admin-nav" data-td-none data-nav-item>All Users</a>
                         <a asp-action="ViewTeams" class="nav-item" data-td-none data-nav-item>Team</a>
                     </ul>
                 </div>
@@ -59,7 +59,7 @@
                     <p>Role</p>
                 </div>
             </div>
-            @* <div class="agents-container bg-white">
+            <div class="agents-container bg-white">
                 @if (Model != null && Model.Users != null && Model.Users.Any())
                 {
                     @foreach (var item in Model.Users)
@@ -78,7 +78,7 @@
                 {
                     <p>No agents available.</p>
                 }
-            </div> *@
+            </div>
             <div class="agents-container bg-white" id="agents-container"></div>
             <div class="pagination-container justify-content-center" data-pagination-container>
                 <button id="prev-page" disabled>Previous</button>
@@ -236,7 +236,7 @@
         const pageInfo = document.getElementById('page-info');
         const pagenationCtnr = document.querySelector('[data-pagination-container]')
 
-        const usersPerPage = 5;
+        const usersPerPage = 10;
         let currentPage = 1;
 
         /* PAGINATION */
@@ -542,6 +542,24 @@
                 navItem.classList.add("active-admin-nav");
             })
         })
+
+        $(document).on('click', '[data-admin-resetPassword-btn]', function () {
+            const resetPasswordFlag = true;
+            $.ajax({
+                url: '/UserEdit',
+                type: 'GET',
+                data: { UserId: userId, resetPassword: resetPasswordFlag},
+                success: function (response) {
+                    $('[data-modal-edit-form]').html(response).addClass('hidden');
+                    console.log('AJAX request successful');
+                    $('[data-modal-edit-form]').html(response).removeClass('hidden');
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error deleting user:', status, error);
+                }
+            });
+        });
+
     </script>
 
 }

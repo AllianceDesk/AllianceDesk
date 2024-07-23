@@ -20,7 +20,7 @@
 .j-search-container {
     border: 2px solid #9E9E9E;
     border-radius: 1rem;
-    padding: 0.6rem 1rem;
+    padding: 0rem 1rem;
 }
 
 .j-search-container input {
@@ -28,6 +28,7 @@
     padding: 0.5rem 1rem 0.5rem 2rem;
     outline: none; 
 }
+
 
     .j-search-container input:focus {
         border: none;
@@ -240,7 +241,8 @@
 
 a[data-admin-btn],
 a[data-a-btn],
-a[data-td-none]{
+a[data-td-none],
+a[data-td-none]:hover {
     text-decoration: none;
 }
 
@@ -368,3 +370,12 @@ a[data-td-none]{
         background-color: #ccc;
         cursor: not-allowed;
     }
+
+
+
+.agent-container {
+    display: grid;
+    grid-template-columns: repeat(4, 25%);
+    align-items: center;
+}
+

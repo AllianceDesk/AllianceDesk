@@ -16,16 +16,18 @@ namespace ASI.Basecode.Services.Services
     {
         private readonly INotificationRepository _notificationRepository;
         private readonly IMapper _mapper;
+        private readonly ITicketRepository _ticketRepository;
 
         /// <summary>
         /// A constructor for service
         /// </summary>
         /// <param name="notificationRepository"></param>
         /// <param name="mapper"></param>
-        public NotificationService(INotificationRepository notificationRepository, IMapper mapper)
+        public NotificationService(INotificationRepository notificationRepository, IMapper mapper, ITicketRepository ticketRepository)
         {
             _notificationRepository = notificationRepository;
             _mapper = mapper;
+            _ticketRepository = ticketRepository;
         }
 
         /// <summary>
@@ -39,7 +41,10 @@ namespace ASI.Basecode.Services.Services
                 NotificationId = s.NotificationId.ToString(),
                 Title = s.Title,
                 Body = s.Body,
-                DateCreated = s.DateCreated.ToString(),
+                DateCreated = s.DateCreated.HasValue ? s.DateCreated.Value.ToString("MMM dd, yyyy hh:mm tt") : string.Empty,
+                RecipientId = s.RecipientId.ToString(),
+                TicketId = s.TicketId.ToString(),
+                TicketNumber = _ticketRepository.RetrieveAll().Where(t => t.TicketId == s.TicketId).FirstOrDefault().TicketNumber,
             });
 
             return data;
