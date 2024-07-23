@@ -55,10 +55,10 @@ namespace ASI.Basecode.WebApp
             this._services.AddScoped<INotificationRepository, NotificationRepository>();
             this._services.AddScoped<IFavoriteRepository, FavoriteRepository>();
             this._services.AddScoped<IFeedbackRepository, FeedbackRepository>();
+            this._services.AddScoped<IAttachmentRepository, AttachmentRepository>();
 
             // Manager Class
             this._services.AddScoped<SignInManager>();
-
             this._services.AddHttpClient();
         }
     }
