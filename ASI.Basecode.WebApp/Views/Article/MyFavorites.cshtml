@@ -140,7 +140,7 @@ else if (ViewBag.RoleId == 2)
     else if (ViewBag.RoleId == 1)
     {
         @Html.Partial("Admin_Sidebar")
-        <div class="admin-body p-y-3 relative bg-grey flex flex-col gap-1">
+        <div class="admin-body relative bg-grey flex flex-col gap-1">
             <nav>
 
                 <div class="nav_one mb-3">
@@ -151,14 +151,7 @@ else if (ViewBag.RoleId == 2)
 
 
                         <div class="btn-group">
-                            <button type="button" class="btn btn-danger me-1" data-bs-toggle="modal" data-bs-target="#create" id="addArticleBtn">Add Article</button>
-                            <button type="button" class="btn btn-danger dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-                                <span class="visually-hidden">Toggle Dropdown</span>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Document</a></li>
-                                <li><a class="dropdown-item" href="#">PDF</a></li>
-                            </ul>
+                            <button type="button" class="btn btn-danger me-1" data-bs-toggle="modal" data-bs-target="#create" id="addArticleBtn">Add Article</button>                            
                         </div>
 
                     </div>

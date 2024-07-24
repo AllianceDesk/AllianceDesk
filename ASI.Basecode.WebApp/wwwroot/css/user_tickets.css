@@ -49,20 +49,24 @@ body {
 .remove_default {
     box-shadow: none !important;
     outline: none !important;
+    text-decoration: none !important;
 }
 
-.remove_default:active, .remove_default:focus {
+.remove_default:active, .remove_default:focus, .remove_default:hover {
     box-shadow: none !important;
     outline: none !important;
-    border: 1px solid #ccc;
+    color: black;
+    /*border: 1px solid #ccc;*/
+
 }
+
 
 /*Parent Container Designs*/
 #container {
   display: grid;
   height: 100vh;
   width: 100%;
-  grid-template-columns: 1fr 7fr;
+  grid-template-columns: 235px 7fr;
   grid-template-rows: 0.3fr 0.5fr 5fr;
   grid-template-areas:
     "header header"
@@ -663,10 +667,6 @@ hr {
       "main";
     overflow-y: auto;
   }
-
-  /*#sidebar {
-        overflow-y: auto;
-    }*/
 }
 
 /* Pagination Design */
@@ -689,8 +689,8 @@ hr {
 }
 
 .pagination-controls .page-item.active .page-link {
-  background-color: #e21818; /* Active button background color */
-  color: #fff; /* Active button text color */
+  background-color: #e21818; 
+  color: #fff; 
 }
 
 .pagination-controls .page-link:hover {
