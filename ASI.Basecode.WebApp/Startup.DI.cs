@@ -38,7 +38,11 @@ namespace ASI.Basecode.WebApp
             this._services.AddScoped<ITicketService, TicketService>();
             this._services.AddScoped<IArticleService, ArticleService>();
             this._services.AddScoped<INotificationService, NotificationService>();
-           
+
+            // Background Services
+            this._services.AddScoped<ITicketCleanupService, TicketCleanupService>();
+            this._services.AddHostedService<TicketCleanupBackgroundService>();
+
             // Repositories
             this._services.AddScoped<IUserRepository, UserRepository>();
             this._services.AddScoped<ITicketRepository, TicketRepository>();

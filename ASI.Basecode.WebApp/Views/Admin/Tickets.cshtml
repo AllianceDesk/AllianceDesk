@@ -48,7 +48,7 @@
             @foreach (var item in Model)
             {
                 <div onclick="window.location.href = '@Url.Action("Tickets", "Admin", new { id = item.TicketId })'" class="agents p-y-2 p-x-2 flex-col mb-3 rounded-2 pointer_cursor">
-
+                        
                         <div class="d-flex justify-content-between">
                             <h5>@item.Title</h5>
                             <p class="mt-1">@item.RelativeTime</p>

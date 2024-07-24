@@ -22,7 +22,7 @@ namespace ASI.Basecode.Data.Repositories
             UnitOfWork.SaveChanges();
         }
 
-        public IEnumerable<TicketActivity> RetrieveAll()
+        public IQueryable<TicketActivity> RetrieveAll()
         {
             return this.GetDbSet<TicketActivity>();
         }
@@ -45,6 +45,15 @@ namespace ASI.Basecode.Data.Repositories
         public IEnumerable<TicketActivity> GetActivitiesByTicketIds(List<Guid> ticketId)
         {
             return this.GetDbSet<TicketActivity>().Where(x => ticketId.Contains(x.TicketId));
+        }
+
+        public async Task AddTicketActivitiesAsync(List<TicketActivity> ticketActivities)
+        {
+            foreach (var ticketActivity in ticketActivities)
+            {
+                this.GetDbSet<TicketActivity>().Add(ticketActivity);
+                await UnitOfWork.SaveChangesAsync();
+            }
         }
     }
 }
