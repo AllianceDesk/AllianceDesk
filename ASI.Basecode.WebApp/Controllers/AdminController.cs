@@ -665,8 +665,7 @@ namespace ASI.Basecode.WebApp.Controllers
             if (id != null)
             {
                 var ticketId = id.Trim();
-                var ticket = allTickets.FirstOrDefault(t => t.TicketId.ToString() == ticketId);
-
+                var ticket = _ticketService.GetById(id);
                 return View("/Views/Admin/TicketDetail.cshtml", ticket);
             }
 

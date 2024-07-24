@@ -9,7 +9,6 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using System.Threading.Tasks;
-using static ASI.Basecode.Resources.Constants.Enums;
 
 namespace ASI.Basecode.Services.Services
 {
@@ -80,6 +79,7 @@ namespace ASI.Basecode.Services.Services
             var data = tickets.Select(s => new TicketViewModel
             {
                 TicketId = s.TicketId.ToString(),
+                TicketNumber = s.TicketNumber,
                 Title = s.Title,
                 Description = s.Description,
                 DateCreated = s.DateCreated,
@@ -252,7 +252,7 @@ namespace ASI.Basecode.Services.Services
             // Call Async Tasks here
             await FileUploadAsync(ticket.AttachmentFiles, _sessionHelper.GetUserIdFromSession(), newTicket.TicketId);
         }
-
+       
         public void Update(TicketViewModel ticket)
         {
             var existingTicket = _ticketRepository.GetTicketById(Guid.Parse(ticket.TicketId));
