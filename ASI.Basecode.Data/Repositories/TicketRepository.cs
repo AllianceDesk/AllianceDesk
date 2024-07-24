@@ -67,5 +67,10 @@ namespace ASI.Basecode.Data.Repositories
         {
             return this.GetDbSet<Ticket>().Where(x => x.AssignedAgent != null && x.AssignedAgent == id);
         }
+        
+        public IQueryable<Ticket> GetWeeklyTickets(DateTime startOfWeek, DateTime endOfWeek)
+        {
+            return this.GetDbSet<Ticket>().Where(x => x.DateCreated >= startOfWeek && x.DateCreated <= endOfWeek);
+        }
     }
 }

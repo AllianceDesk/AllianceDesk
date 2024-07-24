@@ -213,7 +213,6 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("Teams");
         }
 
-
         [HttpGet("PerformanceReport")]
         public ActionResult PerformanceReport()
         {

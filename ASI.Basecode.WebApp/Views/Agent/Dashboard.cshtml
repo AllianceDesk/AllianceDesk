@@ -9,24 +9,30 @@
 @section styles {
     <link rel="stylesheet" href="~/css/functionalities.css" />
     <link rel="stylesheet" href="~/css/Admin.css" />
+    <link rel="stylesheet" href="~/css/user_tickets.css" />
 }
 
 @Html.Partial("Agent_Header")
 <div class="main">
     @Html.Partial("Agent_Sidebar")
     <div class="admin-body p-y-3 relative bg-grey flex flex-col gap-1">
-
         <div class="flex-Row justify-content-between">
             <div id="buttonContainer">
                 <a asp-action="Dashboard" asp-route-status="Unresolved" class="btn btn-primary @(Model.CurrentStatus == "Unresolved" ? "activeButton" : "inactiveButton")">Unresolved</a>
                 <a asp-action="Dashboard" asp-route-status="Resolved" class ="btn btn-primary @(Model.CurrentStatus == "Resolved" ? "activeButton" : "inactiveButton")">Resolved</a>
             </div>
 
+            <div class="flex-Row gap-2 justify-content-center align-center mb-5 mt-3">
+                <input name="searchString" id="search-input" type="text" class="form-control filter_tickets remove_default" placeholder="Search Tickets" aria-label="Search" aria-describedby="button-search">
+            </div>
+
             <select class="form-select nav-select" id="floatingSelect" aria-label="Floating label select example">
                 <option selected>Date</option>
                 <option value="1">Category</option>
             </select>
+        
         </div>
+
         <div id="card_content">
             @foreach (var item in Model.Tickets)
             {
@@ -180,6 +186,27 @@
                 document.getElementById("Rating").value = this.value;
             });
         });
+
+		document.getElementById('search-input').addEventListener('keypress', function (event) {
+			if (event.keyCode === 13) {
+				event.preventDefault(); // Prevent form submission
+
+				var searchTerm = this.value;
+				var status = '@Model.CurrentStatus';
+				var url = '@Url.Action("Dashboard")';
+
+				// Construct the URL with the appropriate parameters
+				if (status !== 'All') {
+					url += '?status=' + encodeURIComponent(status);
+				}
+
+				if (searchTerm) {
+					url += (url.indexOf('?') === -1 ? '?' : '&') + 'searchTerm=' + encodeURIComponent(searchTerm);
+				}
+
+				location.replace(url);
+			}
+		});
     });
 </script>
 

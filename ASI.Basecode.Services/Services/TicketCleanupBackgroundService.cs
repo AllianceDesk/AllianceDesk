@@ -25,10 +25,11 @@ namespace ASI.Basecode.Services.Services
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             _logger.LogInformation("TicketCleanupBackgroundService is starting.");
-
-            try
+           
+            
+           // For testing purposes, will run on program startup
+            /*  try
             {
-                // Perform the ticket cleanup within a scope
                 using (var scope = _serviceScopeFactory.CreateScope())
                 {
                     var ticketCleanupService = scope.ServiceProvider.GetRequiredService<ITicketCleanupService>();
@@ -40,8 +41,9 @@ namespace ASI.Basecode.Services.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while cleaning up tickets.");
-            }
+            }*/
 
+            // Runs every day at midnight
             while (!stoppingToken.IsCancellationRequested)
             {
                 try
@@ -49,14 +51,12 @@ namespace ASI.Basecode.Services.Services
                     var now = DateTime.Now;
                     var nextRun = now.Date.AddDays(1);
 
-                    if (now > nextRun) // If we've already passed midnight, execute the task immediately
-                    {
-                        nextRun = nextRun.AddDays(1); // Schedule for the next midnight instead
+                    if (now > nextRun)                     {
+                        nextRun = nextRun.AddDays(1);
                     }
 
-                    var delay = nextRun - now; // Calculate the delay until the next 12:00 AM
-
-                    await Task.Delay(delay, stoppingToken); // Wait until the scheduled time
+                    var delay = nextRun - now; 
+                    await Task.Delay(delay, stoppingToken);
 
                     // Perform the ticket cleanup within a scope
                     using (var scope = _serviceScopeFactory.CreateScope())

@@ -13,6 +13,7 @@ using System.Linq;
 using System;
 using System.Collections.Generic;
 using ASI.Basecode.Data.Models;
+using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 
 namespace ASI.Basecode.WebApp.Controllers
 {
@@ -81,17 +82,12 @@ namespace ASI.Basecode.WebApp.Controllers
                 return RedirectToAction("Index", "AccessDenied");
             }
 
-
-            ViewBag.AdminSidebar = "Analytics";
-            var tickets = _ticketService.RetrieveAll();
-
             var now = DateTime.Now;
             var startOfWeek = now.AddDays(-(int)now.DayOfWeek + (int)DayOfWeek.Monday - 4).Date;
             var endOfWeek = now.Date.AddDays(1);
 
-
-            var weeklyTickets = tickets.
-                Where(t => t.DateCreated >= startOfWeek && t.DateCreated <= endOfWeek).ToList();
+            ViewBag.AdminSidebar = "Analytics";
+            var weeklyTickets = _ticketService.GetWeeklyTickets(startOfWeek, endOfWeek);
 
             var categories = _ticketService.GetCategories().ToList();
             var statuses = _ticketService.GetStatuses().ToList();
@@ -100,18 +96,18 @@ namespace ASI.Basecode.WebApp.Controllers
             // Count tickets by category
             var ticketCountsByCategory = categories.ToDictionary(
                 category => category.CategoryName,
-                category => weeklyTickets.Count(t => t.Category == category.CategoryName)
+                category => weeklyTickets.Count(t => t.CategoryId == category.CategoryId)
             );
 
             // Count tickets by status
             var ticketCountsByStatus = statuses.ToDictionary(
                 status => status.StatusName,
-                status => weeklyTickets.Count(t => t.Status == status.StatusName)
+                status => weeklyTickets.Count(t => t.StatusId == status.StatusId)
             );
 
             var ticketCountsByPriority = priorities.ToDictionary(
                 priority => priority.PriorityName,
-                priority => weeklyTickets.Count(t => t.Priority == priority.PriorityName)
+                priority => weeklyTickets.Count(t => t.PriorityId == priority.PriorityId)
             );
 
             var model = new OverAllTicketCountViewModel
@@ -139,15 +135,11 @@ namespace ASI.Basecode.WebApp.Controllers
             }
 
             ViewBag.AdminSidebar = "Analytics";
-            var tickets = _ticketService.RetrieveAll();
-
+            
             var now = DateTime.Now;
             var startOfWeek = now.AddDays(-(int)now.DayOfWeek + (int)DayOfWeek.Monday - 4).Date;
             var endOfWeek = now.Date.AddDays(1);
-
-            var weeklyTickets = tickets.
-                Where(t => t.DateCreated >= startOfWeek && t.DateCreated <= endOfWeek).ToList();
-
+  
             var agents = _userService.GetAgents().ToList();
             var teams = _userService.GetTeams().ToList();
 
@@ -155,9 +147,23 @@ namespace ASI.Basecode.WebApp.Controllers
             var statuses = _ticketService.GetStatuses().ToList();
             var priorities = _ticketService.GetPriorities().ToList();
 
-            var ticketsByAgent = weeklyTickets
+            var tickets = _ticketService.RetrieveAll();
+
+            var ticketsByAgentQuery = tickets
+                .Where(t => t.DateCreated >= startOfWeek && t.DateCreated < endOfWeek)
                 .GroupBy(t => t.AgentId)
-                .ToDictionary(g => g.Key, g => g.ToList());
+                .Select(g => new
+                {
+                    AgentId = g.Key,
+                    Tickets = g.ToList()
+                });
+
+            // Materialize the query into a dictionary
+            var ticketsByAgent = ticketsByAgentQuery
+                .ToDictionary(
+                    g => g.AgentId,
+                    g => g.Tickets
+                );
 
 
             var agentTicketCounts = agents.Select(agent =>
@@ -211,14 +217,12 @@ namespace ASI.Basecode.WebApp.Controllers
             }
 
             ViewBag.AdminSidebar = "Analytics";
-            var tickets = _ticketService.RetrieveAll();
 
             var now = DateTime.Now;
             var startOfWeek = now.AddDays(-(int)now.DayOfWeek + (int)DayOfWeek.Monday - 4).Date;
             var endOfWeek = now.Date.AddDays(1);
 
-            var weeklyTickets = tickets.
-                Where(t => t.DateCreated >= startOfWeek && t.DateCreated <= endOfWeek).ToList();
+            /*var weeklyTickets = _ticketService.GetWeeklyTickets(startOfWeek, endOfWeek)*/;
 
             var agents = _userService.GetAgents().ToList();
             var teams = _userService.GetTeams().ToList();
@@ -227,10 +231,24 @@ namespace ASI.Basecode.WebApp.Controllers
             var statuses = _ticketService.GetStatuses().ToList();
             var priorities = _ticketService.GetPriorities().ToList();
 
-            var ticketsByAgent = weeklyTickets
+            var tickets = _ticketService.RetrieveAll();
+
+            var ticketsByAgentQuery = tickets
+                .Where(t => t.DateCreated >= startOfWeek && t.DateCreated < endOfWeek)
                 .GroupBy(t => t.AgentId)
-                .ToDictionary(g => g.Key, g => g.ToList());
- 
+                .Select(g => new
+                {
+                    AgentId = g.Key,
+                    Tickets = g.ToList()
+                });
+
+            // Materialize the query into a dictionary
+            var ticketsByAgent = ticketsByAgentQuery
+                .ToDictionary(
+                    g => g.AgentId,
+                    g => g.Tickets
+                );
+
             var agentTicketCounts = agents.Select(agent =>
             {
                 var agentTickets = ticketsByAgent.ContainsKey(agent.UserId)
@@ -240,18 +258,18 @@ namespace ASI.Basecode.WebApp.Controllers
                 // Count tickets by category
                 var ticketCountsByCategory = categories.ToDictionary(
                     category => category.CategoryName,
-                    category => agentTickets.Count(t => t.Category == category.CategoryName)
+                    category => agentTickets.Count(t => t.CategoryId == category.CategoryId)
                 );
 
                 // Count tickets by status
                 var ticketCountsByStatus = statuses.ToDictionary(
                     status => status.StatusName,
-                    status => agentTickets.Count(t => t.Status == status.StatusName)
+                    status => agentTickets.Count(t => t.StatusId == status.StatusId)
                 );
 
                 var ticketCountByPriority = priorities.ToDictionary(
                     priority => priority.PriorityName,
-                    priority => agentTickets.Count(t => t.Priority == priority.PriorityName)
+                    priority => agentTickets.Count(t => t.PriorityId == priority.PriorityId)
                 );
 
                 return new AnalyticsAgentMetricViewModel
@@ -635,8 +653,8 @@ namespace ASI.Basecode.WebApp.Controllers
 
                 IEnumerable<TicketViewModel> filteredTickets = status switch
                 {
-                    "Resolved" => allTickets.Where(t => t.StatusId == "4" || t.StatusId == "5"),
-                    _ => allTickets.Where(t => t.StatusId == "1" || t.StatusId == "2" || t.StatusId == "3")
+                    "Resolved" => allTickets.Where(t => t.StatusId == 4 || t.StatusId == 5),
+                    _ => allTickets.Where(t => t.StatusId == 1 || t.StatusId == 2 || t.StatusId == 3)
                 };
 
                 filteredTickets = filteredTickets.OrderByDescending(t => t.DateCreated);

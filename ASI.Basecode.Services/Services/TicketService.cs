@@ -9,6 +9,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using System.Threading.Tasks;
+using static ASI.Basecode.Resources.Constants.Enums;
 
 namespace ASI.Basecode.Services.Services
 {
@@ -62,7 +63,7 @@ namespace ASI.Basecode.Services.Services
             _attachmentRepository = attachmentRepository;
         }
 
-        public IEnumerable<TicketViewModel> RetrieveAll()
+        public IQueryable<TicketViewModel> RetrieveAll()
         {
             var tickets = _ticketRepository.RetrieveAll().ToList();
             var categories = _categoryRepository.RetrieveAll().ToDictionary(c => c.CategoryId, c => c.CategoryName);
@@ -84,7 +85,7 @@ namespace ASI.Basecode.Services.Services
                 DateCreated = s.DateCreated,
                 CreatorId = s.CreatedBy.ToString(),
                 AgentId = s.AssignedAgent.ToString(),
-                StatusId = s.StatusId.ToString(),
+                StatusId = s.StatusId,
                 Category = categories.TryGetValue(s.CategoryId, out var categoryName) ? categoryName : "Unknown",
                 Priority = priorities.TryGetValue(s.PriorityId, out var priorityName) ? priorityName : "Unknown",
                 Status = statuses.TryGetValue(s.StatusId, out var statusName) ? statusName : "Unknown",
@@ -94,7 +95,7 @@ namespace ASI.Basecode.Services.Services
                     _mapper.Map<IEnumerable<TicketActivityViewModel>>(activities) : Enumerable.Empty<TicketActivityViewModel>()
             });
 
-            return data;
+            return data.AsQueryable();
         }
 
         public IQueryable<TicketViewModel> GetUserTickets(Guid userId, byte? status, string? searchTerm, string? sortOrder, int? page)
@@ -141,7 +142,7 @@ namespace ASI.Basecode.Services.Services
                 DateCreated = s.DateCreated,
                 CreatorId = s.CreatedBy.ToString(),
                 AgentId = s.AssignedAgent.ToString(),
-                StatusId = s.StatusId.ToString(),
+                StatusId = s.StatusId,
                 Category = categories.TryGetValue(s.CategoryId, out var categoryName) ? categoryName : "Unknown",
                 Priority = priorities.TryGetValue(s.PriorityId, out var priorityName) ? priorityName : "Unknown",
                 Status = statuses.TryGetValue(s.StatusId, out var statusName) ? statusName : "Unknown",
@@ -211,6 +212,26 @@ namespace ASI.Basecode.Services.Services
             });
 
             return model.AsQueryable();
+        }
+
+        public IQueryable<TicketViewModel> GetWeeklyTickets(DateTime startOfWeek, DateTime endOfWeek)
+        {
+            var ticketsQuery = _ticketRepository.GetWeeklyTickets(startOfWeek, endOfWeek);
+
+            var model = ticketsQuery.Select(s => new TicketViewModel
+            {
+                TicketId = s.TicketId.ToString(),
+                Title = s.Title,
+                Description = s.Description,
+                DateCreated = s.DateCreated,
+                CreatorId = s.CreatedBy.ToString(),
+                AgentId = s.AssignedAgent.ToString(),
+                StatusId = s.StatusId,
+                CategoryId = s.CategoryId,
+                PriorityId = s.PriorityId,
+            });
+
+            return model;
         }
 
         public async Task AddAsync(TicketViewModel ticket)
@@ -349,8 +370,8 @@ namespace ASI.Basecode.Services.Services
                 Title = ticket.Title,
                 Description = ticket.Description,
                 DateCreated = ticket.DateCreated,
-                CategoryId = ticket.CategoryId.ToString(),
-                PriorityId = ticket.PriorityId.ToString(),
+                CategoryId = ticket.CategoryId,
+                PriorityId = ticket.PriorityId,
                 Category = categories.TryGetValue(ticket.CategoryId, out var categoryName) ? categoryName : "Unknown",
                 Priority = priorities.TryGetValue(ticket.PriorityId, out var priorityName) ? priorityName : "Unknown",
                 Status = statuses.TryGetValue(ticket.StatusId, out var statusName) ? statusName : "Unknown",
