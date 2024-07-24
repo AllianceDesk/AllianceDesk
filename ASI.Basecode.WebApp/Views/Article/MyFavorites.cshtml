@@ -140,8 +140,8 @@ else if (ViewBag.RoleId == 2)
     else if (ViewBag.RoleId == 1)
     {
         @Html.Partial("Admin_Sidebar")
-        <div class="admin-body p-y-3 relative bg-grey flex flex-col gap-1">
-            <nav>
+        <div class="admin-body py-3 relative bg-grey flex flex-col gap-1">
+            <div>
 
                 <div class="nav_one mb-3">
 
@@ -196,7 +196,7 @@ else if (ViewBag.RoleId == 2)
                         </select>
                     </div>
                 </div>
-            </nav>
+            </div>
 
             <main>
                 @foreach (var item in Model.Articles)
@@ -220,7 +220,7 @@ else if (ViewBag.RoleId == 2)
     else
     {
         @Html.Partial("Agent_Sidebar")
-        <div class="admin-body p-y-3 relative bg-grey flex flex-col gap-1">
+        <div class="admin-body py-3 relative bg-grey flex flex-col gap-1">
             <nav>
 
                 <div class="nav_one mb-3">

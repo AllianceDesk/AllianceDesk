@@ -1,6 +1,6 @@
 .admin-body {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
+    padding-left: 6rem;
+    padding-right: 6rem;
     margin: auto;
     width: 100%;
     height: 100%;
@@ -18,7 +18,7 @@
 
 
 .j-search-container {
-    border: 2px solid #9E9E9E;
+    border: 1px solid #9E9E9E;
     border-radius: 1rem;
     padding: 0rem 1rem;
 }
@@ -44,7 +44,7 @@
     }
 
 .role-container {
-    padding: 0.3rem 0.5rem;
+    padding: 0.1rem 0.5rem;
     border-radius: 1rem;
     font-size: 0.6rem;
 }
@@ -215,7 +215,7 @@
     }
 
 .admin-sb-inactive-button {
-    background-color: #FAFAFA;
+    background-color: white;
     color: black;
 }
 

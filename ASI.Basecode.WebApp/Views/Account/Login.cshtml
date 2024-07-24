@@ -11,11 +11,16 @@
 @* <div>
     @Html.AntiForgeryToken()
 </div> *@
-@Html.Partial("General_Header")
+@* @Html.Partial("General_Header") *@
 <div>
     <div class="login-container">
     
-    <form method="post" action="/Account/Login" id="loginForm">
+    <form class="align-self-center" method="post" action="/Account/Login" id="loginForm">
+        <div class="flex-Row justify-content-center">
+            <img class="mb-4" src="~/img/alliancedesk-logo.png"
+                 style="width: 185px;" alt="logo"
+                 onclick="window.location.href = '@Url.Action("/", "Account")';">
+        </div>
         <h2 class="text-center font-weight-bold">Alliance Help Desk</h2>
         <p>Welcome to Alliance Help Desk! How can we assist you today?</p>
         <div class="form-outline">

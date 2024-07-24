@@ -154,10 +154,10 @@ footer {
 
 .main {
     display: grid;
-    grid-template-columns: 235px 1fr;
+    grid-template-columns: 300px 1fr;
     padding: 0 0 0 0;
     width: 100%;
-    height: 100vh;
+    height: calc(100vh - 66.51px);
 }
 
 @media (max-width: 600px) {
@@ -401,7 +401,7 @@ footer {
 .login-container {
     display: flex;
     justify-content: space-between;
-    height: calc(100vh - 64px);
+    height: 100vh;
 }
 
     .login-container > :first-child {

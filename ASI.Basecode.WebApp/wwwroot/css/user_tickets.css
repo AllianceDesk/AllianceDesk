@@ -62,7 +62,7 @@ body {
   display: grid;
   height: 100vh;
   width: 100%;
-  grid-template-columns: 1fr 7fr;
+  grid-template-columns: 300px 7fr;
   grid-template-rows: 0.3fr 0.5fr 5fr;
   grid-template-areas:
     "header header"
@@ -457,25 +457,29 @@ icon-button:focus-visible {
 }
 
 .button-container1 {
-  display: flex;
-  align-items: center;
-  padding: 10px 15px;
-  width: 88%;
-  background-color: var(--active-button);
-  border-radius: 5px;
-  color: var(--active-button-text);
-  margin: 10px 10px;
-  cursor: pointer;
-  transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    width: 88%;
+    background-color: var(--active-button);
+    border-radius: 5px;
+    color: var(--active-button-text);
+    margin: 15px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
-.button-container1 i {
-  margin-right: 10px;
-  font-size: 20px;
-}
+    
 
-#button-container:hover {
-  background-color: darken(var(--active-button), 10%);
+/*    .button-container1 i {
+        margin-right: 10px;
+        font-size: 20px;
+    }
+*/
+#button-container:hover,
+.button-container1:hover {
+    background-color: rgba(226,24,24, 0.8);
+    transition: ease-in-out 250ms;
 }
 
 #button-container i {

@@ -38,19 +38,20 @@
                <p>Ticket Volume this Week</p>
                <div>
                     <canvas id="myChart"></canvas>
-               </div>
+               </div>   
            </div>
             <div class="bg-White p-x-1 p-y-1 br-1 ">
                 <div class="flex-Row gap-1 align-items-center fw-semi">
                     <i class="fa-regular fa-star"></i>
                     <p>Favorite Articles</p>
                </div>
-                <ul class="admin-dashboard-links">
+                <ul class="admin-dashboard-links p-0">
                     @foreach (var article in Model.FavoriteArticles)
                     {
 
-                        <li class="text-sm" data-article-detail-btn data-article-id="@article.ArticleId" data-bs-toggle="modal" data-bs-target="#detail">@article.Title</li>
+                        <li class="" data-article-detail-btn data-article-id="@article.ArticleId" data-bs-toggle="modal" data-bs-target="#detail">@article.Title</li>
                     }
+                    <li class="text-sm" data-article-detail-btn data-article-id="article.ArticleId" data-bs-toggle="modal" data-bs-target="#detail">article.Title</li>
                 </ul>
            </div>
        </div>

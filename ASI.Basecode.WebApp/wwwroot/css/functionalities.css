@@ -21,6 +21,10 @@
     padding: 4px 1rem;
 }
 
+.admin-sb-inactive-button {
+    color: black;
+}
+
 /* RESET */
 p, .H1, .H2, .H3, .H4, .H5, .H6 {
     margin: 0;
@@ -194,7 +198,7 @@ p {
 }
 
 .text-sm {
-    font-size: 0.7rem;
+    font-size: 0.8rem;
 }
 
 .text-1-5 {
