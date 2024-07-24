@@ -23,12 +23,12 @@ namespace ASI.Basecode.Services.ServiceModels
         public string Description { get; set; }
 
         [Required(ErrorMessage = "Category is required")]
-        public string CategoryId { get; set; }
+        public byte CategoryId { get; set; }
 
         [Required(ErrorMessage = "Priority is required")]
-        public string PriorityId { get; set; }
+        public byte PriorityId { get; set; }
 
-        public string StatusId { get; set; }
+        public byte StatusId { get; set; }
 
         public string CreatorId { get; set; }
 

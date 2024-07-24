@@ -16,7 +16,7 @@ namespace ASI.Basecode.Data.Repositories
 
         }
 
-        public IEnumerable<Ticket> RetrieveAll()
+        public IQueryable<Ticket> RetrieveAll()
         {
             return this.GetDbSet<Ticket>();
         }
@@ -31,6 +31,15 @@ namespace ASI.Basecode.Data.Repositories
         {
             this.GetDbSet<Ticket>().Update(ticket);
             UnitOfWork.SaveChanges();
+        }
+
+        public async Task UpdateTicketsAsync(List<Ticket> tickets)
+        {
+            foreach (var ticket in tickets)
+            {
+                this.GetDbSet<Ticket>().Update(ticket);
+                await UnitOfWork.SaveChangesAsync();
+            }
         }
 
         public void Delete(String id)
@@ -57,6 +66,11 @@ namespace ASI.Basecode.Data.Repositories
         public IEnumerable<Ticket> GetAgentTicketsById(Guid id)
         {
             return this.GetDbSet<Ticket>().Where(x => x.AssignedAgent != null && x.AssignedAgent == id);
+        }
+        
+        public IQueryable<Ticket> GetWeeklyTickets(DateTime startOfWeek, DateTime endOfWeek)
+        {
+            return this.GetDbSet<Ticket>().Where(x => x.DateCreated >= startOfWeek && x.DateCreated <= endOfWeek);
         }
     }
 }

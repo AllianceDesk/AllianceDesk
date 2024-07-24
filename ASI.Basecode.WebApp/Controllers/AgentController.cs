@@ -46,50 +46,66 @@ namespace ASI.Basecode.WebApp.Controllers
 
 
         [HttpGet("Dashboard")]
-        public ActionResult Dashboard(string? id, string? status)
+        public ActionResult Dashboard(string? status, string? searchTerm, string? sortOrder, int? page)
         {
-            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
+            Guid guid = _sessionHelper.GetUserIdFromSession();
+            var userRole = _userService.GetUserById(guid.ToString()).RoleId;
 
             if (userRole != 2)
             {
                 return RedirectToAction("Index", "AccessDenied");
             }
 
-            ViewBag.IsLoginOrRegister = false;
-            ViewBag.AdminSidebar = "Overview";
+            var currentStatus = status ?? "Unresolved";
+            var tickets = _ticketService.GetAgentTickets(guid, currentStatus, searchTerm, sortOrder, page);
 
-            // Retrieve all tickets once
-            var allTickets = _ticketService.RetrieveAll();
+            var pageSize = 10;
+            var currentPage = page ?? 1;
+            var currentSearchTerm = searchTerm ?? "";
 
-            // Handle the case where status is provided
-            if (status != null)
+            var count = tickets.Count();
+            var agents = _userService.GetAgents();
+
+            if (Math.Ceiling(tickets.Count() / (double)pageSize) > 1)
             {
-                ViewBag.ShowStatus = status;
-
-                IEnumerable<TicketViewModel> filteredTickets = status switch
-                {
-                    "Resolved" => allTickets.Where(t => t.StatusId == "4" || t.StatusId == "5"),
-                    _ => allTickets.Where(t => t.StatusId == "1" || t.StatusId == "2" || t.StatusId == "3")
-                };
-
-                filteredTickets = filteredTickets.OrderByDescending(t => t.DateCreated);
-                return View("/Views/Agent/Dashboard.cshtml", filteredTickets);
+                tickets = tickets.Skip((currentPage - 1) * pageSize)
+                                 .Take(pageSize)
+                                 .ToList()
+                                 .AsQueryable();
             }
 
-            // Handle the case where id is provided
-            if (id != null)
+            // Create view model and return view
+            var model = new AgentDashboardViewModel
             {
-                var ticketId = id.Trim(); // Trim to avoid any leading/trailing whitespace
-                var ticket = allTickets.FirstOrDefault(t => t.TicketId.ToString() == ticketId);
+                Tickets = tickets,
+                CurrentPage = currentPage,
+                TotalPages = (int)Math.Ceiling(count / (double)pageSize),
+                CurrentStatus = currentStatus,
+                CurrentSearchTerm = currentSearchTerm,
+            };
 
-                Console.WriteLine(ticket);
+            ViewBag.AgentSidebar = "Overview";
+            return View(model);
+        }
 
-                return View("/Views/Agent/Dashboard.cshtml", ticket);
+        [HttpGet("Tickets/{id}")]
+        public IActionResult Ticket(string id)
+        {
+            var ticket = _ticketService.GetById(id);
+
+            if (ticket == null)
+            {
+                return NotFound(); // Handle ticket not found scenario
             }
 
-            // Handle the case where no id and status are provided
-            var tickets = allTickets.OrderByDescending(t => t.DateCreated);
-            return View("/Views/Agent/Dashboard.cshtml", tickets);
+            return Json(new
+            {
+                user = ticket.CreatorName,
+                title = ticket.Title,
+                description = ticket.Description,
+                dateCreated = ticket.DateCreated.ToString("MM/dd/yyyy hh:mm tt"),
+                files = ticket.AttachmentStrings
+            });
         }
 
         [HttpGet("AssignedTickets")]
@@ -196,7 +212,6 @@ namespace ASI.Basecode.WebApp.Controllers
 
             return RedirectToAction("Teams");
         }
-
 
         [HttpGet("PerformanceReport")]
         public ActionResult PerformanceReport()
@@ -399,7 +414,7 @@ namespace ASI.Basecode.WebApp.Controllers
             var data = _userService.GetUserById(UserId);
             if (data == null)
             {
-                return NotFound(); 
+                return NotFound();
             }
             var team = _userService.GetTeams().FirstOrDefault(t => t.TeamId.Equals(data.TeamId));
             var userModel = new UserViewModel

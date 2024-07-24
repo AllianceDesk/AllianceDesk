@@ -10,10 +10,10 @@ namespace ASI.Basecode.Data.Interfaces
     public interface ITicketActivityRepository
     {
         void Add(TicketActivity ticketActivity);
-        IEnumerable<TicketActivity> RetrieveAll();
+        IQueryable<TicketActivity> RetrieveAll();
         void Delete(Guid id);
         IEnumerable<TicketActivity> GetActivitiesByTicketId(Guid ticketId);
-
         IEnumerable<TicketActivity> GetActivitiesByTicketIds(List<Guid> ticketId);
+        Task AddTicketActivitiesAsync(List<TicketActivity> ticketActivities);
     }
 }

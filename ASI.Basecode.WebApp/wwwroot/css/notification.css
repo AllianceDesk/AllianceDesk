@@ -2,7 +2,7 @@
     display: grid;
     height: 100vh;
     width: 100%;
-    grid-template-columns: 0.2fr 7fr;
+    grid-template-columns: 235px 7fr;
     grid-template-rows: 0.3fr 0.5fr 5fr;
     grid-template-areas:
         "header header"
@@ -330,16 +330,17 @@ nav {
     align-items: center;
     padding: 10px 15px;
     width: 88%;
-    background-color: var(--active-button);
+    background-color: var(--inactive-button);
     border-radius: 5px;
-    color: var(--active-button-text);
+    color: var(--inactive-button-text);
     margin: 15px 10px;
     cursor: pointer;
     transition: background-color 0.3s;
 }
 
     #button-container:hover {
-        background-color: darken(var(--active-button), 10%);
+        background-color: darken(var(--inactive-button), 10%);
+        color: black;
     }
 
     #button-container i {

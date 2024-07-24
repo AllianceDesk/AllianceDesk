@@ -140,8 +140,8 @@ else if (ViewBag.RoleId == 2)
     else if (ViewBag.RoleId == 1)
     {
         @Html.Partial("Admin_Sidebar")
-        <div class="admin-body py-3 relative bg-grey flex flex-col gap-1">
-            <div>
+        <div class="admin-body pt-4 relative bg-grey flex flex-col gap-1">
+            <di class="px-5">
 
                 <div class="nav_one mb-3">
 
@@ -151,14 +151,7 @@ else if (ViewBag.RoleId == 2)
 
 
                         <div class="btn-group">
-                            <button type="button" class="btn btn-danger me-1" data-bs-toggle="modal" data-bs-target="#create" id="addArticleBtn">Add Article</button>
-                            <button type="button" class="btn btn-danger dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-                                <span class="visually-hidden">Toggle Dropdown</span>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Document</a></li>
-                                <li><a class="dropdown-item" href="#">PDF</a></li>
-                            </ul>
+                            <button type="button" class="btn btn-danger me-1" data-bs-toggle="modal" data-bs-target="#create" id="addArticleBtn">Add Article</button>                            
                         </div>
 
                     </div>
@@ -196,7 +189,7 @@ else if (ViewBag.RoleId == 2)
                         </select>
                     </div>
                 </div>
-            </div>
+            </di>
 
             <main>
                 @foreach (var item in Model.Articles)

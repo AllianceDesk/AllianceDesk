@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ASI.Basecode.Services.ServiceModels.TicketViewModel>
+@model ASI.Basecode.Services.ServiceModels.AgentDashboardViewModel
 
 @{
     ViewData["Title"] = "Tickets";
@@ -9,49 +9,206 @@
 @section styles {
     <link rel="stylesheet" href="~/css/functionalities.css" />
     <link rel="stylesheet" href="~/css/Admin.css" />
+    <link rel="stylesheet" href="~/css/user_tickets.css" />
 }
 
 @Html.Partial("Agent_Header")
 <div class="main">
     @Html.Partial("Agent_Sidebar")
-    <div class="admin-body py-3 relative bg-grey">
-        <h2>Tickets</h2>
-        <div class="view-user-nav">
-            <div class="agent-nav pt-4">
-                <div class="flex-Row gap-4 pl-2">
-                    <p class="@(ViewBag.ShowStatus == null ? "active" : "")">
-                        <a asp-controller="Admin" asp-action="Tickets" style="@(ViewBag.ShowStatus == null ? "color: red;" : "color: black;")">All</a>
-                    </p>
-                    <p class="@(ViewBag.ShowStatus == "Unresolved" ? "active" : "")">
-                        <a asp-controller="Admin" asp-action="Tickets" asp-route-status="Unresolved" style="@(ViewBag.ShowStatus == "Unresolved" ? "color: red;" : "color: black;")">Unresolved</a>
-                    </p>
-                    <p class="@(ViewBag.ShowStatus == "Resolved" ? "active" : "")">
-                        <a asp-controller="Admin" asp-action="Tickets" asp-route-status="Resolved" style="@(ViewBag.ShowStatus == "Resolved" ? "color: red;" : "color: black;")">Resolved</a>
-                    </p>
-                </div>
+    <div class="admin-body p-y-3 relative bg-grey flex flex-col gap-1">
+        <div class="flex-Row justify-content-between">
+            <div id="buttonContainer">
+                <a asp-action="Dashboard" asp-route-status="Unresolved" class="btn btn-primary @(Model.CurrentStatus == "Unresolved" ? "activeButton" : "inactiveButton")">Unresolved</a>
+                <a asp-action="Dashboard" asp-route-status="Resolved" class ="btn btn-primary @(Model.CurrentStatus == "Resolved" ? "activeButton" : "inactiveButton")">Resolved</a>
             </div>
 
-            <div class="flex-Row gap-2 justify-content-center align-center mb-5">
-                <div class="input-group">
-                    <button class="btn btn-outline-secondary" type="submit" id="button-search" style="background-color: whitesmoke; border: 1px solid #ccc;"><i class='bx bx-search bx-xs bx-fw' style="color: #45474B; cursor: pointer;"></i></button>
-                    <input name="searchString" id="searchInput" type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="button-search" style="background-color: whitesmoke; border: 1px solid #ccc;">
-                </div>
-                <div class=" flex-Row gap-1 color-black bg-btn-grey align-center  border-0 p-x-1" data-admin-add-btn>
-                    <i class="fa-solid fa-filter"></i>
-                    <p class="br-1-5 p-y-1">Filter</p>
-                </div>
+            <div class="flex-Row gap-2 justify-content-center align-center mb-5 mt-3">
+                <input name="searchString" id="search-input" type="text" class="form-control filter_tickets remove_default" placeholder="Search Tickets" aria-label="Search" aria-describedby="button-search">
             </div>
+
+            <select class="form-select nav-select" id="floatingSelect" aria-label="Floating label select example">
+                <option selected>Date</option>
+                <option value="1">Category</option>
+            </select>
+        
         </div>
-        <div class="flex-col rounded-md">
-            @foreach (var item in Model)
+
+        <div id="card_content">
+            @foreach (var item in Model.Tickets)
             {
-                <div onclick="window.location.href = '@Url.Action("Tickets", "Admin", new { id = item.TicketId })'" class=" agents cursor-pointer p-y-1 p-x-1 flex-col ">
-                    <p class="text-1-5 fw-semi">@item.Title</p>
-                    <p class="text-1-5 fw-semi">@item.RelativeTime)</p>
-                    <p>@item.Description</p>
+                <div class="ticket-container">
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#viewTicket" class="ticket-link" data-ticket-id="@item.TicketId">
+                        <div class="top-container">
+                            @*  <img class="image" src="@item.Image" alt="image"> *@
+                            <div class="nameDateContainer">
+
+                                <h5 class="name">@item.CreatorName</h5>
+                                <p class="date">@item.RelativeTime</p>
+                            </div>
+                        </div>
+                        <h2 class="question">@item.Title</h2>
+                        <p class="details">@item.Description</p>
+                    </a>
+                    @* Add Dropdown Menu Later Here *@
+                    @* <div class="btn-group option">
+                        <button class="btn icon-button" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bx bx-dots-vertical-rounded bx-sm icon-ticket" style="color: #808080;"></i>
+                        </button>
+
+                        
+                        <ul class="dropdown-menu menu">
+                        </ul>
+                    </div> *@
+                </div>
+            }
+        </div>
+      
+        <div class="modal fade" id="viewTicket" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="ticket-modal1">
+                        <div class="top_modal d-flex justify-content-between align-items-center mb-3">
+                            <h3>View Ticket</h3>
+                            <button type="button" class="btn closebtn1" data-bs-dismiss="modal"><i class='bx bx-x bx-sm icon' style="color: #45474B; cursor: pointer;"></i></button>
+                        </div>
+
+                        <div class="top-container">
+                            <img class="image" src="/img/profile-logo.png" alt="image">
+                            <div class="nameDateContainer">
+                                <h5 class="name" id="ViewName">Name</h5>
+                                <p class="date" id="ViewDate">Date</p>
+                            </div>
+                        </div>
+                        <h2 class="question" id="ViewTitle">Title</h2>
+                        <p class="details" id="ViewDetails">Details</p>
+                    </div>
+
+                    <div class="gallery" id="ViewGallery"></div>
                 </div>
             }
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        const viewTicketModal = new bootstrap.Modal(document.getElementById('viewTicket'));
+
+        var dpIcon = document.querySelector('.dpicn');
+        var dropdownMenu = document.getElementById('dropdownMenu');
+
+        dpIcon.addEventListener('click', function (event) {
+            event.stopPropagation();
+
+            if (dropdownMenu.style.display === 'block') {
+                dropdownMenu.style.display = 'none';
+            } else {
+                dropdownMenu.style.display = 'block';
+            }
+        });
+
+        document.querySelectorAll('[data-bs-toggle="modal"]').forEach(element => {
+            element.addEventListener('click', function () {
+                const target = this.getAttribute('data-bs-target');
+
+                console.log("Target was clicked");
+
+
+                if (target == '#viewTicket') {
+                    var ticketId = this.getAttribute('data-ticket-id');
+
+                    fetch(`/Agent/Tickets/${ticketId}`)
+                        .then(response => response.json())
+                        .then(data => {
+
+                            console.log(data);
+                            document.querySelector('#ViewName').textContent = data.user;
+                            document.querySelector('#ViewDate').textContent = data.dateCreated;
+                            document.querySelector('#ViewTitle').textContent = data.title;
+                            document.querySelector('#ViewDetails').textContent = data.description;
+
+                            const gallery = document.querySelector('#ViewGallery');
+                            gallery.innerHTML = '';
+
+                            data.files.forEach(image => {
+                                const anchor = document.createElement('a');
+                                anchor.href = image;
+                                anchor.setAttribute('data-lightbox', 'ticket-gallery');
+                                anchor.setAttribute('data-title', data.title);
+
+                                const img = document.createElement('img');
+                                img.src = image;
+                                img.alt = data.title
+                                img.classList.add('gallery-thumbnail');
+
+                                anchor.appendChild(img);
+                                gallery.appendChild(anchor);
+                            });
+
+                            viewTicketModal.show();
+
+                        })
+                        .catch(error => console.error('Error fetching ticket data:', error));
+                } else {
+                    const modal = new bootstrap.Modal(document.querySelector(target));
+                    modal.show();
+                }
+            });
+        });
+
+        // Get all modal elements
+        const modals = document.querySelectorAll('.modal');
+
+        modals.forEach(modal => {
+            // Find the close button within this specific modal
+            const closeButton = modal.querySelector('[data-bs-dismiss="modal"]');
+
+            if (closeButton) {
+                closeButton.addEventListener('click', function () {
+                    // Get the corresponding Bootstrap modal instance
+                    const modalInstance = bootstrap.Modal.getInstance(modal);
+
+                    if (modalInstance) {
+                        modalInstance.hide(); // Hide the correct modal
+                        // Manually remove backdrop if it still exists
+                        const backdrop = document.querySelector('.modal-backdrop');
+                        if (backdrop) {
+                            backdrop.remove();
+                        }
+                    }
+                });
+            }
+        });
+
+        document.querySelectorAll('input[name="Rating"]').forEach((elem) => {
+            elem.addEventListener("change", function () {
+                document.getElementById("Rating").value = this.value;
+            });
+        });
+
+		document.getElementById('search-input').addEventListener('keypress', function (event) {
+			if (event.keyCode === 13) {
+				event.preventDefault(); // Prevent form submission
+
+				var searchTerm = this.value;
+				var status = '@Model.CurrentStatus';
+				var url = '@Url.Action("Dashboard")';
+
+				// Construct the URL with the appropriate parameters
+				if (status !== 'All') {
+					url += '?status=' + encodeURIComponent(status);
+				}
+
+				if (searchTerm) {
+					url += (url.indexOf('?') === -1 ? '?' : '&') + 'searchTerm=' + encodeURIComponent(searchTerm);
+				}
+
+				location.replace(url);
+			}
+		});
+    });
+</script>
+
+
 

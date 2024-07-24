@@ -62,7 +62,7 @@ namespace ASI.Basecode.Services.Services
             _attachmentRepository = attachmentRepository;
         }
 
-        public IEnumerable<TicketViewModel> RetrieveAll()
+        public IQueryable<TicketViewModel> RetrieveAll()
         {
             var tickets = _ticketRepository.RetrieveAll().ToList();
             var categories = _categoryRepository.RetrieveAll().ToDictionary(c => c.CategoryId, c => c.CategoryName);
@@ -79,12 +79,13 @@ namespace ASI.Basecode.Services.Services
             var data = tickets.Select(s => new TicketViewModel
             {
                 TicketId = s.TicketId.ToString(),
+                TicketNumber = s.TicketNumber,
                 Title = s.Title,
                 Description = s.Description,
                 DateCreated = s.DateCreated,
                 CreatorId = s.CreatedBy.ToString(),
                 AgentId = s.AssignedAgent.ToString(),
-                StatusId = s.StatusId.ToString(),
+                StatusId = s.StatusId,
                 Category = categories.TryGetValue(s.CategoryId, out var categoryName) ? categoryName : "Unknown",
                 Priority = priorities.TryGetValue(s.PriorityId, out var priorityName) ? priorityName : "Unknown",
                 Status = statuses.TryGetValue(s.StatusId, out var statusName) ? statusName : "Unknown",
@@ -94,7 +95,7 @@ namespace ASI.Basecode.Services.Services
                     _mapper.Map<IEnumerable<TicketActivityViewModel>>(activities) : Enumerable.Empty<TicketActivityViewModel>()
             });
 
-            return data;
+            return data.AsQueryable();
         }
 
         public IQueryable<TicketViewModel> GetUserTickets(Guid userId, byte? status, string? searchTerm, string? sortOrder, int? page)
@@ -107,8 +108,11 @@ namespace ASI.Basecode.Services.Services
             var priorities = _priorityRepository.RetrieveAll().ToDictionary(p => p.PriorityId, p => p.PriorityName);
             var statuses = _statusRepository.RetrieveAll().ToDictionary(st => st.StatusId, st => st.StatusName);
             var users = _userRepository.GetUsers().ToDictionary(u => u.UserId, u => u.Name);
+            
+            
             var ticketIds = ticketsQuery.Select(t => t.TicketId).ToList();
             var ticketActivities = _ticketActivityRepository.GetActivitiesByTicketIds(ticketIds).ToList();
+            
             var feedbacks = _feedbackRepository.GetFeedbackByTicketIds(ticketIds)
                 .ToDictionary(f => f.TicketId, f => _mapper.Map<FeedbackViewModel>(f));
 
@@ -138,7 +142,7 @@ namespace ASI.Basecode.Services.Services
                 DateCreated = s.DateCreated,
                 CreatorId = s.CreatedBy.ToString(),
                 AgentId = s.AssignedAgent.ToString(),
-                StatusId = s.StatusId.ToString(),
+                StatusId = s.StatusId,
                 Category = categories.TryGetValue(s.CategoryId, out var categoryName) ? categoryName : "Unknown",
                 Priority = priorities.TryGetValue(s.PriorityId, out var priorityName) ? priorityName : "Unknown",
                 Status = statuses.TryGetValue(s.StatusId, out var statusName) ? statusName : "Unknown",
@@ -152,11 +156,82 @@ namespace ASI.Basecode.Services.Services
             return model.AsQueryable();
         }
 
-        public IEnumerable<TicketViewModel> GetAgentTickets(Guid id)
+        public IEnumerable<TicketViewModel> GetAgentTickets(Guid id, string? status, string? searchTerm, string? sortOrder, int? page)
         {
-            var tickets = _ticketRepository.GetAgentTicketsById(id);
+            // Retrieve IQueryable from repository
+            var ticketsQuery = _ticketRepository.GetAgentTicketsById(id);
 
-            return _mapper.Map<IEnumerable<TicketViewModel>>(tickets);
+            // Retrieve additional data
+            var categories = _categoryRepository.RetrieveAll().ToDictionary(c => c.CategoryId, c => c.CategoryName);
+            var priorities = _priorityRepository.RetrieveAll().ToDictionary(p => p.PriorityId, p => p.PriorityName);
+            var statuses = _statusRepository.RetrieveAll().ToDictionary(st => st.StatusId, st => st.StatusName);
+            var users = _userRepository.GetUsers().ToDictionary(u => u.UserId, u => u.Name);
+
+
+            var ticketIds = ticketsQuery.Select(t => t.TicketId).ToList();
+            var ticketActivities = _ticketActivityRepository.GetActivitiesByTicketIds(ticketIds).ToList();
+
+            var feedbacks = _feedbackRepository.GetFeedbackByTicketIds(ticketIds)
+                .ToDictionary(f => f.TicketId, f => _mapper.Map<FeedbackViewModel>(f));
+
+            var activitiesByTicketId = ticketActivities
+                .GroupBy(a => a.TicketId)
+                .ToDictionary(g => g.Key, g => g.OrderByDescending(a => a.ModifiedAt).ToList());
+
+            // Start applying filters
+            if(status == "Unresolved")
+            {
+                ticketsQuery = ticketsQuery.Where(t => t.StatusId == 1 || t.StatusId == 2 || t.StatusId == 3);
+            } else
+            {
+                ticketsQuery = ticketsQuery.Where(t => t.StatusId == 4 || t.StatusId == 5 );
+            }
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                ticketsQuery = ticketsQuery.Where(t => t.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+                                                        t.Description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
+            }
+
+            ticketsQuery = ticketsQuery.OrderByDescending(t => t.DateCreated);
+
+             
+            var model = ticketsQuery.Select(s => new TicketViewModel
+            {
+                TicketId = s.TicketId.ToString(),
+                Title = s.Title,
+                Description = s.Description,
+                DateCreated = s.DateCreated,
+                CreatorId = s.CreatedBy.ToString(),  
+                Category = categories.TryGetValue(s.CategoryId, out var categoryName) ? categoryName : "Unknown",
+                Priority = priorities.TryGetValue(s.PriorityId, out var priorityName) ? priorityName : "Unknown",
+                Status = statuses.TryGetValue(s.StatusId, out var statusName) ? statusName : "Unknown",
+                CreatorName = users.TryGetValue(s.CreatedBy, out var creatorName) ? creatorName : "Unknown",
+                LatestUpdate = activitiesByTicketId.TryGetValue(s.TicketId, out var activities) ?
+                    activities.OrderByDescending(a => a.ModifiedAt).FirstOrDefault() : null,
+            });
+
+            return model.AsQueryable();
+        }
+
+        public IQueryable<TicketViewModel> GetWeeklyTickets(DateTime startOfWeek, DateTime endOfWeek)
+        {
+            var ticketsQuery = _ticketRepository.GetWeeklyTickets(startOfWeek, endOfWeek);
+
+            var model = ticketsQuery.Select(s => new TicketViewModel
+            {
+                TicketId = s.TicketId.ToString(),
+                Title = s.Title,
+                Description = s.Description,
+                DateCreated = s.DateCreated,
+                CreatorId = s.CreatedBy.ToString(),
+                AgentId = s.AssignedAgent.ToString(),
+                StatusId = s.StatusId,
+                CategoryId = s.CategoryId,
+                PriorityId = s.PriorityId,
+            });
+
+            return model;
         }
 
         public async Task AddAsync(TicketViewModel ticket)
@@ -177,7 +252,7 @@ namespace ASI.Basecode.Services.Services
             // Call Async Tasks here
             await FileUploadAsync(ticket.AttachmentFiles, _sessionHelper.GetUserIdFromSession(), newTicket.TicketId);
         }
-
+       
         public void Update(TicketViewModel ticket)
         {
             var existingTicket = _ticketRepository.GetTicketById(Guid.Parse(ticket.TicketId));
@@ -260,11 +335,13 @@ namespace ASI.Basecode.Services.Services
             var priorities = _priorityRepository.RetrieveAll().ToDictionary(p => p.PriorityId, p => p.PriorityName);
             var statuses = _statusRepository.RetrieveAll().ToDictionary(st => st.StatusId, st => st.StatusName);
             var users = _userRepository.GetUsersByIds(userIds).ToDictionary(u => u.UserId, u => u.Name);
-            var ticketActivities = _ticketActivityRepository.GetActivitiesByTicketId(guid).ToList();
+            var ticketActivities = _ticketActivityRepository.GetActivitiesByTicketId(guid)
+                .OrderByDescending(activity => activity.ModifiedAt)
+                .ToList();
 
             var latestUpdate = ticketActivities.FirstOrDefault();
-            var latestUpdateDate = DateTime.Now;
-            var latestUpdateMessage = "No Ticket Activity";
+            var latestUpdateDate = DateTime.Now; // Default value
+            var latestUpdateMessage = "No Ticket Activity"; // Default message
 
             if (latestUpdate != null)
             {
@@ -293,8 +370,8 @@ namespace ASI.Basecode.Services.Services
                 Title = ticket.Title,
                 Description = ticket.Description,
                 DateCreated = ticket.DateCreated,
-                CategoryId = ticket.CategoryId.ToString(),
-                PriorityId = ticket.PriorityId.ToString(),
+                CategoryId = ticket.CategoryId,
+                PriorityId = ticket.PriorityId,
                 Category = categories.TryGetValue(ticket.CategoryId, out var categoryName) ? categoryName : "Unknown",
                 Priority = priorities.TryGetValue(ticket.PriorityId, out var priorityName) ? priorityName : "Unknown",
                 Status = statuses.TryGetValue(ticket.StatusId, out var statusName) ? statusName : "Unknown",
@@ -476,7 +553,6 @@ namespace ASI.Basecode.Services.Services
             }
         }
 
-
         #region private methods
         private void Add(Ticket ticket)
         {
@@ -510,6 +586,7 @@ namespace ASI.Basecode.Services.Services
             newNotification.RecipientId = ticket.CreatedBy;
             _notificationRepository.Add(newNotification);
         }
+        
         private async Task FileUploadAsync(List<IFormFile> files, Guid userId, Guid ticketId)
         {
             var folderPath = Path.Combine("wwwroot/uploads", userId.ToString(), ticketId.ToString());

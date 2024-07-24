@@ -15,8 +15,8 @@
 <div class="main">
     @Html.Partial("Admin_Sidebar")
     <div class="admin-body py-3 relative bg-grey">
-        <h2>Tickets</h2>
-        <div class="view-user-nav">
+        <h2 class="px-5">Tickets</h2>
+        <div class="view-user-nav px-5">
                 <div class="agent-nav pt-4">
                     <div class="flex-Row gap-4 pl-2">
                     <p class="@(ViewBag.ShowStatus == null ? "active" : "")" >
@@ -44,11 +44,11 @@
                 </select>
             </div>
         </div>
-        <div class="flex-col rounded-md">
+        <div class="flex-col rounded-md px-5">
             @foreach (var item in Model)
             {
                 <div onclick="window.location.href = '@Url.Action("Tickets", "Admin", new { id = item.TicketId })'" class="agents p-y-2 p-x-2 flex-col mb-3 rounded-2 pointer_cursor">
-
+                        
                         <div class="d-flex justify-content-between">
                             <h5>@item.Title</h5>
                             <p class="mt-1">@item.RelativeTime</p>
