@@ -31,13 +31,13 @@
             @foreach (var item in Model.Tickets)
             {
                 <div class="ticket-container">
-                    <a href="#" data-bs-toggle="modal" data-bs-target="#viewTicket" class="ticket-link">
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#viewTicket" class="ticket-link" data-ticket-id="@item.TicketId">
                         <div class="top-container">
                             @*  <img class="image" src="@item.Image" alt="image"> *@
                             <div class="nameDateContainer">
 
                                 <h5 class="name">@item.CreatorName</h5>
-                                <p class="date">@item.DateCreated</p>
+                                <p class="date">@item.RelativeTime</p>
                             </div>
                         </div>
                         <h2 class="question">@item.Title</h2>
@@ -69,18 +69,119 @@
                         <div class="top-container">
                             <img class="image" src="/img/profile-logo.png" alt="image">
                             <div class="nameDateContainer">
-                                <h5 class="name">Golanginya</h5>
-                                <p class="date">5 min ago</p>
+                                <h5 class="name" id="ViewName">Name</h5>
+                                <p class="date" id="ViewDate">Date</p>
                             </div>
                         </div>
-                        <h2 class="question">How to patch KDE on FreeBSD?</h2>
-                        <p class="details">Lorem ipsum dolor sit met, consectetur..</p>
+                        <h2 class="question" id="ViewTitle">Title</h2>
+                        <p class="details" id="ViewDetails">Details</p>
                     </div>
 
-                    <p class="status1">Open status</p>
+                    <div class="gallery" id="ViewGallery"></div>
                 </div>
             }
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        const viewTicketModal = new bootstrap.Modal(document.getElementById('viewTicket'));
+
+        var dpIcon = document.querySelector('.dpicn');
+        var dropdownMenu = document.getElementById('dropdownMenu');
+
+        dpIcon.addEventListener('click', function (event) {
+            event.stopPropagation();
+
+            if (dropdownMenu.style.display === 'block') {
+                dropdownMenu.style.display = 'none';
+            } else {
+                dropdownMenu.style.display = 'block';
+            }
+        });
+
+        document.querySelectorAll('[data-bs-toggle="modal"]').forEach(element => {
+            element.addEventListener('click', function () {
+                const target = this.getAttribute('data-bs-target');
+
+                console.log("Target was clicked");
+
+
+                if (target == '#viewTicket') {
+                    var ticketId = this.getAttribute('data-ticket-id');
+
+                    fetch(`/Agent/Tickets/${ticketId}`)
+                        .then(response => response.json())
+                        .then(data => {
+
+                            console.log(data);
+                            document.querySelector('#ViewName').textContent = data.user;
+                            document.querySelector('#ViewDate').textContent = data.dateCreated;
+                            document.querySelector('#ViewTitle').textContent = data.title;
+                            document.querySelector('#ViewDetails').textContent = data.description;
+
+                            const gallery = document.querySelector('#ViewGallery');
+                            gallery.innerHTML = '';
+
+                            data.files.forEach(image => {
+                                const anchor = document.createElement('a');
+                                anchor.href = image;
+                                anchor.setAttribute('data-lightbox', 'ticket-gallery');
+                                anchor.setAttribute('data-title', data.title);
+
+                                const img = document.createElement('img');
+                                img.src = image;
+                                img.alt = data.title
+                                img.classList.add('gallery-thumbnail');
+
+                                anchor.appendChild(img);
+                                gallery.appendChild(anchor);
+                            });
+
+                            viewTicketModal.show();
+
+                        })
+                        .catch(error => console.error('Error fetching ticket data:', error));
+                } else {
+                    const modal = new bootstrap.Modal(document.querySelector(target));
+                    modal.show();
+                }
+            });
+        });
+
+        // Get all modal elements
+        const modals = document.querySelectorAll('.modal');
+
+        modals.forEach(modal => {
+            // Find the close button within this specific modal
+            const closeButton = modal.querySelector('[data-bs-dismiss="modal"]');
+
+            if (closeButton) {
+                closeButton.addEventListener('click', function () {
+                    // Get the corresponding Bootstrap modal instance
+                    const modalInstance = bootstrap.Modal.getInstance(modal);
+
+                    if (modalInstance) {
+                        modalInstance.hide(); // Hide the correct modal
+                        // Manually remove backdrop if it still exists
+                        const backdrop = document.querySelector('.modal-backdrop');
+                        if (backdrop) {
+                            backdrop.remove();
+                        }
+                    }
+                });
+            }
+        });
+
+        document.querySelectorAll('input[name="Rating"]').forEach((elem) => {
+            elem.addEventListener("change", function () {
+                document.getElementById("Rating").value = this.value;
+            });
+        });
+    });
+</script>
+
+
 

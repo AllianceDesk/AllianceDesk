@@ -88,6 +88,26 @@ namespace ASI.Basecode.WebApp.Controllers
             return View(model);
         }
 
+        [HttpGet("Tickets/{id}")]
+        public IActionResult Ticket(string id)
+        {
+            var ticket = _ticketService.GetById(id);
+
+            if (ticket == null)
+            {
+                return NotFound(); // Handle ticket not found scenario
+            }
+
+            return Json(new
+            {
+                user = ticket.CreatorName,
+                title = ticket.Title,
+                description = ticket.Description,
+                dateCreated = ticket.DateCreated.ToString("MM/dd/yyyy hh:mm tt"),
+                files = ticket.AttachmentStrings
+            });
+        }
+
         [HttpGet("AssignedTickets")]
         public ActionResult AssignedTickets()
         {
