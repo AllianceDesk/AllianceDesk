@@ -642,10 +642,11 @@ namespace ASI.Basecode.WebApp.Controllers
             // Handle the case where id is provided
             if (id != null)
             {
+                Console.WriteLine("TICKET ID", id);
                 var ticketId = id.Trim(); // Trim to avoid any leading/trailing whitespace
                 var ticket = allTickets.FirstOrDefault(t => t.TicketId.ToString() == ticketId);
 
-                Console.WriteLine(ticket);
+                Console.WriteLine("TICKET", ticket);
 
                 return View("/Views/Admin/TicketDetail.cshtml", ticket);
             }

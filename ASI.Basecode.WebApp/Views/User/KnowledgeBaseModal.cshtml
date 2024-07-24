@@ -45,15 +45,15 @@
         @foreach (var articles in Model.Articles)
         {
             <a href="#" class="link_card" style="text-decoration: none; color: black;">
-                <div class="article_card  mb-3" data-bs-toggle="modal" data-bs-target="#detail" data-article-detail-btn data-article-id="@articles.ArticleId" style="background-color: #FEF2F4; padding: 1em; border-radius: 10px;">
-                    <div class="article_top mb-3 d-flex justify-content-between">
+                <div class="article_card flex flex-col align-items-start mb-3" data-bs-toggle="modal" data-bs-target="#detail" data-article-detail-btn data-article-id="@articles.ArticleId" style="background-color: #FEF2F4; padding: 1em; border-radius: 10px;">
+                    <div class="article_top w-100 mb-3 d-flex justify-content-between">
                         <h6>@articles.Title</h6>
                         <p style="font-size: 14px;">@articles.DateUpdated</p>
                     </div>
 
                     @* <p class="mb-3" style="font-size: 14px;">Life seasons open have. Air have of. Lights fill after let third darkness replenish fruitful let. Wherein set image. Creepeth said above gathered bring.</p> *@
 
-                    <h6 class="article_category" style=" color: #e21818; border: 1px solid #e21818; width:auto; padding: 0.5em; border-radius: 10px; background-color: rgba(226, 24, 24, 0.3); text-align: center; font-size: 10px;">
+                    <h6 class="article_category" style=" color: #e21818; border: 1px solid #e21818; width:auto; padding: 0.5em; border-radius: 10px; background-color: rgba(226, 24, 24, 0.1); text-align: center; font-size: 10px;">
                         @articles.CategoryNavigation
                     </h6>
                 </div>
@@ -61,3 +61,8 @@
         }
     </div>
 </div>
+
+<script>
+    const teams = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+    console.log("ARTICLE  ", teams.Users)
+</script>
