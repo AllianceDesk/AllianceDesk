@@ -62,11 +62,13 @@
                     </label>
                     <label class="modal-input relative flex">
                         <span>Password</span>
-                        <input type="password" name="Password" placeholder="*****" />
+                        <input asp-for="Password" type="password" placeholder="@Html.DisplayFor(model => model.Password)" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
                     </label>
                     <label class="modal-input relative flex">
                         <span>Confirm Password</span>
-                        <input type="password" name="ConfirmPassword" placeholder="*****" />
+                        <input asp-for="Password" type="password" placeholder="@Html.DisplayFor(model => model.Password)" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
                     </label>
                 </div>
                 <div class="flex-Row gap-2 w-100 justify-content-center">

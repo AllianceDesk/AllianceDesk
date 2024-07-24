@@ -247,7 +247,7 @@ namespace ASI.Basecode.WebApp.Controllers
         }
 
         [HttpGet("Teams")]
-        public ActionResult Teams()
+        public ActionResult Teams(string searchString)
         {
             var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
 
@@ -258,10 +258,7 @@ namespace ASI.Basecode.WebApp.Controllers
 
             ViewBag.IsLoginOrRegister = false;
             ViewBag.AgentSidebar = "ViewUser";
-            var teamId = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).TeamId;
-
-            var agents = _userService.GetAgents()
-                                        .Where(t => t.TeamId == teamId.ToString())
+            var users = _userService.GetAllUsers()
                                         .Select(u => new UserViewModel
                                         {
                                             Name = u.Name,
@@ -270,16 +267,25 @@ namespace ASI.Basecode.WebApp.Controllers
                                             UserId = u.UserId.ToString(),
                                         })
                                         .ToList();
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                users = _userService.GetAllUsers()
+                                        .Where(u => u.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                                        .Select(u => new UserViewModel
+                                        {
+                                            Name = u.Name,
+                                            Email = u.Email,
+                                            RoleId = u.RoleId,
+                                            UserId = u.UserId.ToString(),
+                                        })
+                                        .ToList();
+            }
 
             var viewModel = new UserViewModel
             {
-                Users = agents
+                Users = users
             };
-
-            if (teamId == null)
-            {
-                viewModel = null;
-            }
+            ViewBag.SearchString = searchString;
 
             return View(viewModel);
         }
