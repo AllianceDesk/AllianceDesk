@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ASI.Basecode.Services.ServiceModels.TicketViewModel>
+@model ASI.Basecode.Services.ServiceModels.AgentDashboardViewModel
 
 @{
     ViewData["Title"] = "Tickets";
@@ -14,41 +14,70 @@
 @Html.Partial("Agent_Header")
 <div class="main">
     @Html.Partial("Agent_Sidebar")
-    <div class="admin-body py-3 relative bg-grey">
-        <h2>Tickets</h2>
-        <div class="view-user-nav">
-            <div class="agent-nav pt-4">
-                <div class="flex-Row gap-4 pl-2">
-                    <p class="@(ViewBag.ShowStatus == null ? "active" : "")">
-                        <a asp-controller="Admin" asp-action="Tickets" style="@(ViewBag.ShowStatus == null ? "color: red;" : "color: black;")">All</a>
-                    </p>
-                    <p class="@(ViewBag.ShowStatus == "Unresolved" ? "active" : "")">
-                        <a asp-controller="Admin" asp-action="Tickets" asp-route-status="Unresolved" style="@(ViewBag.ShowStatus == "Unresolved" ? "color: red;" : "color: black;")">Unresolved</a>
-                    </p>
-                    <p class="@(ViewBag.ShowStatus == "Resolved" ? "active" : "")">
-                        <a asp-controller="Admin" asp-action="Tickets" asp-route-status="Resolved" style="@(ViewBag.ShowStatus == "Resolved" ? "color: red;" : "color: black;")">Resolved</a>
-                    </p>
-                </div>
+    <div class="admin-body p-y-3 relative bg-grey flex flex-col gap-1">
+
+        <div class="flex-Row justify-content-between">
+            <div id="buttonContainer">
+                <a asp-action="Dashboard" asp-route-status="Unresolved" class="btn btn-primary @(Model.CurrentStatus == "Unresolved" ? "activeButton" : "inactiveButton")">Unresolved</a>
+                <a asp-action="Dashboard" asp-route-status="Resolved" class ="btn btn-primary @(Model.CurrentStatus == "Resolved" ? "activeButton" : "inactiveButton")">Resolved</a>
             </div>
 
-            <div class="flex-Row gap-2 justify-content-center align-center mb-5">
-                <div class="input-group">
-                    <button class="btn btn-outline-secondary" type="submit" id="button-search" style="background-color: whitesmoke; border: 1px solid #ccc;"><i class='bx bx-search bx-xs bx-fw' style="color: #45474B; cursor: pointer;"></i></button>
-                    <input name="searchString" id="searchInput" type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="button-search" style="background-color: whitesmoke; border: 1px solid #ccc;">
-                </div>
-                <div class=" flex-Row gap-1 color-black bg-btn-grey align-center  border-0 p-x-1" data-admin-add-btn>
-                    <i class="fa-solid fa-filter"></i>
-                    <p class="br-1-5 p-y-1">Filter</p>
-                </div>
-            </div>
+            <select class="form-select nav-select" id="floatingSelect" aria-label="Floating label select example">
+                <option selected>Date</option>
+                <option value="1">Category</option>
+            </select>
         </div>
-        <div class="flex-col rounded-md">
-            @foreach (var item in Model)
+        <div id="card_content">
+            @foreach (var item in Model.Tickets)
             {
-                <div onclick="window.location.href = '@Url.Action("Tickets", "Admin", new { id = item.TicketId })'" class=" agents cursor-pointer p-y-1 p-x-1 flex-col ">
-                    <p class="text-1-5 fw-semi">@item.Title</p>
-                    <p class="text-1-5 fw-semi">@item.RelativeTime)</p>
-                    <p>@item.Description</p>
+                <div class="ticket-container">
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#viewTicket" class="ticket-link">
+                        <div class="top-container">
+                            @*  <img class="image" src="@item.Image" alt="image"> *@
+                            <div class="nameDateContainer">
+
+                                <h5 class="name">@item.CreatorName</h5>
+                                <p class="date">@item.DateCreated</p>
+                            </div>
+                        </div>
+                        <h2 class="question">@item.Title</h2>
+                        <p class="details">@item.Description</p>
+                    </a>
+                    @* Add Dropdown Menu Later Here *@
+                    @* <div class="btn-group option">
+                        <button class="btn icon-button" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bx bx-dots-vertical-rounded bx-sm icon-ticket" style="color: #808080;"></i>
+                        </button>
+
+                        
+                        <ul class="dropdown-menu menu">
+                        </ul>
+                    </div> *@
+                </div>
+            }
+        </div>
+      
+        <div class="modal fade" id="viewTicket" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="ticket-modal1">
+                        <div class="top_modal d-flex justify-content-between align-items-center mb-3">
+                            <h3>View Ticket</h3>
+                            <button type="button" class="btn closebtn1" data-bs-dismiss="modal"><i class='bx bx-x bx-sm icon' style="color: #45474B; cursor: pointer;"></i></button>
+                        </div>
+
+                        <div class="top-container">
+                            <img class="image" src="/img/profile-logo.png" alt="image">
+                            <div class="nameDateContainer">
+                                <h5 class="name">Golanginya</h5>
+                                <p class="date">5 min ago</p>
+                            </div>
+                        </div>
+                        <h2 class="question">How to patch KDE on FreeBSD?</h2>
+                        <p class="details">Lorem ipsum dolor sit met, consectetur..</p>
+                    </div>
+
+                    <p class="status1">Open status</p>
                 </div>
             }
         </div>

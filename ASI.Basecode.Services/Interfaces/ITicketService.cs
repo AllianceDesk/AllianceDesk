@@ -13,7 +13,7 @@ namespace ASI.Basecode.Services.Interfaces
         {
                 IEnumerable<TicketViewModel> RetrieveAll();
                 IQueryable<TicketViewModel> GetUserTickets(Guid id, byte? status, string? searchTerm, string? sortOrder, int? page);
-                IEnumerable<TicketViewModel> GetAgentTickets(Guid id);
+                IEnumerable<TicketViewModel> GetAgentTickets(Guid id, string? status, string? searchTerm, string? sortOrder, int? page);
                 Task AddAsync(TicketViewModel ticket);
                 void Update(TicketViewModel ticket);
                 void Delete(string id);

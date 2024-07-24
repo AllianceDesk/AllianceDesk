@@ -107,8 +107,11 @@ namespace ASI.Basecode.Services.Services
             var priorities = _priorityRepository.RetrieveAll().ToDictionary(p => p.PriorityId, p => p.PriorityName);
             var statuses = _statusRepository.RetrieveAll().ToDictionary(st => st.StatusId, st => st.StatusName);
             var users = _userRepository.GetUsers().ToDictionary(u => u.UserId, u => u.Name);
+            
+            
             var ticketIds = ticketsQuery.Select(t => t.TicketId).ToList();
             var ticketActivities = _ticketActivityRepository.GetActivitiesByTicketIds(ticketIds).ToList();
+            
             var feedbacks = _feedbackRepository.GetFeedbackByTicketIds(ticketIds)
                 .ToDictionary(f => f.TicketId, f => _mapper.Map<FeedbackViewModel>(f));
 
@@ -152,11 +155,62 @@ namespace ASI.Basecode.Services.Services
             return model.AsQueryable();
         }
 
-        public IEnumerable<TicketViewModel> GetAgentTickets(Guid id)
+        public IEnumerable<TicketViewModel> GetAgentTickets(Guid id, string? status, string? searchTerm, string? sortOrder, int? page)
         {
-            var tickets = _ticketRepository.GetAgentTicketsById(id);
+            // Retrieve IQueryable from repository
+            var ticketsQuery = _ticketRepository.GetAgentTicketsById(id);
 
-            return _mapper.Map<IEnumerable<TicketViewModel>>(tickets);
+            // Retrieve additional data
+            var categories = _categoryRepository.RetrieveAll().ToDictionary(c => c.CategoryId, c => c.CategoryName);
+            var priorities = _priorityRepository.RetrieveAll().ToDictionary(p => p.PriorityId, p => p.PriorityName);
+            var statuses = _statusRepository.RetrieveAll().ToDictionary(st => st.StatusId, st => st.StatusName);
+            var users = _userRepository.GetUsers().ToDictionary(u => u.UserId, u => u.Name);
+
+
+            var ticketIds = ticketsQuery.Select(t => t.TicketId).ToList();
+            var ticketActivities = _ticketActivityRepository.GetActivitiesByTicketIds(ticketIds).ToList();
+
+            var feedbacks = _feedbackRepository.GetFeedbackByTicketIds(ticketIds)
+                .ToDictionary(f => f.TicketId, f => _mapper.Map<FeedbackViewModel>(f));
+
+            var activitiesByTicketId = ticketActivities
+                .GroupBy(a => a.TicketId)
+                .ToDictionary(g => g.Key, g => g.OrderByDescending(a => a.ModifiedAt).ToList());
+
+            // Start applying filters
+            if(status == "Unresolved")
+            {
+                ticketsQuery = ticketsQuery.Where(t => t.StatusId == 1 || t.StatusId == 2 || t.StatusId == 3);
+            } else
+            {
+                ticketsQuery = ticketsQuery.Where(t => t.StatusId == 4 || t.StatusId == 5 );
+            }
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                ticketsQuery = ticketsQuery.Where(t => t.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+                                                        t.Description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
+            }
+
+            ticketsQuery = ticketsQuery.OrderByDescending(t => t.DateCreated);
+
+             
+            var model = ticketsQuery.Select(s => new TicketViewModel
+            {
+                TicketId = s.TicketId.ToString(),
+                Title = s.Title,
+                Description = s.Description,
+                DateCreated = s.DateCreated,
+                CreatorId = s.CreatedBy.ToString(),  
+                Category = categories.TryGetValue(s.CategoryId, out var categoryName) ? categoryName : "Unknown",
+                Priority = priorities.TryGetValue(s.PriorityId, out var priorityName) ? priorityName : "Unknown",
+                Status = statuses.TryGetValue(s.StatusId, out var statusName) ? statusName : "Unknown",
+                CreatorName = users.TryGetValue(s.CreatedBy, out var creatorName) ? creatorName : "Unknown",
+                LatestUpdate = activitiesByTicketId.TryGetValue(s.TicketId, out var activities) ?
+                    activities.OrderByDescending(a => a.ModifiedAt).FirstOrDefault() : null,
+            });
+
+            return model.AsQueryable();
         }
 
         public async Task AddAsync(TicketViewModel ticket)

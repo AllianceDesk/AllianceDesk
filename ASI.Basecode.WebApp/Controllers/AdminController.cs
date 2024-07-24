@@ -69,6 +69,8 @@ namespace ASI.Basecode.WebApp.Controllers
             return this.View(model);
         }
 
+        #region Analytics
+
         [HttpGet("AnalyticsOverallMetrics")]
         public IActionResult AnalyticsOverallMetrics()
         {
@@ -302,6 +304,8 @@ namespace ASI.Basecode.WebApp.Controllers
             
             return View("Views/Admin/AnalyticsTeamMetric.cshtml", teamTicketCounts);
         }
+
+        #endregion
 
         #region Users
 
@@ -642,10 +646,8 @@ namespace ASI.Basecode.WebApp.Controllers
             // Handle the case where id is provided
             if (id != null)
             {
-                var ticketId = id.Trim(); // Trim to avoid any leading/trailing whitespace
+                var ticketId = id.Trim();
                 var ticket = allTickets.FirstOrDefault(t => t.TicketId.ToString() == ticketId);
-
-                Console.WriteLine(ticket);
 
                 return View("/Views/Admin/TicketDetail.cshtml", ticket);
             }
@@ -725,7 +727,5 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("Tickets", new { id = model.TicketId });
         }
         #endregion
-
-        
     }
 }
