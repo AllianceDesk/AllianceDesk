@@ -20,35 +20,41 @@
                 <div class="agent-nav pt-4">
                     <div class="flex-Row gap-4 pl-2">
                     <p class="@(ViewBag.ShowStatus == null ? "active" : "")" >
-                        <a asp-controller="Admin" asp-action="Tickets" style="@(ViewBag.ShowStatus == null ? "color: red;" : "color: black;")">All</a>
+                        <a asp-controller="Admin" asp-action="Tickets" class="@(ViewBag.ShowStatus == null ? "active_link" : "inactive_link")">All</a>
                         </p>
                     <p class="@(ViewBag.ShowStatus == "Unresolved" ? "active" : "")" >
-                        <a asp-controller="Admin" asp-action="Tickets" asp-route-status="Unresolved" style="@(ViewBag.ShowStatus == "Unresolved" ? "color: red;" : "color: black;")">Unresolved</a>
+                        <a asp-controller="Admin" asp-action="Tickets" asp-route-status="Unresolved" class="@(ViewBag.ShowStatus == "Unresolved" ? "active_link" : "inactive_link")">Unresolved</a>
                         </p>
                     <p class="@(ViewBag.ShowStatus == "Resolved" ? "active" : "")" >
-                        <a asp-controller="Admin" asp-action="Tickets" asp-route-status="Resolved" style="@(ViewBag.ShowStatus == "Resolved" ? "color: red;" : "color: black;")">Resolved</a>
+                        <a asp-controller="Admin" asp-action="Tickets" asp-route-status="Resolved" class="@(ViewBag.ShowStatus == "Resolved" ? "active_link" : "inactive_link")">Resolved</a>
                         </p>
                     </div>
                 </div>
             
-            <div class="flex-Row gap-2 justify-content-center align-center mb-5">
+            <div class="flex-Row gap-2 justify-content-center align-center mb-5  mt-3">
                 <div class="input-group">
-                    <button class="btn btn-outline-secondary" type="submit" id="button-search" style="background-color: whitesmoke; border: 1px solid #ccc;"><i class='bx bx-search bx-xs bx-fw' style="color: #45474B; cursor: pointer;"></i></button>
-                    <input name="searchString" id="searchInput" type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="button-search" style="background-color: whitesmoke; border: 1px solid #ccc;">
+                    <button class="btn btn-outline-secondary filter_tickets remove_default" type="submit" id="button-search"><i class='bx bx-search bx-xs bx-fw' style="color: #45474B; cursor: pointer;"></i></button>
+                    <input name="searchString" id="searchInput" type="text" class="form-control filter_tickets remove_default" placeholder="Search Tickets" aria-label="Search" aria-describedby="button-search">
                 </div>
-                <div class=" flex-Row gap-1 color-black bg-btn-grey align-center  border-0 p-x-1" data-admin-add-btn>
-                    <i class="fa-solid fa-filter"></i>
-                    <p class="br-1-5 p-y-1">Filter</p>
-                </div>
+                <select class="form-select form-select-md filter_tickets remove_default" aria-label="Small select example">
+                    <option selected>Open this select menu</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
             </div>
         </div>
         <div class="flex-col rounded-md">
             @foreach (var item in Model)
             {
-                <div onclick="window.location.href = '@Url.Action("Tickets", "Admin", new { id = item.TicketId })'" class=" agents cursor-pointer p-y-1 p-x-1 flex-col ">
-                        <p class="text-1-5 fw-semi">@item.Title</p>
-                        <p class="text-1-5 fw-semi">@item.RelativeTime</p>
-                        <p>@item.Description</p>
+                <div onclick="window.location.href = '@Url.Action("Tickets", "Admin", new { id = item.TicketId })'" class="agents p-y-2 p-x-2 flex-col mb-3 rounded-2 pointer_cursor">
+
+                        <div class="d-flex justify-content-between">
+                            <h5>@item.Title</h5>
+                            <p class="mt-1">@item.RelativeTime</p>
+                        </div>
+                        
+                       @*  <p>@item.Description</p> *@
                 </div>
             }
         </div>
