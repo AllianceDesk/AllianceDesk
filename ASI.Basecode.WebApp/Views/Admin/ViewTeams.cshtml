@@ -27,7 +27,7 @@
                         <i class="fa-solid fa-magnifying-glass text-1-5"></i>
                         <input class="bg-transparent" type="text" placeholder="Search" />
                     </div>
-                    <button class="mbtn-primary flex-Row gap-1 color-white bg-red align-center justify-content-center border-0 p-x-1 br-1-5" data-admin-add-btn>
+                    <button class="mbtn-primary flex-Row gap-1 color-white bg-red align-center justify-content-center border-0 p-x-1 br-1-5" style="height: 2.6rem;" data-admin-add-btn>
                         <i class="fa-solid fa-user-plus"></i>
                         <p class="br-1-5 p-y-1">Add</p>
                     </button>
@@ -58,8 +58,8 @@
             }
         </div>
         <div class="hidden modal-admin bg-modal" data-admin-modal-container>
-            <div class="flex flex-col gap-2 br-1 bg-white p-y-1 p-x-2">
-                <form asp-action="PostTeamAdd" method="post" data-modal-add-form>
+            <div class="flex flex-col gap-2 br-1 bg-white p-y-1 p-x-2 w-25">
+                <form asp-action="PostTeamAdd" method="post" data-modal-add-form class="flex flex-col gap-4">
                     @Html.AntiForgeryToken()
                     <div class="flex-Row justify-content-between">
                         <h2>Add Team</h2>

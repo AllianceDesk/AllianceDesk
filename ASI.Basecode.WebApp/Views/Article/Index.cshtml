@@ -132,8 +132,8 @@ else if (ViewBag.RoleId == 2)
     else if (ViewBag.RoleId == 1)
     {
         @Html.Partial("Admin_Sidebar")
-        <div class="admin-body p-y-3 relative bg-grey flex flex-col gap-1">
-            <nav>
+        <div class="admin-body py-3 relative bg-grey flex flex-col gap-1">
+            <div>
 
                 <div class="nav_one mb-3">
 
@@ -182,7 +182,7 @@ else if (ViewBag.RoleId == 2)
                         </form>
                     </div>
                 </div>
-            </nav>
+            </div>
 
             <main>
                 @foreach (var item in Model.Articles)
@@ -206,9 +206,8 @@ else if (ViewBag.RoleId == 2)
     } else
     {
         @Html.Partial("Agent_Sidebar")
-        <div class="admin-body p-y-3 relative bg-grey flex flex-col gap-1">
-            <nav>
-
+        <div class="admin-body py-3 relative bg-grey flex flex-col gap-1">
+            <div>
                 <div class="nav_one mb-3">
 
                     <h3>Knowledge Base</h3>
@@ -256,7 +255,7 @@ else if (ViewBag.RoleId == 2)
                         </form>
                     </div>
                 </div>
-            </nav>
+            </div>
 
             <main>
                 @foreach (var item in Model.Articles)
@@ -328,7 +327,7 @@ else if (ViewBag.RoleId == 2)
         var dpIcon = document.querySelector('.dpicn');
         var dropdownMenu = document.getElementById('dropdownMenu');
 
-        dpIcon.addEventListener('click', function (event) {
+        /*dpIcon.addEventListener('click', function (event) {
             event.stopPropagation();
 
             if (dropdownMenu.style.display === 'block') {
@@ -336,7 +335,7 @@ else if (ViewBag.RoleId == 2)
             } else {
                 dropdownMenu.style.display = 'block';
             }
-        });
+        });*/
 
         var addArticleBtn = document.getElementById('addArticleBtn');
         

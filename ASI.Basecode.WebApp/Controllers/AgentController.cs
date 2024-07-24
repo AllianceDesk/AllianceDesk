@@ -12,6 +12,8 @@ using System;
 using ASI.Basecode.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using ASI.Basecode.Services.Manager;
+using static ASI.Basecode.Resources.Constants.Enums;
+using System.Collections.Generic;
 
 namespace ASI.Basecode.WebApp.Controllers
 {
@@ -44,7 +46,7 @@ namespace ASI.Basecode.WebApp.Controllers
 
 
         [HttpGet("Dashboard")]
-        public ActionResult Dashboard()
+        public ActionResult Dashboard(string? id, string? status)
         {
             var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
 
@@ -53,8 +55,41 @@ namespace ASI.Basecode.WebApp.Controllers
                 return RedirectToAction("Index", "AccessDenied");
             }
 
-            ViewBag.AgentSidebar = "Overview";
-            return this.View();  
+            ViewBag.IsLoginOrRegister = false;
+            ViewBag.AdminSidebar = "Overview";
+
+            // Retrieve all tickets once
+            var allTickets = _ticketService.RetrieveAll();
+
+            // Handle the case where status is provided
+            if (status != null)
+            {
+                ViewBag.ShowStatus = status;
+
+                IEnumerable<TicketViewModel> filteredTickets = status switch
+                {
+                    "Resolved" => allTickets.Where(t => t.StatusId == "4" || t.StatusId == "5"),
+                    _ => allTickets.Where(t => t.StatusId == "1" || t.StatusId == "2" || t.StatusId == "3")
+                };
+
+                filteredTickets = filteredTickets.OrderByDescending(t => t.DateCreated);
+                return View("/Views/Agent/Dashboard.cshtml", filteredTickets);
+            }
+
+            // Handle the case where id is provided
+            if (id != null)
+            {
+                var ticketId = id.Trim(); // Trim to avoid any leading/trailing whitespace
+                var ticket = allTickets.FirstOrDefault(t => t.TicketId.ToString() == ticketId);
+
+                Console.WriteLine(ticket);
+
+                return View("/Views/Agent/Dashboard.cshtml", ticket);
+            }
+
+            // Handle the case where no id and status are provided
+            var tickets = allTickets.OrderByDescending(t => t.DateCreated);
+            return View("/Views/Agent/Dashboard.cshtml", tickets);
         }
 
         [HttpGet("AssignedTickets")]
@@ -153,9 +188,13 @@ namespace ASI.Basecode.WebApp.Controllers
         /// <returns> View User </returns>
         public IActionResult AgentProfileEdit(UserViewModel user)
         {
+            if (user == null)
+            {
+                return NotFound();
+            }
             _userService.UpdateUser(user);
 
-            return RedirectToAction("AgentProfile");
+            return RedirectToAction("Teams");
         }
 
 
@@ -219,7 +258,10 @@ namespace ASI.Basecode.WebApp.Controllers
 
             ViewBag.IsLoginOrRegister = false;
             ViewBag.AgentSidebar = "ViewUser";
-            var users = _userService.GetUsers()
+            var teamId = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).TeamId;
+
+            var agents = _userService.GetAgents()
+                                        .Where(t => t.TeamId == teamId.ToString())
                                         .Select(u => new UserViewModel
                                         {
                                             Name = u.Name,
@@ -231,8 +273,13 @@ namespace ASI.Basecode.WebApp.Controllers
 
             var viewModel = new UserViewModel
             {
-                Users = users
+                Users = agents
             };
+
+            if (teamId == null)
+            {
+                viewModel = null;
+            }
 
             return View(viewModel);
         }
@@ -343,7 +390,7 @@ namespace ASI.Basecode.WebApp.Controllers
                 return RedirectToAction("Index", "AccessDenied");
             }
 
-            var data = _userService.GetUsers().FirstOrDefault(x => x.UserId.ToString() == UserId);
+            var data = _userService.GetUserById(UserId);
             if (data == null)
             {
                 return NotFound(); 
@@ -355,7 +402,8 @@ namespace ASI.Basecode.WebApp.Controllers
                 Name = data.Name,
                 Email = data.Email,
                 RoleId = data.RoleId,
-                TeamName = _userService.GetTeams().FirstOrDefault(t => t.TeamId == data.TeamId.ToString())?.TeamName
+                TeamName = _userService.GetTeams().FirstOrDefault(t => t.TeamId == data.TeamId.ToString())?.TeamName,
+                RecentUserActivities = _userService.GetUserActivity(UserId),
             };
 
             return PartialView("AgentDetails", userModel);

@@ -10,9 +10,9 @@
 }
 
 @Html.Partial("Agent_Header")
-<div class="main">
-    @Html.Partial("Agent_Sidebar")
-    <div class="admin-body py-3 relative bg-modal flex flex-col gap-1">
+<div>
+    @* @Html.Partial("Agent_Sidebar") *@
+    <div class=" py-3 relative bg-modal flex flex-col gap-1">
         <div class=" mx-auto bg-modal" data-admin-modal-container>
             <div class="modal-container br-1 bg-white p-y-1 p-x-2" >
                 <div class="agents-details | margin-1 bg-white flex-Row gap-2 p-y-1 p-x-1 align-center">
@@ -45,8 +45,8 @@
                     </div>
                 </div>
                 <div class="flex-Row gap-2 w-100 justify-content-center">
-    
-                        <button asp-action="AgentProfile" asp-controller="Agent" class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-edit-cancel-btn>Back</button>
+
+                    <a asp-action="AgentProfile" data-td-none asp-controller="Agent" class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-edit-cancel-btn>Back</a>
                  
                     <button class="mbtn-primary color-white bg-red align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-edit-save-btn>Export</button>
                 </div>

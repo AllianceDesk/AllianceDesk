@@ -90,12 +90,21 @@
                     <p>No agents available.</p>
                 }
                 </div> *@
-                <div class="agents-container bg-white" id="agents-container"></div>
-                <div class="pagination-container justify-content-center" data-pagination-container>
-                    <button id="prev-page" disabled>Previous</button>
-                    <span id="page-info"></span>
-                    <button id="next-page">Next</button>
-                </div>
+                @if(Model == null)
+                {
+                    <div class="agents-container" id="agents-container">
+                        <p>The agent does not belong to a Team.</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="agents-container bg-white" id="agents-container"></div>
+                    <div class="pagination-container justify-content-center" data-pagination-container>
+                        <button id="prev-page" disabled>Previous</button>
+                        <span id="page-info"></span>
+                        <button id="next-page">Next</button>
+                    </div>
+                }
             </div>
             <div class="p-x-1 hidden" data-admin-edit-details>
                 <div class="flex-Row  align-center justify-content-between p-y-2 border-b-2">
@@ -289,7 +298,7 @@
         if (usersToShow.length > 0) {
             usersToShow.forEach(item => {
                 const userDiv = document.createElement('div');
-                    userDiv.classList.add('agents', 'cursor-pointer', 'p-y-1', 'p-x-1', 'agent-container');
+                userDiv.classList.add('agents', 'cursor-pointer', 'p-y-1', 'p-x-1', 'agent-container');
                 userDiv.dataset.agentTeamsAgent = '';
                 userDiv.dataset.userId = item.UserId;
 
