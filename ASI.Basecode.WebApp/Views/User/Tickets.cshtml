@@ -9,18 +9,31 @@
 }
 
 <div id="container">
-    <header>
-        <div class="logo">
+    <header class="px-5">
+       @*  <div class="logo">
             <img src="~/img/alliancedesk-logo.png" style="width: 185px;" alt="logo" onclick="window.location.href = '@Url.Action("Index", "Home")';">
+        </div> *@
+
+        <div>
+            <img src="~/img/alliancedesk-logo.png" style="width: 185px;" alt="logo">
         </div>
 
-        <div class="header-buttons">
-            <button type="button" class="btn button button-container1" data-bs-toggle="modal" data-bs-target="#createTicket"><i class='bx bx-plus-circle bx-xs bx-fw header_button_icon'></i> Create Ticket </button>
-            <a asp-action="Index" asp-controller="Notification" class="bell_icon"><i class='bx bx-bell bx-sm header_icon'></i></a>            
-            <i class='bx bx-cog bx-sm header_icon' data-bs-toggle="modal" data-bs-target="#settings"></i>
-                        
+        <div class="">
+            
+           @*  <a asp-action="Index" asp-controller="Notification" class="bell_icon"><i class='bx bx-bell bx-sm header_icon'></i></a> *@
+            <i class='bx bx-bell bx-sm bx-fw pt-1 mr-1 bell_icon' style="cursor: pointer; transform: scale(1.1);"></i>
+            <div class="btn-group">
+                <img src="~/img/profile-logo.png" class="dpicn" data-bs-toggle="dropdown" aria-expanded="false" alt="Profile">
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Profile</a></li>
+                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#settings" style="cursor: pointer;">Settings</a></li>
+                    <li><a class="dropdown-item" asp-action="SignOutUser" asp-controller="Account">Logout</a></li>
+                </ul>
+            </div>
 
-            <a class="profile" href="#">
+            @* <i class='bx bx-cog bx-sm header_icon' data-bs-toggle="modal" data-bs-target="#settings"></i> *@
+
+            @*  <a class="profile" href="#">
                 <img src="~/img/profile-logo.png" class="dpicn hover-pointer" alt="dp">
             </a>
 
@@ -33,22 +46,37 @@
 
                     <a class="dropdown-item" asp-action="SignOutUser" asp-controller="Account"><i class="bx bx-log-out bx-xs bx-fw" style="color: #3D3B40;"></i> Logout</a>
                 </li>
-            </ul>
+            </ul> *@
         </div>
     </header>
 
     <nav>
-        <div id="buttonContainer">
+        <div id="buttonContainer" class="mt-1">
             @foreach (var status in Model.Statuses)
             {
                 <a asp-action="Tickets" asp-route-status=@status.Key class="btn btn-primary @(status.Key == Model.CurrentStatus.ToString() ? "activeButton" : "inactiveButton")">@status.Value</a>
             }
-        </div> 
+        </div>
 
-        <select class="form-select nav-select" id="floatingSelect" aria-label="Floating label select example">
+        <div class="d-flex gap-3 ml-5">
+            <input class="form-control w-75 mt-3" id="search-input" type="search" placeholder="Search" aria-label="Search" value="@Model.CurrentSearchTerm">
+            <select class="form-select w-auto" style="height: 2.5rem; margin-top: 0.9rem; cursor: pointer;" aria-label="Small select example">
+                <option selected>Date</option>
+                <option value="1">Category</option>
+            </select>
+        </div>
+
+        
+        @* <div id="search-container">
+        <i class='bx bx-search'></i>
+        <input type="text" id="search-input" placeholder="Search Tickets" value="@Model.CurrentSearchTerm">
+        </div> *@
+
+        @* <select class="form-select nav-select" id="floatingSelect" aria-label="Floating label select example">
             <option selected>Date</option>
             <option value="1">Category</option>
-        </select>
+        </select> *@
+        
     </nav>
 
     <main>
@@ -417,30 +445,31 @@
 
     </main>
 
-    <div id="sidebar">
+    <div id="sidebar" class="px-4">
+        @* <button type="button" class="btn button button-container1" data-bs-toggle="modal" data-bs-target="#createTicket"><i class='bx bx-plus-circle bx-xs bx-fw header_button_icon'></i> Create Ticket </button> *@
+        <button type="button" class="btn btn-danger mt-3 w-100 d-flex justify-content-start align-items-center" data-bs-toggle="modal" data-bs-target="#createTicket">
+            <i class='bx bx-layer-plus ' style='color:#ffffff; transform: scale(1.2)'></i>
+            <span class="ml-3">Create Ticket</span>
+        </button>
+        
 
-        <div id="search-container">
-            <i class='bx bx-search'></i>
-            <input type="text" id="search-input" placeholder="Search Tickets" value="@Model.CurrentSearchTerm">
-        </div>
-
-        <div id="button-container">
+        @* <div id="button-container">
             <i class='bx bx-list-ul'></i>
             <span class="label-1">Tickets</span>
-        </div>
+        </div> *@
 
 
         <div id="instruction-container">
 
             <div class="instruction-label" data-bs-toggle="modal" data-bs-target="#knowledge" id="knowledgeBase">
-                <i class="fa-regular fa-newspaper"></i>
+                <i class='bx bx-news bx-fw' style='color:#aaaaaa'></i>
                 <span class="label-2">Knowledge Base</span>
             </div>
 
             <hr />
 
-            <div class="instruction-label">
-                <i class='bx bx-star'></i>
+            <div class="instruction-label"  style=" cursor: default !important;">
+                <i class='bx bx-star bx-fw'></i>
                 <span class="label-2">Favorites</span>
             </div>
 
@@ -448,10 +477,16 @@
 
             <div class="instruction-detail">
                 <ul>
-                    @foreach(var article in Model.Favorites)
-                    {
-                        <li class="text-sm" data-article-detail-btn data-article-id="@article.ArticleId" data-bs-toggle="modal" data-bs-target="#detail">@article.Title</li>
+                    @if(Model.Favorites != null) {
+                        @foreach (var article in Model.Favorites)
+                        {
+                            <li class="text-sm" data-article-detail-btn data-article-id="@article.ArticleId" data-bs-toggle="modal" data-bs-target="#detail">@article.Title</li>
+                        }
                     }
+                    else {
+                        <p>No Favorites added</p>
+                    }
+                   
                 </ul>
             </div>
 
