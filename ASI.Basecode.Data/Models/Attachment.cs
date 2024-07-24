@@ -10,6 +10,7 @@ namespace ASI.Basecode.Data.Models
         public string FilePath { get; set; }
         public DateTime UploadedAt { get; set; }
         public Guid UploadedBy { get; set; }
+
         public virtual Ticket Ticket { get; set; }
         public virtual User UploadedByNavigation { get; set; }
     }

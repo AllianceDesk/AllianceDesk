@@ -11,6 +11,7 @@ namespace ASI.Basecode.Data.Models
         public DateTime ModifiedAt { get; set; }
         public byte OperationId { get; set; }
         public string Message { get; set; }
+
         public virtual User ModifiedByNavigation { get; set; }
         public virtual TicketActivityOperation Operation { get; set; }
         public virtual Ticket Ticket { get; set; }
