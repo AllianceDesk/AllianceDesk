@@ -108,10 +108,9 @@ namespace ASI.Basecode.WebApp.Controllers
                                             .ToList();
                 }
             }
-
             var viewModel = new ArticleViewModel
             {
-                Articles = data
+                Articles = data,
             };
             return View(viewModel);
         }
@@ -189,6 +188,7 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpGet ("/KnowledgeBase/Article-Detail")]
         public IActionResult DetailModal(string articleId)
         {
+            ViewBag.RoleId = _userRepository.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
             var articleData = _articleService.RetrieveAll().Where(a => a.ArticleId.ToString() == articleId).FirstOrDefault();
             var isFavorite = _favoriteRepository.RetrieveAll().Any(f => f.ArticleId.ToString() == articleId && f.UserId.ToString() == _sessionHelper.GetUserIdFromSession().ToString());
             if (articleData == null)

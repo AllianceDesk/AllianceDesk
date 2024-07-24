@@ -95,7 +95,7 @@
 								}
 							}
 						</a>
-						<div class="btn-group option">
+						<div class="btn-group option">  
 
 							@if (item.Status == "Open" || item.Status == "Assigned")
 							{
@@ -428,42 +428,47 @@
 
         <div id="instruction-container">
 
-            <div class="instruction-label" data-bs-toggle="modal" data-bs-target="#knowledge">
-                <i class='bx bx-star'></i>
-                <span class="label-2">Articles</span>
+            <div class="instruction-label" data-bs-toggle="modal" data-bs-target="#knowledge" id="knowledgeBase">
+                <i class="fa-regular fa-newspaper"></i>
+                <span class="label-2">Browse Articles</span>
             </div>
 
             <hr />
-
-            <div class="instruction-detail">
-                <ul>
-                    <li>&#8226; Click the 'Create Ticket'</li>
-                    <li>&#8226; Enter the necessary details</li>
-                    <li>&#8226; Submit if done</li>
-                </ul>
-            </div>
 
             <div class="instruction-label">
-                <i class='bx bx-link'></i>
-                <span class="label-2">Contacts</span>
+                <i class='bx bx-star'></i>
+                <span class="label-2">Favorites</span>
             </div>
 
             <hr />
 
             <div class="instruction-detail">
                 <ul>
-                    @foreach(var item in Model.Agents)
+                    @foreach(var article in Model.Favorites)
                     {
-                        <li>&#8226 @item.Email</li>
+                        <li class="text-sm" data-article-detail-btn data-article-id="@article.ArticleId" data-bs-toggle="modal" data-bs-target="#detail">@article.Title</li>
                     }
                 </ul>
             </div>
 
         </div>
-
     </div>
+</div>
 
-    @Html.Partial("KnowledgeBaseModal")
+<div class="modal fade" id="knowledge" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- The content for Create Article Modal will be loaded here-->
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="detail" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <!-- The content for Article Detail Modal will be loaded here-->
+        </div>
+    </div>
 </div>
 
 <script>
@@ -634,5 +639,132 @@
                 document.getElementById("Rating").value = this.value;
             });
         });
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        $(document).on('click', '[data-article-detail-btn]', function () {
+            var articleId = $(this).data('article-id');
+
+            // Perform AJAX request to fetch article details
+            $.ajax({
+                url: '/KnowledgeBase/Article-Detail',
+                type: 'GET',
+                data: { articleId: articleId },
+                success: function (result) {
+                    $('#detail .modal-content').html(result);
+                    $('#detail').modal('show');
+                    console.log('Article details successfully loaded!');
+                },
+                error: function (error) {
+                    console.error('Error loading article details:', error);
+                }
+            });
+        });
+
+        var knowledgeBase = document.getElementById('knowledgeBase');
+        knowledgeBase.addEventListener('click', function () {
+
+            // Perform AJAX request to fetch article details
+            $.ajax({
+                url: '/KnowledgeBaseModal',
+                type: 'GET',
+                success: function (result) {
+                    $('#knowledge .modal-content').html(result);
+                    $('#knowledge').modal('show');
+                    console.log('KnowledgeBase successfully loaded!');
+                },
+                error: function (error) {
+                    console.error('Error loading article details:', error);
+                }
+            });
+        });
+
+        $(document).on('click', '[data-backToKBModal-btn]', function () {
+            // Perform AJAX request to add to favorites
+            $.ajax({
+                url: 'Tickets',
+                type: 'GET',
+                success: function (result) {
+                    // Refresh the article detail modal
+                    loadKnowledgeBase();
+                },
+                error: function (error) {
+                    console.error('Error adding article to favorites:', error);
+                }
+            });
+        });
+
+        // Function to load article details
+        function loadKnowledgeBase() {
+            // Perform AJAX request to fetch article details
+            $.ajax({
+                url: '/KnowledgeBaseModal',
+                type: 'GET',
+                success: function (result) {
+                    $('#knowledge .modal-content').html(result);
+                    $('#knowledge').modal('show');
+                    console.log('KnowledgeBase successfully loaded!');
+                },
+                error: function (error) {
+                    console.error('Error loading article details:', error);
+                }
+            });
+        }
+
+        $(document).on('click', '[data-article-addFavorites-btn]', function () {
+            var articleId = $(this).data('article-id');
+
+            // Perform AJAX request to add to favorites
+            $.ajax({
+                url: '/KnowledgeBase/Article-AddFavorite',
+                type: 'POST',
+                data: { articleId: articleId },
+                success: function (result) {
+                    // Refresh the article detail modal
+                    loadArticleDetails(articleId);
+                },
+                error: function (error) {
+                    console.error('Error adding article to favorites:', error);
+                }
+            });
+        });
+
+        $(document).on('click', '[data-article-removeFavorites-btn]', function () {
+            var articleId = $(this).data('article-id');
+
+            // Perform AJAX request to remove from favorites
+            $.ajax({
+                url: '/KnowledgeBase/Article-DeleteFavorite',
+                type: 'POST',
+                data: { articleId: articleId },
+                success: function (result) {
+                    // Refresh the article detail modal
+                    loadArticleDetails(articleId);
+                },
+                error: function (error) {
+                    console.error('Error removing article from favorites:', error);
+                }
+            });
+        });
+
+        // Function to load article details
+        function loadArticleDetails(articleId) {
+            $.ajax({
+                url: '/KnowledgeBase/Article-Detail',
+                type: 'GET',
+                data: { articleId: articleId },
+                success: function (result) {
+                    $('#detail .modal-content').html(result);
+                    $('#detail').modal('show');
+                    console.log('Article details successfully loaded!');
+                },
+                error: function (error) {
+                    console.error('Error loading article details:', error);
+                }
+            });
+        }
+
     });
 </script>
