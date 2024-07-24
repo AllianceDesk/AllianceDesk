@@ -9,7 +9,10 @@
 }
 
 
-
+.registerBtn:hover, .registerBtn:active{
+    color: white;
+    text-decoration: none !important;
+}
 
 .loginBtn,
 .registerBtn, .loginBtnAccent {
