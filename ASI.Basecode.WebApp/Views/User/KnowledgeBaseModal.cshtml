@@ -1,210 +1,63 @@
-﻿@section styles {
+﻿@model ASI.Basecode.Services.ServiceModels.UserTicketsViewModel
+
+@section styles {
     <link rel="stylesheet" href="~/css/user_tickets.css" />
 
 }
 
-<div class="modal fade" id="knowledge" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="ticket-modal1">
+<div class="ticket-modal1">
 
-                <div class="top_modal d-flex justify-content-between align-items-center mb-4 ">                   
-                    <h3>Articles</h3>
-                    <button type="button" class="btn x_button" data-bs-dismiss="modal"><i class='bx bx-x bx-sm x_icon'></i></button>
+    <div class="top_modal d-flex justify-content-between align-items-center mb-4 ">
+        <h3>Articles</h3>
+        <button type="button" class="btn x_button" data-bs-dismiss="modal">
+            <a asp-controller="User" asp-action="Tickets" method="get" class='bx bx-x bx-sm x_icon remove_default'></a>
+        </button>
+    </div>
+
+    <div class="nav_two">
+
+        <div class="filter_button d-flex justify-content-between mb-2 pr-3 pl-3">
+
+            <form>
+                <div class="input-group w-100">
+                    <button class="btn btn-outline-secondary remove_default search_button" type="button" id="button-search"><i class='bx bx-search bx-xs bx-fw x_icon'></i></button>
+                    <input type="text" class="form-control remove_default search_field" placeholder="Search" aria-label="Search" aria-describedby="button-search">
                 </div>
+            </form>
 
-                <div class="nav_two">                    
+            <select class="form-select form-select-lg mb-3 remove_default select_button" aria-label="Large select example">
+                <option selected>Default</option>
+                <option value="1">Technical</option>
+                <option value="2">Billing</option>
+                <option value="3">General Questions</option>
+                <option value="3">Account Management</option>
+                <option value="3">Customer Support</option>
+                <option value="3">Others</option>
+            </select>
 
-                    <div class="filter_button d-flex justify-content-between mb-2 pr-3 pl-3">
+        </div>
 
-                        <form>
-                            <div class="input-group w-100">
-                                <button class="btn btn-outline-secondary remove_default search_button" type="button" id="button-search"><i class='bx bx-search bx-xs bx-fw x_icon'></i></button>
-                                <input type="text" class="form-control remove_default search_field" placeholder="Search" aria-label="Search" aria-describedby="button-search">
-                            </div>
-                        </form>
+    </div>
 
-                        <select class="form-select form-select-lg mb-3 remove_default select_button" aria-label="Large select example">
-                            <option selected>Default</option>
-                            <option value="1">Technical</option>
-                            <option value="2">Billing</option>
-                            <option value="3">General Questions</option>
-                            <option value="3">Account Management</option>
-                            <option value="3">Customer Support</option>
-                            <option value="3">Others</option>
-                        </select> 
+    <hr class="mb-4" style="border-top: 2px solid black; width: 97%;" />
 
+    <div style="overflow-y: auto; height: 20em;" class="pr-3 pl-3">
+        @foreach (var articles in Model.Articles)
+        {
+            <a href="#" class="link_card" style="text-decoration: none; color: black;">
+                <div class="article_card  mb-3" data-bs-toggle="modal" data-bs-target="#detail" data-article-detail-btn data-article-id="@articles.ArticleId" style="background-color: #FEF2F4; padding: 1em; border-radius: 10px;">
+                    <div class="article_top mb-3 d-flex justify-content-between">
+                        <h6>@articles.Title</h6>
+                        <p style="font-size: 14px;">@articles.DateUpdated</p>
                     </div>
 
+                    @* <p class="mb-3" style="font-size: 14px;">Life seasons open have. Air have of. Lights fill after let third darkness replenish fruitful let. Wherein set image. Creepeth said above gathered bring.</p> *@
+
+                    <h6 class="article_category" style=" color: #e21818; border: 1px solid #e21818; width:auto; padding: 0.5em; border-radius: 10px; background-color: rgba(226, 24, 24, 0.3); text-align: center; font-size: 10px;">
+                        @articles.CategoryNavigation
+                    </h6>
                 </div>
-                
-                <hr class="mb-4" style="border-top: 2px solid black; width: 97%;"/>
-
-                <div style="overflow-y: auto; height: 20em;" class="pr-3 pl-3">
-                    <a href="#" class="link_card" style="text-decoration: none; color: black;">
-                        <div class="article_card  mb-3" data-bs-toggle="modal" data-bs-target="#detail" style=" display: flex; flex-direction: column; background-color: #FEF2F4; padding: 1em; border-radius: 10px;">
-                            <div class="article_top mb-3 d-flex justify-content-between">
-                                <h6>Change Password</h6>
-                                <p style="font-size: 14px;">20th Oct</p>
-                            </div>
-
-                            @* <p class="mb-3" style="font-size: 14px;">Life seasons open have. Air have of. Lights fill after let third darkness replenish fruitful let. Wherein set image. Creepeth said above gathered bring.</p> *@
-
-                            <h6 class="article_category" style=" color: #e21818; border: 1px solid #e21818; width: 10.5%; padding: 0.5em; border-radius: 10px; background-color: rgba(226, 24, 24, 0.3); text-align: center; font-size: 10px;">
-                                Technical
-                            </h6>
-                        </div>
-                    </a>
-                    <a href="#" class="link_card" style="text-decoration: none; color: black;">
-                        <div class="article_card  mb-3" data-bs-toggle="modal" data-bs-target="#detail" style=" display: flex; flex-direction: column; background-color: #FEF2F4; padding: 1em; border-radius: 10px;">
-                            <div class="article_top mb-3 d-flex justify-content-between">
-                                <h6>Change Password</h6>
-                                <p style="font-size: 14px;">20th Oct</p>
-                            </div>
-
-                            @* <p class="mb-3" style="font-size: 14px;">Life seasons open have. Air have of. Lights fill after let third darkness replenish fruitful let. Wherein set image. Creepeth said above gathered bring.</p> *@
-
-                            <h6 class="article_category" style=" color: #e21818; border: 1px solid #e21818; width: 10.5%; padding: 0.5em; border-radius: 10px; background-color: rgba(226, 24, 24, 0.3); text-align: center; font-size: 10px;">
-                                Technical
-                            </h6>
-                        </div>
-                    </a>
-                    <a href="#" class="link_card" style="text-decoration: none; color: black;">
-                        <div class="article_card  mb-3" data-bs-toggle="modal" data-bs-target="#detail" style=" display: flex; flex-direction: column; background-color: #FEF2F4; padding: 1em; border-radius: 10px;">
-                            <div class="article_top mb-3 d-flex justify-content-between">
-                                <h6>Change Password</h6>
-                                <p style="font-size: 14px;">20th Oct</p>
-                            </div>
-
-                            @* <p class="mb-3" style="font-size: 14px;">Life seasons open have. Air have of. Lights fill after let third darkness replenish fruitful let. Wherein set image. Creepeth said above gathered bring.</p> *@
-
-                            <h6 class="article_category" style=" color: #e21818; border: 1px solid #e21818; width: 10.5%; padding: 0.5em; border-radius: 10px; background-color: rgba(226, 24, 24, 0.3); text-align: center; font-size: 10px;">
-                                Technical
-                            </h6>
-                        </div>
-                    </a>
-                    <a href="#" class="link_card" style="text-decoration: none; color: black;">
-                        <div class="article_card  mb-3" data-bs-toggle="modal" data-bs-target="#detail" style=" display: flex; flex-direction: column; background-color: #FEF2F4; padding: 1em; border-radius: 10px;">
-                            <div class="article_top mb-3 d-flex justify-content-between">
-                                <h6>Change Password</h6>
-                                <p style="font-size: 14px;">20th Oct</p>
-                            </div>
-
-                            @* <p class="mb-3" style="font-size: 14px;">Life seasons open have. Air have of. Lights fill after let third darkness replenish fruitful let. Wherein set image. Creepeth said above gathered bring.</p> *@
-
-                            <h6 class="article_category" style=" color: #e21818; border: 1px solid #e21818; width: 10.5%; padding: 0.5em; border-radius: 10px; background-color: rgba(226, 24, 24, 0.3); text-align: center; font-size: 10px;">
-                                Technical
-                            </h6>
-                        </div>
-                    </a>
-                    <a href="#" class="link_card" style="text-decoration: none; color: black;">
-                        <div class="article_card  mb-3" data-bs-toggle="modal" data-bs-target="#detail" style=" display: flex; flex-direction: column; background-color: #FEF2F4; padding: 1em; border-radius: 10px;">
-                            <div class="article_top mb-3 d-flex justify-content-between">
-                                <h6>Change Password</h6>
-                                <p style="font-size: 14px;">20th Oct</p>
-                            </div>
-
-                            @* <p class="mb-3" style="font-size: 14px;">Life seasons open have. Air have of. Lights fill after let third darkness replenish fruitful let. Wherein set image. Creepeth said above gathered bring.</p> *@
-
-                            <h6 class="article_category" style=" color: #e21818; border: 1px solid #e21818; width: 10.5%; padding: 0.5em; border-radius: 10px; background-color: rgba(226, 24, 24, 0.3); text-align: center; font-size: 10px;">
-                                Technical
-                            </h6>
-                        </div>
-                    </a>
-                    <a href="#" class="link_card" style="text-decoration: none; color: black;">
-                        <div class="article_card  mb-3" data-bs-toggle="modal" data-bs-target="#detail" style=" display: flex; flex-direction: column; background-color: #FEF2F4; padding: 1em; border-radius: 10px;">
-                            <div class="article_top mb-3 d-flex justify-content-between">
-                                <h6>Change Password</h6>
-                                <p style="font-size: 14px;">20th Oct</p>
-                            </div>
-
-                            @* <p class="mb-3" style="font-size: 14px;">Life seasons open have. Air have of. Lights fill after let third darkness replenish fruitful let. Wherein set image. Creepeth said above gathered bring.</p> *@
-
-                            <h6 class="article_category" style=" color: #e21818; border: 1px solid #e21818; width: 10.5%; padding: 0.5em; border-radius: 10px; background-color: rgba(226, 24, 24, 0.3); text-align: center; font-size: 10px;">
-                                Technical
-                            </h6>
-                        </div>
-                    </a>
-                    <a href="#" class="link_card" style="text-decoration: none; color: black;">
-                        <div class="article_card  mb-3" data-bs-toggle="modal" data-bs-target="#detail" style=" display: flex; flex-direction: column; background-color: #FEF2F4; padding: 1em; border-radius: 10px;">
-                            <div class="article_top mb-3 d-flex justify-content-between">
-                                <h6>Change Password</h6>
-                                <p style="font-size: 14px;">20th Oct</p>
-                            </div>
-
-                            @* <p class="mb-3" style="font-size: 14px;">Life seasons open have. Air have of. Lights fill after let third darkness replenish fruitful let. Wherein set image. Creepeth said above gathered bring.</p> *@
-
-                            <h6 class="article_category" style=" color: #e21818; border: 1px solid #e21818; width: 10.5%; padding: 0.5em; border-radius: 10px; background-color: rgba(226, 24, 24, 0.3); text-align: center; font-size: 10px;">
-                                Technical
-                            </h6>
-                        </div>
-                    </a>
-                    <a href="#" class="link_card" style="text-decoration: none; color: black;">
-                        <div class="article_card  mb-3" data-bs-toggle="modal" data-bs-target="#detail" style=" display: flex; flex-direction: column; background-color: #FEF2F4; padding: 1em; border-radius: 10px;">
-                            <div class="article_top mb-3 d-flex justify-content-between">
-                                <h6>Change Password</h6>
-                                <p style="font-size: 14px;">20th Oct</p>
-                            </div>
-
-                            @* <p class="mb-3" style="font-size: 14px;">Life seasons open have. Air have of. Lights fill after let third darkness replenish fruitful let. Wherein set image. Creepeth said above gathered bring.</p> *@
-
-                            <h6 class="article_category" style=" color: #e21818; border: 1px solid #e21818; width: 10.5%; padding: 0.5em; border-radius: 10px; background-color: rgba(226, 24, 24, 0.3); text-align: center; font-size: 10px;">
-                                Technical
-                            </h6>
-                        </div>
-                    </a>
-                     <a href="#" class="link_card" style="text-decoration: none; color: black;">
-                        <div class="article_card  mb-3" data-bs-toggle="modal" data-bs-target="#detail" style=" display: flex; flex-direction: column; background-color: #FEF2F4; padding: 1em; border-radius: 10px;">
-                            <div class="article_top mb-3 d-flex justify-content-between">
-                                <h6>Change Password</h6>
-                                <p style="font-size: 14px;">20th Oct</p>
-                            </div>
-
-                            @* <p class="mb-3" style="font-size: 14px;">Life seasons open have. Air have of. Lights fill after let third darkness replenish fruitful let. Wherein set image. Creepeth said above gathered bring.</p> *@
-
-                            <h6 class="article_category" style=" color: #e21818; border: 1px solid #e21818; width: 10.5%; padding: 0.5em; border-radius: 10px; background-color: rgba(226, 24, 24, 0.3); text-align: center; font-size: 10px;">
-                                Technical
-                            </h6>
-                        </div>
-                    </a>
-                    <a href="#" class="link_card" style="text-decoration: none; color: black;">
-                        <div class="article_card  mb-3" data-bs-toggle="modal" data-bs-target="#detail" style=" display: flex; flex-direction: column; background-color: #FEF2F4; padding: 1em; border-radius: 10px;">
-                            <div class="article_top mb-3 d-flex justify-content-between">
-                                <h6>Change Password</h6>
-                                <p style="font-size: 14px;">20th Oct</p>
-                            </div>
-
-                            @* <p class="mb-3" style="font-size: 14px;">Life seasons open have. Air have of. Lights fill after let third darkness replenish fruitful let. Wherein set image. Creepeth said above gathered bring.</p> *@
-
-                            <h6 class="article_category" style=" color: #e21818; border: 1px solid #e21818; width: 10.5%; padding: 0.5em; border-radius: 10px; background-color: rgba(226, 24, 24, 0.3); text-align: center; font-size: 10px;">
-                                Technical
-                            </h6>
-                        </div>
-                    </a>
-                    <a href="#" class="link_card" style="text-decoration: none; color: black;">
-                        <div class="article_card  mb-3" data-bs-toggle="modal" data-bs-target="#detail" style=" display: flex; flex-direction: column; background-color: #FEF2F4; padding: 1em; border-radius: 10px;">
-                            <div class="article_top mb-3 d-flex justify-content-between">
-                                <h6>Change Password</h6>
-                                <p style="font-size: 14px;">20th Oct</p>
-                            </div>
-
-                            @* <p class="mb-3" style="font-size: 14px;">Life seasons open have. Air have of. Lights fill after let third darkness replenish fruitful let. Wherein set image. Creepeth said above gathered bring.</p> *@
-
-                            <h6 class="article_category" style=" color: #e21818; border: 1px solid #e21818; width: 10.5%; padding: 0.5em; border-radius: 10px; background-color: rgba(226, 24, 24, 0.3); text-align: center; font-size: 10px;">
-                                Technical
-                            </h6>
-                        </div>
-                    </a>
-                    
-                    
-                    
-                </div>
-
-                
-                
-           </div>
-        </div>
+            </a>
+        }
     </div>
 </div>
-
-@Html.Partial("ArticleDetailModal")

@@ -15,5 +15,7 @@ namespace ASI.Basecode.Services.ServiceModels
         public List<KeyValuePair<string, string>> Categories { get; set; }
         public List<KeyValuePair<string, string>> Priorities { get; set; }
         public IEnumerable<UserViewModel> Agents { get; set; }
+        public IEnumerable<ArticleViewModel> Favorites { get; set; }
+        public IEnumerable<ArticleViewModel> Articles { get; set; }
     }
 }

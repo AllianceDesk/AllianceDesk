@@ -233,6 +233,31 @@ namespace ASI.Basecode.Services.Services
                                 }).ToList();
             return userActivity;
         }
+
+        public List<TicketActivityViewModel> GetUserActivity(string userId)
+        {
+            var userActivity = _ticketActivityRepository.RetrieveAll()
+                                .Where(u => u.ModifiedBy.ToString() == userId)
+                                .OrderByDescending(a => a.ModifiedAt).Take(2)
+                                .Select(t => new TicketActivityViewModel
+                                {
+                                    HistoryId = t.HistoryId.ToString(),
+                                    TicketId = t.TicketId.ToString(),
+                                    Title = _ticketRepository.RetrieveAll().Where(i => i.TicketId == t.TicketId).FirstOrDefault().Title,
+                                    ModifiedBy = t.ModifiedBy.ToString(),
+                                    ModifiedByName = _repository.GetUsers().Where(u => u.UserId == t.ModifiedBy).FirstOrDefault().Name,
+                                    ModifiedAt = t.ModifiedAt,
+                                    Date = t.ModifiedAt.ToString("dd MMM yyyy, h:mm tt"),
+                                    OperationId = t.OperationId,
+                                    OperationName = _ticketActivityOperationRepository.RetrieveAll().Where(o => o.OperationId == t.OperationId).FirstOrDefault().Name,
+                                    Message = t.Message,
+                                }).ToList();
+            if (userActivity != null)
+            {
+                return userActivity;
+            }
+            return null;
+        }
         public UserPreferenceViewModel GetUserPreference()
         {
             Guid userId = _sessionHelper.GetUserIdFromSession();

@@ -21,9 +21,9 @@ namespace ASI.Basecode.Services.ServiceModels
         public string DateUpdated { get; set; }
         public string UpdatedBy { get; set; }
         public string CategoryNavigation { get; set; }
-
         public bool IsFavorite { get; set; }
 
         public IEnumerable<ArticleViewModel> Articles { get; set; }
+        public IEnumerable<ArticleViewModel> Favorites { get; set; }
     }
 }

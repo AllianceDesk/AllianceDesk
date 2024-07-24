@@ -24,6 +24,7 @@ namespace ASI.Basecode.WebApp.Controllers
         private readonly ITicketService _ticketService;
         private readonly ISessionHelper _sessionHelper;
         private readonly INotificationService _notificationService;
+        private readonly IArticleService _articleService;
         /// <summary>
         /// Constructor
         /// </summary>
@@ -39,13 +40,15 @@ namespace ASI.Basecode.WebApp.Controllers
                               IUserService userService,
                               ITicketService ticketService,
                               ISessionHelper sessionHelper,
+                              IArticleService articleService,
                               INotificationService notificationService,
                               IMapper mapper = null) : base(httpContextAccessor, loggerFactory, configuration, mapper)
         {
             this._userService = userService;
             this._ticketService = ticketService;
             this._notificationService = notificationService;
-            _sessionHelper = sessionHelper;
+            this._sessionHelper = sessionHelper;
+            this._articleService = articleService;
         }
 
         [HttpGet("Preferences")]
@@ -176,7 +179,8 @@ namespace ASI.Basecode.WebApp.Controllers
                 Statuses = statuses,
                 Categories = categories,
                 Priorities = priorities,
-                Agents = agents
+                Agents = agents,
+                Favorites = _articleService.RetrieveFavorites(),
             };
 
             return View(model);
@@ -344,6 +348,63 @@ namespace ASI.Basecode.WebApp.Controllers
             _ticketService.UpdateStatus(id, 3);
 
             return RedirectToAction("Tickets");
+        }
+
+        [HttpGet("/KnowledgeBaseModal")]
+        public IActionResult KnowledgeBaseModal()
+        {
+            /*ViewBag.SearchString = searchString;
+            ViewBag.CategoryString = category;*/
+
+            var data = _articleService.RetrieveAll()
+                                        .Select(u => new ArticleViewModel
+                                        {
+                                            ArticleId = u.ArticleId,
+                                            Title = u.Title,
+                                            Body = u.Body,
+                                            CategoryNavigation = u.CategoryNavigation,
+                                            DateUpdated = u.DateUpdated,
+                                        })
+                                        .OrderBy(u => u.Title)
+                                        .ToList();
+            /*if (!String.IsNullOrEmpty(searchString))
+            {
+                data = _articleService.RetrieveAll()
+                                        .Where(u => u.Title.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                                        .Select(u => new ArticleViewModel
+                                        {
+                                            ArticleId = u.ArticleId,
+                                            Title = u.Title,
+                                            Body = u.Body,
+                                            CategoryNavigation = u.CategoryNavigation,
+                                            DateUpdated = u.DateUpdated,
+                                        })
+                                        .ToList();
+            }
+
+            if (category != "default")
+            {
+                if (!String.IsNullOrEmpty(category))
+                {
+                    data = _articleService.RetrieveAll()
+                                            .Where(u => u.CategoryNavigation.Contains(category, StringComparison.OrdinalIgnoreCase))
+                                            .Select(u => new ArticleViewModel
+                                            {
+                                                ArticleId = u.ArticleId,
+                                                Title = u.Title,
+                                                Body = u.Body,
+                                                CategoryNavigation = u.CategoryNavigation,
+                                                DateUpdated = u.DateUpdated,
+                                            })
+                                            .ToList();
+                }
+            }*/
+
+            var viewModel = new UserTicketsViewModel
+            {
+                Articles = data
+            };
+            return View(viewModel);
         }
     }
 }

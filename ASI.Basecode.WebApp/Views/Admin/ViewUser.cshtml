@@ -34,29 +34,41 @@
                             <i class="fa-solid fa-magnifying-glass text-1-5"></i>
                             <input name="searchString" id="searchInput" class="bg-transparent" type="text" placeholder="Search" value="@ViewBag.SearchString"/>
                         </div>
-                        <button class="mbtn-primary flex-Row gap-1 color-white bg-red align-center justify-content-center border-0 p-x-1 br-1-5">
+                        <button class="mbtn-primary flex-Row gap-1 color-white bg-red align-center justify-content-center border-0 p-x-1 br-1-5" style="height: 2.6rem;">
                             <i class="fa-solid fa-filter"></i>
                             <p class="br-1-5 p-y-1">Filter</p>
                         </button>
                     </form>
-                    <button class="mbtn-primary flex-Row gap-1 color-white bg-red align-center justify-content-center border-0 p-x-1 br-1-5" data-admin-add-btn>
+                    <button class="mbtn-primary flex-Row gap-1 color-white bg-red align-center justify-content-center border-0 p-x-1 br-1-5" data-admin-add-btn style="height: 2.6rem;">
                         <i class="fa-solid fa-user-plus"></i>
                         <p class="br-1-5 p-y-1">Add</p>
                     </button>
                 </div>
             </div>
-            <div class="flex-Row flex-between p-y-1 p-x-1 border-b-2 text-1-5 mb-3">
-                <div class="flex-Row align-center gap-1 fw-semi">
-                    <i class="fa-regular fa-user"></i>
-                    <p>Profile</p>
+            <div class="agent-container p-y-1 p-x-1 border-b-2 text-1-5 mb-3">
+                <div style="display: flex; align-items: center;">
+                    <div class="flex-Row align-center gap-1 fw-semi">
+                        <i class="fa-regular fa-user"></i>
+                        <p>Profile</p>
+                    </div>
                 </div>
-                <div class="flex-Row align-center gap-1 fw-semi">
-                    <i class="fa-regular fa-address-card"></i>
-                    <p>Name</p>
+                <div style="display: flex; justify-content: center; align-items: center;">
+                    <div class="flex-Row align-center gap-1 fw-semi">
+                        <i class="fa-regular fa-address-card"></i>
+                        <p>Name</p>
+                    </div>
                 </div>
-                <div class="flex-Row align-center gap-1 fw-semi">
-                    <i class="fa-solid fa-user-tie"></i>
-                    <p>Role</p>
+                <div style="display: flex; justify-content: center; align-items: center;">
+                    <div class="flex-Row align-center gap-1 fw-semi">
+                        <i class="fa-regular fa-envelope"></i>
+                        <p>Email</p>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: end; align-items: center;">
+                    <div class="flex-Row align-center gap-1 fw-semi">
+                        <i class="fa-solid fa-user-tie"></i>
+                        <p>Role</p>
+                    </div>
                 </div>
             </div>
             <div class="agents-container bg-white">
@@ -277,18 +289,23 @@
             if (usersToShow.length > 0) {
                 usersToShow.forEach(item => {
                     const userDiv = document.createElement('div');
-                    userDiv.classList.add('agents', 'cursor-pointer', 'flex-Row', 'flex-between', 'p-y-1', 'p-x-1', 'align-center');
+                    userDiv.classList.add('agents', 'cursor-pointer', 'p-y-1', 'p-x-1', 'agent-container');
                     userDiv.dataset.agentTeamsAgent = '';
                     userDiv.dataset.userId = item.UserId;
-
                     userDiv.innerHTML = `
-                                <div class="user-img-profile br-50 bg-red"></div>
-                                <div class="flex-col justify-content-center align-center">
-                                    <p class="fw-semi text-1-5">${item.Name}</p>
-                                    <p>${item.Email}</p>
-                                </div>
-                                <div class="role-container role-agent fw-semi text-0-5">${roleMappings[item.RoleId]}</div>
-                            `;
+                                            <div style="display: flex; align-items: center;">
+                                                <div class="user-img-profile br-50 bg-red"></div>
+                                            </div>
+                                            <div style="display: flex; justify-content: center; align-items: center;">
+                                                <p class="fw-semi text-1-5">${item.Name}</p>
+                                            </div>
+                                            <div style="display: flex; justify-content: center; align-items: center;">
+                                                <p>${item.Email}</p>
+                                            </div>
+                                            <div style="display: flex; justify-content: end; align-items: center;">
+                                                <div class="role-container role-agent fw-semi text-0-5">${roleMappings[item.RoleId]}</div>
+                                            </div>
+                                        `;
                     agentsContainer.appendChild(userDiv);
                 });
             } else {
