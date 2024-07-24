@@ -21,6 +21,7 @@ namespace ASI.Basecode.Services.Interfaces
                 IEnumerable<UserViewModel> GetAgents();
                 string GeneratePassword();
                 List<TicketActivityViewModel> GetRecentUserActivity();
+                List<TicketActivityViewModel> GetUserActivity(string userId);
                 UserPreferenceViewModel GetUserPreference();
                 void UpdatePreference(UserPreferenceViewModel model); 
         }
