@@ -1,6 +1,7 @@
 ﻿using ASI.Basecode.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ASI.Basecode.Data.Interfaces
 {
@@ -13,5 +14,6 @@ namespace ASI.Basecode.Data.Interfaces
         IEnumerable<Notification> RetrieveAll();
         void Add(Notification notification);
         void Update(Notification model);
+        Task AddNotificationsAsync(List<Notification> notificationList);
     }
 }

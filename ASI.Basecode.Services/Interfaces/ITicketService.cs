@@ -4,16 +4,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using ASI.Basecode.Data.Models;
 using ASI.Basecode.Services.ServiceModels;
-using ASI.Basecode.Services.Services;
-
 
 namespace ASI.Basecode.Services.Interfaces
 {
         public interface ITicketService
         {
-                IEnumerable<TicketViewModel> RetrieveAll();
+                IQueryable<TicketViewModel> RetrieveAll();
                 IQueryable<TicketViewModel> GetUserTickets(Guid id, byte? status, string? searchTerm, string? sortOrder, int? page);
-                IEnumerable<TicketViewModel> GetAgentTickets(Guid id);
+                IEnumerable<TicketViewModel> GetAgentTickets(Guid id, string? status, string? searchTerm, string? sortOrder, int? page);
+                IQueryable<TicketViewModel> GetWeeklyTickets(DateTime startOfWeek, DateTime endOfWeek);
                 Task AddAsync(TicketViewModel ticket);
                 void Update(TicketViewModel ticket);
                 void Delete(string id);

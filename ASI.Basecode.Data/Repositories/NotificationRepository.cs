@@ -38,5 +38,13 @@ namespace ASI.Basecode.Data.Repositories
             UnitOfWork.SaveChanges();
         }
         
+        public async Task AddNotificationsAsync(List<Notification> notificationList)
+        {
+            foreach (var notification in notificationList)
+            {
+                this.GetDbSet<Notification>().Add(notification);
+                await UnitOfWork.SaveChangesAsync();
+            }
+        }
     }
 }
