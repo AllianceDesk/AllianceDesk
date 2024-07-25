@@ -6,8 +6,8 @@
     display: grid;
     height: 100vh;
     width: 100%;
-    grid-template-columns: 1.45fr 7fr;
-    grid-template-rows: 0.3fr 1fr 5fr;
+    grid-template-columns: 300px 7fr;
+    grid-template-rows: 0.3fr 0.5fr 5fr;
     grid-template-areas:
         "header header"
         "sidebar nav"
@@ -121,9 +121,7 @@ nav {
     grid-area: nav;
     display: flex;
     flex-direction: column;
-    padding: 2em 3em;
-    justify-content: space-between;
-    gap: 0.7em;
+    padding: 0 6rem 1rem 6rem;
 }
 
 .nav_one, .nav_two {
@@ -415,7 +413,6 @@ main {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 0.8em;
 }
 
 .button-container {
