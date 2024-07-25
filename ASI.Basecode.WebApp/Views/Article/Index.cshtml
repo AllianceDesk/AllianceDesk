@@ -132,8 +132,8 @@ else if (ViewBag.RoleId == 2)
     else if (ViewBag.RoleId == 1)
     {
         @Html.Partial("Admin_Sidebar")
-        <div class="admin-body pt-4 relative bg-grey flex flex-col gap-1">
-            <div class="px-5">
+        <div class="admin-body py-3 relative bg-grey flex flex-col gap-1">
+            <div class="">
 
                 <div class="nav_one mb-3">
 
@@ -184,7 +184,7 @@ else if (ViewBag.RoleId == 2)
                 </div>
             </div>
 
-            <main>
+            <main class="flex flex-col gap-1 mt-4">
                 @foreach (var item in Model.Articles)
                 {
                     <a href="#" class="link_card" style="text-decoration: none; color: inherit;">

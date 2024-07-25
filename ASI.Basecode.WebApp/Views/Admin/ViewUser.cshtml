@@ -25,7 +25,7 @@
 @Html.Partial("Admin_Header")
 <div class="main relative" >
     @Html.Partial("Admin_Sidebar")
-    <div class="admin-body py-3 relative bg-grey flex flex-col gap-1">
+    <div class="admin-body py-3 relative bg-grey flex flex-col gap-1" style="padding-right: 1rem;">
 
         <div class="flex" style="padding-right: 2rem; border-right: 1.5px solid #9E9E9E;">
             <div class="flex flex-col justify-content-between">
@@ -77,7 +77,7 @@
                 </div>
             </div>
             <div class="agent-container p-y-1 p-x-1 border-b-2 text-1-5 mb-3">
-                <div style="display: flex; align-items: center; font-size: 0.9rem;">
+                    <div style="display: flex; padding-left: 2rem; align-items: center; font-size: 0.9rem;">
                     <div class="flex-Row align-center gap-1 fw-semi">
                         <i class="bx bx-user"></i>
                         <p>Profile</p>
@@ -95,7 +95,7 @@
                         <p>Email</p>
                     </div>
                 </div>
-                <div style="display: flex; justify-content: end; align-items: center; font-size: 0.9rem;">
+                <div style="display: flex; justify-content: center; align-items: center; font-size: 0.9rem;">
                     <div class="flex-Row align-center gap-1 fw-semi">
                         <i class="fa-solid fa-user-tie"></i>
                         <p>Role</p>
@@ -351,7 +351,7 @@
                     const userRole = roleMappings[item.RoleId] == "Agent" ? 'role-agent' : roleMappings[item.RoleId] == "Admin" ? 'role-admin' : 'role-user';
 
                     userDiv.innerHTML = `
-                            <div style="display: flex; align-items: center;">
+                                    <div style="display: flex; padding-left: 2rem; align-items: center;">
                                 <div class="user-img-profile br-50 bg-red"></div>
                             </div>
                             <div style="display: flex; justify-content: center; align-items: center;">
@@ -360,7 +360,7 @@
                             <div style="display: flex; justify-content: center; align-items: center;">
                                 <p>${item.Email}</p>
                             </div>
-                            <div style="display: flex; justify-content: end; align-items: center;">
+                            <div style="display: flex; justify-content: center; align-items: center;">
                                 <div class="role-container ${userRole} fw-semi text-0-5">${roleMappings[item.RoleId]}</div>
                             </div>
                         `;
