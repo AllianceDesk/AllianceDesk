@@ -7,6 +7,33 @@
 
 @{
     ViewData["Title"] = "Knowledge Base";
+    var categoryItem = new Dictionary<string, string> {
+        {"Technical", "category-technical"},
+        {"Billing", "category-billing"},
+        {"General Questions", "category-gen-question"},
+        {"Account Management", "category-act-management"},
+        {"Customer Support", "category-customer-support"},
+        {"Others", "category-others"}
+    };
+
+    var priorityItem = new Dictionary<string, string> {
+        {"Mid", "priority-medium"},
+        {"High", "priority-high"},
+        {"Low", "priority-low"},
+    };
+
+    var statusItem = new Dictionary<string, string> {
+        {"Open", "status-open"},
+        {"Closed", "status-closed"},
+        {"Resolved", "status-resolved"},
+        {"In Progress", "status-inprogress"},
+
+    };
+
+    string GetPriorityClass(string priority) => priorityItem.ContainsKey(priority) ? priorityItem[priority] : string.Empty;
+    string GetCategoryClass(string category) => categoryItem.ContainsKey(category) ? categoryItem[category] : string.Empty;
+    string GetStatusClass(string status) => statusItem.ContainsKey(status) ? statusItem[status] : string.Empty;
+
 }
 
 @if (ViewBag.RoleId == 1) {
@@ -51,9 +78,7 @@ else if (ViewBag.RoleId == 2)
             </a>
         </div>
 
-        <div class="admin-body py-3 relative bg-grey flex flex-col gap-1">
-            <div>
-                <div class="nav_one mb-3">
+        <nav style="padding: 0rem 4rem 1rem 4rem;">
 
                     <h3>Knowledge Base</h3>
 
@@ -94,25 +119,23 @@ else if (ViewBag.RoleId == 2)
                 </div>
             </div>
 
-            <main>
-                @foreach (var item in Model.Articles)
-                {
-                    <a href="#" class="link_card" style="text-decoration: none; color: inherit;">
-                        <div class="article_card" data-bs-toggle="modal" data-bs-target="#detail" data-article-detail-btn data-article-id="@item.ArticleId">
-                            <div class="article_top mb-4">
-                                <h5>@Html.DisplayFor(modelItem => item.Title)</h5>
-                                <p>@Html.DisplayFor(modelItem => item.DateUpdated)</p>
-                            </div>
-
-                            <p class="mb-3" style="font-size: 14px;">@Html.DisplayFor(modelItem => item.Body)</p>
-
-                            <h6 class="role-container role-agent text-sm" style="align-self: start; text-align: center;">@Html.DisplayFor(modelItem => item.CategoryNavigation)</h6>
-
+        <main class="flex flex-col gap-1 pt-4">
+            @foreach (var item in Model.Articles)
+            {
+                <a href="#" class="link_card" style="text-decoration: none; color: inherit;">
+                    <div class="article_card" data-bs-toggle="modal" data-bs-target="#detail" data-article-detail-btn data-article-id="@item.ArticleId">
+                        <div class="article_top mb-4">
+                            <h5>@Html.DisplayFor(modelItem => item.Title)</h5>
+                            <p>@Html.DisplayFor(modelItem => item.DateUpdated)</p>
                         </div>
-                    </a>
-                }
-            </main>
-        </div>
+
+                        <p class="mb-3" style="font-size: 14px;">@Html.DisplayFor(modelItem => item.Body)</p>
+                        <h6 class="role-container @GetCategoryClass(item.CategoryNavigation) " style="align-self: start; text-align: center;">@Html.DisplayFor(modelItem => item.CategoryNavigation)</h6>
+
+                    </div>
+                </a>
+            }
+        </main>
     }
     else if (ViewBag.RoleId == 1)
     {
@@ -180,8 +203,7 @@ else if (ViewBag.RoleId == 2)
                             </div>
 
                             <p class="mb-3" style="font-size: 14px;">@Html.DisplayFor(modelItem => item.Body)</p>
-
-                            <h6 class="role-container role-agent text-sm" style="align-self: start; text-align: center;">@Html.DisplayFor(modelItem => item.CategoryNavigation)</h6>
+                            <h6 class="role-container @GetCategoryClass(item.CategoryNavigation) " style="align-self: start; text-align: center;">@Html.DisplayFor(modelItem => item.CategoryNavigation)</h6>
 
                         </div>
                     </a>
@@ -242,7 +264,7 @@ else if (ViewBag.RoleId == 2)
                 </div>
             </div>
 
-            <main>
+            <main class="flex flex-col gap-1 mt-4">
                 @foreach (var item in Model.Articles)
                 {
                     <a href="#" class="link_card" style="text-decoration: none; color: inherit;">
@@ -253,8 +275,7 @@ else if (ViewBag.RoleId == 2)
                             </div>
 
                             <p class="mb-3" style="font-size: 14px;">@Html.DisplayFor(modelItem => item.Body)</p>
-
-                            <h6 class="role-container role-agent text-sm" style="align-self: start; text-align: center;">@Html.DisplayFor(modelItem => item.CategoryNavigation)</h6>
+                            <h6 class="role-container @GetCategoryClass(item.CategoryNavigation) " style="align-self: start; text-align: center;">@Html.DisplayFor(modelItem => item.CategoryNavigation)</h6>
 
                         </div>
                     </a>

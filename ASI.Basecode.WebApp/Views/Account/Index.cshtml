@@ -1,0 +1,42 @@
+﻿@model LoginViewModel
+@using static ASI.Basecode.Resources.Views.Screen
+@section styles {
+    <link rel="stylesheet" href="~/css/login.css" />
+    <link rel="stylesheet" href="~/css/functionalities.css" />
+}
+@{
+    ViewBag.LoginView = true;
+    ViewData["Title"] = "Login Page";
+}
+@* <div>
+    @Html.AntiForgeryToken()
+</div> *@
+@Html.Partial("General_Header") 
+<div class="flex-Row justify-content-center align-items-center" style="padding-block: 4rem; background-color: #F5F7FA;">
+   <div class="flex-Row justify-content-between align-items-center mx-auto " style="width: 60%; gap: 7rem;">
+       <div>
+            <h1>Where Every <span class="text-red">Ticket</span> Finds Its Answer</h1>
+       </div>
+        <img  src="~/img/Illustration.svg"  />
+   </div>
+</div>
+<div style="background-color: #FFF;">
+    <div class="flex-Row justify-content-between align-items-center mx-auto" style=" padding-block: 3rem; width: 80%; gap: 7rem;">
+
+
+    <img src="~/img/svg2.svg" />
+    <div>
+        <h3 class="text-red mb-2">A team made of experts</h3>
+        <p style="text-align: end; text-align: justify;">AllianceDesk was made by a team of five innovative students committed to making a difference for startup founders, business owners, and product providers. Driven by the desire to enhance customer support, we developed AllianceDesk, a cutting-edge help desk ticketing system designed to streamline and elevate customer interactions. Our mission is to empower businesses with a tool that simplifies support management, ensuring every customer receives prompt and effective assistance, ultimately driving growth and success.</p>
+    </div>
+    </div>
+</div>
+@section scripts {
+    <script>
+        // Check for error message and display Toastr notification
+        var errorMessage = '@TempData["ErrorMessage"]';
+        if (errorMessage) {
+            toastr.error(errorMessage);
+        }
+    </script>
+}
