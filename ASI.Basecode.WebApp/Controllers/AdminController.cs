@@ -65,7 +65,7 @@ namespace ASI.Basecode.WebApp.Controllers
                 return RedirectToAction("Index", "AccessDenied");
             }
 
-            ViewBag.Name = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).Name;
+            ViewData["Name"] = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).Name;
             ViewBag.AdminSidebar = "Overview";
             var model = new AdminDashboardViewModel
             {

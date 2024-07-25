@@ -178,17 +178,7 @@ namespace ASI.Basecode.Services.Services
             existingTicket.PriorityId = Convert.ToByte(ticket.PriorityId);
             existingTicket.AssignedAgent = ticket.AgentId;
 
-            _ticketRepository.Update(existingTicket);
-
-            // Add ticket activity
-            TicketActivity newActivity = new TicketActivity();
-            newActivity.HistoryId = Guid.NewGuid();
-            newActivity.TicketId = existingTicket.TicketId;
-            newActivity.OperationId = 2;
-            newActivity.ModifiedBy = _sessionHelper.GetUserIdFromSession();
-            newActivity.ModifiedAt = DateTime.Now;
-            newActivity.Message = "Ticket updated";
-            _ticketActivityRepository.Add(newActivity);
+            _ticketRepository.Update(existingTicket); 
         }
 
         public void UpdateStatus(Guid ticketId, byte statusId)
@@ -198,16 +188,6 @@ namespace ASI.Basecode.Services.Services
             existingTicket.StatusId = statusId;
 
             _ticketRepository.Update(existingTicket);
-
-            // Add ticket activity
-            TicketActivity newActivity = new TicketActivity();
-            newActivity.HistoryId = Guid.NewGuid();
-            newActivity.TicketId = existingTicket.TicketId;
-            newActivity.OperationId = 5;
-            newActivity.ModifiedBy = _sessionHelper.GetUserIdFromSession();
-            newActivity.ModifiedAt = DateTime.Now;
-            newActivity.Message = "Ticket was closed";
-            _ticketActivityRepository.Add(newActivity);
         }
 
         public void Delete(Guid ticketId)

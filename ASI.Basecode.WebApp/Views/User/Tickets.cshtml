@@ -339,11 +339,13 @@
                     let formAction = '';
 
                     if (actionType === 'close') {
+                        console.log('close');
                         title = 'Close Ticket';
                         modalMessage = 'Are you sure you want to close this ticket?';
                         buttonText = 'Close';
                         formAction = `/User/Tickets/${ticketId}/Close`;
                     } else if (actionType === 'reopen') {
+                        console.log('reopen');
                         title = 'Reopen Ticket';
                         modalMessage = 'Are you sure you want to reopen this ticket?';
                         buttonText = 'Reopen';

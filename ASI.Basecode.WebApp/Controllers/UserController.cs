@@ -1,4 +1,5 @@
-﻿using ASI.Basecode.Services.Interfaces;
+﻿using ASI.Basecode.Data.Models;
+using ASI.Basecode.Services.Interfaces;
 using ASI.Basecode.Services.ServiceModels;
 using ASI.Basecode.WebApp.Mvc;
 using AutoMapper;
@@ -106,10 +107,16 @@ namespace ASI.Basecode.WebApp.Controllers
         {
             var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
 
+            if(userRole == null || userRole == 0)
+            {
+                return RedirectToAction("Account", "Login");
+            }
+
             if (userRole != 3)
             {
                 return RedirectToAction("Index", "AccessDenied");
             }
+
 
             var userPreference = _userService.GetUserPreference();
             var pageSize = 10;
@@ -265,6 +272,16 @@ namespace ASI.Basecode.WebApp.Controllers
             // Call service to update the ticket
             _ticketService.Update(ticket);
 
+            // Add a new activity to the ticket
+            // Add ticket activity
+            TicketActivityViewModel newActivity = new TicketActivityViewModel();
+            newActivity.TicketId = ticket.TicketId;
+            newActivity.OperationId = 2;
+            newActivity.UserId = _sessionHelper.GetUserIdFromSession();
+            newActivity.Message = "Ticket was updated by user";
+
+            _ticketService.AddActivity(newActivity);
+
             // Redirect to the Tickets action
             return RedirectToAction("Tickets");
         }
@@ -298,14 +315,25 @@ namespace ASI.Basecode.WebApp.Controllers
                 return NotFound();
             }
 
-            _ticketService.UpdateStatus(ticketId, 5);
+            _ticketService.UpdateStatus(ticketId, 4);
 
-            return RedirectToAction("Tickets");
+            TicketActivityViewModel activity = new TicketActivityViewModel
+            {
+                TicketId = ticketId,
+                OperationId = 5,
+                Message = "Ticket was closed by user",
+                ModifiedAt = DateTime.Now,
+                UserId = _sessionHelper.GetUserIdFromSession()
+            };
+
+            _ticketService.AddActivity(activity);
+
+            return RedirectToAction("Tickets", new { status = 4 });
         }
 
         
         [HttpPost("Tickets/{id}/Reopen")]
-        public IActionResult TicketReopen(string id)
+        public IActionResult ReopenTicket(string id)
         {
             var ticketId = Guid.Parse(id);
             var ticket = _ticketService.GetById(ticketId);
@@ -315,9 +343,20 @@ namespace ASI.Basecode.WebApp.Controllers
                 return NotFound();
             }
 
-            _ticketService.UpdateStatus(ticketId, 3);
+            _ticketService.UpdateStatus(ticketId, 2);
 
-            return RedirectToAction("Tickets");
+            TicketActivityViewModel activity = new TicketActivityViewModel
+            {
+                TicketId = ticketId,
+                OperationId = 6,
+                Message = "Ticket was reopened by user",
+                ModifiedAt = DateTime.Now,
+                UserId = _sessionHelper.GetUserIdFromSession()
+            };
+
+            _ticketService.AddActivity(activity);
+
+            return RedirectToAction("Tickets", new { status = 2 });
         }
 
         #endregion
