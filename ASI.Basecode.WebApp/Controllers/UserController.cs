@@ -350,8 +350,8 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("Tickets");
         }
 
-        [HttpGet("/KnowledgeBaseModal")]
-        public IActionResult KnowledgeBaseModal()
+        /*[HttpGet("/KnowledgeBase")]
+        public IActionResult KnowledgeBase()
         {
 
             var data = _articleService.RetrieveAll()
@@ -371,6 +371,6 @@ namespace ASI.Basecode.WebApp.Controllers
                 Articles = data
             };
             return View(viewModel);
-        }
+        }*/
     }
 }

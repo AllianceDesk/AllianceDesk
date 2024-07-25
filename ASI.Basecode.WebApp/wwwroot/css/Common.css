@@ -1,0 +1,71 @@
+.border_color {
+    box-shadow: none;
+
+}
+
+.border_color:active,
+.border_color:focus {
+    box-shadow: 0 0 3px #E21818; 
+    outline: none; 
+}
+
+.admin-sb-inactive-button {
+    background-color: white;
+    color: black;
+}
+
+.admin-sb-inactive-button:hover {
+    background-color: rgba(226,24,24, 0.6);
+    transition: background-color ease-in-out 350ms;
+}
+
+.admin-sb-inactive-button:hover span,
+.admin-sb-inactive-button:hover i {
+    color: white;
+}
+
+.admin-sb-active-button {
+    background-color: #E21818;
+    color: white;
+}
+
+.admin-sb-active-button i,
+.admin-sb-active-button span {
+    color: white;
+}
+
+.admin-sb-active-button:hover {
+    background-color: rgba(226,24,24, 0.8);
+    transition: ease-in-out 250ms;
+}
+
+.position-relative {
+    position: relative;
+}
+
+.search-icon {
+    position: absolute;
+    top: 1.8rem;
+    left: 3rem;
+    transform: translateY(-50%);
+    pointer-events: none; 
+    font-size: 1.2rem; 
+}
+
+.ellipsis {
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
+    margin: 0; 
+    width:60rem;
+}
+
+.agents {
+    background-color: #FFF;
+}
+
+.agents:hover,
+.selected-agent {
+    background-color: #FFE5E5;
+    box-shadow: 0px 5px 4px grey;
+}
