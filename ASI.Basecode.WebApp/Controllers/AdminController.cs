@@ -343,6 +343,7 @@ namespace ASI.Basecode.WebApp.Controllers
 
             ViewBag.IsLoginOrRegister = false;
             ViewBag.AdminSidebar = "ViewUser";
+            ViewBag.SelectRoles = new List<string> { "All User", "User", "Agent", "Admin" };
             var users = _userService.GetAllUsers()
                                         .Select(u => new UserViewModel
                                         {

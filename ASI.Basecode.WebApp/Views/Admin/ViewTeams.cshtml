@@ -9,18 +9,19 @@
     <link rel="stylesheet" href="~/css/Admin.css" />
 }
 
+
 @Html.Partial("Admin_Header")
 <div class="main">
     @Html.Partial("Admin_Sidebar")
     <div class="admin-body py-3 bg-grey relative">
         <div style="padding-right: 2rem; border-right: 1.5px solid #9E9E9E;">
-            <h1>Agents and Team</h1>
+            <h2>Team Directory</h2>
             <div class="flex-Row flex-between">
                 <div class="agent-nav pt-4">
-                    <ul class="flex-Row gap-2">
-                        <a asp-action="ViewUser" data-admin-btn class="nav-item" data-nav-item>Agents</a>
+                    <div class="flex-Row gap-4 pl-2 ">
+                        <a asp-action="ViewUser" data-admin-btn class="nav-item" data-nav-item>All Users</a>
                         <a asp-action="ViewTeams" data-admin-btn class="nav-item active-admin-nav" data-nav-item>Team</a>
-                    </ul>
+                    </div>
                 </div>
                 <div class="flex-Row gap-2 justify-content-center align-center">
                     <div class="j-search-container | flex-Row align-center justify-content-center">
