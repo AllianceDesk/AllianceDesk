@@ -121,7 +121,6 @@ namespace ASI.Basecode.Services.Services
         {
             // Retrieve IQueryable from repository
             var ticketsQuery = _ticketRepository.GetAgentTicketsById(agentId);
-
             return ticketsQuery.Select(s => new TicketViewModel
             {
                 TicketId = s.TicketId,

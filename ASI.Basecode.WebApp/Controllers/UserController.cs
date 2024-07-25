@@ -169,7 +169,6 @@ namespace ASI.Basecode.WebApp.Controllers
             var currentSearchTerm = searchTerm ?? "";
 
             var count = tickets.Count();
-
             var statuses = _ticketService.GetStatuses()
                 .Select(c => new KeyValuePair<string, string>(c.StatusId.ToString(), c.StatusName))
                 .ToList();

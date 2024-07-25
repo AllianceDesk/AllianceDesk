@@ -107,7 +107,7 @@ namespace ASI.Basecode.WebApp.Controllers
                 {
                     return RedirectToAction("Dashboard", "Agent");
                 }
-                else if(userRole == 3)
+                else if (userRole == 3)
                 {
                     return RedirectToAction("Tickets", "User");
                 }
@@ -138,7 +138,7 @@ namespace ASI.Basecode.WebApp.Controllers
                 _userService.AddUser(model);
                 return RedirectToAction("Login", "Account");
             }
-            catch(InvalidDataException ex)
+            catch (InvalidDataException ex)
             {
                 TempData["ErrorMessage"] = ex.Message;
             }
