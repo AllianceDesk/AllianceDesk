@@ -2,6 +2,7 @@
 
 @section styles {
     <link rel="stylesheet" href="~/css/KnowledgeBase/Index.css" />
+    <link rel="stylesheet" href="~/css/Common.css" />
 }
 
 @{
@@ -39,12 +40,12 @@ else if (ViewBag.RoleId == 2)
             </div>
         </header>
         <div id="sidebar" class="px-4">
-            <a asp-controller="User" asp-action="Tickets" method="get" type="button" class="btn btn-danger mt-3 w-100 d-flex justify-content-start align-items-center admin-sb-inactive-button" style="height: 3rem;">
+            <a asp-controller="User" asp-action="Tickets" method="get" type="button" class="btn mt-3 w-100 d-flex justify-content-start align-items-center admin-sb-inactive-button remove_default" style="height: 3rem;">
                 <i class='bx bx-book' style=' transform: scale(1.3)'></i>
                 <span class="ml-2">My Tickets</span>
             </a>
 
-            <a asp-controller="Article" asp-action="Index" method="get" type="button" class="btn mt-3 w-100 d-flex justify-content-start align-items-center admin-sb-active-button" style="height: 3rem;">
+            <a asp-controller="Article" asp-action="Index" method="get" type="button" class="btn btn-danger mt-3 w-100 d-flex justify-content-start align-items-center admin-sb-active-button remove_default" style="height: 3rem;">
                 <i class='bx bx-news' style=' transform: scale(1.3)'></i>
                 <span class="ml-2">Knowledge Base</span>
             </a>
@@ -52,21 +53,13 @@ else if (ViewBag.RoleId == 2)
 
         <nav>
 
-            <div class="nav_one mb-3">
+            <div class="nav_one mt-3">
 
-                <h3>Knowledge Base</h3>
-
-                <div class="add_button">
-
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-danger me-1" data-bs-toggle="modal" data-bs-target="#create" id="addArticleBtn">Add Article</button>
-                    </div>
-
-                </div>
+                <h2>Knowledge Base</h2>               
 
             </div>
 
-            <div class="nav_two">
+            <div class="nav_two mt-1">
                 <div class="d-flex" style="gap:2em;">
                     <a class="active_link" asp-controller="Article" asp-action="Index" style="text-decoration: none;">Articles</a>
                     <a class="inactive_link d-flex" asp-controller="Article" asp-action="MyFavorites" style="text-decoration: none; ">
@@ -78,7 +71,22 @@ else if (ViewBag.RoleId == 2)
                     </a>
                 </div>
 
-                <div class="filter_button">
+                @* <div class="d-flex gap-3">
+
+                    <div class="d-flex position-relative" style="width: 20rem; margin-top: 0.25rem;">
+                        <i class='bx bx-search-alt search-icon' style='color:#1d1c1c'></i>
+                        <input class="form-control rounded-5 border_color" id="search-input" type="search" placeholder="Search" aria-label="Search" value="@Model.CurrentSearchTerm" style="width: 100%; height: 2.6rem; padding-left: 2.5rem;">
+                    </div>
+
+
+                    <select class="form-select border_color" style="height: 2.5rem; width: 10.1rem; margin-top: 0.8rem; cursor: pointer; border: none;" aria-label="Small select example">
+                        <option selected>Date</option>
+                        <option value="1">Category</option>
+                    </select>
+
+                </div> *@
+
+                <div class="filter_button mt-2">
 
                     <form asp-action="Index" method="get" asp-controller="Article" id="searchForm" class="d-flex">
                         <div class="input-group mr-3">
