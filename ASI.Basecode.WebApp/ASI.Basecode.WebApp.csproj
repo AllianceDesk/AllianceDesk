@@ -69,10 +69,6 @@
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Update="Views\Admin\TicketReassignment.cshtml">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
 
     <Content Update="Views\Admin\Tickets.cshtml">
 		<ExcludeFromSingleFile>true</ExcludeFromSingleFile>

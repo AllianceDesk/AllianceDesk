@@ -5,7 +5,7 @@
         <div class="modal-content p-3">
 
             <h5 class="mb-3">Update Priority:</h5>
-            <form asp-controller="Admin" asp-action="UpdatePriority" method="post">
+            <form asp-controller="Admin" asp-action="UpdatePriority" asp-route-id="@Model.TicketId" method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="TicketId" value="@Model.TicketId"></>
                 <select asp-for="PriorityId" class="form-select mb-4" aria-label="Default select example">

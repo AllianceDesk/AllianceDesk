@@ -79,7 +79,7 @@
         function updatePaginationControls() {
             const totalPages = Math.ceil(teams.length / usersPerPage);
 
-            if (totalPages === 1) {
+            if (totalPages <= 1) {
                 paginationCtnr.classList.add('hidden');
             } else {
                 paginationCtnr.classList.remove('hidden');
@@ -185,7 +185,7 @@
                     ticketsContainer.appendChild(userDiv);
                 });
             } else {
-                ticketsContainer.innerHTML = '<p>No agents available.</p>';
+                ticketsContainer.innerHTML = '<p style="text-align: center; margin-top: 20px; font-size: 16px; color: #666;">No tickets available.</p>';
             }
 
             updatePaginationControls();

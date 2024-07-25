@@ -3,7 +3,6 @@ using ASI.Basecode.Services.ServiceModels;
 using ASI.Basecode.Services.Manager;
 using ASI.Basecode.WebApp.Mvc;
 using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -208,9 +207,11 @@ namespace ASI.Basecode.WebApp.Controllers
         {
             var existingTicket = _ticketService.GetById(ticket.TicketId);
 
+            existingTicket.PriorityId = ticket.PriorityId;
+
             if (existingTicket != null)
             {
-                _ticketService.Update(ticket);
+                _ticketService.Update(existingTicket);
 
                 return RedirectToAction("Tickets", new { id = ticket.TicketId });
             }
