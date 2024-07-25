@@ -169,7 +169,7 @@ namespace ASI.Basecode.WebApp.Controllers
             var currentSearchTerm = searchTerm ?? "";
 
             var count = tickets.Count();
-            
+
             var statuses = _ticketService.GetStatuses()
                 .Select(c => new KeyValuePair<string, string>(c.StatusId.ToString(), c.StatusName))
                 .ToList();
@@ -184,7 +184,7 @@ namespace ASI.Basecode.WebApp.Controllers
 
             var agents = _userService.GetAgents();
             List<string> emails = new List<string>();
-            foreach(var agent in agents)
+            foreach (var agent in agents)
             {
                 emails.Add(agent.Email);
             }
@@ -218,7 +218,7 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpGet("Tickets/{id}")]
         public IActionResult Ticket(Guid id)
         {
-            var ticket = _ticketService.GetById(id);
+            var ticket = _ticketService.GetById(Guid.Parse(ticketId));
 
             if (ticket == null)
             {
@@ -249,7 +249,7 @@ namespace ASI.Basecode.WebApp.Controllers
             return View(ticket);
         }
 
-        
+
         [HttpPost("Tickets/{id}/Delete")]
         public IActionResult TicketDelete(string id)
         {
@@ -266,7 +266,6 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("Tickets");
         }
 
-        
         [HttpPost("Tickets/{id}/Edit"), ActionName("TicketEdit")]
         public IActionResult TicketEditPost(string ticketId, UserTicketsViewModel model)
         {
@@ -277,20 +276,17 @@ namespace ASI.Basecode.WebApp.Controllers
                 return NotFound();
             }
 
-            // Update ticket properties from the model
             ticket.Title = model.Ticket.Title;
             ticket.Description = model.Ticket.Description;
             ticket.CategoryId = model.Ticket.CategoryId;
             ticket.PriorityId = model.Ticket.PriorityId;
 
-            // Call service to update the ticket
             _ticketService.Update(ticket);
 
-            // Redirect to the Tickets action
             return RedirectToAction("Tickets");
         }
 
-        
+
         [HttpPost("Tickets/{id}/Feedback")]
         public IActionResult TicketFeedback(string id, UserTicketsViewModel model)
         {
@@ -307,7 +303,7 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("Tickets");
         }
 
-        
+
         [HttpPost("Tickets/{id}/Close")]
         public IActionResult TicketClose(string id)
         {
@@ -324,7 +320,7 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("Tickets");
         }
 
-        
+
         [HttpPost("Tickets/{id}/Reopen")]
         public IActionResult TicketReopen(string id)
         {

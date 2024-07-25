@@ -6,24 +6,24 @@ using ASI.Basecode.Data.Models;
 
 namespace ASI.Basecode.Data.Interfaces
 {
-    public interface ITicketRepository
-    {
-        IQueryable<Ticket> RetrieveAll();
-        
-        void Add(Ticket ticket);
+        public interface ITicketRepository
+        {
+                IQueryable<Ticket> RetrieveAll();
 
-        void Update(Ticket ticket);
+                void Add(Ticket ticket);
 
-        Task UpdateTicketsAsync(List<Ticket> tickets);
+                void Update(Ticket ticket);
 
-        void Delete(Guid id);
+                Task UpdateTicketsAsync(List<Ticket> tickets);
 
-        Ticket GetTicketById(Guid id);
+                void Delete(Guid id);
 
-        IQueryable<Ticket> GetUserTicketsById(Guid id);
+                Ticket GetTicketById(Guid id);
 
-        IQueryable<Ticket> GetAgentTicketsById(Guid id);
-        
-        IQueryable<Ticket> GetWeeklyTickets(DateTime startOfWeek, DateTime endOfWeek);
-    }
+                IQueryable<Ticket> GetUserTicketsById(Guid id);
+
+                IQueryable<Ticket> GetAgentTicketsById(Guid id);
+
+                IQueryable<Ticket> GetWeeklyTickets(DateTime startOfWeek, DateTime endOfWeek);
+        }
 }

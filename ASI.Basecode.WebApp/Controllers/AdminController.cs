@@ -23,7 +23,7 @@ namespace ASI.Basecode.WebApp.Controllers
         private readonly ITicketService _ticketService;
         private readonly ISessionHelper _sessionHelper;
         private readonly IArticleService _articleService;
-        
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -140,7 +140,7 @@ namespace ASI.Basecode.WebApp.Controllers
             {
                 return RedirectToAction("Index", "AccessDenied");
             }
-            
+
             var ticket = _ticketService.GetById(ticketId);
             var agents = _userService.GetAgents().ToList();
             var teams = _userService.GetTeams().ToDictionary(u => u.TeamId, u => u.TeamName);
@@ -163,7 +163,7 @@ namespace ASI.Basecode.WebApp.Controllers
                 var agentTickets = _ticketService.GetAgentTickets(agent.UserId)
                     .ToList()
                     .Where(a => a.StatusId != 5 && a.StatusId != 4);
-                
+
                 ticketCount.Add(agent.UserId, agentTickets.Count());
             }
 
@@ -248,7 +248,7 @@ namespace ASI.Basecode.WebApp.Controllers
             if (!String.IsNullOrEmpty(searchString))
             {
                 users = _userService.GetAllUsers()
-                                        .Where (u => u.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                                        .Where(u => u.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
                                         .Select(u => new UserViewModel
                                         {
                                             Name = u.Name,
@@ -286,7 +286,7 @@ namespace ASI.Basecode.WebApp.Controllers
             var data = _userService.GetAllUsers().FirstOrDefault(x => x.UserId.ToString() == UserId);
             if (data == null)
             {
-                return NotFound(); 
+                return NotFound();
             }
 
             var team = _userService.GetTeams().FirstOrDefault(t => t.TeamId.Equals(data.TeamId));
@@ -469,7 +469,7 @@ namespace ASI.Basecode.WebApp.Controllers
         /// <summary>
         /// Go to the Teams View
         /// </summary>
-         [HttpGet("/ViewTeams")]
+        [HttpGet("/ViewTeams")]
         public IActionResult ViewTeams()
         {
             var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;

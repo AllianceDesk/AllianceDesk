@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace ASI.Basecode.Services.ServiceModels
 {
     public class AgentAssignmentViewModel
-    {   
+    {
         public Guid TicketId { get; set; }
         public string TicketNumber { get; set; }
         public string Title { get; set; }

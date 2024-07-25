@@ -121,7 +121,7 @@ namespace ASI.Basecode.Services.Services
         {
             // Retrieve IQueryable from repository
             var ticketsQuery = _ticketRepository.GetAgentTicketsById(agentId);
-             
+
             return ticketsQuery.Select(s => new TicketViewModel
             {
                 TicketId = s.TicketId,
@@ -172,7 +172,7 @@ namespace ASI.Basecode.Services.Services
             // Call Async Tasks here
             await FileUploadAsync(ticket.AttachmentFiles, _sessionHelper.GetUserIdFromSession(), newTicket.TicketId);
         }
-       
+
         public void Update(TicketViewModel ticket)
         {
             var existingTicket = _ticketRepository.GetTicketById(ticket.TicketId);
@@ -454,7 +454,7 @@ namespace ASI.Basecode.Services.Services
 
             var result = topResolvers.Select(tr => new UserViewModel
             {
-                UserId = (Guid) tr.UserId,
+                UserId = (Guid)tr.UserId,
                 TeamName = _teamRepository.RetrieveAll().Where(t => t.TeamId ==
                             _userRepository.GetUsers().Where(u => u.UserId == tr.UserId).FirstOrDefault()?.TeamId)
                             .FirstOrDefault()?.TeamName ?? "No Team",
@@ -498,7 +498,7 @@ namespace ASI.Basecode.Services.Services
             newNotification.RecipientId = ticket.CreatedBy;
             _notificationRepository.Add(newNotification);
         }
-        
+
         private async Task FileUploadAsync(List<IFormFile> files, Guid userId, Guid ticketId)
         {
             var folderPath = Path.Combine("wwwroot/uploads", userId.ToString(), ticketId.ToString());

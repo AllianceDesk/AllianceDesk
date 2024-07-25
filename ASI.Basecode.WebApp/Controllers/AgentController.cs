@@ -207,7 +207,7 @@ namespace ASI.Basecode.WebApp.Controllers
             }
 
             ViewData["AgentSidebar"] = "Tickets";
-            
+
             return this.View();
         }
 
@@ -226,7 +226,7 @@ namespace ASI.Basecode.WebApp.Controllers
             }
 
             ViewData["AgentSidebar"] = "Tickets";
-            
+
             return this.View();
         }
 
@@ -248,7 +248,7 @@ namespace ASI.Basecode.WebApp.Controllers
         }
 
         #endregion
-        
+
         #region User
         [HttpGet("Teams")]
         public ActionResult Teams(string searchString)
@@ -335,7 +335,6 @@ namespace ASI.Basecode.WebApp.Controllers
 
             return RedirectToAction("Teams");
         }
-
 
         /// <summary>
         /// Goes to the Teams Page
