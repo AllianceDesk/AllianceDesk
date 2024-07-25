@@ -10,6 +10,7 @@ namespace ASI.Basecode.Services.ServiceModels
     public class AgentAssignmentViewModel
     {   
         public Guid TicketId { get; set; }
+        public string TicketNumber { get; set; }
         public string Title { get; set; }
         public DateTime CreatedAt { get; set; }
         public string Description { get; set; }

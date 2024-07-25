@@ -55,10 +55,13 @@
                                 <input type="hidden" id="agentName" value="@item.Name" />
                                 <input type="hidden" id="agentId" value="@item.UserId" />
                                 <h6 class="mr-2">@item.Name</h6>
-                                <div class="role-container role-agent fw-semi text-0-5 text-sm mr-3">@item.TeamName</div>
+                                @if(item.TeamName != null)
+								{
+									<div class="role-container role-agent fw-semi text-0-5 text-sm mr-3">@item.TeamName</div>
+								}
                             </div>
                             <div class="flex-Row gap-1">
-                                <p class="text-sm">Number of Tickets: @Model.TicketCount[item.UserId])</p>
+                                <p class="text-sm">Current Number of Unresolved Tickets: @Model.TicketCount[item.UserId]</p>
                             </div>
                         </div>
                     }
