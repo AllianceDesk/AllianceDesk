@@ -125,7 +125,7 @@ namespace ASI.Basecode.WebApp.Controllers
         /// </summary>
         /// <param name="id">User Id</param>
         /// <returns></returns>
-        [HttpGet("Tickets/Assignment")]
+        [HttpGet("Tickets/Assignment/{id}")]
         public IActionResult TicketAssignment(string id)
         {
             Guid ticketId = Guid.Parse(id);
@@ -140,7 +140,6 @@ namespace ASI.Basecode.WebApp.Controllers
             var agents = _userService.GetAgents().ToList();
             var teams = _userService.GetTeams().ToDictionary(u => u.TeamId, u => u.TeamName);
             Dictionary<Guid, int> ticketCount = new Dictionary<Guid, int>();
-            List<UserViewModel> availableAgents = new List<UserViewModel>();
 
             if (ticket.AgentId != null)
             {
@@ -157,8 +156,8 @@ namespace ASI.Basecode.WebApp.Controllers
 
                 //Get the ticket counts for each agent that is still not resolved
                 var agentTickets = _ticketService.GetAgentTickets(agent.UserId)
-                    .Where(a => a.StatusId != 5 && a.StatusId != 4)
-                    .ToList();
+                    .ToList()
+                    .Where(a => a.StatusId != 5 && a.StatusId != 4);
                 
                 ticketCount.Add(agent.UserId, agentTickets.Count());
             }
@@ -166,10 +165,11 @@ namespace ASI.Basecode.WebApp.Controllers
             var model = new AgentAssignmentViewModel
             {
                 TicketId = ticket.TicketId,
+                TicketNumber = ticket.TicketNumber,
                 Title = ticket.Title,
                 CreatedAt = ticket.DateCreated,
                 Description = ticket.Description,
-                Agents = availableAgents,
+                Agents = agents,
                 TicketCount = ticketCount
             };
 
@@ -178,6 +178,11 @@ namespace ASI.Basecode.WebApp.Controllers
         }
 
 
+        /// <summary>
+        /// Assigns the agent to the ticket.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
         [HttpPost("Tickets/Assignment"), ActionName("TicketAssignment")]
         public IActionResult PostTicketAssignment([FromBody] AgentAssignmentViewModel model)
         {

@@ -211,9 +211,9 @@ namespace ASI.Basecode.WebApp.Controllers
         }
 
         [HttpGet("Tickets/{id}")]
-        public IActionResult Ticket(Guid ticketId)
+        public IActionResult Ticket(Guid id)
         {
-            var ticket = _ticketService.GetById(ticketId);
+            var ticket = _ticketService.GetById(id);
 
             if (ticket == null)
             {
@@ -260,58 +260,12 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("Tickets");
         }
 
-        [HttpGet("Tickets/{id}/Edit")]
-        public IActionResult TicketEdit(string id)
-        {
-            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
-
-            if (userRole != 3)
-            {
-                return RedirectToAction("Index", "AccessDenied");
-            }
-
-            var ticketId = Guid.Parse(id);
-            var ticket = _ticketService.GetById(ticketId);
-
-            if (ticket == null)
-            {
-                return NotFound(); // Handle ticket not found scenario
-            }
-
-            var categories = _ticketService.GetCategories()
-                                   .Select(c => new SelectListItem
-                                   {
-                                       Value = c.CategoryId.ToString(),
-                                       Text = c.CategoryName
-                                   })
-                                   .ToList();
-
-            var priorities = _ticketService.GetPriorities()
-                                           .Select(p => new SelectListItem
-                                           {
-                                               Value = p.PriorityId.ToString(),
-                                               Text = p.PriorityName
-                                           })
-                                           .ToList();
-            // Pass data to ViewBag
-            ViewBag.Categories = new SelectList(categories, "Value", "Text", ticket.CategoryId.ToString());
-            ViewBag.Priorities = new SelectList(priorities, "Value", "Text", ticket.PriorityId.ToString());
-
-            return Json(new
-            {
-                id = ticket.TicketId,
-                title = ticket.Title,
-                description = ticket.Description,
-                categoryId = ticket.CategoryId,
-                priorityId = ticket.PriorityId
-            });
-        }
-
+        
         [HttpPost("Tickets/{id}/Edit"), ActionName("TicketEdit")]
-        public IActionResult TicketEditPost(string id, UserTicketsViewModel model)
+        public IActionResult TicketEditPost(string ticketId, UserTicketsViewModel model)
         {
-            var ticketId = Guid.Parse(id);
-            var ticket = _ticketService.GetById(ticketId);
+            Guid guid = Guid.Parse(ticketId);
+            var ticket = _ticketService.GetById(guid);
             if (ticket == null)
             {
                 return NotFound();

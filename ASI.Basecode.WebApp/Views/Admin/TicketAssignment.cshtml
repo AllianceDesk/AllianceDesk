@@ -55,10 +55,13 @@
                                 <input type="hidden" id="agentName" value="@item.Name" />
                                 <input type="hidden" id="agentId" value="@item.UserId" />
                                 <h6 class="mr-2">@item.Name</h6>
-                                <div class="role-container role-agent fw-semi text-0-5 text-sm mr-3">@item.TeamName</div>
+                                @if(item.TeamName != null)
+								{
+									<div class="role-container role-agent fw-semi text-0-5 text-sm mr-3">@item.TeamName</div>
+								}
                             </div>
                             <div class="flex-Row gap-1">
-                                <p class="text-sm">Number of Tickets: @Model.TicketCount[item.UserId])</p>
+                                <p class="text-sm">Current Number of Unresolved Tickets: @Model.TicketCount[item.UserId]</p>
                             </div>
                         </div>
                     }
@@ -69,7 +72,7 @@
             <div class="delete-modal flex flex-col gap-1 justify-content-center align-items-center" data-admin-assign-modal>
                 <i class="text-md fa-regular fa-circle-xmark hover-pointer align-self-end" data-admin-assign-close-btn></i>
                 <div class="flex-between flex-col align-items-center justify-content-center">
-                    <p class="text-1-5">Do you really want to assign<span class="font-weight-bold">@Model.Title</span><br /> to Agent: <span class="font-weight-bold" id="agentNameDisplay"></span>?</p>
+                    <p class="text-1-5">Do you really want to assign <span class="font-weight-bold">@Model.TicketNumber</span><br /> to Agent: <span class="font-weight-bold" id="agentNameDisplay"></span>?</p>
                 </div>
                 <div class="flex-Row w-100 justify-content-end gap-2">
                     <button class=" mbtn-primary color-white bg-red align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-assign-save-btn>Assign</button>

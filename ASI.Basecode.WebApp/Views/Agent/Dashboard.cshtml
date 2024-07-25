@@ -3,7 +3,6 @@
 @{
     ViewData["Title"] = "Tickets";
     Layout = "_Layout";
-
 }
 
 @section styles {
@@ -132,9 +131,6 @@
             element.addEventListener('click', function () {
                 const target = this.getAttribute('data-bs-target');
 
-                console.log("Target was clicked");
-
-
                 if (target == '#viewTicket') {
                     var ticketId = this.getAttribute('data-ticket-id');
 
@@ -177,7 +173,6 @@
             });
         });
 
-        // Get all modal elements
         const modals = document.querySelectorAll('.modal');
 
         modals.forEach(modal => {

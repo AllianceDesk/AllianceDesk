@@ -175,7 +175,7 @@
 
         @Html.Partial("ViewTicketModal")
 
-        @Html.Partial("CreateTicketModal", Model.Ticket)
+        @Html.Partial("CreateTicketModal")
         
         @Html.Partial("EditTicketModal")
 
@@ -249,6 +249,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        const createTicketModal = new bootstrap.Modal(document.getElementById('createTicket'));
         const viewTicketModal = new bootstrap.Modal(document.getElementById('viewTicket'));
         const editTicketModal = new bootstrap.Modal(document.getElementById('editTicket'));
         const feedbackModal = new bootstrap.Modal(document.getElementById('fillFeedback'));
@@ -295,9 +296,11 @@
 
                 if (target === '#editTicket') {
                     const ticketId = this.getAttribute('data-ticket-id');
-                    document.querySelector('#editTicketForm').action = `/User/Tickets/${ticketId}/Edit`;
+                    document.querySelector('#editTicketForm').action = `/User/Tickets/${ticketId}`;
 
-                    fetch(`/User/Tickets/${ticketId}/Edit`)
+                    console.log(ticketId);
+
+                    fetch(`/User/Tickets/${ticketId}`)
                         .then(response => {
                             if (!response.ok) {
                                 throw new Error(`Server Error: ${response.status} - ${response.statusText}`);
@@ -305,20 +308,40 @@
                             return response.json();
                         })
                         .then(data => {
-                            document.querySelector('#Ticket_TicketId').value = data.ticketId;
-                            document.querySelector('#Edit_Ticket_Title').value = data.title;
-                            document.querySelector('#Ticket_CategoryId').value = data.categoryId;
-                            document.querySelector('#Ticket_PriorityId').value = data.priorityId;
-                            document.querySelector('#Ticket_Description').value = data.description;
+                            document.querySelector('#EditTicketId').value = ticketId;
+                            document.querySelector('#EditTitle').value = data.title;
+
+                            // Set Category
+                            const editCategorySelect = document.querySelector('#EditCategory');
+                            for (const option of editCategorySelect.options) {
+                                if (parseInt(option.value, 10) === parseInt(data.categoryId, 10)) {
+                                    option.selected = true;
+                                    break;
+                                }
+                            }
+
+                            // Set Priority
+                            const editPrioritySelect = document.querySelector('#EditPriority');
+                            for (const option of editPrioritySelect.options) {
+                                if (parseInt(option.value, 10) === parseInt(data.priorityId, 10)) {
+                                    option.selected = true;
+                                    break;
+                                }
+                            }
+
+                            document.querySelector('#EditDescription').value = data.description;
                             editTicketModal.show();
                         })
                         .catch(error => console.error('Error fetching ticket data:', error));
-                } else if (target === '#fillFeedback') {
+
+                }
+                else if (target === '#fillFeedback') {
                     const ticketId = this.getAttribute('data-ticket-id');
                     document.querySelector('#Feedback_TicketId').value = ticketId;
                     document.querySelector('#fillFeedbackForm').action = `/User/Tickets/${ticketId}/Feedback`;
                     feedbackModal.show();
-                } else if (target === '#ticketActionModal') {
+                }
+                else if (target === '#ticketActionModal') {
                     const actionType = this.getAttribute('data-action-type');
                     const ticketId = this.getAttribute('data-ticket-id');
 
@@ -344,8 +367,11 @@
                     document.getElementById('ticketActionButton').textContent = buttonText;
                     document.getElementById('ticketActionForm').action = formAction;
                     ticketActionModal.show();
-                } else if (target === '#viewTicket') {
+                }
+                else if (target === '#viewTicket') {
                     const ticketId = this.getAttribute('data-ticket-id');
+
+                    console.log(ticketId);
 
                     fetch(`/User/Tickets/${ticketId}`)
                         .then(response => {
@@ -429,9 +455,6 @@
         });
     });
 
-</script>
-
-<script>
     document.addEventListener('DOMContentLoaded', function () {
         $(document).on('click', '[data-article-detail-btn]', function () {
             var articleId = $(this).data('article-id');

@@ -13,33 +13,43 @@
 
                 <form id="editTicketForm" asp-action="TicketEdit" method="post">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <input type="hidden" asp-for="Ticket.TicketId" id="Ticket_TicketId" />
-                    <div class="form-group mb-3">
-                        <input asp-for="Ticket.Title" class="form-control" placeholder="Ticket Title" aria-label="Title" id="Edit_Ticket_Title" />
+                    <input type="hidden" asp-for="Ticket.TicketId" id="EditTicketId" />
+                    <div class="form-floating mb-3">
+                        <input asp-for="Ticket.Title" type="text" class="form-control" id="EditTitle" placeholder="Ticket Title">
                         <span asp-validation-for="Ticket.Title" class="text-danger"></span>
+                        <label for="EditTitle">Ticket Title</label>
                     </div>
-                    <div class="form-group mb-3">
-                        <select asp-for="Ticket.CategoryId" class="form-select" aria-label="Category Options"
-                                asp-items="@(new SelectList(Model.Categories, "Key", "Value"))">
+                    <div class="form-floating mb-3">
+                        <select asp-for="Ticket.CategoryId" class="form-select" id="EditCategory" aria-label="Category Options">
+                            @foreach (var category in Model.Categories)
+                            {
+                                <option value="@category.Key">@category.Value</option>
+                            }
                         </select>
                         <span asp-validation-for="Ticket.CategoryId" class="text-danger"></span>
+                        <label for="EditCategory">Category Options</label>
                     </div>
-                    <div class="form-group mb-3">
-                        <select asp-for="Ticket.PriorityId" class="form-select" aria-label="Priority Options"
-                                asp-items="@(new SelectList(Model.Priorities, "Key", "Value"))">
+
+                    <div class="form-floating mb-3">
+                        <select asp-for="Ticket.PriorityId" class="form-select" id="EditPriority" aria-label="Priority Options">
+                            @foreach (var priority in Model.Priorities)
+                            {
+                                <option value="@priority.Key">@priority.Value</option>
+                            }
                         </select>
                         <span asp-validation-for="Ticket.PriorityId" class="text-danger"></span>
+                        <label for="EditPriority">Priority Options</label>
                     </div>
-                    <div class="form-group mb-3">
-                        <textarea asp-for="Ticket.Description" class="form-control" rows="10" placeholder="Description"></textarea>
+
+                    <div class="form-floating mb-3">
+                        <textarea asp-for="Ticket.Description" class="form-control" placeholder="Description" id="EditDescription" style="height: 100px"></textarea>
                         <span asp-validation-for="Ticket.Description" class="text-danger"></span>
+                        <label for="EditDescription">Description</label>
                     </div>
-                    <div class="button_card d-flex justify-content-between">
-                        <button type="button" class="btn attachment custom-button" style="background-color: #7E7E7E; color: white;">
-                            <i class='bx bx-image-add bx-xs bx-fw uh' style="align-self:center;"></i> Add Attachment
-                        </button>
-                        <button type="submit" class="btn attachment custom-button" style="background-color: #E21818; color: white;">
-                            <i class='bx bxl-telegram bx-xs bx-fw uh' style="align-self:center;"></i> Submit
+
+                    <div class="d-flex pr-3">
+                        <button type="submit" class="btn button button_size">
+                            Submit
                         </button>
                     </div>
                 </form>
