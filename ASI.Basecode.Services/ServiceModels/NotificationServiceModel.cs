@@ -19,5 +19,8 @@ namespace ASI.Basecode.Services.ServiceModels
         public string DateCreated { get; set; }
         public string RecipientId { get; set; }
         public List<NotificationServiceModel> UserNotifications { get; set; }
+        public string TicketStatus { get; set; }
+        public string AgentName { get; set; }
+        public byte RoleId { get; set; }
     }
 }
