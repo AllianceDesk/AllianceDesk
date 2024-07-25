@@ -43,6 +43,7 @@ else if (ViewBag.RoleId == 2)
 {
     @Html.Partial("Agent_Header")
 }
+
 <div @(ViewBag.RoleId == 3 ? "id=container" : "class=main")>
     @if (ViewBag.RoleId == 3)
     {
@@ -88,7 +89,15 @@ else if (ViewBag.RoleId == 2)
 
             <div class="nav_one mt-3">
 
-                <h2>Knowledge Base</h2>               
+                <h2>Knowledge Base</h2>
+
+                <div class="hidden add_button">
+
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-danger me-1" data-bs-toggle="modal" data-bs-target="#create" id="addArticleBtn">Add Article</button>
+                    </div>
+
+                </div>
 
             </div>
 
@@ -106,18 +115,18 @@ else if (ViewBag.RoleId == 2)
 
                 @* <div class="d-flex gap-3">
 
-                    <div class="d-flex position-relative" style="width: 20rem; margin-top: 0.25rem;">
-                        <i class='bx bx-search-alt search-icon' style='color:#1d1c1c'></i>
-                        <input class="form-control rounded-5 border_color" id="search-input" type="search" placeholder="Search" aria-label="Search" value="@Model.CurrentSearchTerm" style="width: 100%; height: 2.6rem; padding-left: 2.5rem;">
-                    </div>
+            <div class="d-flex position-relative" style="width: 20rem; margin-top: 0.25rem;">
+            <i class='bx bx-search-alt search-icon' style='color:#1d1c1c'></i>
+            <input class="form-control rounded-5 border_color" id="search-input" type="search" placeholder="Search" aria-label="Search" value="@Model.CurrentSearchTerm" style="width: 100%; height: 2.6rem; padding-left: 2.5rem;">
+            </div>
 
 
-                    <select class="form-select border_color" style="height: 2.5rem; width: 10.1rem; margin-top: 0.8rem; cursor: pointer; border: none;" aria-label="Small select example">
-                        <option selected>Date</option>
-                        <option value="1">Category</option>
-                    </select>
+            <select class="form-select border_color" style="height: 2.5rem; width: 10.1rem; margin-top: 0.8rem; cursor: pointer; border: none;" aria-label="Small select example">
+            <option selected>Date</option>
+            <option value="1">Category</option>
+            </select>
 
-                </div> *@
+            </div> *@
 
                 <div class="filter_button mt-2">
 
@@ -128,15 +137,15 @@ else if (ViewBag.RoleId == 2)
                         </div>
 
                         @Html.DropDownList("category", new Microsoft.AspNetCore.Mvc.Rendering.SelectList(new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>
-                        {
-                        new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Default", Value = "default" },
-                        new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Technical", Value = "Technical" },
-                        new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Billing", Value = "Billing" },
-                        new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "General Questions", Value = "General Questions" },
-                        new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Account Management", Value = "Account Management" },
-                        new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Customer Support", Value = "Customer Support" },
-                        new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Others", Value = "Others" }
-                        }, "Value", "Text", ViewBag.CategoryString), new { @class = "form-select", @aria_label = "Default select example", @style = "width: 16em; outline: none; box-shadow: none; border: 1px solid #ccc; background-color: whitesmoke;", @onchange = "document.getElementById('searchForm').submit();" })
+                    {
+                    new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Default", Value = "default" },
+                    new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Technical", Value = "Technical" },
+                    new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Billing", Value = "Billing" },
+                    new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "General Questions", Value = "General Questions" },
+                    new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Account Management", Value = "Account Management" },
+                    new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Customer Support", Value = "Customer Support" },
+                    new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Others", Value = "Others" }
+                    }, "Value", "Text", ViewBag.CategoryString), new { @class = "form-select", @aria_label = "Default select example", @style = "width: 16em; outline: none; box-shadow: none; border: 1px solid #ccc; background-color: whitesmoke;", @onchange = "document.getElementById('searchForm').submit();" })
                     </form>
                 </div>
             </div>
@@ -306,14 +315,6 @@ else if (ViewBag.RoleId == 2)
             </main>
         </div>
     }
-
-
-
-
-   
-    
-
-
 </div>
 
 <div class="modal fade" id="create" tabindex="-1">
@@ -389,6 +390,8 @@ else if (ViewBag.RoleId == 2)
 
         $(document).on('click', '[data-article-detail-btn]', function () {
             var articleId = $(this).data('article-id');
+            console.log("clicked");
+            console.log(articleId);
 
             // Perform AJAX request to fetch article details
             $.ajax({

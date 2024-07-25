@@ -9,9 +9,9 @@
         <div class="modal-input-container">
             <label class="modal-input relative flex">
                 <span>Team Name</span>
-                <input asp-for="TeamName" class="form-control" type="text" placeholder="unityDesk" maxlength="50" oninput="updateCharacterCount(this, 'charCount')" />
+                <input asp-for="TeamName" class="form-control" type="text" placeholder="unityDesk" maxlength="50" oninput="updateCharacterCount(this, 'teamNameCharCount')" />
                 <span asp-validation-for="TeamName" class="text-danger"></span>
-                <span id="charCount" class="text-gray-500" style="text-align:end;">0/300</span>
+                <span id="teamNameCharCount" class="text-gray-500" style="text-align:end;">0/50</span>
             </label>
             <label class="modal-input relative flex">
                 <span>Department</span>
@@ -22,9 +22,9 @@
             </label>
             <label class="modal-input relative flex">
                 <span>Team Description</span>
-                <textarea asp-for="TeamDescription" class="form-control" type="text" placeholder="unityDesk" maxlength="300" oninput="updateCharacterCount(this, 'charCount')"></textarea>
+                <textarea asp-for="TeamDescription" class="form-control" type="text" placeholder="unityDesk" maxlength="300" oninput="updateCharacterCount(this, 'teamDescCharCount')"></textarea>
                 <span asp-validation-for="TeamDescription" class="text-danger"></span>
-                <span id="charCount" class="text-gray-500" style="text-align:end;">0/300</span>
+                <span id="teamDescCharCount" class="text-gray-500" style="text-align:end;">0/300</span>
             </label>
             
         </div>
