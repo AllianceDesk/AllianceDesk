@@ -83,6 +83,8 @@ namespace ASI.Basecode.Services.Services
                 Description = s.Description,
                 DateCreated = s.DateCreated,
                 CreatorId = s.CreatedBy,
+                AgentId = s.AssignedAgent,
+                StatusId = s.StatusId,
                 Category = s.Category.CategoryName,
                 Priority = s.Priority.PriorityName,
                 Status = s.Status.StatusName,
@@ -101,7 +103,7 @@ namespace ASI.Basecode.Services.Services
                 .Include(t => t.CreatedByNavigation);
 
             return tickets.Select(s => new TicketViewModel
-            { 
+            {
                 TicketId = s.TicketId,
                 Title = s.Title,
                 Description = s.Description,
@@ -123,9 +125,10 @@ namespace ASI.Basecode.Services.Services
                 .Include(t => t.AssignedAgent)
                 .Include(t => t.CreatedByNavigation);
 
-           return ticketsQuery.Select(s => new TicketViewModel
+            return ticketsQuery.Select(s => new TicketViewModel
             {
                 TicketId = s.TicketId,
+                TicketNumber = s.TicketNumber,
                 Title = s.Title,
                 Description = s.Description,
                 DateCreated = s.DateCreated,
@@ -137,7 +140,7 @@ namespace ASI.Basecode.Services.Services
             });
         }
 
-         public IQueryable<TicketViewModel> GetWeeklyTickets(DateTime startOfWeek, DateTime endOfWeek)
+        public IQueryable<TicketViewModel> GetWeeklyTickets(DateTime startOfWeek, DateTime endOfWeek)
         {
             var ticketsQuery = _ticketRepository.GetWeeklyTickets(startOfWeek, endOfWeek);
 
@@ -175,7 +178,7 @@ namespace ASI.Basecode.Services.Services
             // Call Async Tasks here
             await FileUploadAsync(ticket.AttachmentFiles, _sessionHelper.GetUserIdFromSession(), newTicket.TicketId);
         }
-       
+
         public void Update(TicketViewModel ticket)
         {
             var existingTicket = _ticketRepository.GetTicketById(ticket.TicketId);
@@ -402,7 +405,7 @@ namespace ASI.Basecode.Services.Services
             existingTicket.StatusId = 2;
             _ticketRepository.Update(existingTicket);
 
-            
+
 
             // Add notification for the agent assigned
             _notificationService.Add(ticketId.ToString(), userId.ToString());
@@ -477,7 +480,7 @@ namespace ASI.Basecode.Services.Services
 
             var result = topResolvers.Select(tr => new UserViewModel
             {
-                UserId = (Guid) tr.UserId,
+                UserId = (Guid)tr.UserId,
                 TeamName = _teamRepository.RetrieveAll().Where(t => t.TeamId ==
                             _userRepository.GetUsers().Where(u => u.UserId == tr.UserId).FirstOrDefault()?.TeamId)
                             .FirstOrDefault()?.TeamName ?? "No Team",
@@ -526,7 +529,7 @@ namespace ASI.Basecode.Services.Services
             // Add notification for the user that created it
             _notificationService.Add(ticket.TicketId.ToString(), ticket.CreatedBy.ToString());
         }
-        
+
         private async Task FileUploadAsync(List<IFormFile> files, Guid userId, Guid ticketId)
         {
             var folderPath = Path.Combine("wwwroot/uploads", userId.ToString(), ticketId.ToString());

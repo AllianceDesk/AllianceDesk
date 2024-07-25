@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace ASI.Basecode.Services.ServiceModels
 {
     public class AgentAssignmentViewModel
-    {   
+    {
         public Guid TicketId { get; set; }
         public string TicketNumber { get; set; }
         public string Title { get; set; }
@@ -16,7 +16,7 @@ namespace ASI.Basecode.Services.ServiceModels
         public string Description { get; set; }
         public List<UserViewModel> Agents { get; set; } // Assuming User is your user model
         public Dictionary<Guid, int> TicketCount { get; set; }
-        
+
         //For submitting the form
         public Guid SelectedAgentId { get; set; }
     }

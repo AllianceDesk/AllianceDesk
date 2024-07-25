@@ -58,7 +58,7 @@ namespace ASI.Basecode.WebApp.Controllers
         {
             Guid userId = _sessionHelper.GetUserIdFromSession();
             var userRole = _userService.GetUserById(userId).RoleId;
-            
+
             if (userRole != 2)
             {
                 return RedirectToAction("Index", "AccessDenied");
@@ -75,7 +75,8 @@ namespace ASI.Basecode.WebApp.Controllers
             if (currentStatus == "Unresolved")
             {
                 tickets = tickets.Where(ticket => ticket.StatusId == 2);
-            } else if (currentStatus == "Resolved")
+            }
+            else if (currentStatus == "Resolved")
             {
                 tickets = tickets.Where(ticket => ticket.StatusId == 3 || ticket.StatusId == 4);
             }
@@ -185,7 +186,7 @@ namespace ASI.Basecode.WebApp.Controllers
         public IActionResult Ticket(string id)
         {
             var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
-            
+
             if (userRole != 2)
             {
                 return RedirectToAction("Index", "AccessDenied");
@@ -225,7 +226,7 @@ namespace ASI.Basecode.WebApp.Controllers
             }
 
             ViewData["AgentSidebar"] = "Tickets";
-            
+
             return this.View();
         }
 
@@ -236,7 +237,7 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpGet("TicketDetail")]
         public ActionResult TicketDetail()
         {
-            
+
             var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
 
             if (userRole != 2)
@@ -265,7 +266,7 @@ namespace ASI.Basecode.WebApp.Controllers
 
             var ticket = _ticketService.GetById(ticketMessage.TicketId);
             var user = _userService.GetUserById(_sessionHelper.GetUserIdFromSession());
-            
+
             if (ticket == null)
             {
                 return NotFound();
@@ -290,7 +291,7 @@ namespace ASI.Basecode.WebApp.Controllers
         }
 
         #endregion
-        
+
         #region User
         [HttpGet("Teams")]
         public ActionResult Teams(string searchString)
@@ -316,7 +317,7 @@ namespace ASI.Basecode.WebApp.Controllers
                                             RoleId = u.RoleId,
                                             UserId = u.UserId,
                                         });
-                                        
+
 
             if (!String.IsNullOrEmpty(searchString))
             {

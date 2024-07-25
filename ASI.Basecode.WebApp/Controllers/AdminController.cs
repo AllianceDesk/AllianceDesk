@@ -25,7 +25,7 @@ namespace ASI.Basecode.WebApp.Controllers
         private readonly ISessionHelper _sessionHelper;
         private readonly IArticleService _articleService;
         private readonly ITeamService _teamService;
-        
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -77,12 +77,10 @@ namespace ASI.Basecode.WebApp.Controllers
         }
 
         #region Tickets
-
-        /// <param name="id">Ticket Id</param>
-        /// <param name="status">Resolved or Unresolved</param>
-        /// <returns>
-        /// Tickets when id is null and a specific ticket when id is provided
-        /// </returns>
+        /// <summary>
+        /// Returns Tickets View.
+        /// </summary>
+        /// <returns> Tickets View </returns>
         [HttpGet]
         [Route("Tickets/{id?}")]
         public IActionResult Tickets(string? id, string? status)
@@ -129,13 +127,12 @@ namespace ASI.Basecode.WebApp.Controllers
             return View("/Views/Admin/Tickets.cshtml", tickets);
         }
 
-        
         /// <summary>
         /// Returns a list of agents except the current agent if the ticket was already assigend to an agent.
         /// </summary>
         /// <param name="id">User Id</param>
         /// <returns></returns>
-        [HttpGet("Tickets/Assignment/{id}")]
+        [HttpGet("Tickets/Assignment")]
         public IActionResult TicketAssignment(string id)
         {
             Guid ticketId = Guid.Parse(id);
@@ -145,11 +142,12 @@ namespace ASI.Basecode.WebApp.Controllers
             {
                 return RedirectToAction("Index", "AccessDenied");
             }
-            
+
             var ticket = _ticketService.GetById(ticketId);
             var agents = _userService.GetAgents().ToList();
             var teams = _userService.GetTeams().ToDictionary(u => u.TeamId, u => u.TeamName);
             Dictionary<Guid, int> ticketCount = new Dictionary<Guid, int>();
+            List<UserViewModel> availableAgents = new List<UserViewModel>();
 
             if (ticket.AgentId != null)
             {
@@ -166,20 +164,19 @@ namespace ASI.Basecode.WebApp.Controllers
 
                 //Get the ticket counts for each agent that is still not resolved
                 var agentTickets = _ticketService.GetAgentTickets(agent.UserId)
-                    .ToList()
-                    .Where(a => a.StatusId != 5 && a.StatusId != 4);
-                
+                    .Where(a => a.StatusId != 5 && a.StatusId != 4)
+                    .ToList();
+
                 ticketCount.Add(agent.UserId, agentTickets.Count());
             }
 
             var model = new AgentAssignmentViewModel
             {
                 TicketId = ticket.TicketId,
-                TicketNumber = ticket.TicketNumber,
                 Title = ticket.Title,
                 CreatedAt = ticket.DateCreated,
                 Description = ticket.Description,
-                Agents = agents,
+                Agents = availableAgents,
                 TicketCount = ticketCount
             };
 
@@ -187,12 +184,6 @@ namespace ASI.Basecode.WebApp.Controllers
             return View(model);
         }
 
-        
-        /// <summary>
-        /// Assigns the agent to the ticket.
-        /// </summary>
-        /// <param name="model">Agent Assignment View Model</param>
-        /// <returns></returns>
         [HttpPost("Tickets/Assignment"), ActionName("TicketAssignment")]
         public IActionResult PostTicketAssignment([FromBody] AgentAssignmentViewModel model)
         {
@@ -200,47 +191,14 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("Tickets", new { id = model.TicketId });
         }
 
-        
-        /// <summary>
-        /// Updates the priority of the ticket
-        /// </summary>
-        /// <param name="ticket">The ticket to be modified</param>
-        /// <returns></returns>
         [HttpPost("Tickets/{id}/UpdatePriority")]
         public IActionResult UpdatePriority(TicketViewModel ticket)
         {
             var existingTicket = _ticketService.GetById(ticket.TicketId);
 
-            existingTicket.PriorityId = ticket.PriorityId;
-
-            string priorityName = "";
-
-            switch(ticket.PriorityId)
-            {
-                case 1:
-                    priorityName = "High";
-                    break;
-                case 2:
-                    priorityName = "Mid";
-                    break;
-                case 3:
-                    priorityName = "Low";
-                    break;
-            }
-
-
             if (existingTicket != null)
             {
-                _ticketService.Update(existingTicket);
-
-                var ticketActivity = new TicketActivityViewModel
-                {
-                    TicketId = ticket.TicketId,
-                    Message = $"Admin updated the priority to {priorityName}",
-                    OperationId = 2,
-                };
-
-                _ticketService.AddActivity(ticketActivity);
+                _ticketService.Update(ticket);
 
                 return RedirectToAction("Tickets", new { id = ticket.TicketId });
             }
@@ -253,9 +211,9 @@ namespace ASI.Basecode.WebApp.Controllers
         #region Users
 
         /// <summary>
-        /// Go to the User Directory
+        /// Returns User View
         /// </summary>
-        /// <returns> Returns all the user </returns>
+        /// <returns> Home View </returns>
         [HttpGet("ViewUser")]
         public ActionResult ViewUser(string searchString)
         {
@@ -277,12 +235,11 @@ namespace ASI.Basecode.WebApp.Controllers
                                             RoleId = u.RoleId,
                                             UserId = u.UserId,
                                         })
-                                        .OrderBy(u => u.Name)
                                         .ToList();
             if (!String.IsNullOrEmpty(searchString))
             {
                 users = _userService.GetAllUsers()
-                                        .Where (u => u.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                                        .Where(u => u.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
                                         .Select(u => new UserViewModel
                                         {
                                             Name = u.Name,
@@ -290,7 +247,6 @@ namespace ASI.Basecode.WebApp.Controllers
                                             RoleId = u.RoleId,
                                             UserId = u.UserId,
                                         })
-                                        .OrderBy(u => u.Name)
                                         .ToList();
             }
 
@@ -303,12 +259,12 @@ namespace ASI.Basecode.WebApp.Controllers
             return View(viewModel);
         }
 
+        [HttpGet("/UserDetails")]
         /// <summary>
         /// Go to the User Details View
         /// </summary>
         /// <returns> User Details</returns>
         /// 
-        [HttpGet("/UserDetails")]
         public IActionResult UserDetails(string UserId)
         {
             var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
@@ -321,32 +277,28 @@ namespace ASI.Basecode.WebApp.Controllers
             var data = _userService.GetAllUsers().FirstOrDefault(x => x.UserId.ToString() == UserId);
             if (data == null)
             {
-                return NotFound(); 
+                return NotFound();
             }
 
             var team = _userService.GetTeams().FirstOrDefault(t => t.TeamId.Equals(data.TeamId));
-            
-            var guid = Guid.Parse(UserId);
-
             var userModel = new UserViewModel
             {
-                UserId = guid,
+                UserId = Guid.Parse(UserId),
                 Name = data.Name,
                 Email = data.Email,
                 RoleId = data.RoleId,
-                TeamName = _userService.GetTeams().FirstOrDefault(t => t.TeamId == data.TeamId)?.TeamName,
-                RecentUserActivities = _userService.GetUserActivity(guid),
+                TeamName = _userService.GetTeams().FirstOrDefault(t => t.TeamId == data.TeamId)?.TeamName
             };
 
             return PartialView("UserDetails", userModel);
         }
 
 
+        [HttpGet("/AddUser")]
         /// <summary>
         /// Go to the Add a User View
         /// </summary>
         /// <returns> Add User</returns>
-        [HttpGet("/AddUser")]
         public IActionResult AddUser()
         {
             var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
@@ -380,12 +332,11 @@ namespace ASI.Basecode.WebApp.Controllers
             return PartialView("AddUser");
         }
 
-
+        [HttpPost("/AddUser")]
         /// <summary>
         /// Post Request for Adding a User
         /// </summary>
         /// <returns> View User </returns>
-        [HttpPost("/AddUser")]
         public IActionResult PostUserAdd(UserViewModel user)
         {
             _userService.AddUser(user);
@@ -393,12 +344,12 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("ViewUser");
         }
 
-
-        /// <summary>
-        /// Go to the User Edit View
-        /// </summary>
-        /// <returns> Returns to Edit User </returns>
         [HttpGet("/UserEdit")]
+        /// <summary>
+        /// Go to the User Details View
+        /// </summary>
+        /// <returns> User Details</returns>
+        /// 
         public IActionResult UserEdit(string UserId, bool resetPassword)
         {
             var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
@@ -457,12 +408,11 @@ namespace ASI.Basecode.WebApp.Controllers
             return PartialView("UserEdit", userModel);
         }
 
-
-        /// <summary>
-        /// Post Request for Editing User
-        /// </summary>
-        /// <returns> Returns to View User </returns>
         [HttpPost("/UserEdit")]
+        /// <summary>
+        /// Post Request for Adding a User
+        /// </summary>
+        /// <returns> View User </returns>
         public IActionResult PostUserEdit(UserViewModel user)
         {
             _userService.UpdateUser(user);
@@ -470,11 +420,11 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("ViewUser");
         }
 
-        /// <summary>
-        /// Post Request for Deleting User
-        /// </summary>
-        /// <returns> Returns to View User </returns>
         [HttpGet("/UserDelete")]
+        /// <summary>
+        /// Post Request for Adding a User
+        /// </summary>
+        /// <returns> View User </returns>
         public IActionResult UserDelete(string UserId)
         {
             var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
@@ -492,11 +442,11 @@ namespace ASI.Basecode.WebApp.Controllers
             return PartialView("UserDelete", userToDelete);
         }
 
+        [HttpPost("/UserDelete")]
         /// <summary>
         /// Post Request for Adding a User
         /// </summary>
-        /// <returns> Returns to View User </returns>
-        [HttpPost("/UserDelete")]
+        /// <returns> View User </returns>
         public IActionResult PostUserDelete(string UserId)
         {
             _userService.DeleteUser(Guid.Parse(UserId));
@@ -504,10 +454,6 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("ViewUser");
         }
 
-
-        /// <summary>
-        /// Go to the Teams View
-        /// </summary>
         [HttpGet("/ViewTeams")]
         public IActionResult ViewTeams()
         {
@@ -518,74 +464,24 @@ namespace ASI.Basecode.WebApp.Controllers
                 return RedirectToAction("Index", "AccessDenied");
             }
 
-            var teams = _teamService.GetTeams()
-                                        .Select(u => new TeamViewModel
-                                        {
-                                            TeamName = u.TeamName,
-                                            TeamId = u.TeamId,
-                                            TeamDescription = u.TeamDescription,
-                                            DepartmentId = u.DepartmentId,
-                                            DepartmentName = _teamService.GetDepartmentName(u.DepartmentId),
-                                            TeamNumber = _teamService.GetTeamNumber(u.TeamId.ToString()),
-                                        })
-                                        .OrderBy(t => t.TeamName)
-                                        .ToList();
-
-            var viewModel = new TeamViewModel
-            {
-                Teams = teams
-            };
+            ViewBag.IsLoginOrRegister = false;
+            var teams = _userService.GetTeams()
+                                   .Select(t => new SelectListItem
+                                   {
+                                       Value = t.TeamId.ToString(),
+                                       Text = t.TeamName
+                                   })
+                                   .ToList();
+            ViewBag.Teams = new SelectList(teams, "Value", "Text");
             ViewBag.AdminSidebar = "ViewUser";
-
-            return View(viewModel);
+            return View();
         }
 
-        /// <summary>
-        /// Go to the Team Details View
-        /// </summary>
-        /// <returns>Team Details</returns>
-        /// 
-        [HttpGet("/TeamDetail")]
-        public IActionResult TeamDetail(string teamId)
-        {
-            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
-
-            if (userRole != 1)
-            {
-                return RedirectToAction("Index", "AccessDenied");
-            }
-
-            var data = _userService.GetAllUsers()
-                        .Where(x => x.TeamId.ToString() == teamId)
-                        .Select (u => new UserViewModel{
-                            Name = u.Name,
-                            UserName = u.Username,
-                            Email = u.Email,
-                            RoleId = u.RoleId,
-                        })
-                        .ToList();
-            var teamInfo = _teamService.GetTeams().Where(t => t.TeamId.ToString() == teamId).FirstOrDefault();
-            if (data == null)
-            {
-                return NotFound();
-            }
-            var agentModel = new TeamViewModel
-            {
-                TeamDescription = teamInfo.TeamDescription,
-                TeamName = teamInfo.TeamName,
-                DepartmentName = _teamService.GetDepartmentName(teamInfo.DepartmentId),
-                Agents = data,
-                TeamNumber = data.Count(),
-            };
-
-            return PartialView("TeamDetail", agentModel);
-        }
-
-        /// <summary>
-        /// Go to the Add Team View
-        /// </summary>
-        /// <returns>The Add Team View</returns>
         [HttpGet("/AddTeam")]
+        /// <summary>
+        /// Go to the Add a User View
+        /// </summary>
+        /// <returns> Add User</returns>
         public IActionResult AddTeam()
         {
             var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
@@ -595,25 +491,14 @@ namespace ASI.Basecode.WebApp.Controllers
                 return RedirectToAction("Index", "AccessDenied");
             }
 
-            var departments = _teamService.GetDepartments()
-                                   .Select(u => new SelectListItem
-                                   {
-                                       Value = u.DepartmentId.ToString(),
-                                       Text = u.DepartmentName
-                                   })
-                                   .ToList();
-
-            // Pass data to ViewBag
-            ViewBag.Departments = new SelectList(departments, "Value", "Text");
-
             return PartialView("AddTeam");
         }
 
-        /// <summary>
-        /// Post Request for Adding a Team
-        /// </summary>
-        /// <returns> Redirects to View Teams</returns>
         [HttpPost("/AddTeam")]
+        /// <summary>
+        /// Post Request for Adding a User
+        /// </summary>
+        /// <returns> View User </returns>
         public IActionResult PostTeamAdd(UserViewModel team)
         {
             _userService.AddTeam(team);
@@ -623,11 +508,8 @@ namespace ASI.Basecode.WebApp.Controllers
 
         #endregion
 
-        #region Analytics        
-        /// <summary>
-        /// Go to Overall Metrics on Analytics
-        /// </summary>
-        /// <returns>Analytics of the all the tickets</returns>
+        #region Analytics
+
         [HttpGet("AnalyticsOverallMetrics")]
         public IActionResult AnalyticsOverallMetrics()
         {
@@ -680,10 +562,6 @@ namespace ASI.Basecode.WebApp.Controllers
             return View("Views/Admin/AnalyticsOverallMetrics.cshtml", model);
         }
 
-        /// <summary>
-        /// Go to Agent Metrics on Analytics
-        /// </summary>
-        /// <returns>Analytics based on Agent</returns>
         [HttpGet("AnalyticsAgentMetric")]
         public IActionResult AgentMetric()
         {
@@ -712,10 +590,9 @@ namespace ASI.Basecode.WebApp.Controllers
             var ticketsByAgentQuery = tickets
                 .Where(t => t.DateCreated >= startOfWeek && t.DateCreated < endOfWeek)
                 .GroupBy(t => t.AgentId)
-                .Where(g => g.Key != null) // Filter out groups with null keys
                 .Select(g => new
                 {
-                    AgentId = g.Key.Value, // Assuming AgentId is a nullable type
+                    AgentId = g.Key,
                     Tickets = g.ToList()
                 });
 
@@ -725,6 +602,7 @@ namespace ASI.Basecode.WebApp.Controllers
                     g => g.AgentId,
                     g => g.Tickets
                 );
+
 
             var agentTicketCounts = agents.Select(agent =>
             {
@@ -743,25 +621,11 @@ namespace ASI.Basecode.WebApp.Controllers
                     status => status.StatusName,
                     status => agentTickets.Count(t => t.Status == status.StatusName)
                 );
-                
-                // Count tickets by priority
+
                 var ticketCountByPriority = priorities.ToDictionary(
                     priority => priority.PriorityName,
                     priority => agentTickets.Count(t => t.Priority == priority.PriorityName)
                 );
-
-                var ratingCounts = Enumerable.Range(1, 5).ToDictionary(rating => rating, rating => 0);
-
-                foreach (var ticket in agentTickets)
-                {
-                    // Ensure Feedback is within the valid range
-                    if (ticket.Feedback.HasValue && ticket.Feedback.Value >= 1 && ticket.Feedback.Value <= 5)
-                    {
-                        ratingCounts[ticket.Feedback.Value]++;
-                    }
-                }
-
-                var ticketCountByFeedback = ratingCounts;
 
                 return new AnalyticsAgentMetricViewModel
                 {
@@ -773,18 +637,13 @@ namespace ASI.Basecode.WebApp.Controllers
 
                     TicketCountsByCategory = ticketCountsByCategory,
                     TicketCountsByStatus = ticketCountsByStatus,
-                    TicketCountsByPriority = ticketCountByPriority,
-                    TicketCountByFeedback = ticketCountByFeedback
+                    TicketCountsByPriority = ticketCountByPriority
                 };
             });
 
             return View("Views/Admin/AnalyticsAgentMetric.cshtml", agentTicketCounts);
         }
 
-        /// <summary>
-        /// Go to Team Metrics on Analytics
-        /// </summary>
-        /// <returns>Analytics based on Teams</returns>
         [HttpGet("AnalyticsTeamMetric")]
         public IActionResult TeamMetrics()
         {
@@ -829,6 +688,7 @@ namespace ASI.Basecode.WebApp.Controllers
                     g => g.AgentId,
                     g => g.Tickets
                 );
+
             var agentTicketCounts = agents.Select(agent =>
             {
                 var agentTickets = ticketsByAgent.ContainsKey(agent.UserId)
