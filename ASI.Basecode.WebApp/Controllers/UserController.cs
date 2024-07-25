@@ -245,11 +245,11 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("Tickets");
         }
 
-
-        [HttpPost("Tickets/{id}/Edit")]
-        public IActionResult EditTicketPost(UserTicketsViewModel model)
+        [HttpPost("Tickets/{id}/Edit"), ActionName("TicketEdit")]
+        public IActionResult TicketEditPost(string id, UserTicketsViewModel model)
         {
-            var ticket = _ticketService.GetById(model.Ticket.TicketId);
+            Guid ticketId = Guid.Parse(id);
+            var ticket = _ticketService.GetById(ticketId); // Ensure this matches with the ID being passed
             if (ticket == null)
             {
                 return NotFound();
@@ -261,10 +261,8 @@ namespace ASI.Basecode.WebApp.Controllers
             ticket.CategoryId = model.Ticket.CategoryId;
             ticket.PriorityId = model.Ticket.PriorityId;
 
-            // Call service to update the ticket
             _ticketService.Update(ticket);
 
-            // Add a new activity to the ticket
             // Add ticket activity
             TicketActivityViewModel newActivity = new TicketActivityViewModel();
             newActivity.TicketId = ticket.TicketId;
@@ -275,7 +273,7 @@ namespace ASI.Basecode.WebApp.Controllers
             _ticketService.AddActivity(newActivity);
 
             // Redirect to the Tickets action
-            return RedirectToAction("Tickets");
+            return RedirectToAction("Tickets", new { status = 4 });
         }
 
 
