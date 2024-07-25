@@ -40,7 +40,7 @@
 <div class="main">
     @Html.Partial("Admin_Sidebar") 
     <div class="admin-body py-3 relative bg-grey flex flex-col gap-1">
-
+        
         <div class="view-user-nav mb-4">
             <div class="flex flex-Row gap-4">
                 <div class="flex-Row justify-content-between align-items-center gap-1 ml-2">
@@ -53,6 +53,7 @@
             @if(Model.StatusId != 4 && Model.StatusId != 5)
             {
                 <div class="flex-Row justify-content-between align-items-center gap-3">
+
                     <a data-admin-btn class="registerBtn color-white" href="#" data-bs-toggle="modal" data-bs-target="#updatePrio">Update Priority</a>
 
                     @if (Model.AgentName == "Not yet Assigned")
@@ -69,9 +70,9 @@
         </div>
 
         <div class="h-29 px-5 py-4 br-1 bg-white gap-1 overflow-auto"> 
+            <p class="agent_assigned">Issue created by: <i class='bx bx-user-circle'></i> @Model.CreatorName</p>
             <div class="flex flex-Row justify-content-between align-items-center">
                 <h2 class="mb-2">@Model.Title</h2>
-                <div class="tag-border assigned-to p-x-1 py-1">@Model.Status</div>
             </div>
             <div class="flex-Row justify-content-between w-100 mb-2">
                 <div class="flex-Row gap-0-5">
@@ -86,7 +87,8 @@
                 <p class="mb-4 agent_assigned">Assigned to: @Model.AgentName</p>
             }
             
-            <p class="mb-3">@Model.Description</p>
+            <p class="mb-1">Ticket Description</p>
+            <p class="assigned-to px-4 py-4 h-50" >@Model.Description</p>
             @* <button class="registerBtn mbtn-primary align-self-start">@Model.Status</button> *@
 
             @if (!string.IsNullOrWhiteSpace(Model.AgentName)) {
