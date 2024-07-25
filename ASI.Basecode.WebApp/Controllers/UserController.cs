@@ -100,7 +100,6 @@ namespace ASI.Basecode.WebApp.Controllers
         #endregion
 
         #region Tickets
-
         [HttpGet("Tickets")]
         public IActionResult Tickets(byte? status, string? searchTerm, string? sortOrder, int? page)
         {
@@ -204,7 +203,7 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpGet("Tickets/{id}")]
         public IActionResult Ticket(Guid id)
         {
-            var ticket = _ticketService.GetById(Guid.Parse(ticketId));
+            var ticket = _ticketService.GetById(id);
 
             if (ticket == null)
             {

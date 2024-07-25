@@ -231,9 +231,6 @@
     </div>
 </div>
 
-            timeOut: 1000000,
-            extendedTimeOut: 1000000
-
 <div class="modal fade" id="detail" tabindex="-1">
     <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
@@ -293,7 +290,7 @@
                     const ticketId = this.getAttribute('data-ticket-id');
                     document.querySelector('#editTicketForm').action = `/User/Tickets/${ticketId}/Edit`;
 
-                    fetch(`/User/Tickets/${ticketId}`)
+                    fetch(`/User/Tickets/${ticketId}/Edit`)
                         .then(response => {
                             if (!response.ok) {
                                 throw new Error(`Server Error: ${response.status} - ${response.statusText}`);
@@ -447,6 +444,8 @@
                 .catch(error => console.error('Error updating preferences:', error.message));
         });
     });
+
+</script>
 
     document.addEventListener('DOMContentLoaded', function () {
         $(document).on('click', '[data-article-detail-btn]', function () {

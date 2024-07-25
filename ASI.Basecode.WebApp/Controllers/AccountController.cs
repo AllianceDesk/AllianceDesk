@@ -115,7 +115,7 @@ namespace ASI.Basecode.WebApp.Controllers
             }
             else
             {
-                TempData["ErrorMessage"] = "Incorrect UserId or Password";
+                TempData["ErrorMessage"] = "Incorrect Username or Password";
                 return View();
             }
         }

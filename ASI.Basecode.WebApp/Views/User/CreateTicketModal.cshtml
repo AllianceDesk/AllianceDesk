@@ -16,6 +16,7 @@
                         <span asp-validation-for="Ticket.Title" class="text-danger"></span>
                         <label for="floatingInput">Ticket Title</label>
                     </div>
+
                     <div class="form-floating mb-3">
                         <select asp-for="Ticket.CategoryId" class="form-select" id="floatingSelect1" aria-label="Category Options">
                             @foreach (var category in Model.Categories)
@@ -45,10 +46,12 @@
                     </div>
 
                     <div class="d-flex pr-3">
+
                         <div class="form-group">
                             <input type="file" asp-for="Ticket.AttachmentFiles" class="btn  file_button" multiple accept="image/*" />
                             <span asp-validation-for="Ticket.AttachmentFiles" class="text-danger"></span>
                         </div>
+
                         <button type="submit" class="btn button button_size">
                             Submit
                         </button>
