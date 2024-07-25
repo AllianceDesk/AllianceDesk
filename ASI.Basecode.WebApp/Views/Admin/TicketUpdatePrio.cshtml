@@ -1,22 +1,46 @@
-﻿<div class="modal fade" id="updatePrio" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+﻿@model ASI.Basecode.Services.ServiceModels.TicketViewModel
+
+<div class="modal fade" id="updatePrio" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content p-3">
 
             <h5 class="mb-3">Update Priority:</h5>
+            <form asp-controller="Admin" asp-action="UpdatePriority" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="TicketId" value="@Model.TicketId"></>
+                <select asp-for="PriorityId" class="form-select mb-4" aria-label="Default select example">
+                    <option value="">Select an option</option>
+                    @if (Model.PriorityId == 1)
+                    {
+                        <option value="1" selected>High</option>
+                    }
+                    else
+                    {
+                        <option value="1">High</option>
+                    }
+                    @if (Model.PriorityId == 2)
+                    {
+                        <option value="2" selected>Mid</option>
+                    }
+                    else
+                    {
+                        <option value="2">Mid</option>
+                    }
+                    @if (Model.PriorityId == 3)
+                    {
+                        <option value="3" selected>Low</option>
+                    }
+                    else
+                    {
+                        <option value="3">Low</option>
+                    }
+                </select>
 
-            <select class="form-select mb-4" aria-label="Default select example">
-                <option selected>Select an option</option>
-                <option value="1">Urgent and Important</option>
-                <option value="2">Important but not urgent</option>
-                <option value="3">Urgent but not important</option>
-                <option value="4">Not urgent and not important</option>
-            </select>
-
-            <div class="d-flex gap-3 justify-content-between">
-                <button type="button" class="btn btn-danger">Assign</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            </div>
-
+                <div class="d-flex gap-3 justify-content-end">
+                    <button type="submit" class="btn btn-danger">Assign</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

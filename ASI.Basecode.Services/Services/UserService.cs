@@ -261,6 +261,7 @@ namespace ASI.Basecode.Services.Services
             }
             return null;
         }
+
         public UserPreferenceViewModel GetUserPreference()
         {
             Guid userId = _sessionHelper.GetUserIdFromSession();
@@ -305,6 +306,5 @@ namespace ASI.Basecode.Services.Services
             }
         }
 
-   
     }
 }

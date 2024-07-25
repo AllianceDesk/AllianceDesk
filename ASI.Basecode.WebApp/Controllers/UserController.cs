@@ -1,5 +1,4 @@
-﻿using ASI.Basecode.Data.Models;
-using ASI.Basecode.Services.Interfaces;
+﻿using ASI.Basecode.Services.Interfaces;
 using ASI.Basecode.Services.ServiceModels;
 using ASI.Basecode.WebApp.Mvc;
 using AutoMapper;
@@ -10,8 +9,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Drawing.Printing;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -82,7 +79,7 @@ namespace ASI.Basecode.WebApp.Controllers
                 if (ModelState.IsValid)
                 {
                     _userService.UpdatePreference(model);
-                    // TODO: Add Toastr notification for this
+                    TempData["Success"] = "Preferences updated successfully";
                     return Ok(new { message = "Preferences updated successfully" });
                 }
                 else
@@ -98,6 +95,8 @@ namespace ASI.Basecode.WebApp.Controllers
                 return StatusCode(500, "Error updating user preferences");
             }
         }
+
+        #region Tickets
 
         [HttpGet("Tickets")]
         public IActionResult Tickets(byte? status, string? searchTerm, string? sortOrder, int? page)
@@ -130,13 +129,44 @@ namespace ASI.Basecode.WebApp.Controllers
                 }
             }
 
-            var tickets = _ticketService.GetUserTickets(_sessionHelper.GetUserIdFromSession(), status, searchTerm, sortOrder, page);
+            var tickets = _ticketService.GetUserTickets(_sessionHelper.GetUserIdFromSession());
+
+            if (status != 0)
+            {
+                tickets = tickets.Where(t => t.StatusId == status);
+            }
+
+            if (!String.IsNullOrEmpty(searchTerm))
+            {
+                tickets = tickets.Where(t => t.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
+            }
+
+            /*if (!String.IsNullOrEmpty(sortOrder))
+            {
+                switch (sortOrder)
+                {
+                    case "title_desc":
+                        tickets = tickets.OrderByDescending(t => t.Title);
+                        break;
+                    case "Date":
+                        tickets = tickets.OrderBy(t => t.DateCreated);
+                        break;
+                    case "date_desc":
+                        tickets = tickets.OrderByDescending(t => t.DateCreated);
+                        break;
+                    default:
+                        tickets = tickets.OrderBy(t => t.Title);
+                        break;
+                }
+            }
+*/
 
             var currentPage = page ?? 1;
             var currentStatus = status ?? 0;
             var currentSearchTerm = searchTerm ?? "";
 
             var count = tickets.Count();
+            
             var statuses = _ticketService.GetStatuses()
                 .Select(c => new KeyValuePair<string, string>(c.StatusId.ToString(), c.StatusName))
                 .ToList();
@@ -150,6 +180,12 @@ namespace ASI.Basecode.WebApp.Controllers
                 .ToList();
 
             var agents = _userService.GetAgents();
+            List<string> emails = new List<string>();
+            foreach(var agent in agents)
+            {
+                emails.Add(agent.Email);
+            }
+
 
             if (Math.Ceiling(tickets.Count() / (double)pageSize) > 1)
             {
@@ -169,8 +205,8 @@ namespace ASI.Basecode.WebApp.Controllers
                 Statuses = statuses,
                 Categories = categories,
                 Priorities = priorities,
-                Agents = agents,
                 Favorites = _articleService.RetrieveFavorites(),
+                Emails = emails
             };
 
             return View(model);
@@ -400,5 +436,7 @@ namespace ASI.Basecode.WebApp.Controllers
             };
             return View(viewModel);
         }
+
+        #endregion 
     }
 }

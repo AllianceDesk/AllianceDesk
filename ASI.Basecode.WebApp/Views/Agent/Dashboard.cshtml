@@ -49,16 +49,36 @@
                         <h2 class="question">@item.Title</h2>
                         <p class="details">@item.Description</p>
                     </a>
-                    @* Add Dropdown Menu Later Here *@
-                    @* <div class="btn-group option">
-                        <button class="btn icon-button" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bx bx-dots-vertical-rounded bx-sm icon-ticket" style="color: #808080;"></i>
-                        </button>
-
-                        
-                        <ul class="dropdown-menu menu">
-                        </ul>
-                    </div> *@
+                    <div class="btn-group option">
+						@if (item.Status == "Assigned")
+						{
+							<button class="btn icon-button" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+								<i class="bx bx-dots-vertical-rounded bx-sm icon-ticket" style="color: #808080;"></i>
+							</button>
+							<ul class="dropdown-menu menu">
+								<li>
+									<a class="dropdown-item item" href="#" data-bs-toggle="modal" data-bs-target="#ticketActionModal" data-action-type="inprogress" data-ticket-id="@item.TicketId">
+										<i class="bx bx-show bx-xs bx-fw" style="color: #808080;"></i>
+										Mark as In Progress
+									</a>
+								</li>
+							</ul>
+						}
+						else if(item.Status == "In Progress")
+						{
+							<button class="btn icon-button" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+								<i class="bx bx-dots-vertical-rounded bx-sm icon-ticket" style="color: #808080;"></i>
+							</button>
+							<ul class="dropdown-menu menu">
+								<li>
+									<a class="dropdown-item item" href="#" data-bs-toggle="modal" data-bs-target="#ticketActionModal" data-action-type="resolved" data-ticket-id="@item.TicketId">
+										<i class="bx bx-show bx-xs bx-fw" style="color: #808080;"></i>
+										Mark as Resolved
+									</a>
+								</li>
+							</ul>
+						}
+                    </div>
                 </div>
             }
         </div>

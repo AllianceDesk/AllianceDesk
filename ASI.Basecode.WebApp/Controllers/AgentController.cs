@@ -48,8 +48,8 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpGet("Dashboard")]
         public ActionResult Dashboard(string? status, string? searchTerm, string? sortOrder, int? page)
         {
-            Guid guid = _sessionHelper.GetUserIdFromSession();
-            var userRole = _userService.GetUserById(guid).RoleId;
+            Guid userId = _sessionHelper.GetUserIdFromSession();
+            var userRole = _userService.GetUserById(userId).RoleId;
 
             if (userRole != 2)
             {
@@ -57,7 +57,7 @@ namespace ASI.Basecode.WebApp.Controllers
             }
 
             var currentStatus = status ?? "Unresolved";
-            var tickets = _ticketService.GetAgentTickets(guid, currentStatus, searchTerm, sortOrder, page);
+            var tickets = _ticketService.GetAgentTickets(userId);
 
             var pageSize = 10;
             var currentPage = page ?? 1;
@@ -289,12 +289,12 @@ namespace ASI.Basecode.WebApp.Controllers
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                agents = agents.Where(u => u.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                agents = agents.Where(u => u.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToList();
             }
 
             var viewModel = new UserViewModel
             {
-                Users = users
+                Users = agents
             };
             ViewBag.SearchString = searchString;
 

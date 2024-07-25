@@ -8,45 +8,42 @@
     ViewBag.LoginView = true;
     ViewData["Title"] = "Login Page";
 }
-@* <div>
-    @Html.AntiForgeryToken()
-</div> *@
-@* @Html.Partial("General_Header") *@
+
 <div>
     <div class="login-container">
     
-    <form class="align-self-center" method="post" action="/Account/Login" id="loginForm">
-        <div class="flex-Row justify-content-center">
-            <img class="mb-4" src="~/img/alliancedesk-logo.png"
-                 style="width: 185px;" alt="logo"
-                 onclick="window.location.href = '@Url.Action("/", "Account")';">
-        </div>
-        <h2 class="text-center font-weight-bold">Alliance Help Desk</h2>
-        <p>Welcome to Alliance Help Desk! How can we assist you today?</p>
-        <div class="form-outline">
-            <label class="form-label" style="font-size: 10px;" for="form2Example11">Username</label>
-            <input type="text" id="form2Example11" class="form-control"
-                   asp-for="UserName" placeholder="Enter username" />
-            <span asp-validation-for="UserName" class="text-danger"></span>
-        </div>
-        <div class="form-outline mb-4">
-            <label class="form-label" style="font-size: 10px;" for="form2Example22">@Password</label>
-            <input type="password" id="form2Example22" class="form-control"
-                   asp-for="Password" placeholder="Enter password" />
-            <span asp-validation-for="Password" class="text-danger"></span>
-        </div>
-        <button class="registerBtn w-100" type="submit">
-            @Login
-        </button>
-    </form>
-    <img src="~/img/login-bg.png"
-         alt="logo" />
+		<form class="align-self-center" method="post" action="/Account/Login" id="loginForm">
+			<div class="flex-Row justify-content-center">
+				<img class="mb-4" src="~/img/alliancedesk-logo.png"
+					 style="width: 185px;" alt="logo"
+					 onclick="window.location.href = '@Url.Action("/", "Account")';">
+			</div>
+			<h2 class="text-center font-weight-bold">Alliance Help Desk</h2>
+			<p>Welcome to Alliance Help Desk! How can we assist you today?</p>
+			<div class="form-outline">
+				<label class="form-label" style="font-size: 10px;" for="form2Example11">Username</label>
+				<input type="text" id="form2Example11" class="form-control"
+					   asp-for="UserName" placeholder="Enter username" />
+				<span asp-validation-for="UserName" class="text-danger"></span>
+			</div>
+			<div class="form-outline mb-4">
+				<label class="form-label" style="font-size: 10px;" for="form2Example22">@Password</label>
+				<input type="password" id="form2Example22" class="form-control"
+					   asp-for="Password" placeholder="Enter password" />
+				<span asp-validation-for="Password" class="text-danger"></span>
+			</div>
+			<button class="registerBtn w-100" type="submit">
+				@Login
+			</button>
+		</form>
+		<img src="~/img/login-bg.png" alt="logo" />
+	</div>
 </div>
-</div>
+
 @section scripts {
     <script>
-        // Check for error message and display Toastr notification
         var errorMessage = '@TempData["ErrorMessage"]';
+        
         if (errorMessage) {
             toastr.error(errorMessage);
         }
