@@ -9,14 +9,15 @@
     <link rel="stylesheet" href="~/css/Admin.css" />
 }
 
+<div class="relative">
 @Html.Partial("Admin_Header")
-<div class="main">
-    @Html.Partial("Admin_Sidebar") 
+<div class="main relative">
+    @Html.Partial("Admin_Sidebar")
     <div class="admin-body py-3 relative bg-grey">
         <div class="flex flex-col gap-1">
 
             <div class="flex-Row justify-content-between align-items-center gap-1 ml-2 mb-2">
-                <a asp-controller="Admin" asp-action="Tickets" asp-route-id=""><i class="fa-solid fa-arrow-left" style="color: #45474B; transform: scale(1.5)"></i></a>
+                <a asp-controller="Admin" asp-action="Tickets" asp-route-id="@Model.TicketId"><i class="fa-solid fa-arrow-left" style="color: #45474B; transform: scale(1.5)"></i></a>
             </div>
 
             <div class="bg-white admin-ticket agents | cursor-pointer ctr-shadow p-y-1 p-x-1 flex flex-col gap-1">
@@ -28,17 +29,16 @@
 
             </div>
 
-            <br></br>
-
+            <br />
             <div class="flex-Row justify-content-between align-items-center mb-3">
                 <h5>Agents</h5>
                 <button class="registerBtn mbtn-primary align-self-start" data-admin-assign-btn>Assign</button>
             </div>
         
-            <div class=" flex flex-col gap-0-5 br-1-5 h-29" data-admin-tickets-container>
-                @if (Model.Agents.Count == 0)
+            <div class=" flex flex-col gap-0-5 br-1-5 " data-admin-tickets-container>
+              @*   @if (Model.Agents.Count == 0)
 				{
-					<div class="flex-Row justify-content-center align-items-center h-100">
+					<div class="flex-Row justify-content-center align-items-center ">
 						<p class="text-1-5">
                         No Agents Available
                         </p>
@@ -65,48 +65,149 @@
                             </div>
                         </div>
                     }
-                }
+                } *@
+
+                
+            </div>
+            <div class="pagination-container justify-content-center" data-pagination-container>
+                <button style="padding: 0.1rem 0.5rem;" id="first-page" disabled><i class="fa-solid fa-angles-left"></i></button>
+                <button style="padding: 0.1rem 0.5rem;" id="prev-page" disabled><i class="fa-solid fa-angle-left"></i></button>
+                <span class="bg-White br-1 py-1 px-4" id="page-info"></span>
+                <button style="padding: 0.1rem 0.5rem;" id="next-page"><i class="fa-solid fa-angle-right"></i></button>
+                <button style="padding: 0.1rem 0.5rem;" id="last-page" disabled><i class="fa-solid fa-angles-right"></i></button>
             </div>
         </div>
-        <div class="hidden bg-modal delete-modal-container" data-admin-assign-modal-container>
-            <div class="delete-modal flex flex-col gap-1 justify-content-center align-items-center" data-admin-assign-modal>
-                <i class="text-md fa-regular fa-circle-xmark hover-pointer align-self-end" data-admin-assign-close-btn></i>
-                <div class="flex-between flex-col align-items-center justify-content-center">
-                    <p class="text-1-5">Do you really want to assign<span class="font-weight-bold">@Model.Title</span><br /> to Agent: <span class="font-weight-bold" id="agentNameDisplay"></span>?</p>
-                </div>
-                <div class="flex-Row w-100 justify-content-end gap-2">
-                    <button class=" mbtn-primary color-white bg-red align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-assign-save-btn>Assign</button>
-                    <button class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-assign-cancel-btn>Cancel</button>
-                </div>
+        
+    </div>
+</div>
+<div class="hidden bg-modal delete-modal-container"  data-admin-assign-modal-container>
+    <div class="delete-modal flex flex-col gap-2 py-4 px-4 " style="width: 30%; text-align: start;" data-admin-assign-modal>
+        <div class="relative">
+            <div>
+                <i class="bx bx-x hover-pointer align-self-end fs-3" style="position: absolute; right: 0; top: 0;" data-admin-assign-close-btn></i>
             </div>
+            <h5 class="align-self-start mt-4">Assign Agent? </h5>
+        </div>
+        <div class="flex-between flex-col mb-2">
+            <p class="text-1">This ticket will be to assigned to  <span class="font-weight-bold" id="agentNameDisplay"></span>.</p>
+        </div>
+        <div class="flex-Row align-items-center justify-content-end gap-2">
+            <button class=" mbtn-primary color-white bg-red align-center justify-content-center border-0 px-2 py-2 br-1-5" style="font-size: 0.8rem;" data-admin-assign-save-btn>Assign</button>
+                <button class="color-white bg-btn-accent align-center justify-content-center border-0 px-2 py-2 br-1-5" style="font-size: 0.8rem;" data-admin-assign-cancel-btn>Cancel</button>
         </div>
     </div>
+</div>
 </div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-
         const teams = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
-        console.log("TEAMS ", teams);
-        const AssigneeAgents = document.querySelectorAll("[data-agent-assignee]")
-        const assignModalContainer = document.querySelector("[data-admin-assign-modal-container]")
+        console.log("TEAMS ", teams.Agents);
 
-        const adminAsgnBtn = document.querySelector("[data-admin-assign-btn]")
-        const adminAsgnForm = document.querySelector("[data-admin-assign-modal]")
+        const agentsContainer = document.querySelector("[data-admin-tickets-container]");
+        const paginationContainer = document.querySelector('[data-pagination-container]');
+        const prevPageBtn = document.getElementById('prev-page');
+        const nextPageBtn = document.getElementById('next-page');
+        const firstPageBtn = document.getElementById('first-page');
+        const lastPageBtn = document.getElementById('last-page');
+        const pageInfo = document.getElementById('page-info');
 
-        const adminAsgnCloseBtn = document.querySelector("[data-admin-assign-close-btn]")
-        const adminAsgnCancelBtn = document.querySelector("[data-admin-assign-cancel-btn]")
-        const adminAsgnSaveBtn = document.querySelector("[data-admin-assign-save-btn]")
+        let currentPage = 1;
+        const usersPerPage = 10;
+        let filteredTeams = teams.Agents;
+
+        function updatePaginationControls() {
+            const totalPages = Math.ceil(filteredTeams.length / usersPerPage);
+            console.log("TOTAL PAGES ", totalPages);
+
+            prevPageBtn.disabled = currentPage === 1;
+            firstPageBtn.disabled = currentPage === 1;
+            nextPageBtn.disabled = currentPage === totalPages;
+            lastPageBtn.disabled = currentPage === totalPages;
+            pageInfo.textContent = `${currentPage}`;
+        }
+
+        function renderPage(page) {
+            agentsContainer.innerHTML = '';
+            const start = (page - 1) * usersPerPage;
+            const end = start + usersPerPage;
+            const usersToShow = filteredTeams.slice(start, end);
+
+            if (usersToShow.length > 0) {
+                usersToShow.forEach(item => {
+                    const userDiv = document.createElement('div');
+                    userDiv.classList.add('agents', 'cursor-pointer', 'br-1-5', 'flex-Row', 'p-x-0-5', 'p-y-0-5', 'justify-content-between', 'align-items-center');
+                    userDiv.dataset.agentAssignee = '';
+                    userDiv.dataset.userId = item.UserId;
+
+                    userDiv.innerHTML = `
+                            <div class="flex-Row gap-1 align-items-center">
+                                <div class="p-y-1 p-x-1 br-50 bg-grey"></div>
+                                <input type="hidden" id="agentName" value="${item.Name}" />
+                                <input type="hidden" id="agentId" value="${item.UserId}" />
+                                <h6 class="mr-2">${item.Name}</h6>
+                                ${item.TeamName ? `<div class="role-container role-agent fw-semi text-0-5 text-sm mr-3">${item.TeamName}</div>` : ''}
+                            </div>
+                            <div class="flex-Row gap-1">
+                                <p class="text-sm">Number of Tickets: ${teams.AssignedTicketCounts.find(x => x.Agent.UserId === item.UserId)?.TotalTicketCount || 0}</p>
+                            </div>
+                        `;
+                    agentsContainer.appendChild(userDiv);
+                });
+            } else {
+                agentsContainer.innerHTML = '<p>No agents available.</p>';
+            }
+            updatePaginationControls();
+        }
+
+        // Event listeners for pagination buttons
+        prevPageBtn.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderPage(currentPage);
+            }
+        });
+
+        firstPageBtn.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage = 1;
+                renderPage(currentPage);
+            }
+        });
+
+        lastPageBtn.addEventListener('click', () => {
+            const totalPages = Math.ceil(filteredTeams.length / usersPerPage);
+            if (currentPage < totalPages) {
+                currentPage = totalPages;
+                renderPage(currentPage);
+            }
+        });
+
+        nextPageBtn.addEventListener('click', () => {
+            const totalPages = Math.ceil(filteredTeams.length / usersPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderPage(currentPage);
+            }
+        });
+
+        // Initial render
+        renderPage(currentPage);
+
+        // Assignment modal
+        const adminAsgnBtn = document.querySelector("[data-admin-assign-btn]");
+        const assignModalContainer = document.querySelector("[data-admin-assign-modal-container]");
+        const adminAsgnForm = document.querySelector("[data-admin-assign-modal]");
+        const adminAsgnCloseBtn = document.querySelector("[data-admin-assign-close-btn]");
+        const adminAsgnCancelBtn = document.querySelector("[data-admin-assign-cancel-btn]");
+        const adminAsgnSaveBtn = document.querySelector("[data-admin-assign-save-btn]");
 
         adminAsgnBtn.addEventListener("click", () => {
-
             const selectedAgent = document.querySelector(".selected-agent");
-
             if (!selectedAgent) {
                 alert("Please select an agent to assign the ticket to.");
                 return;
             }
-            
             const agentName = selectedAgent.querySelector("h6").textContent.trim();
             document.querySelector("#agentNameDisplay").textContent = agentName;
             assignModalContainer.classList.remove("hidden");
@@ -114,26 +215,20 @@
         });
 
         adminAsgnCancelBtn.addEventListener("click", () => {
-            assignModalContainer.classList.add("hidden")
-            adminAsgnForm.classList.add("hidden")
-        })
+            assignModalContainer.classList.add("hidden");
+            adminAsgnForm.classList.add("hidden");
+        });
 
         adminAsgnCloseBtn.addEventListener("click", () => {
-            assignModalContainer.classList.add("hidden")
-            adminAsgnForm.classList.add("hidden")
-        })
+            assignModalContainer.classList.add("hidden");
+            adminAsgnForm.classList.add("hidden");
+        });
 
         adminAsgnSaveBtn.addEventListener("click", () => {
             const selectedAgent = document.querySelector(".selected-agent");
-
-
             const agentId = selectedAgent.querySelector("#agentId").value;
             const ticketId = '@Model.TicketId';
 
-            console.log(agentId);
-            console.log(ticketId);
-
-            // AJAX POST request with absolute path
             fetch('/Admin/Tickets/Assignment', {
                 method: 'POST',
                 headers: {
@@ -143,38 +238,28 @@
             }).then(response => {
                 if (response.ok) {
                     console.log('Ticket assigned successfully.');
-                    // Optionally handle success actions like updating UI
                     assignModalContainer.classList.add("hidden");
                     adminAsgnForm.classList.add("hidden");
-
                     window.location.href = '/Admin/Tickets/' + ticketId;
                 } else {
-					console.error('Failed to assign ticket.');
-					// Handle error cases
+                    console.error('Failed to assign ticket.');
                 }
             }).catch(error => {
                 console.error('Error assigning ticket:', error);
             });
-
-            assignModalContainer.classList.add("hidden");
-            adminAsgnForm.classList.add("hidden");
         });
 
+        // Agent selection
+        const AssigneeAgents = document.querySelectorAll("[data-agent-assignee]");
         AssigneeAgents.forEach(agent => {
             agent.addEventListener("click", () => {
-                console.log("event", agent)
                 if (agent.classList.contains("selected-agent")) {
                     agent.classList.remove("selected-agent");
                     return;
                 }
                 AssigneeAgents.forEach(a => a.classList.remove("selected-agent"));
                 agent.classList.add("selected-agent");
-            })
-        })
-
-        const agentName = document.querySelector("#agentName").value;
-        document.querySelector("#agentNameDisplay").textContent = agentName;
-
-        const agentId = document.querySelector("#agentId").value;
+            });
+        });
     });
 </script>

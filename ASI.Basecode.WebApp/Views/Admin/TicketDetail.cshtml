@@ -3,6 +3,33 @@
 @{
     ViewData["Title"] = "Tickets";
     Layout = "_Layout"; 
+
+    var categoryItem = new Dictionary<string, string> {
+        {"Technical", "category-technical"},
+        {"Billing", "category-billing"},
+        {"General Questions", "category-gen-question"},
+        {"Account Management", "category-act-management"},
+        {"Customer Support", "category-customer-support"},
+        {"Others", "category-others"}
+    };
+
+    var priorityItem = new Dictionary<string, string> {
+        {"Mid", "priority-medium"},
+        {"High", "priority-high"},
+        {"Low", "priority-low"},
+    };
+
+    var statusItem = new Dictionary<string, string> {
+        {"Open", "status-open"},
+        {"Closed", "status-closed"},
+        {"Resolved", "status-resolved"},
+        {"In Progress", "status-inprogress"},
+
+    };
+
+    string GetPriorityClass(string priority) => priorityItem.ContainsKey(priority) ? priorityItem[priority] : string.Empty;
+    string GetCategoryClass(string category) => categoryItem.ContainsKey(category) ? categoryItem[category] : string.Empty;
+    string GetStatusClass(string status) => statusItem.ContainsKey(status) ? statusItem[status] : string.Empty;
 }
 @section styles {
     <link rel="stylesheet" href="~/css/functionalities.css" />
@@ -15,11 +42,13 @@
     <div class="admin-body py-3 relative bg-grey flex flex-col gap-1">
 
         <div class="view-user-nav mb-4">
-            <div class="flex-Row justify-content-between align-items-center gap-1 ml-2">
-                <a asp-controller="Admin" asp-action="Tickets" asp-route-id=""><i class="bx bx-left-arrow-alt" style="color: #45474B; transform: scale(1.5)"></i></a>
-            </div>
+            <div class="flex flex-Row gap-4">
+                <div class="flex-Row justify-content-between align-items-center gap-1 ml-2">
+                    <a asp-controller="Admin" asp-action="Tickets" asp-route-id=""><i class="bx bx-left-arrow-alt" style="color: #45474B; transform: scale(1.5)"></i></a>
+                </div>
 
-            <h2 class="mb-2">@Model.TicketNumber</h2>
+                <h2>@Model.TicketNumber</h2>
+            </div>
 
             @if(Model.StatusId != 4 && Model.StatusId != 5)
             {
@@ -42,12 +71,13 @@
         <div class="h-29 px-5 py-4 br-1 bg-white gap-1 overflow-auto"> 
             <div class="flex flex-Row justify-content-between align-items-center">
                 <h2 class="mb-2">@Model.Title</h2>
-                <div class="  tag-border  p-x-1 py-1" style="border-radius: 10px; color: #E21818; border-color: #E21818;">@Model.Status</div>
+                <div class="tag-border assigned-to p-x-1 py-1">@Model.Status</div>
             </div>
             <div class="flex-Row justify-content-between w-100 mb-2">
                 <div class="flex-Row gap-0-5">
-                    <div class="ticket-tag | tag-border bg-btn-grey p-x-1 br-1 text-sm">@Model.Category</div>
-                    <div class="ticket-tag | tag-border bg-btn-grey p-x-1 br-1 text-sm">@Model.Priority</div>
+                    <div class="role-container @GetCategoryClass(Model.Category) ">@Model.Category</div>
+                    <div class="role-container @GetPriorityClass(Model.Priority) ">@Model.Priority</div>
+                    <div class="role-container @GetStatusClass(Model.Status)">@Model.Status</div>
                     
                 </div>                
             </div>
@@ -70,3 +100,8 @@
 </div>
 
 @Html.Partial("TicketUpdatePrio") 
+
+<script>
+    const teams = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+    console.log("TEAMS ", teams);
+</script>

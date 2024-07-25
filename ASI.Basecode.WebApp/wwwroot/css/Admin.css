@@ -3,7 +3,8 @@
     padding-right: 4rem;
     margin: auto;
     width: 100%;
-    height: 100%;
+    height: calc(100vh - 66.61px);
+    overflow-y: scroll;
 }
 
     .admin-body.edit-active {
@@ -487,4 +488,20 @@ a[data-td-none]:hover {
 
 .agent_assigned {
     font-size: 12px;
+}
+
+.assigned-to {
+    position: relative;
+    border: 1px solid black;
+    border-radius: 4px;
+}
+
+.assigned-to::before {
+    content: 'Assigned to:';
+    position: absolute;
+    top: -7px;
+    left: 8px;
+    background-color: white;
+    color: black;
+    font-size: 0.6rem;
 }

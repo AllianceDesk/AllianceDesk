@@ -722,6 +722,7 @@ namespace ASI.Basecode.WebApp.Controllers
                 CreatedAt = ticket.DateCreated,
                 Description = ticket.Description,
                 Agents = availableAgents,
+                
                 AssignedTicketCounts = assignedTicketCounts
                     .Select(agent => new AnalyticsAgentMetricViewModel
                     {
