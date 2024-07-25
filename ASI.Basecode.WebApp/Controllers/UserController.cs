@@ -79,25 +79,23 @@ namespace ASI.Basecode.WebApp.Controllers
                 if (ModelState.IsValid)
                 {
                     _userService.UpdatePreference(model);
-                    TempData["Success"] = "Preferences updated successfully";
-                    return Ok(new { message = "Preferences updated successfully" });
+                    return Ok(new { success = true, message = "Preferences updated successfully" });
                 }
                 else
                 {
                     var errors = ModelState.Values.SelectMany(v => v.Errors)
                                                  .Select(e => e.ErrorMessage);
-                    return BadRequest(new { errors });
+                    return BadRequest(new { success = false, errors });
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error updating user preferences");
-                return StatusCode(500, "Error updating user preferences");
+                return StatusCode(500, new { success = false, message = "Error updating user preferences" });
             }
         }
 
         #region Tickets
-
         [HttpGet("Tickets")]
         public IActionResult Tickets(byte? status, string? searchTerm, string? sortOrder, int? page)
         {
@@ -193,9 +191,9 @@ namespace ASI.Basecode.WebApp.Controllers
         }
 
         [HttpGet("Tickets/{id}")]
-        public IActionResult Ticket(string ticketId)
+        public IActionResult Ticket(Guid ticketId)
         {
-            var ticket = _ticketService.GetById(Guid.Parse(ticketId));
+            var ticket = _ticketService.GetById(ticketId);
 
             if (ticket == null)
             {
