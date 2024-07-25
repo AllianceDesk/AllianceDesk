@@ -43,6 +43,7 @@ else if (ViewBag.RoleId == 2)
 {
     @Html.Partial("Agent_Header")
 }
+
 <div @(ViewBag.RoleId == 3 ? "id=container" : "class=main")>
     @if (ViewBag.RoleId == 3)
     {
@@ -81,6 +82,14 @@ else if (ViewBag.RoleId == 2)
         <nav style="padding: 0rem 4rem 1rem 4rem;">
 
                     <h3>Knowledge Base</h3>
+
+                    <div class="hidden add_button">
+
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-danger me-1" data-bs-toggle="modal" data-bs-target="#create" id="addArticleBtn">Add Article</button>
+                        </div>
+
+                    </div>
 
                 </div>
 
@@ -358,6 +367,8 @@ else if (ViewBag.RoleId == 2)
 
         $(document).on('click', '[data-article-detail-btn]', function () {
             var articleId = $(this).data('article-id');
+            console.log("clicked");
+            console.log(articleId);
 
             // Perform AJAX request to fetch article details
             $.ajax({
