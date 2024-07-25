@@ -6,29 +6,31 @@
             <h2>Add Team</h2>
             <i class="text-md fa-regular fa-circle-xmark hover-pointer" data-admin-add-close-btn></i>
         </div>
-        <div class="modal-input-container">
-            <label class="modal-input relative flex">
-                <span>Team Name</span>
-                <input asp-for="TeamName" class="form-control" type="text" placeholder="unityDesk" maxlength="50" oninput="updateCharacterCount(this, 'teamNameCharCount')" />
-                <span asp-validation-for="TeamName" class="text-danger"></span>
-                <span id="teamNameCharCount" class="text-gray-500" style="text-align:end;">0/50</span>
-            </label>
-            <label class="modal-input relative flex">
-                <span>Department</span>
-                <select class="pl-2" asp-for="DepartmentId" asp-items="ViewBag.Departments">
-                    <option selected disabled hidden value="">-- Select Role --</option>
-                </select>
-                <span asp-validation-for="DepartmentId" class="text-danger"></span>
-            </label>
-            <label class="modal-input relative flex">
+        <div class="">
+            <div class="flex-Row gap-4">
+                <label class="modal-input relative flex">
+                    <span>Team Name</span>
+                    <input asp-for="TeamName" type="text" placeholder="unityDesk" maxlength="50" oninput="updateCharacterCount(this, 'teamNameCharCount')" />
+                    <span asp-validation-for="TeamName" class="text-danger"></span>
+                    <span id="teamNameCharCount" class="text-gray-500" style="text-align:end;">0/50</span>
+                </label>
+                <label class="modal-input relative flex">
+                    <span>Department</span>
+                    <select class="pl-2" asp-for="DepartmentId" asp-items="ViewBag.Departments">
+                        <option selected disabled hidden value="">-- Select Role --</option>
+                    </select>
+                    <span asp-validation-for="DepartmentId" class="text-danger"></span>
+                </label>
+            </div>
+            <label class="modal-input relative flex mt-2">
                 <span>Team Description</span>
-                <textarea asp-for="TeamDescription" class="form-control" type="text" placeholder="unityDesk" maxlength="300" oninput="updateCharacterCount(this, 'teamDescCharCount')"></textarea>
+                <textarea asp-for="TeamDescription" style="height: 15rem;"  type="text" placeholder="unityDesk" maxlength="300" oninput="updateCharacterCount(this, 'teamDescCharCount')"></textarea>
                 <span asp-validation-for="TeamDescription" class="text-danger"></span>
                 <span id="teamDescCharCount" class="text-gray-500" style="text-align:end;">0/300</span>
             </label>
             
         </div>
-        <div class="flex-Row gap-1">
+        <div class="flex-Row justify-content-end gap-2">
             <button class="mbtn-primary color-white bg-red align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" type="submit">Save</button>
             <button class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-add-cancel-btn>Cancel</button>
         </div>

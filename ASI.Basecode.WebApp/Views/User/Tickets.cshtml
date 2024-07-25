@@ -75,24 +75,22 @@
                 @foreach (var item in Model.Tickets)
                 {
 					<div class="ticket-container agents rounded-2 w-100">
-                        <a href="#" class="ticket-link ellipsis" data-bs-toggle="modal" data-bs-target="#viewTicket" data-ticket-id="@item.TicketId">								
-
+                        <a href="#" class="ticket-link ellipsis" data-bs-toggle="modal" data-bs-target="#viewTicket" data-ticket-id="@item.TicketId">
                             <div class="d-flex">
-
                                 <h5 class="text-black">@item.TicketNumber:&nbsp;</h5>
 
                                 <h5 class="text-black">@item.Title</h5>
-
                             </div>
-									
-						    <p class="date ml-1">@item.RelativeTime</p>
-
-                            <div class="ellipsis mt-2">
+                            <p class="date ml-1">@item.RelativeTime</p>
+                            <div class="ellipsis mt-1">
                                 <p class="text-black mt-2">
-                                    @if (item.Description.Length > 300) {
+                                    @if (item.Description.Length > 300)
+                                    {
                                         @item.Description.Substring(0, 120)
-                                @Html.Raw("...")
-                                    } else {
+                                        @Html.Raw("...")
+                                    }
+                                    else
+                                    {
                                         @item.Description
                                     }
                                 </p>
