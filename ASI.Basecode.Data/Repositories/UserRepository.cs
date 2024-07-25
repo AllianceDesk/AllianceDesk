@@ -38,9 +38,9 @@ namespace ASI.Basecode.Data.Repositories
             UnitOfWork.SaveChanges();
         }
 
-        public void DeleteUser(string userId)
+        public void DeleteUser(Guid userId)
         {
-            var deleteUser = this.GetDbSet<User>().Where(u => u.UserId.ToString() == userId).FirstOrDefault();
+            var deleteUser = this.GetDbSet<User>().Where(u => u.UserId == userId).FirstOrDefault();
             if (deleteUser != null)
             {
                 this.GetDbSet<User>().Remove(deleteUser);

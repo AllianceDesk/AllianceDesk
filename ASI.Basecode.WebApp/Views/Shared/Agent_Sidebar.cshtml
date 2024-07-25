@@ -1,12 +1,18 @@
 ﻿@using Microsoft.AspNetCore.Http
 
 @inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    // Set default value if ViewData["AgentSidebar"] is null
+    var currentSidebar = ViewData["AgentSidebar"]?.ToString() ?? "Overview";
+}
 @section styles {
     <link rel="stylesheet" href="~/css/Admin.css" />
 }
+
 <div class="admin-sidebar flex flex-col gap-2 bg-White">
 
-    @if (ViewBag.AdminSidebar == "Overview")
+    @if (ViewData["AgentSidebar"].Equals("Overview"))
     {
         <a asp-controller="Agent" data-td-none  asp-action="Dashboard" data-admin-btn class=" admin-sb-active-button margin-0"><i class='bx bx-grid-alt bx-sm as' style="align-self:center;"></i>  <p>Overview</p> </a>
     }
@@ -15,7 +21,7 @@
         <a asp-controller="Agent" data-td-none asp-action="Dashboard" data-admin-btn class=" admin-sb-inactive-button margin-0"><i class='bx bx-grid-alt bx-sm as' style="align-self:center;"></i>  <p>Overview</p> </a>
     }
  
-    @if (ViewBag.AgentSidebar == "ViewUser")
+    @if ((ViewData["AgentSidebar"].Equals("ViewUser")))
     {
         <a asp-controller="Agent" data-td-none asp-action="Teams" data-admin-btn class=" admin-sb-active-button margin-0"><i class='bx bx-group bx-sm as' style="align-self:center;"></i> <p>Teams</p> </a>
     }
@@ -23,7 +29,7 @@
     {
         <a asp-controller="Agent" data-td-none asp-action="Teams" data-admin-btn class=" admin-sb-inactive-button margin-0"><i class='bx bx-group bx-sm as' style="align-self:center;"></i> <p>Teams</p> </a>
     }
-    @if (ViewBag.AgentSidebar == "Index")
+    @if (ViewData["AgentSidebar"].Equals("Index"))
     {
         <a asp-controller="Article" data-td-none asp-action="Index" data-admin-btn class=" admin-sb-active-button margin-0"><i class="bx bx-news" style="align-self:center; margin-right: 1rem;"></i> <p>Knowledge Base</p> </a>
     }
@@ -31,10 +37,6 @@
     {
         <a asp-controller="Article" data-td-none asp-action="Index" data-admin-btn class=" admin-sb-inactive-button margin-0"><i class="bx bx-news" style="align-self:center; margin-right: 1rem;"></i> <p>Knowledge Base</p> </a>
     }
-
-  
-
-
 
 </div>
 
