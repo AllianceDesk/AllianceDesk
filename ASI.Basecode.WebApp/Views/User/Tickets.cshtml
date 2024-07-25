@@ -214,9 +214,9 @@
                         <form asp-controller="User" asp-action="TicketCreate" method="post" enctype="multipart/form-data">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <div class="form-floating mb-3">
-                                <input asp-for="Ticket.Title" type="text" class="form-control" id="floatingInput" placeholder="Ticket Title" maxlength="50" oninput="updateCharacterCount(this, 'charCount')">
+                                <input asp-for="Ticket.Title" type="text" class="form-control" id="floatingInput" placeholder="Ticket Title" maxlength="50" oninput="updateCharacterCount(this, 'titleCount')">
                                 <span asp-validation-for="Ticket.Title" class="text-danger"></span>
-                                <span id="charCount" class="text-gray-500" style="text-align:end; font-size: 0.5rem; display: flex; justify-content: end; padding-right: 5px;">0/50</span>
+                                <span id="titleCount" class="text-gray-500" style="text-align:end; font-size: 0.5rem; display: flex; justify-content: end; padding-right: 5px;">0/50</span>
                                 <label for="floatingInput">Ticket Title</label>
                             </div>
 
@@ -243,9 +243,9 @@
                             </div>
 
                             <div class="form-floating mb-3">
-                                <textarea asp-for="Ticket.Description" class="form-control" placeholder="Description" id="floatingTextarea2" style="height: 100px" maxlength="300" oninput="updateCharacterCount(this, 'charCount')"></textarea>
+                                <textarea asp-for="Ticket.Description" class="form-control" placeholder="Description" id="floatingTextarea2" style="height: 100px" maxlength="300" oninput="updateCharacterCount(this, 'descCount')"></textarea>
                                 <span asp-validation-for="Ticket.Description" class="text-danger"></span>
-                                <span id="charCount" class="text-gray-500" style="text-align:end; font-size: 0.5rem; display: flex; justify-content: end; padding-right: 5px;">0/300</span>
+                                <span id="descCount" class="text-gray-500" style="text-align:end; font-size: 0.5rem; display: flex; justify-content: end; padding-right: 5px;">0/300</span>
                                 <label for="floatingTextarea2">Description</label>
                             </div>
 
@@ -281,9 +281,9 @@
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <input type="hidden" asp-for="Ticket.TicketId" id="Ticket_TicketId" />
                             <div class="form-group mb-3">
-                                <input asp-for="Ticket.Title" class="form-control" placeholder="Ticket Title" aria-label="Title" id="Edit_Ticket_Title" maxlength="50" oninput="updateCharacterCount(this, 'charCount')" />
+                                <input asp-for="Ticket.Title" class="form-control" placeholder="Ticket Title" aria-label="Title" id="Edit_Ticket_Title" maxlength="50" oninput="updateCharacterCount(this, 'editTitleCount')" />
                                 <span asp-validation-for="Ticket.Title" class="text-danger"></span>
-                                <span id="charCount" class="text-gray-500" style="text-align:end; font-size: 0.5rem; display: flex; justify-content: end; padding-right: 5px;">0/50</span>
+                                <span id="editTitleCount" class="text-gray-500" style="text-align:end; font-size: 0.5rem; display: flex; justify-content: end; padding-right: 5px;">0/50</span>
                             </div>
                             <div class="form-group mb-3">
                                 <select asp-for="Ticket.CategoryId" class="form-select" aria-label="Category Options"
@@ -298,9 +298,9 @@
                                 <span asp-validation-for="Ticket.PriorityId" class="text-danger"></span>
                             </div>
                             <div class="form-group mb-3">
-                                <textarea asp-for="Ticket.Description" class="form-control" rows="10" placeholder="Description" maxlength="300" oninput="updateCharacterCount(this, 'charCount')"></textarea>
+                                <textarea asp-for="Ticket.Description" class="form-control" rows="10" placeholder="Description" maxlength="300" oninput="updateCharacterCount(this, 'editDescCount')"></textarea>
                                 <span asp-validation-for="Ticket.Description" class="text-danger"></span>
-                                <span id="charCount" class="text-gray-500" style="text-align:end; font-size: 0.5rem; display: flex; justify-content: end; padding-right: 5px;">0/300</span>
+                                <span id="editDescCount" class="text-gray-500" style="text-align:end; font-size: 0.5rem; display: flex; justify-content: end; padding-right: 5px;">0/300</span>
                             </div>
                             <div class="button_card d-flex justify-content-between">                                
                                 <button type="submit" class="btn attachment custom-button" style="background-color: #E21818; color: white;">
