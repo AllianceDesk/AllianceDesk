@@ -1,7 +1,7 @@
 @model ASI.Basecode.Services.ServiceModels.UserViewModel
 
 @{
-    ViewData["Title"] = "Directory";
+    ViewData["Title"] = "User Directory";
     var roleMappings = new Dictionary<int, string>
     {
         { 1, "Admin" },
@@ -109,12 +109,14 @@
                         @foreach (var item in Model.Users)
                         {
                             <div class="agents | cursor-pointer flex-Row flex-between p-y-1 p-x-1 align-center" data-agent-teams-agent data-user-id="@item.UserId">
-                                <div class="user-img-profile br-50 bg-red"></div>
+                                <div class="user-img-profile br-50 bg-red align-center font-weight-normal">
+                                    @item.FirstLetter
+                                </div>
                                 <div class="flex-col justify-content-center align-center">
                                     <p class="fw-semi text-1-5">@Html.DisplayFor(modelItem => item.Name)</p>
                                     <p>@Html.DisplayFor(modelItem => item.Email)</p>
                                 </div>
-                                <div class="role-container role-agent fw-semi text-0-5">@roleMappings[item.RoleId]</div>
+                                    <div class="role-container role-agent fw-semi text-0-5">@roleMappings[item.RoleId]</div>
                             </div>
                         }
                     }
@@ -352,19 +354,21 @@
                     const userRole = roleMappings[item.RoleId] == "Agent" ? 'role-agent' : roleMappings[item.RoleId] == "Admin" ? 'role-admin' : 'role-user';
 
                     userDiv.innerHTML = `
-                            <div style="display: flex; padding-left: 2rem; align-items: center;">
-                                <div class="user-img-profile br-50 bg-red"></div>
-                            </div>
-                            <div style="display: flex; justify-content: center; align-items: center;">
-                                <p class="fw-semi text-1-5">${item.Name}</p>
-                            </div>
-                            <div style="display: flex; justify-content: center; align-items: center;">
-                                <p>${item.Email}</p>
-                            </div>
-                            <div style="display: flex; justify-content: center; align-items: center;">
-                                <div class="role-container ${userRole} fw-semi text-0-5">${roleMappings[item.RoleId]}</div>
-                            </div>
-                        `;
+                                            <div style="display: flex; align-items: center;">
+                                                <div class="user-img-profile br-50 bg-red" style="display: flex; justify-content: center; align-items: center;">
+                                                    <span class="fw-semi text-1-5 color-white">${item.FirstLetter}</span>
+                                                </div>
+                                            </div>
+                                            <div style="display: flex; justify-content: center; align-items: center;">
+                                                <p class="fw-semi text-1-5">${item.Name}</p>
+                                            </div>
+                                            <div style="display: flex; justify-content: center; align-items: center;">
+                                                <p>${item.Email}</p>
+                                            </div>
+                                            <div style="display: flex; justify-content: end; align-items: center;">
+                                                <div class="role-container role-agent fw-semi text-0-5">${roleMappings[item.RoleId]}</div>
+                                            </div>
+                                        `;
                     agentsContainer.appendChild(userDiv);
                 });
             } else {
@@ -597,9 +601,6 @@
 
         $(document).on('click', '[data-agent-teams-agent]', function () {
             console.log("agent clicked");
-
-       
-
 
             const agent = $(this); // Get the clicked agent element
 

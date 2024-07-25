@@ -13,6 +13,7 @@ namespace ASI.Basecode.Services.ServiceModels
 
         [Required(ErrorMessage = "Name is required.")]
         public string Name { get; set; }
+        public char FirstLetter => !string.IsNullOrEmpty(Name) ? Name.Trim()[0] : '?';
 
         [Required(ErrorMessage = "Username is required.")]
         public string UserName { get; set; }
@@ -27,7 +28,7 @@ namespace ASI.Basecode.Services.ServiceModels
         public string Password { get; set; }
 
         [Required(ErrorMessage = "Confirmation Password is required.")]
-        [Compare("Password", ErrorMessage = "Password and Confirmation Password must match.")]
+        [Compare("Password", ErrorMessage = "Password does not match")]
         public string ConfirmPassword { get; set; }
 
         public byte RoleId { get; set; }

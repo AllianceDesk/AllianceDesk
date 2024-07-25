@@ -1,0 +1,62 @@
+﻿@model ASI.Basecode.Services.ServiceModels.TeamViewModel
+
+@{
+    var roleMappings = new Dictionary<int, string>
+    {
+        { 1, "Admin" },
+        { 2, "Agent" },
+        { 3, "User" }
+    };
+}
+
+@section styles {
+    <link rel="stylesheet" href="~/css/functionalities.css" />
+    <link rel="stylesheet" href="~/css/Admin.css" />
+}
+
+<div class="pl-1" data-admin-edit-details>
+    <div class="flex-Row align-center justify-content-between p-y-2 border-b-2">
+        <h2>Team Detail</h2>
+        <u class="fa-solid fa-pen-to-square text-1-5 cursor-pointer color-inactive" data-admin-edit-btn data-user-id="@Model.TeamId"></u>
+    </div>
+    <div class="flex p-t-1">
+        <div class="agents-details | margin-1 bg-white flex-col flex-between p-x-1 py-2 gap-1 align-items-start" style="border-radius: 5px;">
+            <p class="fw-semi d-flex">Team Description</p>
+           @*  <div class="role-container role-agent fw-semi text-0-5 d-flex mb-3" style="text-align: center;">@Html.DisplayFor(model => model.DepartmentName)</div> *@
+            <p class="text-sm d-flex">@Html.DisplayFor(model => model.TeamDescription)</p>
+        </div>
+        <div>
+            <h5>Members</h5>
+            @if (Model.TeamNumber != 0)
+            {
+                foreach (var agents in Model.Agents)
+                {
+                    <div class="agents-details | margin-1 bg-white flex-Row flex-between p-y-1 p-x-1 align-center" style="border-radius: 5px;">
+                        <div class="user-img-profile br-50 bg-grey" style="display: flex; justify-content: center; align-items: center;">
+                            <span class="fw-semi text-1-5 color-black">@Html.DisplayFor(model => model.FirstLetter)</span>
+                        </div>
+                        <div class="flex-col justify-content-center align-center">
+                            <p class="fw-semi">@Html.DisplayFor(agentMem => agents.Name)</p>
+                            <p class="text-sm">@Html.DisplayFor(agentMem => agents.Email)</p>
+                        </div>
+                        <div class="role-container role-agent fw-semi text-0-5">@roleMappings[agents.RoleId]</div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="agents-details | margin-1 bg-white flex-Row gap-2 p-y-1 p-x-1 align-center" style="border-radius: 5px;">
+                    <div class="flex-col align-center">
+                        <p class="text-sm">This team has no members.</p>
+                        @* <p class="text-sm">a@team2</p> *@
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    const teams = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+    console.log("DETAILS ", teams)
+</script>

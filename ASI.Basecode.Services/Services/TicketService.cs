@@ -9,6 +9,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using System.Threading.Tasks;
+using System.Net.Sockets;
 
 namespace ASI.Basecode.Services.Services
 {
@@ -26,7 +27,7 @@ namespace ASI.Basecode.Services.Services
         private readonly ITeamRepository _teamRepository;
         private readonly ISessionHelper _sessionHelper;
         private readonly IMapper _mapper;
-        private readonly INotificationRepository _notificationRepository;
+        private readonly INotificationService _notificationService;
         private readonly IAttachmentRepository _attachmentRepository;
 
         public TicketService(
@@ -41,7 +42,7 @@ namespace ASI.Basecode.Services.Services
             IFeedbackRepository feedbackRepository,
             IMapper mapper,
             ISessionHelper sessionHelper,
-            INotificationRepository notificationRepository,
+            INotificationService notificationService,
             ITeamRepository teamRepository,
             IAttachmentRepository attachmentRepository)
         {
@@ -58,7 +59,7 @@ namespace ASI.Basecode.Services.Services
             _mapper = mapper;
             _sessionHelper = sessionHelper;
             _teamRepository = teamRepository;
-            _notificationRepository = notificationRepository;
+            _notificationService = notificationService;
             _attachmentRepository = attachmentRepository;
         }
 
@@ -150,7 +151,8 @@ namespace ASI.Basecode.Services.Services
                 CreatorName = users.TryGetValue(s.CreatedBy, out var creatorName) ? creatorName : "Unknown",
                 LatestUpdate = activitiesByTicketId.TryGetValue(s.TicketId, out var activities) ?
                     activities.OrderByDescending(a => a.ModifiedAt).FirstOrDefault() : null,
-                Feedback = feedbacks.TryGetValue(s.TicketId, out var feedback) ? feedback : null
+                Feedback = feedbacks.TryGetValue(s.TicketId, out var feedback) ? feedback : null,
+                TicketNumber= s.TicketNumber,
             });
 
             return model.AsQueryable();
@@ -482,6 +484,8 @@ namespace ASI.Basecode.Services.Services
 
         public void AssignAgent(string ticketId, string userId)
         {
+            var adminId = _sessionHelper.GetUserIdFromSession().ToString();
+
             Guid ticketGuid = Guid.Parse(ticketId);
             Guid userGuid = Guid.Parse(userId);
 
@@ -490,6 +494,15 @@ namespace ASI.Basecode.Services.Services
             existingTicket.AssignedAgent = userGuid;
             existingTicket.StatusId = 2;
             _ticketRepository.Update(existingTicket);
+
+            // Add notification for the agent assigned
+            _notificationService.Add(ticketId, userId);
+
+            // Add notification for the admin that assigned it to the agent
+            _notificationService.Add(ticketId, adminId);
+
+            // Add notification for the user to inform that there is an assigned agent for it
+            _notificationService.Add(ticketId, existingTicket.CreatedBy.ToString());
         }
 
         public Dictionary<string, int> GetTicketVolume()
@@ -576,16 +589,8 @@ namespace ASI.Basecode.Services.Services
             _ticketActivityRepository.Add(newActivity);
 
 
-            // Add notification
-            Notification newNotification = new Notification();
-            newNotification.NotificationId = Guid.NewGuid();
-            newNotification.TicketId = ticket.TicketId;
-            newNotification.Title = ticket.Title;
-            newNotification.Body = ticket.Description;
-            newNotification.DateCreated = DateTime.Now;
-            newNotification.Status = true;
-            newNotification.RecipientId = ticket.CreatedBy;
-            _notificationRepository.Add(newNotification);
+            // Add notification for the user that created it
+            _notificationService.Add(ticket.TicketId.ToString(), ticket.CreatedBy.ToString());
         }
         
         private async Task FileUploadAsync(List<IFormFile> files, Guid userId, Guid ticketId)

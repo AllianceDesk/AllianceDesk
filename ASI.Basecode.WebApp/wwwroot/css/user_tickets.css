@@ -50,14 +50,18 @@ body {
     box-shadow: none !important;
     outline: none !important;
     text-decoration: none !important;
+    border: none;
 }
 
 .remove_default:active, .remove_default:focus, .remove_default:hover {
     box-shadow: none !important;
     outline: none !important;
+    border: none;
     color: black;
-    /*border: 1px solid #ccc;*/
+}
 
+.cursor {
+    cursor: pointer;
 }
 
 
@@ -67,7 +71,6 @@ body {
   height: 100vh;
   width: 100%;
   grid-template-columns: 300px 7fr;
-
   grid-template-rows: 0.3fr 0.5fr 5fr;
   grid-template-areas:
     "header header"
@@ -114,7 +117,7 @@ header {
 }
 
 .bell_icon {
-    margin-top: 0.3em;
+    color: #45474B;
 }
 
 .dpicn {
@@ -170,12 +173,8 @@ nav {
   background-color: whitesmoke;
   grid-area: nav;
   display: flex;
-  flex-direction: row;
-  padding-left: 5em;
-  padding-right: 5.9em;
-  justify-content: space-between;
-  gap: 0.7em;
-  padding-bottom: 1em;
+  flex-direction: column;
+  padding: 0 6rem 1rem 6rem;
 }
 
 #buttonContainer {
@@ -299,8 +298,7 @@ nav {
 main {
   background-color: whitesmoke;
   grid-area: main;
-  padding-left: 5em;
-  padding-right: 5em;
+  padding: 0 6rem 1rem 6rem;
   gap: 2em;
   overflow-y: auto;
 }
@@ -312,16 +310,16 @@ main {
 .ticket-container {
   display: flex;
   flex-direction: row;
-  margin: 1em 0;
-  border-radius: 5px;
   transition: background-color 0.3s, box-shadow 0.3s;
   justify-content: space-between;
   padding: 15px;
   background-color: white;
+  margin-bottom: 0.5rem;
 }
 
 .ticket-link {
   text-decoration: none;
+  width: auto;
 }
 
 .ticket-link:hover {
@@ -343,7 +341,6 @@ main {
 
 .name {
   color: #2f3645;
-  font-size: 14px;
   font-weight: 500;
 }
 
@@ -353,17 +350,17 @@ main {
 }
 
 .question {
-  margin-top: 0.8em;
   font-weight: 600;
-  font-size: 18px;
   color: #2f3645;
 }
 
 .details {
-  color: #2f3645;
-  font-size: 12px;
-  font-weight: 400;
-  margin-top: 1em;
+    color: #2f3645;
+    font-size: 14px;
+    font-weight: 400;
+    margin-top: 1em;
+    word-wrap: break-word;
+    width: 47rem;
 }
 
 .option {
@@ -391,7 +388,8 @@ icon-button:focus-visible {
   justify-content: space-between;
   align-items: center;
   padding: 0.1em;
-  background-color: green; /* Ensure the background color is the same for the container if needed */
+  background-color: green; 
+  font-size: 12px;
 }
 
 .status1,
@@ -402,7 +400,7 @@ icon-button:focus-visible {
 }
 
 .statusdate {
-  padding-left: 0; /* Remove padding from the left to align it to the right */
+  padding-left: 0; 
   margin-right: 1em;
 }
 
@@ -417,6 +415,7 @@ icon-button:focus-visible {
   display: flex;
   flex-direction: column;
   align-items: center;
+
 }
 
 #search-container {
@@ -525,7 +524,7 @@ icon-button:focus-visible {
 }
 
 #instruction-container {
-  width: 88%;
+  width: 100%;
   border: 1px solid var(--border-color);
   border-radius: 5px;
   margin: 20px 10px;
@@ -780,7 +779,7 @@ hr {
 
 /* Style for the modal content */
 .modal-content {
-    padding: 20px;
+
 }
 
 /* Style for images in the gallery */
