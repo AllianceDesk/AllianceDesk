@@ -20,9 +20,9 @@
         <u class="fa-solid fa-pen-to-square text-1-5 cursor-pointer color-inactive" data-admin-edit-btn data-user-id="@Model.TeamId"></u>
     </div>
     <div class="flex p-t-1">
-        <div class="agents-details | margin-1 bg-white flex-col flex-between p-y-1 p-x-1 align-center" style="border-radius: 5px;">
-            <p class="fw-semi d-flex mb-1">@Html.DisplayFor(model => model.TeamName)</p>
-            <div class="role-container role-agent fw-semi text-0-5 d-flex" style="text-align: center;">@Html.DisplayFor(model => model.DepartmentName)</div>
+        <div class="agents-details | margin-1 bg-white flex-col flex-between p-x-1 py-2 gap-1 align-items-start" style="border-radius: 5px;">
+            <p class="fw-semi d-flex">Team Description</p>
+           @*  <div class="role-container role-agent fw-semi text-0-5 d-flex mb-3" style="text-align: center;">@Html.DisplayFor(model => model.DepartmentName)</div> *@
             <p class="text-sm d-flex">@Html.DisplayFor(model => model.TeamDescription)</p>
         </div>
         <div>
