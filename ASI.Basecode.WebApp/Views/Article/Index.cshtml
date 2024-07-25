@@ -51,50 +51,35 @@ else if (ViewBag.RoleId == 2)
             </a>
         </div>
 
-        <nav>
+        <div class="admin-body py-3 relative bg-grey flex flex-col gap-1">
+            <div>
+                <div class="nav_one mb-3">
 
-            <div class="nav_one mt-3">
+                    <h3>Knowledge Base</h3>
 
-                <h2>Knowledge Base</h2>               
-
-            </div>
-
-            <div class="nav_two mt-1">
-                <div class="d-flex" style="gap:2em;">
-                    <a class="active_link" asp-controller="Article" asp-action="Index" style="text-decoration: none;">Articles</a>
-                    <a class="inactive_link d-flex" asp-controller="Article" asp-action="MyFavorites" style="text-decoration: none; ">
-                        My Favorites
-                        @if (ViewBag.FavoriteCount != null && ViewBag.FavoriteCount > 0)
-                        {
-                            <span class="article_badge ml-2">@ViewBag.FavoriteCount</span>
-                        }
-                    </a>
                 </div>
 
-                @* <div class="d-flex gap-3">
-
-                    <div class="d-flex position-relative" style="width: 20rem; margin-top: 0.25rem;">
-                        <i class='bx bx-search-alt search-icon' style='color:#1d1c1c'></i>
-                        <input class="form-control rounded-5 border_color" id="search-input" type="search" placeholder="Search" aria-label="Search" value="@Model.CurrentSearchTerm" style="width: 100%; height: 2.6rem; padding-left: 2.5rem;">
+                <div class="nav_two">
+                    <div class="d-flex" style="gap:2em;">
+                        <a class="active_link" asp-controller="Article" asp-action="Index" style="text-decoration: none;">Articles</a>
+                        <a class="inactive_link d-flex" asp-controller="Article" asp-action="MyFavorites" style="text-decoration: none; ">
+                            My Favorites
+                            @if (ViewBag.FavoriteCount != null && ViewBag.FavoriteCount > 0)
+                            {
+                                <span class="article_badge ml-2">@ViewBag.FavoriteCount</span>
+                            }
+                        </a>
                     </div>
 
+                    <div class="filter_button">
 
-                    <select class="form-select border_color" style="height: 2.5rem; width: 10.1rem; margin-top: 0.8rem; cursor: pointer; border: none;" aria-label="Small select example">
-                        <option selected>Date</option>
-                        <option value="1">Category</option>
-                    </select>
+                        <form asp-action="Index" method="get" asp-controller="Article" id="searchForm" class="d-flex">
+                            <div class="input-group mr-3">
+                                <button class="btn btn-outline-secondary" type="submit" id="button-search" style="background-color: whitesmoke; border: 1px solid #ccc; outline: none; box-shadow: none;"><i class='bx bx-search bx-xs bx-fw' style="color: #45474B; cursor: pointer;"></i></button>
+                                <input name="searchString" id="searchInput" type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="button-search" style="background-color: whitesmoke; border: 1px solid #ccc; outline: none; box-shadow: none;" value="@ViewBag.SearchString">
+                            </div>
 
-                </div> *@
-
-                <div class="filter_button mt-2">
-
-                    <form asp-action="Index" method="get" asp-controller="Article" id="searchForm" class="d-flex">
-                        <div class="input-group mr-3">
-                            <button class="btn btn-outline-secondary" type="submit" id="button-search" style="background-color: whitesmoke; border: 1px solid #ccc; outline: none; box-shadow: none;"><i class='bx bx-search bx-xs bx-fw' style="color: #45474B; cursor: pointer;"></i></button>
-                            <input name="searchString" id="searchInput" type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="button-search" style="background-color: whitesmoke; border: 1px solid #ccc; outline: none; box-shadow: none;" value="@ViewBag.SearchString">
-                        </div>
-
-                        @Html.DropDownList("category", new Microsoft.AspNetCore.Mvc.Rendering.SelectList(new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>
+                            @Html.DropDownList("category", new Microsoft.AspNetCore.Mvc.Rendering.SelectList(new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>
                         {
                         new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Default", Value = "default" },
                         new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Technical", Value = "Technical" },
@@ -104,29 +89,30 @@ else if (ViewBag.RoleId == 2)
                         new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Customer Support", Value = "Customer Support" },
                         new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Others", Value = "Others" }
                         }, "Value", "Text", ViewBag.CategoryString), new { @class = "form-select", @aria_label = "Default select example", @style = "width: 16em; outline: none; box-shadow: none; border: 1px solid #ccc; background-color: whitesmoke;", @onchange = "document.getElementById('searchForm').submit();" })
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </nav>
 
-        <main>
-            @foreach (var item in Model.Articles)
-            {
-                <a href="#" class="link_card" style="text-decoration: none; color: inherit;">
-                    <div class="article_card" data-bs-toggle="modal" data-bs-target="#detail" data-article-detail-btn data-article-id="@item.ArticleId">
-                        <div class="article_top mb-4">
-                            <h5>@Html.DisplayFor(modelItem => item.Title)</h5>
-                            <p>@Html.DisplayFor(modelItem => item.DateUpdated)</p>
+            <main>
+                @foreach (var item in Model.Articles)
+                {
+                    <a href="#" class="link_card" style="text-decoration: none; color: inherit;">
+                        <div class="article_card" data-bs-toggle="modal" data-bs-target="#detail" data-article-detail-btn data-article-id="@item.ArticleId">
+                            <div class="article_top mb-4">
+                                <h5>@Html.DisplayFor(modelItem => item.Title)</h5>
+                                <p>@Html.DisplayFor(modelItem => item.DateUpdated)</p>
+                            </div>
+
+                            <p class="mb-3" style="font-size: 14px;">@Html.DisplayFor(modelItem => item.Body)</p>
+
+                            <h6 class="role-container role-agent text-sm" style="align-self: start; text-align: center;">@Html.DisplayFor(modelItem => item.CategoryNavigation)</h6>
+
                         </div>
-
-                        <p class="mb-3" style="font-size: 14px;">@Html.DisplayFor(modelItem => item.Body)</p>
-
-                        <h6 class="role-container role-agent text-sm" style="align-self: center; text-align: center;">@Html.DisplayFor(modelItem => item.CategoryNavigation)</h6>
-
-                    </div>
-                </a>
-            }
-        </main>
+                    </a>
+                }
+            </main>
+        </div>
     }
     else if (ViewBag.RoleId == 1)
     {
@@ -276,14 +262,6 @@ else if (ViewBag.RoleId == 2)
             </main>
         </div>
     }
-
-
-
-
-   
-    
-
-
 </div>
 
 <div class="modal fade" id="create" tabindex="-1">
