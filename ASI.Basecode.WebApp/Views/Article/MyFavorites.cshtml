@@ -55,7 +55,7 @@ else if (ViewBag.RoleId == 2)
 
             <div class="">
 
-                <i class='bx bx-bell bx-sm bx-fw pt-1 mr-1 bell_icon' style="cursor: pointer; transform: scale(1.1);"></i>
+                <i class='bx bx-bell bx-sm bx-fw pt-1 mr-1 bell_icon' style="cursor: pointer; transform: scale(1.1);" data-bs-toggle="modal" data-bs-target="#settings"></i>
                 <div class="btn-group">
                     <img src="~/img/profile-logo.png" class="dpicn" data-bs-toggle="dropdown" aria-expanded="false" alt="Profile">
                     <ul class="dropdown-menu">
@@ -67,7 +67,6 @@ else if (ViewBag.RoleId == 2)
 
             </div>
         </header>
-
         <div id="sidebar" class="px-4">
             <a asp-controller="User" asp-action="Tickets" method="get" type="button" class="btn mt-3 w-100 d-flex justify-content-start align-items-center admin-sb-inactive-button remove_default" style="height: 3rem;">
                 <i class='bx bx-book' style=' transform: scale(1.3)'></i>
@@ -80,16 +79,23 @@ else if (ViewBag.RoleId == 2)
             </a>
         </div>
 
-        <nav style="padding: 0rem 4rem 1rem 4rem;">
+        <nav style="padding: 0rem 6rem 1rem 6rem;">
 
-            <div class="nav_one mb-3 mt-3">
+            <div class="nav_one mt-3">
 
                 <h2>Knowledge Base</h2>
 
+                <div class="hidden add_button">
+
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-danger me-1" data-bs-toggle="modal" data-bs-target="#create" id="addArticleBtn">Add Article</button>
+                    </div>
+
+                </div>
+
             </div>
 
-            <div class="nav_two">
-
+            <div class="nav_two mt-2">
                 <div class="d-flex" style="gap:2em;">
                     <a class="inactive_link" asp-controller="Article" asp-action="Index" style="text-decoration: none;">Articles</a>
                     <a class="active_link d-flex" asp-controller="Article" asp-action="MyFavorites" style="text-decoration: none; ">
@@ -101,10 +107,12 @@ else if (ViewBag.RoleId == 2)
                     </a>
                 </div>
 
+      
+
                 <div class="filter_button mt-2">
 
                     <form asp-action="Index" method="get" asp-controller="Article" id="searchForm" class="d-flex">
-                        <div class="input-group mr-3 rounded-2">
+                        <div class="input-group mr-3">
                             <button class="btn btn-outline-secondary" type="submit" id="button-search" style="background-color: whitesmoke; border: 1px solid #ccc; outline: none; box-shadow: none;"><i class='bx bx-search bx-xs bx-fw' style="color: #45474B; cursor: pointer;"></i></button>
                             <input name="searchString" id="searchInput" type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="button-search" style="background-color: whitesmoke; border: 1px solid #ccc; outline: none; box-shadow: none;" value="@ViewBag.SearchString">
                         </div>
@@ -124,7 +132,7 @@ else if (ViewBag.RoleId == 2)
             </div>
         </nav>
 
-        <main class="flex flex-col gap-1 pt-4">
+        <main class="flex flex-col gap-1" style=" padding: 0rem 6rem 1rem 6rem;">
             @foreach (var item in Model.Articles)
             {
                 <a href="#" class="link_card" style="text-decoration: none; color: inherit;">
@@ -135,7 +143,7 @@ else if (ViewBag.RoleId == 2)
                         </div>
 
                         <p class="mb-3" style="font-size: 14px;">@Html.DisplayFor(modelItem => item.Body)</p>
-                        <h6 class="role-container @GetCategoryClass(item.CategoryNavigation) text-sm" style="align-self: start; text-align: center;">@Html.DisplayFor(modelItem => item.CategoryNavigation)</h6>
+                        <h6 class="role-container @GetCategoryClass(item.CategoryNavigation) " style="align-self: start; text-align: center;">@Html.DisplayFor(modelItem => item.CategoryNavigation)</h6>
 
                     </div>
                 </a>
