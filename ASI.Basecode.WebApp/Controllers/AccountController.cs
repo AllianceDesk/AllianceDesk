@@ -135,6 +135,14 @@ namespace ASI.Basecode.WebApp.Controllers
             return View();
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult Index()
+        {
+            ViewBag.IsLoginOrRegister = true;
+            return View();
+        }
+
         [HttpPost]
         [AllowAnonymous]
         public IActionResult Register(UserViewModel model)

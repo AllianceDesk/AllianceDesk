@@ -374,6 +374,7 @@ namespace ASI.Basecode.Services.Services
                 DateCreated = ticket.DateCreated,
                 CategoryId = ticket.CategoryId,
                 PriorityId = ticket.PriorityId,
+                TicketNumber = ticket.TicketNumber,
                 Category = categories.TryGetValue(ticket.CategoryId, out var categoryName) ? categoryName : "Unknown",
                 Priority = priorities.TryGetValue(ticket.PriorityId, out var priorityName) ? priorityName : "Unknown",
                 Status = statuses.TryGetValue(ticket.StatusId, out var statusName) ? statusName : "Unknown",

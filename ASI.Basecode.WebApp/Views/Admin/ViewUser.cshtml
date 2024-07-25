@@ -16,6 +16,8 @@
         { "Agent", "Agent" },
         { "User", "User" }
     };
+
+    
 }
 @section styles {
     <link rel="stylesheet" href="~/css/functionalities.css" />
@@ -57,14 +59,13 @@
                            
                             <div class="text-center flex relative ">
                                 <label class="modal-input flex relative justify-content-center align-items-center" style=" height: 2.6rem; margin-bottom: 0; border: 1px solid #9E9E9E;">
-                                    <select class="alliance-dropdown" name="users-role" id="users-role" class=" pl-3 mr-4" >
+                                    <select class="form-select form-select-md filter_tickets remove_default border-0" name="users-role" id="users-role">
                                         <option value="All" selected disabled>Select Roles</option>
                                         <option value="All">All</option>
                                         <option value="User">Users</option>
                                         <option value="Agent">Agents</option>
                                         <option value="Admin">Admin</option>
                                     </select>
-                                    <i class='bx bx-chevron-down' style="position: absolute; top: 20%; right: 5%; font-size: 1.5rem;"></i>
                                 </label>
                             </div>
                           @*   <button class="mbtn-primary flex-Row gap-1 color-white bg-red align-center justify-content-center border-0 p-x-1 br-1-5" style="height: 2.6rem;">
@@ -390,6 +391,7 @@
         const roleSelect = document.getElementById('users-role');
         roleSelect.addEventListener('change', () => {
             selectedRole = roleSelect.value;
+            console.log("SELECTED ROLE", selectedRole)
             filterTeams();
         });
 
@@ -398,7 +400,7 @@
                 const matchesSearchTerm = team.Name.toLowerCase().includes(searchTerm);
                 const matchEmailTerm = team.Email.toLowerCase().includes(searchTerm);
                 const matchesRole = selectedRole === "All" || roleMappings[team.RoleId] === selectedRole;
-                return matchEmailTerm || matchesSearchTerm && matchesRole;
+                return (matchEmailTerm || matchesSearchTerm) && matchesRole;
             });
             currentPage = 1; 
             renderPage(currentPage);
