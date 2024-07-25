@@ -9,27 +9,27 @@ namespace ASI.Basecode.Services.Interfaces
 {
         public interface ITicketService
         {
-                IQueryable<TicketViewModel> RetrieveAll();
-                IQueryable<TicketViewModel> GetUserTickets(Guid id, byte? status, string? searchTerm, string? sortOrder, int? page);
-                IEnumerable<TicketViewModel> GetAgentTickets(Guid id, string? status, string? searchTerm, string? sortOrder, int? page);
+                IQueryable<TicketViewModel> GetAllTickets();
+                IQueryable<TicketViewModel> GetUserTickets(Guid userId, byte? status, string? searchTerm, string? sortOrder, int? page);
+                IQueryable<TicketViewModel> GetAgentTickets(Guid agentId, string? status, string? searchTerm, string? sortOrder, int? page);
                 IQueryable<TicketViewModel> GetWeeklyTickets(DateTime startOfWeek, DateTime endOfWeek);
                 Task AddAsync(TicketViewModel ticket);
                 void Update(TicketViewModel ticket);
-                void Delete(string id);
-                TicketViewModel GetById(string id);
+                void Delete(Guid id);
+                TicketViewModel GetById(Guid ticketId);
                 IEnumerable<Category> GetCategories();
                 IEnumerable<TicketPriority> GetPriorities();
                 IEnumerable<TicketStatus> GetStatuses();
-                Category GetCategoryById(byte id);
-                TicketPriority GetPriorityById(byte id);
-                TicketStatus GetStatusById(byte id);
+                Category GetCategoryById(byte categoryId);
+                TicketPriority GetPriorityById(byte priorityId);
+                TicketStatus GetStatusById(byte statusId);
                 void SendMessage(TicketMessageViewModel message);
-                IEnumerable<TicketActivityViewModel> GetHistory(string id);
-                IEnumerable<TicketMessageViewModel> GetMessages(string id);
-                void AssignAgent(string ticketId, string userId);
+                IEnumerable<TicketActivityViewModel> GetHistory(Guid ticketId);
+                IEnumerable<TicketMessageViewModel> GetMessages(Guid ticketId);
+                void AssignAgent(Guid ticketId, Guid userId);
                 Dictionary<string, int> GetTicketVolume();
                 List<UserViewModel> GetWeeklyTopResolvers();
-                void UpdateStatus(string ticketId, byte statusId);
+                void UpdateStatus(Guid ticketId, byte statusId);
                 void AddFeedback(FeedbackViewModel model);
         }
 }

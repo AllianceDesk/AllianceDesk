@@ -25,9 +25,7 @@ namespace ASI.Basecode.Services.Services
         private readonly ITicketMessageRepository _ticketMessageRepository;
         private readonly IFeedbackRepository _feedbackRepository;
         private readonly ITeamRepository _teamRepository;
-        private readonly ISessionHelper _sessionHelper;
-        private readonly IMapper _mapper;
-        private readonly INotificationService _notificationService;
+        private readonly INotificationRepository _notificationRepository;
         private readonly IAttachmentRepository _attachmentRepository;
 
         public TicketService(
@@ -42,9 +40,8 @@ namespace ASI.Basecode.Services.Services
             IFeedbackRepository feedbackRepository,
             IMapper mapper,
             ISessionHelper sessionHelper,
-            INotificationService notificationService,
-            ITeamRepository teamRepository,
-            IAttachmentRepository attachmentRepository)
+            INotificationRepository notificationRepository,
+            ITeamRepository teamRepository)
         {
             _ticketRepository = ticketRepository;
             _userRepository = userRepository;
@@ -56,10 +53,7 @@ namespace ASI.Basecode.Services.Services
             _ticketMessageRepository = ticketMessageRepository;
             _feedbackRepository = feedbackRepository;
             _teamRepository = teamRepository;
-            _mapper = mapper;
-            _sessionHelper = sessionHelper;
-            _teamRepository = teamRepository;
-            _notificationService = notificationService;
+            _notificationRepository = notificationRepository;
             _attachmentRepository = attachmentRepository;
         }
 
@@ -79,19 +73,19 @@ namespace ASI.Basecode.Services.Services
 
             var data = tickets.Select(s => new TicketViewModel
             {
-                TicketId = s.TicketId.ToString(),
+                TicketId = s.TicketId,
                 TicketNumber = s.TicketNumber,
                 Title = s.Title,
                 Description = s.Description,
                 DateCreated = s.DateCreated,
-                CreatorId = s.CreatedBy.ToString(),
-                AgentId = s.AssignedAgent.ToString(),
+                CreatorId = s.CreatedBy,
+                AgentId = s.AssignedAgent,
                 StatusId = s.StatusId,
-                Category = categories.TryGetValue(s.CategoryId, out var categoryName) ? categoryName : "Unknown",
-                Priority = priorities.TryGetValue(s.PriorityId, out var priorityName) ? priorityName : "Unknown",
-                Status = statuses.TryGetValue(s.StatusId, out var statusName) ? statusName : "Unknown",
-                AgentName = s.AssignedAgent.HasValue && users.TryGetValue(s.AssignedAgent.Value, out var agentName) ? agentName : "Not yet Assigned",
-                CreatorName = users.TryGetValue(s.CreatedBy, out var creatorName) ? creatorName : "Unknown",
+                Category = categories.TryGetValue(s.CategoryId, out var categoryName) ? categoryName : null,
+                Priority = priorities.TryGetValue(s.PriorityId, out var priorityName) ? priorityName : null,
+                Status = statuses.TryGetValue(s.StatusId, out var statusName) ? statusName : null,
+                AgentName = s.AssignedAgent.HasValue && users.TryGetValue(s.AssignedAgent.Value, out var agentName) ? agentName : null,
+                CreatorName = users.TryGetValue(s.CreatedBy, out var creatorName) ? creatorName : null,
                 TicketHistory = activitiesByTicketId.TryGetValue(s.TicketId, out var activities) ?
                     _mapper.Map<IEnumerable<TicketActivityViewModel>>(activities) : Enumerable.Empty<TicketActivityViewModel>()
             });
@@ -137,18 +131,18 @@ namespace ASI.Basecode.Services.Services
 
             var model = ticketsQuery.Select(s => new TicketViewModel
             {
-                TicketId = s.TicketId.ToString(),
+                TicketId = s.TicketId,
                 Title = s.Title,
                 Description = s.Description,
                 DateCreated = s.DateCreated,
-                CreatorId = s.CreatedBy.ToString(),
-                AgentId = s.AssignedAgent.ToString(),
+                CreatorId = s.CreatedBy,
+                AgentId = s.AssignedAgent,
                 StatusId = s.StatusId,
-                Category = categories.TryGetValue(s.CategoryId, out var categoryName) ? categoryName : "Unknown",
-                Priority = priorities.TryGetValue(s.PriorityId, out var priorityName) ? priorityName : "Unknown",
-                Status = statuses.TryGetValue(s.StatusId, out var statusName) ? statusName : "Unknown",
-                AgentName = s.AssignedAgent.HasValue && users.TryGetValue(s.AssignedAgent.Value, out var agentName) ? agentName : "Unknown",
-                CreatorName = users.TryGetValue(s.CreatedBy, out var creatorName) ? creatorName : "Unknown",
+                Category = categories.TryGetValue(s.CategoryId, out var categoryName) ? categoryName : null,
+                Priority = priorities.TryGetValue(s.PriorityId, out var priorityName) ? priorityName : null,
+                Status = statuses.TryGetValue(s.StatusId, out var statusName) ? statusName : null,
+                AgentName = s.AssignedAgent.HasValue && users.TryGetValue(s.AssignedAgent.Value, out var agentName) ? agentName : null,
+                CreatorName = users.TryGetValue(s.CreatedBy, out var creatorName) ? creatorName : null,
                 LatestUpdate = activitiesByTicketId.TryGetValue(s.TicketId, out var activities) ?
                     activities.OrderByDescending(a => a.ModifiedAt).FirstOrDefault() : null,
                 Feedback = feedbacks.TryGetValue(s.TicketId, out var feedback) ? feedback : null,
@@ -158,10 +152,10 @@ namespace ASI.Basecode.Services.Services
             return model.AsQueryable();
         }
 
-        public IEnumerable<TicketViewModel> GetAgentTickets(Guid id, string? status, string? searchTerm, string? sortOrder, int? page)
+        public IQueryable<TicketViewModel> GetAgentTickets(Guid agentId, string? status, string? searchTerm, string? sortOrder, int? page)
         {
             // Retrieve IQueryable from repository
-            var ticketsQuery = _ticketRepository.GetAgentTicketsById(id);
+            var ticketsQuery = _ticketRepository.GetAgentTicketsById(agentId);
 
             // Retrieve additional data
             var categories = _categoryRepository.RetrieveAll().ToDictionary(c => c.CategoryId, c => c.CategoryName);
@@ -200,15 +194,15 @@ namespace ASI.Basecode.Services.Services
              
             var model = ticketsQuery.Select(s => new TicketViewModel
             {
-                TicketId = s.TicketId.ToString(),
+                TicketId = s.TicketId,
                 Title = s.Title,
                 Description = s.Description,
                 DateCreated = s.DateCreated,
-                CreatorId = s.CreatedBy.ToString(),  
-                Category = categories.TryGetValue(s.CategoryId, out var categoryName) ? categoryName : "Unknown",
-                Priority = priorities.TryGetValue(s.PriorityId, out var priorityName) ? priorityName : "Unknown",
-                Status = statuses.TryGetValue(s.StatusId, out var statusName) ? statusName : "Unknown",
-                CreatorName = users.TryGetValue(s.CreatedBy, out var creatorName) ? creatorName : "Unknown",
+                CreatorId = s.CreatedBy,  
+                Category = categories.TryGetValue(s.CategoryId, out var categoryName) ? categoryName : null,
+                Priority = priorities.TryGetValue(s.PriorityId, out var priorityName) ? priorityName : null,
+                Status = statuses.TryGetValue(s.StatusId, out var statusName) ? statusName : null,
+                CreatorName = users.TryGetValue(s.CreatedBy, out var creatorName) ? creatorName : null,
                 LatestUpdate = activitiesByTicketId.TryGetValue(s.TicketId, out var activities) ?
                     activities.OrderByDescending(a => a.ModifiedAt).FirstOrDefault() : null,
             });
@@ -222,12 +216,12 @@ namespace ASI.Basecode.Services.Services
 
             var model = ticketsQuery.Select(s => new TicketViewModel
             {
-                TicketId = s.TicketId.ToString(),
+                TicketId = s.TicketId,
                 Title = s.Title,
                 Description = s.Description,
                 DateCreated = s.DateCreated,
-                CreatorId = s.CreatedBy.ToString(),
-                AgentId = s.AssignedAgent.ToString(),
+                CreatorId = s.CreatedBy,
+                AgentId = s.AssignedAgent,
                 StatusId = s.StatusId,
                 CategoryId = s.CategoryId,
                 PriorityId = s.PriorityId,
@@ -257,17 +251,14 @@ namespace ASI.Basecode.Services.Services
        
         public void Update(TicketViewModel ticket)
         {
-            var existingTicket = _ticketRepository.GetTicketById(Guid.Parse(ticket.TicketId));
+            var existingTicket = _ticketRepository.GetTicketById(ticket.TicketId);
 
             existingTicket.Title = ticket.Title;
             existingTicket.Description = ticket.Description;
             existingTicket.CategoryId = Convert.ToByte(ticket.CategoryId);
             existingTicket.PriorityId = Convert.ToByte(ticket.PriorityId);
+            existingTicket.AssignedAgent = ticket.AgentId;
 
-            if (ticket.AgentId != null)
-            {
-                existingTicket.AssignedAgent = Guid.Parse(ticket.AgentId);
-            }
             _ticketRepository.Update(existingTicket);
 
             // Add ticket activity
@@ -281,9 +272,9 @@ namespace ASI.Basecode.Services.Services
             _ticketActivityRepository.Add(newActivity);
         }
 
-        public void UpdateStatus(string ticketId, byte statusId)
+        public void UpdateStatus(Guid ticketId, byte statusId)
         {
-            var existingTicket = _ticketRepository.GetTicketById(Guid.Parse(ticketId));
+            var existingTicket = _ticketRepository.GetTicketById(ticketId);
 
             existingTicket.StatusId = statusId;
 
@@ -300,12 +291,11 @@ namespace ASI.Basecode.Services.Services
             _ticketActivityRepository.Add(newActivity);
         }
 
-        public void Delete(String id)
+        public void Delete(Guid ticketId)
         {
-            Guid guid = Guid.Parse(id);
             // Delete the ticket activities associated with the ticket
-            var activitites = _ticketActivityRepository.GetActivitiesByTicketId(guid);
-            var activities = _ticketActivityRepository.RetrieveAll().Where(s => s.TicketId.ToString() == id).ToList();
+            var activitites = _ticketActivityRepository.GetActivitiesByTicketId(ticketId);
+            var activities = _ticketActivityRepository.RetrieveAll().Where(s => s.TicketId == ticketId).ToList();
 
             foreach (var activity in activities)
             {
@@ -315,13 +305,12 @@ namespace ASI.Basecode.Services.Services
             // Delete the ticket messages associated with the ticket
 
             // Delete the ticket itself
-            _ticketRepository.Delete(id);
+            _ticketRepository.Delete(ticketId);
         }
 
-        public TicketViewModel GetById(string id)
+        public TicketViewModel GetById(Guid ticketId)
         {
-            Guid guid = Guid.Parse(id);
-            var ticket = _ticketRepository.GetTicketById(guid);
+            var ticket = _ticketRepository.GetTicketById(ticketId);
 
             if (ticket == null)
             {
@@ -337,13 +326,13 @@ namespace ASI.Basecode.Services.Services
             var priorities = _priorityRepository.RetrieveAll().ToDictionary(p => p.PriorityId, p => p.PriorityName);
             var statuses = _statusRepository.RetrieveAll().ToDictionary(st => st.StatusId, st => st.StatusName);
             var users = _userRepository.GetUsersByIds(userIds).ToDictionary(u => u.UserId, u => u.Name);
-            var ticketActivities = _ticketActivityRepository.GetActivitiesByTicketId(guid)
+            var ticketActivities = _ticketActivityRepository.GetActivitiesByTicketId(ticketId)
                 .OrderByDescending(activity => activity.ModifiedAt)
                 .ToList();
 
             var latestUpdate = ticketActivities.FirstOrDefault();
-            var latestUpdateDate = DateTime.Now; // Default value
-            var latestUpdateMessage = "No Ticket Activity"; // Default message
+            var latestUpdateDate = DateTime.Now;
+            var latestUpdateMessage = "No Ticket Activity";
 
             if (latestUpdate != null)
             {
@@ -368,7 +357,7 @@ namespace ASI.Basecode.Services.Services
 
             var ticketViewModel = new TicketViewModel
             {
-                TicketId = ticket.TicketId.ToString(),
+                TicketId = ticket.TicketId,
                 Title = ticket.Title,
                 Description = ticket.Description,
                 DateCreated = ticket.DateCreated,
@@ -422,15 +411,15 @@ namespace ASI.Basecode.Services.Services
         {
             TicketMessage newMessage = new TicketMessage();
             newMessage.MessageId = Guid.NewGuid();
-            newMessage.TicketId = Guid.Parse(message.TicketId);
+            newMessage.TicketId = message.TicketId;
             newMessage.MessageBody = message.Message;
-            newMessage.UserId = Guid.Parse(message.SentById);
+            newMessage.UserId = message.SentById;
             newMessage.PostedAt = DateTime.Now;
 
             _ticketMessageRepository.Add(newMessage);
         }
 
-        public IEnumerable<TicketMessageViewModel> GetMessages(string id)
+        public IEnumerable<TicketMessageViewModel> GetMessages(Guid id)
         {
 
             var messages = _ticketMessageRepository.GetMessagesByTicketId(id);
@@ -442,10 +431,10 @@ namespace ASI.Basecode.Services.Services
 
             var model = messages.Select(message => new TicketMessageViewModel
             {
-                MessageId = message.MessageId.ToString(),
-                TicketId = message.TicketId.ToString(),
+                MessageId = message.MessageId,
+                TicketId = message.TicketId,
                 Message = message.MessageBody,
-                SentById = message.UserId.ToString(),
+                SentById = message.UserId,
                 SentByName = userDictionary[message.UserId],
                 PostedAt = message.PostedAt,
             });
@@ -453,10 +442,9 @@ namespace ASI.Basecode.Services.Services
             return model;
         }
 
-        public IEnumerable<TicketActivityViewModel> GetHistory(string id)
+        public IEnumerable<TicketActivityViewModel> GetHistory(Guid ticketId)
         {
-            Guid guid = Guid.Parse(id);
-            var activities = _ticketActivityRepository.GetActivitiesByTicketId(guid);
+            var activities = _ticketActivityRepository.GetActivitiesByTicketId(ticketId);
 
             // Fetch all users involved in the activities to avoid multiple database calls
             var userIds = activities.Select(a => a.ModifiedBy).Distinct();
@@ -470,9 +458,9 @@ namespace ASI.Basecode.Services.Services
 
             var activityViewModels = activities.Select(activity => new TicketActivityViewModel
             {
-                HistoryId = activity.HistoryId.ToString(),
-                TicketId = activity.TicketId.ToString(),
-                ModifiedBy = activity.ModifiedBy.ToString(),
+                HistoryId = activity.HistoryId,
+                TicketId = activity.TicketId,
+                UserId = activity.ModifiedBy,
                 ModifiedByName = userDictionary[activity.ModifiedBy].Name,
                 ModifiedAt = activity.ModifiedAt,
                 OperationName = operationDictionary[activity.OperationId].Name,
@@ -482,16 +470,11 @@ namespace ASI.Basecode.Services.Services
             return activityViewModels;
         }
 
-        public void AssignAgent(string ticketId, string userId)
+        public void AssignAgent(Guid ticketId, Guid userId)
         {
-            var adminId = _sessionHelper.GetUserIdFromSession().ToString();
+            var existingTicket = _ticketRepository.GetTicketById(ticketId);
 
-            Guid ticketGuid = Guid.Parse(ticketId);
-            Guid userGuid = Guid.Parse(userId);
-
-            var existingTicket = _ticketRepository.GetTicketById(ticketGuid);
-
-            existingTicket.AssignedAgent = userGuid;
+            existingTicket.AssignedAgent = userId;
             existingTicket.StatusId = 2;
             _ticketRepository.Update(existingTicket);
 
@@ -503,6 +486,20 @@ namespace ASI.Basecode.Services.Services
 
             // Add notification for the user to inform that there is an assigned agent for it
             _notificationService.Add(ticketId, existingTicket.CreatedBy.ToString());
+        }
+
+        public void AddFeedback(FeedbackViewModel model)
+        {
+            var existingFeedback = _feedbackRepository.GetFeedbackByTicketId(model.TicketId);
+
+            if (existingFeedback == null)
+            {
+                Feedback feedback = _mapper.Map<Feedback>(model);
+                feedback.UserId = _sessionHelper.GetUserIdFromSession();
+                feedback.FeedbackId = Guid.NewGuid();
+                feedback.DateCreated = DateTime.Now;
+                _feedbackRepository.Add(feedback);
+            }
         }
 
         public Dictionary<string, int> GetTicketVolume()
@@ -540,9 +537,10 @@ namespace ASI.Basecode.Services.Services
                                 .OrderByDescending(g => g.ResolvedCount)
                                 .Take(5)
                                 .ToList();
+
             var result = topResolvers.Select(tr => new UserViewModel
             {
-                UserId = tr.UserId.ToString(),
+                UserId = (Guid) tr.UserId,
                 TeamName = _teamRepository.RetrieveAll().Where(t => t.TeamId ==
                             _userRepository.GetUsers().Where(u => u.UserId == tr.UserId).FirstOrDefault()?.TeamId)
                             .FirstOrDefault()?.TeamName ?? "No Team",
@@ -551,20 +549,6 @@ namespace ASI.Basecode.Services.Services
             }).ToList();
 
             return result;
-        }
-
-        public void AddFeedback(FeedbackViewModel model)
-        {
-            var existingFeedback = _feedbackRepository.GetFeedbackByTicketId(model.TicketId);
-
-            if (existingFeedback == null)
-            {
-                Feedback feedback = _mapper.Map<Feedback>(model);
-                feedback.UserId = _sessionHelper.GetUserIdFromSession();
-                feedback.FeedbackId = Guid.NewGuid();
-                feedback.DateCreated = DateTime.Now;
-                _feedbackRepository.Add(feedback);
-            }
         }
 
         #region private methods

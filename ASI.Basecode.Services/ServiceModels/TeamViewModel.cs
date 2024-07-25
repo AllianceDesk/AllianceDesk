@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ASI.Basecode.Services.ServiceModels
 {
     public class TeamViewModel
     {
-        public string TeamId { get; set; }
-        [Required(ErrorMessage = "Team Name is required.")]
+        public Guid TeamId { get; set; }
         public string TeamName { get; set; }
         public char FirstLetter => !string.IsNullOrEmpty(TeamName) ? TeamName.Trim()[0] : '?';
         [Required(ErrorMessage = "Team Description is required.")]

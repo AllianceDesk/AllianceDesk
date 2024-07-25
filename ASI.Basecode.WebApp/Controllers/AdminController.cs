@@ -54,14 +54,14 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpGet("/Dashboard")]
         public ActionResult Dashboard()
         {
-            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
 
             if (userRole != 1)
             {
                 return RedirectToAction("Index", "AccessDenied");
             }
 
-            ViewBag.Name = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).Name;
+            ViewBag.Name = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).Name;
             ViewBag.AdminSidebar = "Overview";
             var model = new AdminDashboardViewModel
             {
@@ -78,7 +78,7 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpGet("AnalyticsOverallMetrics")]
         public IActionResult AnalyticsOverallMetrics()
         {
-            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
 
             if (userRole != 1)
             {
@@ -130,7 +130,7 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpGet("AnalyticsAgentMetric")]
         public IActionResult AgentMetric()
         {
-            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
 
             if (userRole != 1)
             {
@@ -150,7 +150,7 @@ namespace ASI.Basecode.WebApp.Controllers
             var statuses = _ticketService.GetStatuses().ToList();
             var priorities = _ticketService.GetPriorities().ToList();
 
-            var tickets = _ticketService.RetrieveAll();
+            var tickets = _ticketService.GetAllTickets();
 
             var ticketsByAgentQuery = tickets
                 .Where(t => t.DateCreated >= startOfWeek && t.DateCreated < endOfWeek)
@@ -212,7 +212,7 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpGet("AnalyticsTeamMetric")]
         public IActionResult TeamMetrics()
         {
-            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
 
             if (userRole != 1)
             {
@@ -234,7 +234,7 @@ namespace ASI.Basecode.WebApp.Controllers
             var statuses = _ticketService.GetStatuses().ToList();
             var priorities = _ticketService.GetPriorities().ToList();
 
-            var tickets = _ticketService.RetrieveAll();
+            var tickets = _ticketService.GetAllTickets();
 
             var ticketsByAgentQuery = tickets
                 .Where(t => t.DateCreated >= startOfWeek && t.DateCreated < endOfWeek)
@@ -291,7 +291,7 @@ namespace ASI.Basecode.WebApp.Controllers
 
             var teamTicketCounts = teams.Select(team =>
             {
-                var teamAgents = agents.Where(a => a.TeamId == team.TeamId.ToString()).ToList();
+                var teamAgents = agents.Where(a => a.TeamId == team.TeamId).ToList();
 
                 var teamTickets = teamAgents
                     .SelectMany(a => ticketsByAgent.ContainsKey(a.UserId) ? ticketsByAgent[a.UserId] : new List<TicketViewModel>())
@@ -337,7 +337,7 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpGet("ViewUser")]
         public ActionResult ViewUser(string searchString)
         {
-            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
 
             if (userRole != 1)
             {
@@ -353,7 +353,7 @@ namespace ASI.Basecode.WebApp.Controllers
                                             Name = u.Name,
                                             Email = u.Email,
                                             RoleId = u.RoleId,
-                                            UserId = u.UserId.ToString(),
+                                            UserId = u.UserId,
                                         })
                                         .OrderBy(u => u.Name)
                                         .ToList();
@@ -366,7 +366,7 @@ namespace ASI.Basecode.WebApp.Controllers
                                             Name = u.Name,
                                             Email = u.Email,
                                             RoleId = u.RoleId,
-                                            UserId = u.UserId.ToString(),
+                                            UserId = u.UserId,
                                         })
                                         .OrderBy(u => u.Name)
                                         .ToList();
@@ -389,7 +389,7 @@ namespace ASI.Basecode.WebApp.Controllers
         /// 
         public IActionResult UserDetails(string UserId)
         {
-            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
 
             if (userRole != 1)
             {
@@ -405,7 +405,7 @@ namespace ASI.Basecode.WebApp.Controllers
             var team = _userService.GetTeams().FirstOrDefault(t => t.TeamId.Equals(data.TeamId));
             var userModel = new UserViewModel
             {
-                UserId = UserId,
+                UserId = Guid.Parse(UserId),
                 Name = data.Name,
                 Email = data.Email,
                 RoleId = data.RoleId,
@@ -424,7 +424,7 @@ namespace ASI.Basecode.WebApp.Controllers
         /// <returns> Add User</returns>
         public IActionResult AddUser()
         {
-            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
 
             if (userRole != 1)
             {
@@ -475,7 +475,7 @@ namespace ASI.Basecode.WebApp.Controllers
         /// 
         public IActionResult UserEdit(string UserId, bool resetPassword)
         {
-            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
 
             if (userRole != 1)
             {
@@ -491,15 +491,15 @@ namespace ASI.Basecode.WebApp.Controllers
 
             var userModel = new UserViewModel
             {
-                UserId = user.UserId.ToString(),
+                UserId = user.UserId,
                 UserName = user.Username,
                 Name = user.Name,
                 Email = user.Email,
                 Password = PasswordManager.DecryptPassword(user.Password),
                 RoleId = user.RoleId,
-                TeamId = user.TeamId?.ToString(),
+                TeamId = user.TeamId,
                 RoleName = _userService.GetUserRoles().FirstOrDefault(r => r.RoleId == user.RoleId).RoleName,
-                TeamName = _userService.GetTeams().FirstOrDefault(t => t.TeamId == user.TeamId.ToString())?.TeamName
+                TeamName = _userService.GetTeams().FirstOrDefault(t => t.TeamId == user.TeamId)?.TeamName
             };
 
             if (resetPassword)
@@ -550,7 +550,7 @@ namespace ASI.Basecode.WebApp.Controllers
         /// <returns> View User </returns>
         public IActionResult UserDelete(string UserId)
         {
-            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
 
             if (userRole != 1)
             {
@@ -559,7 +559,7 @@ namespace ASI.Basecode.WebApp.Controllers
 
             var userToDelete = new UserViewModel
             {
-                UserId = UserId,
+                UserId = Guid.Parse(UserId),
             };
 
             return PartialView("UserDelete", userToDelete);
@@ -572,7 +572,7 @@ namespace ASI.Basecode.WebApp.Controllers
         /// <returns> View User </returns>
         public IActionResult PostUserDelete(string UserId)
         {
-            _userService.DeleteUser(UserId);
+            _userService.DeleteUser(Guid.Parse(UserId));
 
             return RedirectToAction("ViewUser");
         }
@@ -585,7 +585,7 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpGet("/ViewTeams")]
         public IActionResult ViewTeams()
         {
-            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
 
             if (userRole != 1)
             {
@@ -662,7 +662,7 @@ namespace ASI.Basecode.WebApp.Controllers
         /// <returns> Add User</returns>
         public IActionResult AddTeam()
         {
-            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
 
             if (userRole != 1)
             {
@@ -706,7 +706,7 @@ namespace ASI.Basecode.WebApp.Controllers
         [Route("Tickets/{id?}")]
         public IActionResult Tickets(string? id, string? status)
         {
-            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
 
             if (userRole != 1)
             {
@@ -717,7 +717,7 @@ namespace ASI.Basecode.WebApp.Controllers
             ViewBag.AdminSidebar = "Tickets";
 
             // Retrieve all tickets once
-            var allTickets = _ticketService.RetrieveAll();
+            var allTickets = _ticketService.GetAllTickets();
 
             // Handle the case where status is provided
             if (status != null)
@@ -737,8 +737,9 @@ namespace ASI.Basecode.WebApp.Controllers
             // Handle the case where id is provided
             if (id != null)
             {
-                var ticketId = id.Trim();
-                var ticket = _ticketService.GetById(id);
+                Guid ticketId = Guid.Parse(id);
+                
+                var ticket = _ticketService.GetById(ticketId);
                 return View("/Views/Admin/TicketDetail.cshtml", ticket);
             }
 
@@ -750,18 +751,18 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpGet("Tickets/Assignment")]
         public IActionResult TicketAssignment(string id)
         {
-            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
 
             if (userRole != 1)
             {
                 return RedirectToAction("Index", "AccessDenied");
             }
 
-            var ticket = _ticketService.RetrieveAll()
+            var ticket = _ticketService.GetAllTickets()
                 .Where(t => t.TicketId.ToString() == id)
                 .FirstOrDefault();
 
-            var tickets = _ticketService.RetrieveAll();
+            var tickets = _ticketService.GetAllTickets();
 
             // Retrieve all agents (assuming RoleId 2 corresponds to agents)
 
@@ -771,11 +772,11 @@ namespace ASI.Basecode.WebApp.Controllers
             {
                 if (agent.TeamId != null)
                 {
-                    agent.TeamName = _userService.GetTeams().Where(t => t.TeamId.ToString() == agent.TeamId).FirstOrDefault().TeamName;
+                    agent.TeamName = _userService.GetTeams().Where(t => t.TeamId == agent.TeamId).FirstOrDefault().TeamName;
                 }
             }
 
-            var currentAgentId = ticket.AgentId.ToString();
+            var currentAgentId = ticket.AgentId;
             var availableAgents = agents.Where(agent => agent.UserId != currentAgentId).ToList();
 
             var assignedTicketCounts = agents
