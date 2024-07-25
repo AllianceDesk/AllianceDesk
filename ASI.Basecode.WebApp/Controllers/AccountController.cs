@@ -88,14 +88,8 @@ namespace ASI.Basecode.WebApp.Controllers
         {
             HttpContext.Session.SetString("HasSession", "Exist");
 
-            //User user = null;
-            /*            User user = new() { UserId = Guid.NewGuid(), Username = "0", Password = "Password" };
-
-                        await this._signInManager.SignInAsync(user);
-                        this._session.SetString("UserName", model.UserName);
-
-                        return RedirectToAction("Index", "Home");*/
             User user = null;
+
             var loginResult = _userService.AuthenticateUser(model.UserName, model.Password, ref user);
             if (loginResult == LoginResult.Success)
             {
@@ -113,7 +107,7 @@ namespace ASI.Basecode.WebApp.Controllers
                 {
                     return RedirectToAction("Dashboard", "Agent");
                 }
-                else if(userRole == 3)
+                else if (userRole == 3)
                 {
                     return RedirectToAction("Tickets", "User");
                 }
@@ -121,8 +115,7 @@ namespace ASI.Basecode.WebApp.Controllers
             }
             else
             {
-                // 認証NG
-                TempData["ErrorMessage"] = "Incorrect UserId or Password";
+                TempData["ErrorMessage"] = "Incorrect Username or Password";
                 return View();
             }
         }
@@ -153,7 +146,7 @@ namespace ASI.Basecode.WebApp.Controllers
                 _userService.AddUser(model);
                 return RedirectToAction("Login", "Account");
             }
-            catch(InvalidDataException ex)
+            catch (InvalidDataException ex)
             {
                 TempData["ErrorMessage"] = ex.Message;
             }

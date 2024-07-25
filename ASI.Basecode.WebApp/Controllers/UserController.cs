@@ -10,8 +10,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Drawing.Printing;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -51,10 +49,12 @@ namespace ASI.Basecode.WebApp.Controllers
             this._articleService = articleService;
         }
 
+        #region User Navigation
+
         [HttpGet("Preferences")]
         public IActionResult GetPreference()
         {
-            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
 
             if (userRole != 3)
             {
@@ -82,32 +82,41 @@ namespace ASI.Basecode.WebApp.Controllers
                 if (ModelState.IsValid)
                 {
                     _userService.UpdatePreference(model);
-                    // TODO: Add Toastr notification for this
-                    return Ok(new { message = "Preferences updated successfully" });
+                    return Ok(new { success = true, message = "Preferences updated successfully" });
                 }
                 else
                 {
                     var errors = ModelState.Values.SelectMany(v => v.Errors)
                                                  .Select(e => e.ErrorMessage);
-                    return BadRequest(new { errors });
+                    return BadRequest(new { success = false, errors });
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error updating user preferences");
-                return StatusCode(500, "Error updating user preferences");
+                return StatusCode(500, new { success = false, message = "Error updating user preferences" });
             }
         }
+
+        #endregion
+
+        #region Tickets
 
         [HttpGet("Tickets")]
         public IActionResult Tickets(byte? status, string? searchTerm, string? sortOrder, int? page)
         {
-            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
+
+            if (userRole == null || userRole == 0)
+            {
+                return RedirectToAction("Account", "Login");
+            }
 
             if (userRole != 3)
             {
                 return RedirectToAction("Index", "AccessDenied");
             }
+
 
             var userPreference = _userService.GetUserPreference();
             var pageSize = 10;
@@ -118,34 +127,35 @@ namespace ASI.Basecode.WebApp.Controllers
 
                 if (status == null)
                 {
-                    switch (userPreference.DefaultTicketView)
+                    status ??= userPreference switch
                     {
-                        case "Open":
-                            status = 1;
-                            break;
-                        case "Assigned":
-                            status = 2;
-                            break;
-                        case "In Progress":
-                            status = 3;
-                            break;
-                        case "Resolved":
-                            status = 4;
-                            break;
-                        case "Closed":
-                            status = 5;
-                            break;
-                    }
+                        { DefaultTicketView: "Open" } => 1,
+                        { DefaultTicketView: "Assigned" } => 2,
+                        { DefaultTicketView: "In Progress" } => 3,
+                        { DefaultTicketView: "Resolved" } => 4,
+                        { DefaultTicketView: "Closed" } => 5,
+                        _ => status
+                    };
                 }
             }
 
-            var tickets = _ticketService.GetUserTickets(_sessionHelper.GetUserIdFromSession(), status, searchTerm, sortOrder, page);
+            var tickets = _ticketService.GetUserTickets(_sessionHelper.GetUserIdFromSession()).AsEnumerable();
 
+            if (status != 0)
+            {
+                tickets = tickets.Where(t => t.StatusId == status);
+            }
+
+            if (!String.IsNullOrEmpty(searchTerm))
+            {
+                tickets = tickets.Where(t => t.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
+            }
+
+            var count = tickets.Count();
             var currentPage = page ?? 1;
             var currentStatus = status ?? 0;
             var currentSearchTerm = searchTerm ?? "";
 
-            var count = tickets.Count();
             var statuses = _ticketService.GetStatuses()
                 .Select(c => new KeyValuePair<string, string>(c.StatusId.ToString(), c.StatusName))
                 .ToList();
@@ -168,7 +178,6 @@ namespace ASI.Basecode.WebApp.Controllers
                                  .AsQueryable();
             }
 
-            // Create view model and return view
             var model = new UserTicketsViewModel
             {
                 Tickets = tickets,
@@ -179,7 +188,6 @@ namespace ASI.Basecode.WebApp.Controllers
                 Statuses = statuses,
                 Categories = categories,
                 Priorities = priorities,
-                Agents = agents,
                 Favorites = _articleService.RetrieveFavorites(),
             };
 
@@ -187,7 +195,7 @@ namespace ASI.Basecode.WebApp.Controllers
         }
 
         [HttpGet("Tickets/{id}")]
-        public IActionResult Ticket(string id)
+        public IActionResult Ticket(Guid id)
         {
             var ticket = _ticketService.GetById(id);
 
@@ -220,72 +228,28 @@ namespace ASI.Basecode.WebApp.Controllers
             return View(ticket);
         }
 
+
         [HttpPost("Tickets/{id}/Delete")]
         public IActionResult TicketDelete(string id)
         {
-
-            var ticket = _ticketService.GetById(id);
+            Guid ticketId = Guid.Parse(id);
+            var ticket = _ticketService.GetById(ticketId);
 
             if (ticket == null)
             {
                 return NotFound();
             }
 
-            _ticketService.Delete(id);
+            _ticketService.Delete(ticketId);
 
             return RedirectToAction("Tickets");
-        }
-
-        [HttpGet("Tickets/{id}/Edit")]
-        public IActionResult TicketEdit(string id)
-        {
-            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
-
-            if (userRole != 3)
-            {
-                return RedirectToAction("Index", "AccessDenied");
-            }
-
-            var ticket = _ticketService.GetById(id);
-
-            if (ticket == null)
-            {
-                return NotFound(); // Handle ticket not found scenario
-            }
-
-            var categories = _ticketService.GetCategories()
-                                   .Select(c => new SelectListItem
-                                   {
-                                       Value = c.CategoryId.ToString(),
-                                       Text = c.CategoryName
-                                   })
-                                   .ToList();
-
-            var priorities = _ticketService.GetPriorities()
-                                           .Select(p => new SelectListItem
-                                           {
-                                               Value = p.PriorityId.ToString(),
-                                               Text = p.PriorityName
-                                           })
-                                           .ToList();
-            // Pass data to ViewBag
-            ViewBag.Categories = new SelectList(categories, "Value", "Text", ticket.CategoryId.ToString());
-            ViewBag.Priorities = new SelectList(priorities, "Value", "Text", ticket.PriorityId.ToString());
-
-            return Json(new
-            {
-                id = ticket.TicketId,
-                title = ticket.Title,
-                description = ticket.Description,
-                categoryId = ticket.CategoryId,
-                priorityId = ticket.PriorityId
-            });
         }
 
         [HttpPost("Tickets/{id}/Edit"), ActionName("TicketEdit")]
         public IActionResult TicketEditPost(string id, UserTicketsViewModel model)
         {
-            var ticket = _ticketService.GetById(id); // Ensure this matches with the ID being passed
+            Guid ticketId = Guid.Parse(id);
+            var ticket = _ticketService.GetById(ticketId); // Ensure this matches with the ID being passed
             if (ticket == null)
             {
                 return NotFound();
@@ -297,18 +261,27 @@ namespace ASI.Basecode.WebApp.Controllers
             ticket.CategoryId = model.Ticket.CategoryId;
             ticket.PriorityId = model.Ticket.PriorityId;
 
-            // Call service to update the ticket
             _ticketService.Update(ticket);
 
+            // Add ticket activity
+            TicketActivityViewModel newActivity = new TicketActivityViewModel();
+            newActivity.TicketId = ticket.TicketId;
+            newActivity.OperationId = 2;
+            newActivity.UserId = _sessionHelper.GetUserIdFromSession();
+            newActivity.Message = "Ticket was updated by user";
+
+            _ticketService.AddActivity(newActivity);
+
             // Redirect to the Tickets action
-            return RedirectToAction("Tickets");
+            return RedirectToAction("Tickets", new { status = 4 });
         }
+
 
         [HttpPost("Tickets/{id}/Feedback")]
         public IActionResult TicketFeedback(string id, UserTicketsViewModel model)
         {
-            model.Feedback.TicketId = Guid.Parse(id);
-            var ticket = _ticketService.GetById(id);
+            var ticketId = Guid.Parse(id);
+            var ticket = _ticketService.GetById(ticketId);
 
             if (ticket == null)
             {
@@ -320,38 +293,67 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("Tickets");
         }
 
+
         [HttpPost("Tickets/{id}/Close")]
         public IActionResult TicketClose(string id)
         {
-            var ticket = _ticketService.GetById(id);
+            var ticketId = Guid.Parse(id);
+            var ticket = _ticketService.GetById(ticketId);
 
             if (ticket == null)
             {
                 return NotFound();
             }
 
-            _ticketService.UpdateStatus(id, 5);
+            _ticketService.UpdateStatus(ticketId, 4);
 
-            return RedirectToAction("Tickets");
+            TicketActivityViewModel activity = new TicketActivityViewModel
+            {
+                TicketId = ticketId,
+                OperationId = 5,
+                Message = "Ticket was closed by user",
+                ModifiedAt = DateTime.Now,
+                UserId = _sessionHelper.GetUserIdFromSession()
+            };
+
+            _ticketService.AddActivity(activity);
+
+            return RedirectToAction("Tickets", new { status = 4 });
         }
+
 
         [HttpPost("Tickets/{id}/Reopen")]
-        public IActionResult TicketReopen(string id)
+        public IActionResult ReopenTicket(string id)
         {
-            var ticket = _ticketService.GetById(id);
+            var ticketId = Guid.Parse(id);
+            var ticket = _ticketService.GetById(ticketId);
 
             if (ticket == null)
             {
                 return NotFound();
             }
 
-            _ticketService.UpdateStatus(id, 3);
+            _ticketService.UpdateStatus(ticketId, 2);
 
-            return RedirectToAction("Tickets");
+            TicketActivityViewModel activity = new TicketActivityViewModel
+            {
+                TicketId = ticketId,
+                OperationId = 6,
+                Message = "Ticket was reopened by user",
+                ModifiedAt = DateTime.Now,
+                UserId = _sessionHelper.GetUserIdFromSession()
+            };
+
+            _ticketService.AddActivity(activity);
+
+            return RedirectToAction("Tickets", new { status = 2 });
         }
 
-        /*[HttpGet("/KnowledgeBase")]
-        public IActionResult KnowledgeBase()
+        #endregion
+
+        #region KnowledgeBase
+        [HttpGet("/KnowledgeBaseModal")]
+        public IActionResult KnowledgeBaseModal()
         {
 
             var data = _articleService.RetrieveAll()
@@ -371,6 +373,7 @@ namespace ASI.Basecode.WebApp.Controllers
                 Articles = data
             };
             return View(viewModel);
-        }*/
+        }
+        #endregion
     }
 }

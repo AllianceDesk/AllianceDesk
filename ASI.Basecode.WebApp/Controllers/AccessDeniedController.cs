@@ -47,7 +47,7 @@ namespace ASI.Basecode.WebApp.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            var user = _userService.GetUserById(Guid.Parse(userId).ToString());
+            var user = _userService.GetUserById(Guid.Parse(userId));
             if (user == null)
             {
                 return NotFound();

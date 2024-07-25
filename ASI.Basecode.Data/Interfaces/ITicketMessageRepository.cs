@@ -13,6 +13,6 @@ namespace ASI.Basecode.Data.Interfaces
 
             void Add(TicketMessage ticketMessage);
 
-            IEnumerable<TicketMessage> GetMessagesByTicketId(string ticketId);
+            IEnumerable<TicketMessage> GetMessagesByTicketId(Guid ticketId);
     }
 }

@@ -9,7 +9,7 @@ namespace ASI.Basecode.Services.ServiceModels
 {
     public class UserViewModel
     {
-        public string UserId { get; set; }
+        public Guid UserId { get; set; }
 
         [Required(ErrorMessage = "Name is required.")]
         public string Name { get; set; }
@@ -30,17 +30,14 @@ namespace ASI.Basecode.Services.ServiceModels
         [Required(ErrorMessage = "Confirmation Password is required.")]
         [Compare("Password", ErrorMessage = "Password does not match")]
         public string ConfirmPassword { get; set; }
-
         public byte RoleId { get; set; }
         public string RoleName { get; set; }
 
         [Required(ErrorMessage = "Team Name is required.")]
         public string TeamName { get; set; }
-        public string TeamId { get; set; }
-
+        public Guid? TeamId { get; set; }
         public List<UserViewModel> Users { get; set; }
         public List<TicketActivityViewModel> RecentUserActivities { get; set; }
         public int TicketResolved { get; set; }
-
     }
 }
