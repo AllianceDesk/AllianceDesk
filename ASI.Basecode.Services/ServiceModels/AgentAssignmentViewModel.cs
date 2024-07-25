@@ -9,7 +9,7 @@ namespace ASI.Basecode.Services.ServiceModels
 {
     public class AgentAssignmentViewModel
     {   
-        public string TicketId { get; set; }
+        public Guid TicketId { get; set; }
         public string Title { get; set; }
         public DateTime CreatedAt { get; set; }
         public string Description { get; set; }
@@ -17,6 +17,6 @@ namespace ASI.Basecode.Services.ServiceModels
         public List<AnalyticsAgentMetricViewModel> AssignedTicketCounts { get; set; }
 
         //For submitting the form
-        public string SelectedAgentId { get; set; }
+        public Guid SelectedAgentId { get; set; }
     }
 }

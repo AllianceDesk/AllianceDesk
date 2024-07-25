@@ -54,7 +54,7 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpGet("Preferences")]
         public IActionResult GetPreference()
         {
-            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
 
             if (userRole != 3)
             {
@@ -102,7 +102,7 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpGet("Tickets")]
         public IActionResult Tickets(byte? status, string? searchTerm, string? sortOrder, int? page)
         {
-            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
 
             if (userRole != 3)
             {
@@ -118,24 +118,15 @@ namespace ASI.Basecode.WebApp.Controllers
 
                 if (status == null)
                 {
-                    switch (userPreference.DefaultTicketView)
+                    status ??= userPreference switch
                     {
-                        case "Open":
-                            status = 1;
-                            break;
-                        case "Assigned":
-                            status = 2;
-                            break;
-                        case "In Progress":
-                            status = 3;
-                            break;
-                        case "Resolved":
-                            status = 4;
-                            break;
-                        case "Closed":
-                            status = 5;
-                            break;
-                    }
+                        { DefaultTicketView: "Open" } => 1,
+                        { DefaultTicketView: "Assigned" } => 2,
+                        { DefaultTicketView: "In Progress" } => 3,
+                        { DefaultTicketView: "Resolved" } => 4,
+                        { DefaultTicketView: "Closed" } => 5,
+                        _ => status
+                    };
                 }
             }
 
@@ -168,7 +159,6 @@ namespace ASI.Basecode.WebApp.Controllers
                                  .AsQueryable();
             }
 
-            // Create view model and return view
             var model = new UserTicketsViewModel
             {
                 Tickets = tickets,
@@ -187,9 +177,9 @@ namespace ASI.Basecode.WebApp.Controllers
         }
 
         [HttpGet("Tickets/{id}")]
-        public IActionResult Ticket(string id)
+        public IActionResult Ticket(string ticketId)
         {
-            var ticket = _ticketService.GetById(id);
+            var ticket = _ticketService.GetById(Guid.Parse(ticketId));
 
             if (ticket == null)
             {
@@ -223,15 +213,15 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpPost("Tickets/{id}/Delete")]
         public IActionResult TicketDelete(string id)
         {
-
-            var ticket = _ticketService.GetById(id);
+            Guid ticketId = Guid.Parse(id);
+            var ticket = _ticketService.GetById(ticketId);
 
             if (ticket == null)
             {
                 return NotFound();
             }
 
-            _ticketService.Delete(id);
+            _ticketService.Delete(ticketId);
 
             return RedirectToAction("Tickets");
         }
@@ -239,14 +229,15 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpGet("Tickets/{id}/Edit")]
         public IActionResult TicketEdit(string id)
         {
-            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
 
             if (userRole != 3)
             {
                 return RedirectToAction("Index", "AccessDenied");
             }
 
-            var ticket = _ticketService.GetById(id);
+            var ticketId = Guid.Parse(id);
+            var ticket = _ticketService.GetById(ticketId);
 
             if (ticket == null)
             {
@@ -285,7 +276,8 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpPost("Tickets/{id}/Edit"), ActionName("TicketEdit")]
         public IActionResult TicketEditPost(string id, UserTicketsViewModel model)
         {
-            var ticket = _ticketService.GetById(id); // Ensure this matches with the ID being passed
+            var ticketId = Guid.Parse(id);
+            var ticket = _ticketService.GetById(ticketId);
             if (ticket == null)
             {
                 return NotFound();
@@ -307,8 +299,8 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpPost("Tickets/{id}/Feedback")]
         public IActionResult TicketFeedback(string id, UserTicketsViewModel model)
         {
-            model.Feedback.TicketId = Guid.Parse(id);
-            var ticket = _ticketService.GetById(id);
+            var ticketId = Guid.Parse(id);
+            var ticket = _ticketService.GetById(ticketId);
 
             if (ticket == null)
             {
@@ -323,14 +315,15 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpPost("Tickets/{id}/Close")]
         public IActionResult TicketClose(string id)
         {
-            var ticket = _ticketService.GetById(id);
+            var ticketId = Guid.Parse(id);
+            var ticket = _ticketService.GetById(ticketId);
 
             if (ticket == null)
             {
                 return NotFound();
             }
 
-            _ticketService.UpdateStatus(id, 5);
+            _ticketService.UpdateStatus(ticketId, 5);
 
             return RedirectToAction("Tickets");
         }
@@ -338,14 +331,15 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpPost("Tickets/{id}/Reopen")]
         public IActionResult TicketReopen(string id)
         {
-            var ticket = _ticketService.GetById(id);
+            var ticketId = Guid.Parse(id);
+            var ticket = _ticketService.GetById(ticketId);
 
             if (ticket == null)
             {
                 return NotFound();
             }
 
-            _ticketService.UpdateStatus(id, 3);
+            _ticketService.UpdateStatus(ticketId, 3);
 
             return RedirectToAction("Tickets");
         }

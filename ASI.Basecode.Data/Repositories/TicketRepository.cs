@@ -42,9 +42,9 @@ namespace ASI.Basecode.Data.Repositories
             }
         }
 
-        public void Delete(String id)
+        public void Delete(Guid id)
         {
-            var ticketToDelete = this.GetDbSet<Ticket>().FirstOrDefault(x => x.TicketId.ToString() == id);
+            var ticketToDelete = this.GetDbSet<Ticket>().FirstOrDefault(x => x.TicketId == id);
 
             if (ticketToDelete != null)
             {

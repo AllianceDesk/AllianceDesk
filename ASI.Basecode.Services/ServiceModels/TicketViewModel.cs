@@ -10,8 +10,7 @@ namespace ASI.Basecode.Services.ServiceModels
 {
     public class TicketViewModel
     {
-        public string TicketId { get; set; }
-
+        public Guid TicketId { get; set; }
         public string TicketNumber { get; set; }
 
         [Required(ErrorMessage = "Title is required")]
@@ -27,46 +26,46 @@ namespace ASI.Basecode.Services.ServiceModels
 
         [Required(ErrorMessage = "Priority is required")]
         public byte PriorityId { get; set; }
-
+       
         public byte StatusId { get; set; }
-
-        public string CreatorId { get; set; }
-
-        public string AgentId { get; set; }
-
-        public string TeamId { get; set; }
+        
+        public Guid CreatorId { get; set; }
+        
+        public Guid? AgentId { get; set; }
+        
+        public Guid? TeamId { get; set; }
+        
         public DateTime DateCreated { get; set; }
-
+        
         public List<IFormFile> AttachmentFiles { get; set; } = new List<IFormFile>();
-
+        
         public List<string> AttachmentStrings { get; set; } = new List<string>();
-
+        
         public string Priority { get; set; }
-
+        
         public string Status { get; set; }
-
+        
         public string Category { get; set; }
-
+        
         public string FeedbackId { get; set; }
+        
+        public string CreatorName { get; set; }
+        
+        public string TeamName { get; set; }
 
         public string AgentName { get; set; }
 
-        public string CreatorName { get; set; }
-
-        public string TeamName { get; set; }
-
         [FileSize(5)]
-        [FileTypes(new[] { "image/jpeg", "image/png", "image/gif" })]
         public IEnumerable<TicketActivityViewModel> TicketHistory { get; set; }
-
+        
         public IEnumerable<TicketMessageViewModel> TicketMessages { get; set; }
-
+        
         public string NewMessageBody { get; set; }
-
+        
         public DateTime DateAssigned { get; set; }
-
+        
         public TicketActivity LatestUpdate { get; set; }
-
+        
         public string RelativeTime
         {
             get
@@ -87,11 +86,15 @@ namespace ASI.Basecode.Services.ServiceModels
                 return $"{timespan.Days / 365} years ago";
             }
         }
-
+        
         public FeedbackViewModel Feedback { get; set; }
     }
 
 
+    /// <summary>
+    /// File Size Validation
+    /// </summary>
+    /// <seealso cref="System.ComponentModel.DataAnnotations.ValidationAttribute" />
     public class FileSizeAttribute : ValidationAttribute
     {
         private readonly int _maxSizeInMb;
@@ -107,41 +110,15 @@ namespace ASI.Basecode.Services.ServiceModels
             if (files == null)
                 return ValidationResult.Success;
 
+            long totalMb = 0;
             foreach (var file in files)
             {
-                if (file.Length > _maxSizeInMb * 1024 * 1024)
-                {
-                    return new ValidationResult($"Each file cannot be larger than {_maxSizeInMb} MB.");
-                }
+                totalMb += file.Length;
             }
 
-            return ValidationResult.Success;
-        }
-
-
-    }
-
-    public class FileTypesAttribute : ValidationAttribute
-    {
-        private readonly string[] _allowedTypes;
-
-        public FileTypesAttribute(string[] allowedTypes)
-        {
-            _allowedTypes = allowedTypes;
-        }
-
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
-        {
-            var files = value as List<IFormFile>;
-            if (files == null)
-                return ValidationResult.Success;
-
-            foreach (var file in files)
+            if (totalMb > _maxSizeInMb * 1024 * 1024)
             {
-                if (file.Length > 0 && !_allowedTypes.Contains(file.ContentType))
-                {
-                    return new ValidationResult("Only image files are allowed (JPEG, PNG, GIF).");
-                }
+                return new ValidationResult($"Total file size of images cannot be larger than {_maxSizeInMb} MB.");
             }
 
             return ValidationResult.Success;

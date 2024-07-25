@@ -77,14 +77,9 @@ namespace ASI.Basecode.Services.Services
             {
                 _mapper.Map(model, user);
                 user.UserId = Guid.NewGuid();
-                Console.WriteLine($"Generated UserId: {user.UserId}");
                 user.Username = model.UserName;
                 user.Email = model.Email;
                 user.Password = PasswordManager.EncryptPassword(model.Password);
-                /*user.CreatedTime = DateTime.Now;
-                user.UpdatedTime = DateTime.Now;
-                user.CreatedBy = System.Environment.UserName;
-                user.UpdatedBy = System.Environment.UserName;*/
                 user.RoleId = model.RoleId;
                 _repository.AddUser(user);
 
@@ -103,10 +98,10 @@ namespace ASI.Basecode.Services.Services
                 throw new InvalidDataException(Resources.Messages.Errors.UserExists);
             }
         }
-
+        
         public void UpdateUser(UserViewModel model)
         {
-            var existingData = _repository.GetUsers().Where(u => u.UserId.ToString() == model.UserId).FirstOrDefault();
+            var existingData = _repository.GetUsers().Where(u => u.UserId == model.UserId).FirstOrDefault();
             if (existingData != null)
             {
                 _mapper.Map(model, existingData);
@@ -115,22 +110,13 @@ namespace ASI.Basecode.Services.Services
                 existingData.Password = PasswordManager.EncryptPassword(model.Password);
                 existingData.Email = model.Email;
                 existingData.RoleId = model.RoleId;
-                if (!string.IsNullOrEmpty(model.TeamId))
-                {
-                    existingData.TeamId = Guid.Parse(model.TeamId);
-                }
-                else
-                {
-                    // Handle the case where model.TeamId is null or empty
-                    existingData.TeamId = null; // or set a default value if appropriate
-                }
-
+                existingData.TeamId = model.TeamId;
                 _repository.UpdateUser(existingData);
             }
 
         }
 
-        public void DeleteUser(string userId)
+        public void DeleteUser(Guid userId)
         {
             _repository.DeleteUser(userId);
         }
@@ -161,29 +147,20 @@ namespace ASI.Basecode.Services.Services
             return _repository.GetUsers().Where(u => u.RoleId == 3);
         }
 
-        public User GetUserById(string id)
+        public User GetUserById(Guid id)
         {
-            User user = _repository.GetUsers().Where(x => x.UserId.ToString() == id).FirstOrDefault();
-
-            if (user != null)
-            {
-                return user;
-            }
-
-            return null;
+            return _repository.GetUsers().Where(x => x.UserId == id).FirstOrDefault();
         }
 
         public IEnumerable<UserViewModel> GetAgents()
         {
             var agents = _repository.GetUsers().Where(x => x.RoleId == 2).ToList();
-
             return _mapper.Map<IEnumerable<UserViewModel>>(agents);
         }
 
         public IEnumerable<TeamViewModel> GetTeams()
         {
             var teams = _teamRepository.RetrieveAll().ToList();
-
             return _mapper.Map<IEnumerable<TeamViewModel>>(teams);
         }
 
@@ -216,35 +193,61 @@ namespace ASI.Basecode.Services.Services
 
         public List<TicketActivityViewModel> GetRecentUserActivity()
         {
-            var userActivity = _ticketActivityRepository.RetrieveAll()
-                                .OrderByDescending(a => a.ModifiedAt).Take(5)
-                                .Select(t => new TicketActivityViewModel
-                                {
-                                    HistoryId = t.HistoryId.ToString(),
-                                    TicketId = t.TicketId.ToString(),
-                                    Title = _ticketRepository.RetrieveAll().Where(i => i.TicketId == t.TicketId).FirstOrDefault().Title,
-                                    ModifiedBy = t.ModifiedBy.ToString(),
-                                    ModifiedByName = _repository.GetUsers().Where(u => u.UserId == t.ModifiedBy).FirstOrDefault().Name,
-                                    ModifiedAt = t.ModifiedAt,
-                                    Date = t.ModifiedAt.ToString("dd MMM yyyy, h:mm tt"),
-                                    OperationId = t.OperationId,
-                                    OperationName = _ticketActivityOperationRepository.RetrieveAll().Where(o => o.OperationId == t.OperationId).FirstOrDefault().Name,
-                                    Message = t.Message,
-                                }).ToList();
+            var recentActivity = _ticketActivityRepository.RetrieveAll()
+                             .OrderByDescending(a => a.ModifiedAt)
+                             .Take(5)
+                             .Select(t => new
+                             {
+                                 t.HistoryId,
+                                 t.TicketId,
+                                 t.ModifiedBy,
+                                 t.ModifiedAt,
+                                 t.OperationId,
+                                 t.Message
+                             })
+                             .ToList();
+
+            var tickets = _ticketRepository.RetrieveAll()
+                            .Where(i => recentActivity.Select(a => a.TicketId).Contains(i.TicketId))
+                            .ToDictionary(i => i.TicketId, i => i.Title);
+
+            var users = _repository.GetUsers()
+                        .Where(u => recentActivity.Select(a => a.ModifiedBy).Contains(u.UserId))
+                        .ToDictionary(u => u.UserId, u => u.Name);
+
+            var operations = _ticketActivityOperationRepository.RetrieveAll()
+                                .Where(o => recentActivity.Select(a => a.OperationId).Contains(o.OperationId))
+                                .ToDictionary(o => o.OperationId, o => o.Name);
+
+            var userActivity = recentActivity
+                .Select(t => new TicketActivityViewModel
+                {
+                    HistoryId = t.HistoryId,
+                    TicketId = t.TicketId,
+                    UserId = t.ModifiedBy,
+                    Title = tickets.ContainsKey(t.TicketId) ? tickets[t.TicketId] : string.Empty,
+                    ModifiedByName = users.ContainsKey(t.ModifiedBy) ? users[t.ModifiedBy] : string.Empty,
+                    ModifiedAt = t.ModifiedAt,
+                    Date = t.ModifiedAt.ToString("dd MMM yyyy, h:mm tt"),
+                    OperationId = t.OperationId,
+                    OperationName = operations.ContainsKey(t.OperationId) ? operations[t.OperationId] : string.Empty,
+                    Message = t.Message,
+                }).ToList();
+
             return userActivity;
         }
 
-        public List<TicketActivityViewModel> GetUserActivity(string userId)
+        public List<TicketActivityViewModel> GetUserActivity(Guid userId)
         {
             var userActivity = _ticketActivityRepository.RetrieveAll()
-                                .Where(u => u.ModifiedBy.ToString() == userId)
+                                .Where(u => u.ModifiedBy== userId)
                                 .OrderByDescending(a => a.ModifiedAt).Take(2)
                                 .Select(t => new TicketActivityViewModel
                                 {
-                                    HistoryId = t.HistoryId.ToString(),
-                                    TicketId = t.TicketId.ToString(),
+                                    HistoryId = t.HistoryId,
+                                    TicketId = t.TicketId,
                                     Title = _ticketRepository.RetrieveAll().Where(i => i.TicketId == t.TicketId).FirstOrDefault().Title,
-                                    ModifiedBy = t.ModifiedBy.ToString(),
+                                    UserId = t.ModifiedBy,
                                     ModifiedByName = _repository.GetUsers().Where(u => u.UserId == t.ModifiedBy).FirstOrDefault().Name,
                                     ModifiedAt = t.ModifiedAt,
                                     Date = t.ModifiedAt.ToString("dd MMM yyyy, h:mm tt"),

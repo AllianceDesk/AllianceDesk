@@ -16,13 +16,14 @@ namespace ASI.Basecode.Data.Interfaces
 
         Task UpdateTicketsAsync(List<Ticket> tickets);
 
-        void Delete(string id);
+        void Delete(Guid id);
 
         Ticket GetTicketById(Guid id);
 
         IEnumerable<Ticket> GetUserTicketsById(Guid id);
 
         IEnumerable<Ticket> GetAgentTicketsById(Guid id);
+        
         IQueryable<Ticket> GetWeeklyTickets(DateTime startOfWeek, DateTime endOfWeek);
     }
 }
