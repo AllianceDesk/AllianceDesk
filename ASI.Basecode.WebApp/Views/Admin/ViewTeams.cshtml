@@ -382,7 +382,7 @@
             var currentLength = textarea.value.length;
             var counterElement = document.getElementById(counterId);
 
-            counterElement.textContent = currentLength + '/' + maxLength + ' characters';
+            counterElement.textContent = currentLength + '/' + maxLength;
 
             // Optional: Add warning style if near the limit
             if (currentLength > maxLength - 10) {
