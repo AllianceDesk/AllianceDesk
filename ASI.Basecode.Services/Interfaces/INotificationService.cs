@@ -13,7 +13,7 @@ namespace ASI.Basecode.Services.Interfaces
     public interface INotificationService
     {
         IEnumerable<NotificationServiceModel> RetrieveAll();
-        void Add(NotificationServiceModel model);
+        void Add(string ticketId, string userId);
         void Delete(string notificationId);
     }
 }

@@ -24,6 +24,7 @@ namespace ASI.Basecode.WebApp.Controllers
         private readonly ITicketService _ticketService;
         private readonly ISessionHelper _sessionHelper;
         private readonly IArticleService _articleService;
+        private readonly ITeamService _teamService;
         
         /// <summary>
         /// Constructor
@@ -40,12 +41,14 @@ namespace ASI.Basecode.WebApp.Controllers
                               ITicketService ticketService,
                               ISessionHelper sessionHelper,
                               IArticleService articleService,
+                              ITeamService teamService,
                               IMapper mapper = null) : base(httpContextAccessor, loggerFactory, configuration, mapper)
         {
             this._userService = userService;
             this._ticketService = ticketService;
             this._sessionHelper = sessionHelper;
             this._articleService = articleService;
+            this._teamService = teamService;
         }
 
         [HttpGet("/Dashboard")]
@@ -343,6 +346,7 @@ namespace ASI.Basecode.WebApp.Controllers
 
             ViewBag.IsLoginOrRegister = false;
             ViewBag.AdminSidebar = "ViewUser";
+            ViewBag.SelectRoles = new List<string> { "All User", "User", "Agent", "Admin" };
             var users = _userService.GetAllUsers()
                                         .Select(u => new UserViewModel
                                         {
@@ -351,6 +355,7 @@ namespace ASI.Basecode.WebApp.Controllers
                                             RoleId = u.RoleId,
                                             UserId = u.UserId.ToString(),
                                         })
+                                        .OrderBy(u => u.Name)
                                         .ToList();
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -363,6 +368,7 @@ namespace ASI.Basecode.WebApp.Controllers
                                             RoleId = u.RoleId,
                                             UserId = u.UserId.ToString(),
                                         })
+                                        .OrderBy(u => u.Name)
                                         .ToList();
             }
 
@@ -403,7 +409,8 @@ namespace ASI.Basecode.WebApp.Controllers
                 Name = data.Name,
                 Email = data.Email,
                 RoleId = data.RoleId,
-                TeamName = _userService.GetTeams().FirstOrDefault(t => t.TeamId == data.TeamId.ToString())?.TeamName
+                TeamName = _userService.GetTeams().FirstOrDefault(t => t.TeamId == data.TeamId.ToString())?.TeamName,
+                RecentUserActivities = _userService.GetUserActivity(UserId),
             };
 
             return PartialView("UserDetails", userModel);
@@ -570,6 +577,11 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("ViewUser");
         }
 
+        /// <summary>
+        /// Go to the View Teams View
+        /// </summary>
+        /// <returns>View Teams</returns>
+        /// 
         [HttpGet("/ViewTeams")]
         public IActionResult ViewTeams()
         {
@@ -580,17 +592,67 @@ namespace ASI.Basecode.WebApp.Controllers
                 return RedirectToAction("Index", "AccessDenied");
             }
 
-            ViewBag.IsLoginOrRegister = false;
-            var teams = _userService.GetTeams()
-                                   .Select(t => new SelectListItem
-                                   {
-                                       Value = t.TeamId.ToString(),
-                                       Text = t.TeamName
-                                   })
-                                   .ToList();
-            ViewBag.Teams = new SelectList(teams, "Value", "Text");
+            var teams = _teamService.GetTeams()
+                                        .Select(u => new TeamViewModel
+                                        {
+                                            TeamName = u.TeamName,
+                                            TeamId = u.TeamId,
+                                            TeamDescription = u.TeamDescription,
+                                            DepartmentId = u.DepartmentId,
+                                            DepartmentName = _teamService.GetDepartmentName(u.DepartmentId),
+                                            TeamNumber = _teamService.GetTeamNumber(u.TeamId.ToString()),
+                                        })
+                                        .OrderBy(t => t.TeamName)
+                                        .ToList();
+
+            var viewModel = new TeamViewModel
+            {
+                Teams = teams
+            };
             ViewBag.AdminSidebar = "ViewUser";
-            return View();
+
+            return View(viewModel);
+        }
+
+        /// <summary>
+        /// Go to the Team Details View
+        /// </summary>
+        /// <returns>Team Details</returns>
+        /// 
+        [HttpGet("/TeamDetail")]
+        public IActionResult TeamDetail(string teamId)
+        {
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
+
+            if (userRole != 1)
+            {
+                return RedirectToAction("Index", "AccessDenied");
+            }
+
+            var data = _userService.GetAllUsers()
+                        .Where(x => x.TeamId.ToString() == teamId)
+                        .Select (u => new UserViewModel{
+                            Name = u.Name,
+                            UserName = u.Username,
+                            Email = u.Email,
+                            RoleId = u.RoleId,
+                        })
+                        .ToList();
+            var teamInfo = _teamService.GetTeams().Where(t => t.TeamId.ToString() == teamId).FirstOrDefault();
+            if (data == null)
+            {
+                return NotFound();
+            }
+            var agentModel = new TeamViewModel
+            {
+                TeamDescription = teamInfo.TeamDescription,
+                TeamName = teamInfo.TeamName,
+                DepartmentName = _teamService.GetDepartmentName(teamInfo.DepartmentId),
+                Agents = data,
+                TeamNumber = data.Count(),
+            };
+
+            return PartialView("TeamDetail", agentModel);
         }
 
         [HttpGet("/AddTeam")]
@@ -606,6 +668,17 @@ namespace ASI.Basecode.WebApp.Controllers
             {
                 return RedirectToAction("Index", "AccessDenied");
             }
+
+            var departments = _teamService.GetDepartments()
+                                   .Select(u => new SelectListItem
+                                   {
+                                       Value = u.DepartmentId.ToString(),
+                                       Text = u.DepartmentName
+                                   })
+                                   .ToList();
+
+            // Pass data to ViewBag
+            ViewBag.Departments = new SelectList(departments, "Value", "Text");
 
             return PartialView("AddTeam");
         }

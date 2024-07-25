@@ -1,6 +1,6 @@
 .admin-body {
-    padding-left: 6rem;
-    padding-right: 6rem;
+    padding-left: 4rem;
+    padding-right: 4rem;
     margin: auto;
     width: 100%;
     height: 100%;
@@ -25,7 +25,7 @@
 
 .j-search-container input {
     border: none;
-    padding: 0.5rem 1rem 0.5rem 2rem;
+    padding: 0.5rem 1rem 0.5rem 0rem;
     outline: none; 
 }
 
@@ -49,27 +49,62 @@
     font-size: 0.6rem;
 }
 
-.role-agent {
+.role-agent,
+.category-technical,
+.status-inprogress {
     color: #3818D9;
     border: 1px solid #A899F1;
     background-color: #F7F5FF;
 }
 
-.role-admin {
+.role-admin,
+.category-act-management,
+.priority-low,
+.status-resolved{
     color: #03781D;
     border: 1px solid #6DC580;
     background-color: #F0F9F2;
 }
 
-.agents {
-    background-color: #FFF;
+.role-user,
+.category-gen-question{
+    color: #780373;
+    border: 1px solid #C36DC5;
+    background-color: #F8F0F9;
 }
 
-.agents:hover,
-.selected-agent {
-    background-color: #FFE5E5;
-    box-shadow: 0px 5px 4px grey;
+.category-billing,
+.priority-high,
+.status-closed {
+    color: #780303;
+    border: 1px solid #C56D6D;
+    background-color: #F9F0F0;
 }
+
+.category-customer-support {
+    color: #037178;
+    border: 1px solid #6DAFC5;
+    background-color: #F0F5F9;
+}
+
+.category-others,
+.priority-medium,
+.status-open {
+    color: #787303;
+    border: 1px solid #C5C16D;
+    background-color: #F8F9F0;
+}
+
+.agents {
+    background-color: #FFF;
+    transition:  ease-in-out 300ms;
+}
+
+    .agents:hover,
+    .selected-agent {
+        background-color: #FFE5E5;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+    }
 
 .user-img-profile {
     height: 3.5rem;
@@ -357,7 +392,7 @@ a[data-td-none]:hover {
 }
 
     .pagination-container button {
-        padding: 0.5rem 1rem;
+        padding: 0.1rem 0.5rem;
         margin: 0 0.5rem;
         border: none;
         background-color: #E21818;
@@ -375,7 +410,13 @@ a[data-td-none]:hover {
 
 .agent-container {
     display: grid;
-    grid-template-columns: repeat(4, 25%);
+    grid-template-columns: 1fr 1fr 2fr 1fr;
+    align-items: center;
+}
+
+.agent-container-team {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr 1fr;
     align-items: center;
 }
 

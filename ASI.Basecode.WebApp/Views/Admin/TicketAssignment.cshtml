@@ -85,6 +85,9 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+
+        const teams = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        console.log("TEAMS ", teams);
         const AssigneeAgents = document.querySelectorAll("[data-agent-assignee]")
         const assignModalContainer = document.querySelector("[data-admin-assign-modal-container]")
 

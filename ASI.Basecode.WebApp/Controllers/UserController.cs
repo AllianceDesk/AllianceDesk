@@ -353,8 +353,6 @@ namespace ASI.Basecode.WebApp.Controllers
         /*[HttpGet("/KnowledgeBase")]
         public IActionResult KnowledgeBase()
         {
-            *//*ViewBag.SearchString = searchString;
-            ViewBag.CategoryString = category;*//*
 
             var data = _articleService.RetrieveAll()
                                         .Select(u => new ArticleViewModel
@@ -367,38 +365,6 @@ namespace ASI.Basecode.WebApp.Controllers
                                         })
                                         .OrderBy(u => u.Title)
                                         .ToList();
-            *//*if (!String.IsNullOrEmpty(searchString))
-            {
-                data = _articleService.RetrieveAll()
-                                        .Where(u => u.Title.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-                                        .Select(u => new ArticleViewModel
-                                        {
-                                            ArticleId = u.ArticleId,
-                                            Title = u.Title,
-                                            Body = u.Body,
-                                            CategoryNavigation = u.CategoryNavigation,
-                                            DateUpdated = u.DateUpdated,
-                                        })
-                                        .ToList();
-            }
-
-            if (category != "default")
-            {
-                if (!String.IsNullOrEmpty(category))
-                {
-                    data = _articleService.RetrieveAll()
-                                            .Where(u => u.CategoryNavigation.Contains(category, StringComparison.OrdinalIgnoreCase))
-                                            .Select(u => new ArticleViewModel
-                                            {
-                                                ArticleId = u.ArticleId,
-                                                Title = u.Title,
-                                                Body = u.Body,
-                                                CategoryNavigation = u.CategoryNavigation,
-                                                DateUpdated = u.DateUpdated,
-                                            })
-                                            .ToList();
-                }
-            }*//*
 
             var viewModel = new UserTicketsViewModel
             {

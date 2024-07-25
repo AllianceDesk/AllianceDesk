@@ -14,42 +14,66 @@
     <link rel="stylesheet" href="~/css/Admin.css" />
 }
 
-<div class="p-x-1" data-admin-edit-details>
+<div class="pl-1" data-admin-edit-details>
     <div class="flex-Row align-center justify-content-between p-y-2 border-b-2">
         <h2>Detail</h2>
         <u class="fa-solid fa-pen-to-square text-1-5 cursor-pointer color-inactive" data-admin-edit-btn data-user-id="@Model.UserId"></u>
     </div>
     <div class="flex p-t-1">
-        <div class="agents-details | margin-1 bg-white flex-Row flex-between p-y-1 p-x-1 align-center">
-            <div class="user-img-profile br-50 bg-grey"></div>
+        <div class="agents-details | margin-1 bg-white flex-Row flex-between p-y-1 p-x-1 align-center" style="border-radius: 5px;">
+            <div class="user-img-profile br-50 bg-grey" style="display: flex; justify-content: center; align-items: center;">
+                <span class="fw-semi text-1-5 color-black">@Html.DisplayFor(model => model.FirstLetter)</span>
+            </div>
             <div class="flex-col justify-content-center align-center">
                 <p class="fw-semi">@Html.DisplayFor(model => model.Name)</p>
                 <p class="text-sm">@Html.DisplayFor(model => model.Email)</p>
             </div>
             <div class="role-container role-agent fw-semi text-0-5">@roleMappings[Model.RoleId]</div>
         </div>
-        @if (Model.TeamName != null)
-        {
-            <div>
-                <h4>Team</h4>
-                <div class="agents-details | margin-1 bg-white flex-Row flex-between p-y-1 p-x-1 align-center">
-                    <div class="user-img-profile br-50 bg-grey"></div>
+        <div>
+            <h4>Team</h4>
+            @if (Model.TeamName != null)
+            {
+                <div class="agents-details | margin-1 bg-white flex-Row flex-between p-y-1 p-x-1 align-center" style="border-radius: 5px;">
                     <div class="flex-col justify-content-center align-center">
                         <p class="fw-semi">@Html.DisplayFor(model => model.TeamName)</p>
                     </div>
                 </div>
-            </div>
-        }
+            }
+            else
+            {
+                <div class="agents-details | margin-1 bg-white flex-Row gap-2 p-y-1 p-x-1 align-center" style="border-radius: 5px;">
+                    <div class="flex-col align-center">
+                        <p class="text-sm">This user does not belong to any team.</p>
+                        @* <p class="text-sm">a@team2</p> *@
+                    </div>
+                </div>
+            }
+        </div>
         <div>
             <h4>Recent Activity</h4>
-            <div class="agents-details | margin-1 bg-white flex-Row flex-between p-y-1 p-x-1 align-center">
-                <div class="user-img-profile br-50 bg-grey"></div>
-                <div class="flex-col justify-content-center align-center">
-                    <p class="fw-semi">Agent Name</p>
-                    <p class="text-sm">agentemail@gmail.com</p>
-                </div>
-                <div class="role-container role-agent fw-semi text-0-5">Agent</div>
-            </div>
+                @if (Model.RecentUserActivities.Count != 0)
+                {
+                    foreach (var activity in Model.RecentUserActivities)
+                    {
+                        <div class="agents-details | margin-1 bg-white flex-Row gap-2 p-y-1 p-x-1 align-center" style="border-radius: 5px;">
+                            @* <div class="user-img-profile br-50 bg-grey"></div> *@
+                            <div class="flex-col">
+                                <p class="text-sm color-inactive">@activity.Date</p>
+                                <p>@activity.ModifiedByName @activity.OperationName "@activity.Title"</p>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="agents-details | margin-1 bg-white flex-Row gap-2 p-y-1 p-x-1 align-center" style="border-radius: 5px;">
+                            <div class="flex-col align-center">
+                        <p class="text-sm">No recent activities</p>
+                                @* <p class="text-sm">a@team2</p> *@
+                            </div>
+                    </div>
+                }
         </div>
     </div>
 </div>

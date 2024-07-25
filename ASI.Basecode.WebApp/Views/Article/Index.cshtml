@@ -96,15 +96,15 @@ else if (ViewBag.RoleId == 2)
                         </div>
 
                         @Html.DropDownList("category", new Microsoft.AspNetCore.Mvc.Rendering.SelectList(new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>
-                    {
-                    new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Default", Value = "default" },
-                    new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Technical", Value = "Technical" },
-                    new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Billing", Value = "Billing" },
-                    new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "General Questions", Value = "General Questions" },
-                    new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Account Management", Value = "Account Management" },
-                    new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Customer Support", Value = "Customer Support" },
-                    new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Others", Value = "Others" }
-                    }, "Value", "Text", ViewBag.CategoryString), new { @class = "form-select", @aria_label = "Default select example", @style = "width: 16em; outline: none; box-shadow: none; border: 1px solid #ccc; background-color: whitesmoke;", @onchange = "document.getElementById('searchForm').submit();" })
+                        {
+                        new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Default", Value = "default" },
+                        new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Technical", Value = "Technical" },
+                        new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Billing", Value = "Billing" },
+                        new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "General Questions", Value = "General Questions" },
+                        new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Account Management", Value = "Account Management" },
+                        new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Customer Support", Value = "Customer Support" },
+                        new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Text = "Others", Value = "Others" }
+                        }, "Value", "Text", ViewBag.CategoryString), new { @class = "form-select", @aria_label = "Default select example", @style = "width: 16em; outline: none; box-shadow: none; border: 1px solid #ccc; background-color: whitesmoke;", @onchange = "document.getElementById('searchForm').submit();" })
                     </form>
                 </div>
             </div>
@@ -132,8 +132,8 @@ else if (ViewBag.RoleId == 2)
     else if (ViewBag.RoleId == 1)
     {
         @Html.Partial("Admin_Sidebar")
-        <div class="admin-body pt-4 relative bg-grey flex flex-col gap-1">
-            <div class="px-5">
+        <div class="admin-body py-3 relative bg-grey flex flex-col gap-1">
+            <div class="">
 
                 <div class="nav_one mb-3">
 
@@ -184,7 +184,7 @@ else if (ViewBag.RoleId == 2)
                 </div>
             </div>
 
-            <main>
+            <main class="flex flex-col gap-1 mt-4">
                 @foreach (var item in Model.Articles)
                 {
                     <a href="#" class="link_card" style="text-decoration: none; color: inherit;">
