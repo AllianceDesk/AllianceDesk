@@ -13,6 +13,7 @@ namespace ASI.Basecode.Services.ServiceModels
 
         [Required(ErrorMessage = "Name is required.")]
         public string Name { get; set; }
+        public char FirstLetter => !string.IsNullOrEmpty(Name) ? Name.Trim()[0] : '?';
 
         [Required(ErrorMessage = "Username is required.")]
         public string UserName { get; set; }

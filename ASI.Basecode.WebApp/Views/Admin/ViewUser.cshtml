@@ -77,7 +77,9 @@
                     @foreach (var item in Model.Users)
                     {
                         <div class="agents | cursor-pointer flex-Row flex-between p-y-1 p-x-1 align-center" data-agent-teams-agent data-user-id="@item.UserId">
-                            <div class="user-img-profile br-50 bg-red"></div>
+                            <div class="user-img-profile br-50 bg-red align-center font-weight-normal">
+                                @item.FirstLetter
+                            </div>
                             <div class="flex-col justify-content-center align-center">
                                 <p class="fw-semi text-1-5">@Html.DisplayFor(modelItem => item.Name)</p>
                                 <p>@Html.DisplayFor(modelItem => item.Email)</p>
@@ -315,7 +317,9 @@
                     userDiv.dataset.userId = item.UserId;
                     userDiv.innerHTML = `
                                             <div style="display: flex; align-items: center;">
-                                                <div class="user-img-profile br-50 bg-red"></div>
+                                                <div class="user-img-profile br-50 bg-red" style="display: flex; justify-content: center; align-items: center;">
+                                                    <span class="fw-semi text-1-5 color-white">${item.FirstLetter}</span>
+                                                </div>
                                             </div>
                                             <div style="display: flex; justify-content: center; align-items: center;">
                                                 <p class="fw-semi text-1-5">${item.Name}</p>
