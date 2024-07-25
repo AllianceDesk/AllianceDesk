@@ -100,6 +100,7 @@ namespace ASI.Basecode.WebApp.Controllers
         #endregion
 
         #region Tickets
+
         [HttpGet("Tickets")]
         public IActionResult Tickets(byte? status, string? searchTerm, string? sortOrder, int? page)
         {

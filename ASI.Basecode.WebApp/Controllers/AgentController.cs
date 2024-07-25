@@ -111,6 +111,10 @@ namespace ASI.Basecode.WebApp.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Goes to the Agents profile.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("AgentProfile")]
         public ActionResult AgentProfile()
         {
@@ -185,13 +189,6 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpGet("Tickets/{id}")]
         public IActionResult Ticket(string id)
         {
-            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
-
-            if (userRole != 2)
-            {
-                return RedirectToAction("Index", "AccessDenied");
-            }
-
             var ticket = _ticketService.GetById(Guid.Parse(id));
 
             if (ticket == null)
@@ -237,7 +234,6 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpGet("TicketDetail")]
         public ActionResult TicketDetail()
         {
-
             var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
 
             if (userRole != 2)
@@ -245,49 +241,26 @@ namespace ASI.Basecode.WebApp.Controllers
                 return RedirectToAction("Index", "AccessDenied");
             }
 
-            var userId = _sessionHelper.GetUserIdFromSession().ToString();
-            var user = _userService.GetUserById(Guid.Parse(userId));
-            if (user == null)
-            {
-                return NotFound();
-            }
+            ViewData["AgentSidebar"] = "Tickets";
 
             return this.View();
         }
 
         /// <summary>
-        /// Resolves the ticket.
+        /// Goes to the Ticket Assignment Page
         /// </summary>
-        /// <param name="ticketMessage">The ticket message.</param>
         /// <returns></returns>
-        [HttpPost("ResolveTicket")]
-        public IActionResult ResolveTicket(TicketMessageViewModel ticketMessage)
+        [HttpGet("TicketAssignment")]
+        public ActionResult TicketAssignment()
         {
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
 
-            var ticket = _ticketService.GetById(ticketMessage.TicketId);
-            var user = _userService.GetUserById(_sessionHelper.GetUserIdFromSession());
-
-            if (ticket == null)
+            if (userRole != 2)
             {
-                return NotFound();
+                return RedirectToAction("Index", "AccessDenied");
             }
 
-            _ticketService.UpdateStatus(ticket.TicketId, 3);
-
-            // Add Ticket Message
-            _ticketService.AddMessage(ticketMessage);
-
-            // Add Ticket Activity
-            TicketActivityViewModel ticketActivity = new TicketActivityViewModel
-            {
-                TicketId = ticket.TicketId,
-                OperationId = 7,
-                Message = $"Agent {user.Name} has resolved the ticket"
-            };
-
-            _ticketService.AddActivity(ticketActivity);
-
-            return RedirectToAction("Dashboard");
+            return this.View();
         }
 
         #endregion
@@ -302,9 +275,6 @@ namespace ASI.Basecode.WebApp.Controllers
             {
                 return RedirectToAction("Index", "AccessDenied");
             }
-
-            ViewBag.IsLoginOrRegister = false;
-            ViewBag.AgentSidebar = "ViewUser";
 
             var teamId = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).TeamId;
 
@@ -382,19 +352,6 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("Teams");
         }
 
-        [HttpGet("TicketSummary")]
-        public ActionResult TicketSummary()
-        {
-            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
-
-            if (userRole != 2)
-            {
-                return RedirectToAction("Index", "AccessDenied");
-            }
-
-            ViewBag.AgentSidebar = "Analytics";
-            return this.View();
-        }
 
         /// <summary>
         /// Goes to the Teams Page
@@ -558,6 +515,24 @@ namespace ASI.Basecode.WebApp.Controllers
         #endregion
 
         #region Analytics
+
+        /// <summary>
+        /// Goes to the Ticket Summary Page
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("TicketSummary")]
+        public ActionResult TicketSummary()
+        {
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
+
+            if (userRole != 2)
+            {
+                return RedirectToAction("Index", "AccessDenied");
+            }
+
+            ViewData["AgentSidebar"] = "Analytics";
+            return this.View();
+        }
 
         /// <summary>
         /// Goes to the Performance Report Page
