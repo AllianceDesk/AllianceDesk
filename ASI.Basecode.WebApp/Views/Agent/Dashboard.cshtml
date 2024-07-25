@@ -17,8 +17,9 @@
     <div class="admin-body p-y-3 relative bg-grey flex flex-col gap-1">
         <div class="flex-Row justify-content-between">
             <div id="buttonContainer">
+                <a asp-action="Dashboard" asp-route-status="All" class="btn btn-primary @(Model.CurrentStatus == "All" ? "activeButton" : "inactiveButton")">All</a>
                 <a asp-action="Dashboard" asp-route-status="Unresolved" class="btn btn-primary @(Model.CurrentStatus == "Unresolved" ? "activeButton" : "inactiveButton")">Unresolved</a>
-                <a asp-action="Dashboard" asp-route-status="Resolved" class ="btn btn-primary @(Model.CurrentStatus == "Resolved" ? "activeButton" : "inactiveButton")">Resolved</a>
+                <a asp-action="Dashboard" asp-route-status="Resolved" class="btn btn-primary @(Model.CurrentStatus == "Resolved" ? "activeButton" : "inactiveButton")">Resolved</a>
             </div>
 
             <div class="flex-Row gap-2 justify-content-center align-center mb-5 mt-3">
@@ -35,7 +36,7 @@
             @foreach (var item in Model.Tickets)
             {
                 <div class="ticket-container">
-                    <a href="#" data-bs-toggle="modal" data-bs-target="#viewTicket" class="ticket-link" data-ticket-id="@item.TicketId">
+                    <a data-bs-toggle="modal" data-bs-target="#viewTicket" class="ticket-link" data-ticket-id="@item.TicketId">
                         <div class="top-container">
                             @*  <img class="image" src="@item.Image" alt="image"> *@
                             <div class="nameDateContainer">
@@ -48,25 +49,25 @@
                         <p class="details">@item.Description</p>
                     </a>
                     <div class="btn-group option">
-						@if (item.Status == "In Progress")
-						{
-							<button class="btn icon-button" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-								<i class="bx bx-dots-vertical-rounded bx-sm icon-ticket" style="color: #808080;"></i>
-							</button>
-							<ul class="dropdown-menu menu">
-								<li>
-									<a class="dropdown-item item" href="#" data-bs-toggle="modal" data-bs-target="#resolveTicket" data-ticket-id="@item.TicketId">
+                        @if (item.Status == "In Progress")
+                        {
+                            <button class="btn icon-button" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bx bx-dots-vertical-rounded bx-sm icon-ticket" style="color: #808080;"></i>
+                            </button>
+                            <ul class="dropdown-menu menu">
+                                <li>
+                                    <a class="dropdown-item item" href="#" data-bs-toggle="modal" data-bs-target="#resolveTicket" data-ticket-id="@item.TicketId">
                                         <i class="bx bxs-check-circle bx-xs bx-fw" style="color: #808080;"></i>
-										Mark as Resolved
-									</a>
-								</li>
-							</ul>
-						}
+                                        Mark as Resolved
+                                    </a>
+                                </li>
+                            </ul>
+                        }
                     </div>
                 </div>
             }
         </div>
-      
+
         <div class="modal fade" id="viewTicket" tabindex="-1" aria-labelledby="viewTicket" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content">
@@ -91,7 +92,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="modal fade" id="resolveTicket" tabindex="-1" aria-labelledby="resolveTicket" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content p-3">
@@ -180,7 +181,7 @@
                     var ticketId = this.getAttribute('data-ticket-id');
                     document.getElementById('resolveTicketId').value = ticketId;
                     resolveTicketModal.show();
-                } 
+                }
             });
         });
 
@@ -210,28 +211,25 @@
             });
         });
 
-		document.getElementById('search-input').addEventListener('keypress', function (event) {
-			if (event.keyCode === 13) {
-				event.preventDefault(); // Prevent form submission
+        document.getElementById('search-input').addEventListener('keypress', function (event) {
+            if (event.keyCode === 13) {
+                event.preventDefault(); // Prevent form submission
 
-				var searchTerm = this.value;
-				var status = '@Model.CurrentStatus';
-				var url = '@Url.Action("Dashboard")';
+                var searchTerm = this.value;
+                var status = '@Model.CurrentStatus';
+                var url = '@Url.Action("Dashboard")';
 
-				// Construct the URL with the appropriate parameters
-				if (status !== 'All') {
-					url += '?status=' + encodeURIComponent(status);
-				}
+                // Construct the URL with the appropriate parameters
+                if (status !== 'All') {
+                    url += '?status=' + encodeURIComponent(status);
+                }
 
-				if (searchTerm) {
-					url += (url.indexOf('?') === -1 ? '?' : '&') + 'searchTerm=' + encodeURIComponent(searchTerm);
-				}
+                if (searchTerm) {
+                    url += (url.indexOf('?') === -1 ? '?' : '&') + 'searchTerm=' + encodeURIComponent(searchTerm);
+                }
 
-				location.replace(url);
-			}
-		});
+                location.replace(url);
+            }
+        });
     });
 </script>
-
-
-

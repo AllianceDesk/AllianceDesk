@@ -170,11 +170,6 @@ namespace ASI.Basecode.WebApp.Controllers
                 .ToList();
 
             var agents = _userService.GetAgents();
-            List<string> emails = new List<string>();
-            foreach(var agent in agents)
-            {
-                emails.Add(agent.Email);
-            }
 
 
             if (Math.Ceiling(tickets.Count() / (double)pageSize) > 1)
@@ -196,7 +191,6 @@ namespace ASI.Basecode.WebApp.Controllers
                 Categories = categories,
                 Priorities = priorities,
                 Favorites = _articleService.RetrieveFavorites(),
-                Emails = emails
             };
 
             return View(model);

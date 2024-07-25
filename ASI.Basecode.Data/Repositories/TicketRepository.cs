@@ -65,7 +65,7 @@ namespace ASI.Basecode.Data.Repositories
 
         public IQueryable<Ticket> GetAgentTicketsById(Guid id)
         {
-            return this.GetDbSet<Ticket>().Where(x => x.AssignedAgent != null && x.AssignedAgent == id);
+            return this.GetDbSet<Ticket>().Where(x => x.AssignedAgent == id);
         }
         
         public IQueryable<Ticket> GetWeeklyTickets(DateTime startOfWeek, DateTime endOfWeek)

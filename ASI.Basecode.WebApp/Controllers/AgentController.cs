@@ -64,16 +64,29 @@ namespace ASI.Basecode.WebApp.Controllers
                 return RedirectToAction("Index", "AccessDenied");
             }
 
-            var currentStatus = status ?? "Unresolved";
-            var tickets = _ticketService.GetAgentTickets(userId);
-
+            var currentStatus = status ?? "All";
             var pageSize = 10;
             var currentPage = page ?? 1;
             var currentSearchTerm = searchTerm ?? "";
 
-            var count = tickets.Count();
-            var agents = _userService.GetAgents();
+            // Fetch tickets from repository
+            IEnumerable<TicketViewModel> tickets = _ticketService.GetAgentTickets(userId);
 
+            if (currentStatus == "Unresolved")
+            {
+                tickets = tickets.Where(ticket => ticket.StatusId == 2);
+            } else if (currentStatus == "Resolved")
+            {
+                tickets = tickets.Where(ticket => ticket.StatusId == 3 || ticket.StatusId == 4);
+            }
+
+            if (!String.IsNullOrEmpty(searchTerm))
+            {
+                tickets = tickets.Where(t => t.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
+            }
+
+            // Apply pagination
+            var totalCount = tickets.Count();
             if (Math.Ceiling(tickets.Count() / (double)pageSize) > 1)
             {
                 tickets = tickets.Skip((currentPage - 1) * pageSize)
@@ -82,12 +95,13 @@ namespace ASI.Basecode.WebApp.Controllers
                                  .AsQueryable();
             }
 
-            // Create view model and return view
+            tickets = tickets.ToList();
+
             var model = new AgentDashboardViewModel
             {
                 Tickets = tickets,
                 CurrentPage = currentPage,
-                TotalPages = (int)Math.Ceiling(count / (double)pageSize),
+                TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize),
                 CurrentStatus = currentStatus,
                 CurrentSearchTerm = currentSearchTerm,
             };

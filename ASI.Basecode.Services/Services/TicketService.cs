@@ -114,13 +114,24 @@ namespace ASI.Basecode.Services.Services
 
         public IQueryable<TicketViewModel> GetAgentTickets(Guid agentId)
         {
-            // Retrieve IQueryable from repository
-            var ticketsQuery = _ticketRepository.GetAgentTicketsById(agentId);
-             
+
+            var ticketsQuery = _ticketRepository.GetAgentTicketsById(agentId)
+                .Include(t => t.Category)
+                .Include(t => t.Priority)
+                .Include(t => t.Status)
+                .Include(t => t.AssignedAgent)
+                .Include(t => t.CreatedByNavigation);
+
             return ticketsQuery.Select(s => new TicketViewModel
             {
                 TicketId = s.TicketId,
+                TicketNumber = s.TicketNumber,
                 Title = s.Title,
+                Description = s.Description,
+                DateCreated = s.DateCreated,
+                CategoryId = s.CategoryId,
+                PriorityId = s.PriorityId,
+                StatusId= s.StatusId,
                 Category = s.Category.CategoryName,
                 Priority = s.Priority.PriorityName,
                 Status = s.Status.StatusName,
