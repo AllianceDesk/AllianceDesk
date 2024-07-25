@@ -79,9 +79,6 @@
                 return response.json();
             })
             .then(data => {
-
-                console.log(data);
-
                 document.querySelector('#floatingName').value = data.name;
                 document.querySelector('#floatingEmail').value = data.email;
                 document.querySelector('#setDefaultTicketView').value = data.defaultTicketView || 'Set your preference';
@@ -92,8 +89,6 @@
                 } else {
                     document.querySelector('#setInAppNotifications').value = 2;
                 }
-
-                console.log(data);
             })
             .catch(error => console.error('Error fetching user preferences:', error));
 
@@ -124,9 +119,9 @@
 				})
 				.then(data => {
 					if (data.success) {
-						console.log('Preferences updated successfully:', data);
-					} else {
-						console.error('Error updating preferences (from server):', data.message || 'Unknown error');
+                        toastr.success('Preferences was updated');
+                    } else {
+                        toastr.error('Error in saving preferences');
 					}
 				})
 				.catch(error => {

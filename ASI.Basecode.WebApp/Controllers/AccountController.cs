@@ -88,14 +88,8 @@ namespace ASI.Basecode.WebApp.Controllers
         {
             HttpContext.Session.SetString("HasSession", "Exist");
 
-            //User user = null;
-            /*            User user = new() { UserId = Guid.NewGuid(), Username = "0", Password = "Password" };
-
-                        await this._signInManager.SignInAsync(user);
-                        this._session.SetString("UserName", model.UserName);
-
-                        return RedirectToAction("Index", "Home");*/
             User user = null;
+
             var loginResult = _userService.AuthenticateUser(model.UserName, model.Password, ref user);
             if (loginResult == LoginResult.Success)
             {
@@ -121,7 +115,7 @@ namespace ASI.Basecode.WebApp.Controllers
             }
             else
             {
-                TempData["ErrorMessage"] = "Incorrect UserId or Password";
+                TempData["ErrorMessage"] = "Incorrect Username or Password";
                 return View();
             }
         }

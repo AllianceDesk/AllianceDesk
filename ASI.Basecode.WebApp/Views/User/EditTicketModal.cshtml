@@ -1,0 +1,49 @@
+﻿@model ASI.Basecode.Services.ServiceModels.UserTicketsViewModel
+
+<div class="modal fade" id="editTicket" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content p-3">
+            <div id="main_editcard">
+                <div class="top_modal d-flex justify-content-between align-items-center mb-3">
+                    <h3>Edit Ticket</h3>
+                    <button type="button" class="btn" data-bs-dismiss="modal">
+                        <i class='bx bx-x bx-sm icon' style="color: #45474B; cursor: pointer;"></i>
+                    </button>
+                </div>
+
+                <form id="editTicketForm" asp-action="TicketEdit" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="Ticket.TicketId" id="Ticket_TicketId" />
+                    <div class="form-group mb-3">
+                        <input asp-for="Ticket.Title" class="form-control" placeholder="Ticket Title" aria-label="Title" id="Edit_Ticket_Title" />
+                        <span asp-validation-for="Ticket.Title" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <select asp-for="Ticket.CategoryId" class="form-select" aria-label="Category Options"
+                                asp-items="@(new SelectList(Model.Categories, "Key", "Value"))">
+                        </select>
+                        <span asp-validation-for="Ticket.CategoryId" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <select asp-for="Ticket.PriorityId" class="form-select" aria-label="Priority Options"
+                                asp-items="@(new SelectList(Model.Priorities, "Key", "Value"))">
+                        </select>
+                        <span asp-validation-for="Ticket.PriorityId" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <textarea asp-for="Ticket.Description" class="form-control" rows="10" placeholder="Description"></textarea>
+                        <span asp-validation-for="Ticket.Description" class="text-danger"></span>
+                    </div>
+                    <div class="button_card d-flex justify-content-between">
+                        <button type="button" class="btn attachment custom-button" style="background-color: #7E7E7E; color: white;">
+                            <i class='bx bx-image-add bx-xs bx-fw uh' style="align-self:center;"></i> Add Attachment
+                        </button>
+                        <button type="submit" class="btn attachment custom-button" style="background-color: #E21818; color: white;">
+                            <i class='bx bxl-telegram bx-xs bx-fw uh' style="align-self:center;"></i> Submit
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div> 
