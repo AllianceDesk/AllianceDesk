@@ -98,7 +98,7 @@
                                 </p>
                             </div>
 
-							@if (item.AgentName != "Unknown")
+							@if (item.AgentName != null && item.AgentName != "" && item.AgentName != "Unknown")
 							{
 								<div class="agent-container">
 									<div class="agent-name-date-container">
@@ -207,7 +207,7 @@
         @Html.Partial("DeleteTicketModal")
         @Html.Partial("TicketActionModal")
         @Html.Partial("SettingsModal")
-        @Html.Partial("AddFeedbackModal")
+        @Html.Partial("AddFeedbackModal", Model.Feedback)
     </main>
 
     <div id="sidebar" class="px-4">

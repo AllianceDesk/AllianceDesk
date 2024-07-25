@@ -103,9 +103,9 @@ namespace ASI.Basecode.WebApp.Controllers
                 RecipientId = data.RecipientId,
                 DateCreated = data.DateCreated,
                 TicketNumber = data.TicketNumber,
-                TicketStatus = _ticketService.GetById(data.TicketId).Status,
-                AgentName = _ticketService.GetById(data.TicketId).AgentName,
-                RoleId = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId,
+                TicketStatus = _ticketService.GetById(Guid.Parse(data.TicketId)).Status,
+                AgentName = _ticketService.GetById(Guid.Parse(data.TicketId)).AgentName,
+                RoleId = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId,
             };
 
             return PartialView("DetailModal", viewModal);

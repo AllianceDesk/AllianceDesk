@@ -325,14 +325,17 @@ namespace ASI.Basecode.WebApp.Controllers
             }
 
             var team = _userService.GetTeams().FirstOrDefault(t => t.TeamId.Equals(data.TeamId));
+            
+            var guid = Guid.Parse(UserId);
+
             var userModel = new UserViewModel
             {
-                UserId = Guid.Parse(UserId),
+                UserId = guid,
                 Name = data.Name,
                 Email = data.Email,
                 RoleId = data.RoleId,
-                TeamName = _userService.GetTeams().FirstOrDefault(t => t.TeamId == data.TeamId.ToString())?.TeamName,
-                RecentUserActivities = _userService.GetUserActivity(UserId),
+                TeamName = _userService.GetTeams().FirstOrDefault(t => t.TeamId == data.TeamId)?.TeamName,
+                RecentUserActivities = _userService.GetUserActivity(guid),
             };
 
             return PartialView("UserDetails", userModel);
@@ -545,7 +548,7 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpGet("/TeamDetail")]
         public IActionResult TeamDetail(string teamId)
         {
-            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
 
             if (userRole != 1)
             {
@@ -709,9 +712,10 @@ namespace ASI.Basecode.WebApp.Controllers
             var ticketsByAgentQuery = tickets
                 .Where(t => t.DateCreated >= startOfWeek && t.DateCreated < endOfWeek)
                 .GroupBy(t => t.AgentId)
+                .Where(g => g.Key != null) // Filter out groups with null keys
                 .Select(g => new
                 {
-                    AgentId = g.Key,
+                    AgentId = g.Key.Value, // Assuming AgentId is a nullable type
                     Tickets = g.ToList()
                 });
 
@@ -721,7 +725,6 @@ namespace ASI.Basecode.WebApp.Controllers
                     g => g.AgentId,
                     g => g.Tickets
                 );
-
 
             var agentTicketCounts = agents.Select(agent =>
             {
@@ -740,11 +743,25 @@ namespace ASI.Basecode.WebApp.Controllers
                     status => status.StatusName,
                     status => agentTickets.Count(t => t.Status == status.StatusName)
                 );
-
+                
+                // Count tickets by priority
                 var ticketCountByPriority = priorities.ToDictionary(
                     priority => priority.PriorityName,
                     priority => agentTickets.Count(t => t.Priority == priority.PriorityName)
                 );
+
+                var ratingCounts = Enumerable.Range(1, 5).ToDictionary(rating => rating, rating => 0);
+
+                foreach (var ticket in agentTickets)
+                {
+                    // Ensure Feedback is within the valid range
+                    if (ticket.Feedback.HasValue && ticket.Feedback.Value >= 1 && ticket.Feedback.Value <= 5)
+                    {
+                        ratingCounts[ticket.Feedback.Value]++;
+                    }
+                }
+
+                var ticketCountByFeedback = ratingCounts;
 
                 return new AnalyticsAgentMetricViewModel
                 {
@@ -756,7 +773,8 @@ namespace ASI.Basecode.WebApp.Controllers
 
                     TicketCountsByCategory = ticketCountsByCategory,
                     TicketCountsByStatus = ticketCountsByStatus,
-                    TicketCountsByPriority = ticketCountByPriority
+                    TicketCountsByPriority = ticketCountByPriority,
+                    TicketCountByFeedback = ticketCountByFeedback,
                 };
             });
 
@@ -798,9 +816,10 @@ namespace ASI.Basecode.WebApp.Controllers
             var ticketsByAgentQuery = tickets
                 .Where(t => t.DateCreated >= startOfWeek && t.DateCreated < endOfWeek)
                 .GroupBy(t => t.AgentId)
+                .Where(g => g.Key != null) // Filter out groups with null keys
                 .Select(g => new
                 {
-                    AgentId = g.Key,
+                    AgentId = g.Key.Value, // Assuming AgentId is a nullable type
                     Tickets = g.ToList()
                 });
 
@@ -810,7 +829,6 @@ namespace ASI.Basecode.WebApp.Controllers
                     g => g.AgentId,
                     g => g.Tickets
                 );
-
             var agentTicketCounts = agents.Select(agent =>
             {
                 var agentTickets = ticketsByAgent.ContainsKey(agent.UserId)

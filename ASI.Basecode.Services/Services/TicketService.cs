@@ -27,6 +27,9 @@ namespace ASI.Basecode.Services.Services
         private readonly ITeamRepository _teamRepository;
         private readonly INotificationRepository _notificationRepository;
         private readonly IAttachmentRepository _attachmentRepository;
+        private readonly IMapper _mapper;
+        private readonly ISessionHelper _sessionHelper;
+        private readonly INotificationService _notificationService;
 
         public TicketService(
             ITicketRepository ticketRepository,
@@ -38,10 +41,12 @@ namespace ASI.Basecode.Services.Services
             ITicketActivityOperationRepository ticketActivityOperationRepository,
             ITicketMessageRepository ticketMessageRepository,
             IFeedbackRepository feedbackRepository,
+            IAttachmentRepository attachmentRepository,
+            INotificationRepository notificationRepository,
             IMapper mapper,
             ISessionHelper sessionHelper,
-            INotificationRepository notificationRepository,
-            ITeamRepository teamRepository)
+            ITeamRepository teamRepository,
+            INotificationService notificationService)
         {
             _ticketRepository = ticketRepository;
             _userRepository = userRepository;
@@ -55,9 +60,12 @@ namespace ASI.Basecode.Services.Services
             _teamRepository = teamRepository;
             _notificationRepository = notificationRepository;
             _attachmentRepository = attachmentRepository;
+            _notificationService = notificationService;
+            _mapper = mapper;
+            _sessionHelper = sessionHelper;
         }
 
-        public IQueryable<TicketViewModel> RetrieveAll()
+        public IQueryable<TicketViewModel> GetAllTickets()
         {
             // Use Include to load related data efficiently
             var tickets = _ticketRepository.RetrieveAll()
@@ -401,14 +409,16 @@ namespace ASI.Basecode.Services.Services
             existingTicket.StatusId = 2;
             _ticketRepository.Update(existingTicket);
 
+            
+
             // Add notification for the agent assigned
-            _notificationService.Add(ticketId, userId);
+            _notificationService.Add(ticketId.ToString(), userId.ToString());
 
             // Add notification for the admin that assigned it to the agent
-            _notificationService.Add(ticketId, adminId);
+            // _notificationService.Add(ticketId, adminId);
 
             // Add notification for the user to inform that there is an assigned agent for it
-            _notificationService.Add(ticketId, existingTicket.CreatedBy.ToString());
+            _notificationService.Add(ticketId.ToString(), existingTicket.CreatedBy.ToString());
 
             // Add the Ticket Activity
             TicketActivity newActivity = new TicketActivity();

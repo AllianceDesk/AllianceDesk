@@ -11,7 +11,7 @@
 
 @if (ViewBag.Role == 2)
 {
-    @Html.Partial("Agent_Header")
+    @Html.Partial("Agent_Header", ViewData["AgentSidebar"])
 }
 else if (ViewBag.Role == 1) {
     @Html.Partial("Admin_Header")
