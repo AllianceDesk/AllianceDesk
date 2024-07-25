@@ -43,34 +43,30 @@
                                 @*  <img class="image" src="@item.Image" alt="image"> *@
                                 <div class="nameDateContainer">
 
-                                    <h5 class="name">@item.CreatorName</h5>
-                                    <p class="date">@item.RelativeTime</p>
-                                </div>
+                                <h5 class="name">@item.CreatorName</h5>
+                                <p class="date">@item.RelativeTime</p>
                             </div>
-                            <h2 class="question">@item.Title</h2>
-                            <p class="details">@item.Description</p>
-                        </a>
-                        <div class="btn-group option">
-                            @if (item.Status == "In Progress")
-                            {
-                                <button class="btn icon-button" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="bx bx-dots-vertical-rounded bx-sm icon-ticket" style="color: #808080;"></i>
-                                </button>
-                                <ul class="dropdown-menu menu">
-                                    <li>
-                                        <a class="dropdown-item item" href="#" data-bs-toggle="modal" data-bs-target="#resolveTicket" data-ticket-id="@item.TicketId">
-                                            <i class="bx bxs-check-circle bx-xs bx-fw" style="color: #808080;"></i>
-                                            Mark as Resolved
-                                        </a>
-                                    </li>
-                                </ul>
-                            }
                         </div>
+                        <h2 class="question">@item.Title</h2>
+                        <p class="details">@item.Description</p>
+                    </a>
+                    <div class="btn-group option">
+						@if (item.Status == "In Progress")
+						{
+							<button class="btn icon-button" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+								<i class="bx bx-dots-vertical-rounded bx-sm icon-ticket" style="color: #808080;"></i>
+							</button>
+							<ul class="dropdown-menu menu">
+								<li>
+									<a class="dropdown-item item" href="#" data-bs-toggle="modal" data-bs-target="#resolveTicket" data-ticket-id="@item.TicketId">
+                                        <i class="bx bxs-check-circle bx-xs bx-fw" style="color: #808080;"></i>
+										Mark as Resolved
+									</a>
+								</li>
+							</ul>
+						}
                     </div>
-                }
-            } else
-            {
-                <h1 class="d-flex justify-content-center align-items-center h-75">No tickets found</h1>
+                </div>
             }
         </div>
 
@@ -98,7 +94,7 @@
                 </div>
             </div>
         </div>
-
+        
         <div class="modal fade" id="resolveTicket" tabindex="-1" aria-labelledby="resolveTicket" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content p-3">
@@ -132,6 +128,19 @@
 
         const viewTicketModal = new bootstrap.Modal(document.getElementById('viewTicket'));
         const resolveTicketModal = new bootstrap.Modal(document.getElementById('resolveTicket'));
+
+        var dpIcon = document.querySelector('.dpicn');
+        var dropdownMenu = document.getElementById('dropdownMenu');
+
+        dpIcon.addEventListener('click', function (event) {
+            event.stopPropagation();
+
+            if (dropdownMenu.style.display === 'block') {
+                dropdownMenu.style.display = 'none';
+            } else {
+                dropdownMenu.style.display = 'block';
+            }
+        });
 
         document.querySelectorAll('[data-bs-toggle="modal"]').forEach(element => {
             element.addEventListener('click', function () {
@@ -174,7 +183,7 @@
                     var ticketId = this.getAttribute('data-ticket-id');
                     document.getElementById('resolveTicketId').value = ticketId;
                     resolveTicketModal.show();
-                }
+                } 
             });
         });
 

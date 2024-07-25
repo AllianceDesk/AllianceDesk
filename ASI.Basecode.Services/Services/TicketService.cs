@@ -327,7 +327,7 @@ namespace ASI.Basecode.Services.Services
             newMessage.MessageId = Guid.NewGuid();
             newMessage.UserId = _sessionHelper.GetUserIdFromSession();
             newMessage.MessageBody = message.Message;
-            newMessage.UserId = message.SentById;
+            newMessage.UserId = _sessionHelper.GetUserIdFromSession();
             newMessage.PostedAt = DateTime.Now;
 
             _ticketMessageRepository.Add(newMessage);
@@ -404,8 +404,6 @@ namespace ASI.Basecode.Services.Services
             existingTicket.AssignedAgent = userId;
             existingTicket.StatusId = 2;
             _ticketRepository.Update(existingTicket);
-
-
 
             // Add notification for the agent assigned
             _notificationService.Add(ticketId.ToString(), userId.ToString());

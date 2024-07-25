@@ -129,6 +129,7 @@ namespace ASI.Basecode.WebApp.Controllers
             return View("/Views/Admin/Tickets.cshtml", tickets);
         }
 
+        
         /// <summary>
         /// Returns a list of agents except the current agent if the ticket was already assigend to an agent.
         /// </summary>
@@ -186,7 +187,7 @@ namespace ASI.Basecode.WebApp.Controllers
             return View(model);
         }
 
-
+        
         /// <summary>
         /// Assigns the agent to the ticket.
         /// </summary>
@@ -199,6 +200,7 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("Tickets", new { id = model.TicketId });
         }
 
+        
         /// <summary>
         /// Updates the priority of the ticket
         /// </summary>
@@ -211,9 +213,34 @@ namespace ASI.Basecode.WebApp.Controllers
 
             existingTicket.PriorityId = ticket.PriorityId;
 
+            string priorityName = "";
+
+            switch(ticket.PriorityId)
+            {
+                case 1:
+                    priorityName = "High";
+                    break;
+                case 2:
+                    priorityName = "Mid";
+                    break;
+                case 3:
+                    priorityName = "Low";
+                    break;
+            }
+
+
             if (existingTicket != null)
             {
                 _ticketService.Update(existingTicket);
+
+                var ticketActivity = new TicketActivityViewModel
+                {
+                    TicketId = ticket.TicketId,
+                    Message = $"Admin updated the priority to {priorityName}",
+                    OperationId = 2,
+                };
+
+                _ticketService.AddActivity(ticketActivity);
 
                 return RedirectToAction("Tickets", new { id = ticket.TicketId });
             }

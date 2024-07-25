@@ -263,6 +263,44 @@ namespace ASI.Basecode.WebApp.Controllers
             return this.View();
         }
 
+        /// <summary>
+        /// Resolves the ticket.
+        /// </summary>
+        /// <param name="ticketMessage">The ticket message.</param>
+        /// <returns></returns>
+        [HttpPost("ResolveTicket")]
+        public IActionResult ResolveTicket(TicketMessageViewModel ticketMessage)
+        {
+
+            var ticket = _ticketService.GetById(ticketMessage.TicketId);
+                
+            
+            if (ticket == null)
+            {
+                return NotFound();
+            }
+
+            // Resolve the Ticket
+            ticket.StatusId = 3; 
+            _ticketService.Update(ticket);
+
+
+            // Add Ticket Message
+            _ticketService.AddMessage(ticketMessage);
+
+            // Add Ticket Activity
+            TicketActivity ticketActivity = new TicketActivity
+            {
+                TicketId = ticketMessage.TicketId,
+                ModifiedBy = _sessionHelper.GetUserIdFromSession(),
+                ModifiedAt = DateTime.Now,
+                OperationId = 7,
+                Message = $"Agent {ticket.AgentName} resolved the ticket"
+            };
+
+            return RedirectToAction("Dashboard");
+        }
+
         #endregion
 
         #region User

@@ -16,7 +16,7 @@ namespace ASI.Basecode.Services.ServiceModels
         public string Description { get; set; }
         public List<UserViewModel> Agents { get; set; } // Assuming User is your user model
         public Dictionary<Guid, int> TicketCount { get; set; }
-
+        
         //For submitting the form
         public Guid SelectedAgentId { get; set; }
     }
