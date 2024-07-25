@@ -209,9 +209,11 @@ namespace ASI.Basecode.WebApp.Controllers
         {
             var existingTicket = _ticketService.GetById(ticket.TicketId);
 
+            existingTicket.PriorityId = ticket.PriorityId;
+
             if (existingTicket != null)
             {
-                _ticketService.Update(ticket);
+                _ticketService.Update(existingTicket);
 
                 return RedirectToAction("Tickets", new { id = ticket.TicketId });
             }

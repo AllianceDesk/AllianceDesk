@@ -158,18 +158,18 @@
                     userDiv.dataset.agentTeamsAgent = '';
                     userDiv.dataset.userId = item.TicketId;
                     userDiv.innerHTML = `
-                            <div class="d-flex justify-content-between">
-                                <div class="flex flex-col gap-4">
-                                    <h5>${item.TicketNumber}: <span> ${item.Title}</span></h5>
-                                    <div class="flex flex-Row gap-2">
-                                        <div class="role-container ${categoryItem[item.Category]} fw-semi text-0-5">${item.Category}</div>
-                                        <div class="role-container ${priorityItem[item.Priority]} fw-semi text-0-5">${item.Priority}</div>
-                                        <div class="role-container ${statusItem[item.Status]} fw-semi text-0-5">${item.Status}</div>
+                                    <div class="d-flex justify-content-between">
+                                        <div class="flex flex-col gap-4">
+                                            <h5>${item.TicketNumber}: <span> ${item.Title}</span></h5>
+                                            <div class="flex flex-Row gap-2">
+                                                <div class="role-container ${categoryItem[item.Category]} fw-semi text-0-5">${item.Category}</div>
+                                                <div class="role-container ${priorityItem[item.Priority]} fw-semi text-0-5">${item.Priority}</div>
+                                                <div class="role-container ${statusItem[item.Status]} fw-semi text-0-5">${item.Status}</div>
+                                            </div>
+                                        </div>
+                                        <p class="mt-1">${item.RelativeTime}</p>
                                     </div>
-                                </div>
-                                <p class="mt-1">${item.RelativeTime}</p>
-                            </div>
-                        `;
+                                `;
 
                     userDiv.addEventListener('click', () => {
                         console.log("agent clicked");
@@ -187,7 +187,7 @@
             } else {
                 ticketsContainer.innerHTML = '<h1 class="d-flex justify-content-center align-items-center h-75">No tickets found</h1>';
             }
-
+            
             updatePaginationControls();
         }
 
