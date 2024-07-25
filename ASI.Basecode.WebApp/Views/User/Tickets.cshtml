@@ -81,7 +81,7 @@
                                 <h5 class="text-secondary">@item.Title</h5>
                             </div>
                             <p class="date ml-1">@item.RelativeTime</p>
-                            <div class="ellipsis mt-2">
+                            <div class="ellipsis mt-1">
                                 <p class="text-black mt-2">
                                     @if (item.Description.Length > 300)
                                     {
@@ -107,10 +107,13 @@
                             {
                                 if (item.Feedback == null)
                                 {
-                                    <button class="btn feedback" type="button" data-bs-toggle="modal" data-bs-target="#fillFeedback" data-ticket-id="@item.TicketId" onclick="event.stopPropagation();">
-                                        <i class="bx bx-user-voice bx-xs bx-fw feedbackIcon"></i>
-                                        Feedback
-                                    </button>
+                                    <div style="display: flex; justify-content: flex-end;">
+                                        <button class="btn admin-sb-active-button btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#fillFeedback" data-ticket-id="@item.TicketId" onclick="event.stopPropagation();">
+                                            <i class="bx bx-user-voice bx-xs bx-fw feedbackIcon"></i>
+                                            Feedback
+                                        </button>
+                                    </div>
+                                    
                                 }
                                 else
                                 {
@@ -119,51 +122,52 @@
                                 }
                             }
                         </a>
+                        @if (item.Status != "Closed")
+                        {
+                            <div class="btn-group option">
 
-                        
-                        <div class="btn-group option">
-
-							@if (item.Status == "Open" || item.Status == "Assigned")
-							{
-							    <button class="btn icon-button" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-									<i class="bx bx-dots-vertical-rounded bx-sm icon-ticket" style="color: #808080;"></i>
-								</button> 
-								<ul class="dropdown-menu menu">
-									<li>
-										<a class="dropdown-item item" href="#" data-bs-toggle="modal" data-bs-target="#editTicket" data-ticket-id="@item.TicketId">
-											<i class="bx bx-edit bx-xs bx-fw" style="color: #808080;"></i>
-											Edit
-										</a>
-									</li>
-									<li>
-										<a class="dropdown-item item" href="#" data-bs-toggle="modal" data-bs-target="#deleteTicket" data-ticket-id="@item.TicketId">
-											<i class="bx bx-trash bx-xs bx-fw" style="color: #808080;"></i>
-											Delete
-										</a>
-									</li>
-								</ul>
-							}
-							else if (item.Status == "Resolved")
-							{
-								<button class="btn icon-button" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-									<i class="bx bx-dots-vertical-rounded bx-sm icon-ticket" style="color: #808080;"></i>
-								</button>
-								<ul class="dropdown-menu menu">
-									<li>
-										<a class="dropdown-item item" href="#" data-bs-toggle="modal" data-bs-target="#ticketActionModal" data-action-type="reopen" data-ticket-id="@item.TicketId">
-											<i class="bx bx-show bx-xs bx-fw" style="color: #808080;"></i>
-											Reopen
-										</a>
-									</li>
-									<li>
-										<a class="dropdown-item item" href="#" data-bs-toggle="modal" data-bs-target="#ticketActionModal" data-action-type="close" data-ticket-id="@item.TicketId">
-											<i class="bx bx-check bx-xs bx-fw" style="color: #808080;"></i>
-											Close
-										</a>
-									</li>
-								</ul>
-							}
-						</div>
+                                @if (item.Status == "Open" || item.Status == "Assigned")
+                                {
+                                    <button class="btn icon-button" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bx bx-dots-vertical-rounded bx-sm icon-ticket" style="color: #808080;"></i>
+                                    </button>
+                                    <ul class="dropdown-menu menu">
+                                        <li>
+                                            <a class="dropdown-item item" href="#" data-bs-toggle="modal" data-bs-target="#editTicket" data-ticket-id="@item.TicketId">
+                                                <i class="bx bx-edit bx-xs bx-fw" style="color: #808080;"></i>
+                                                Edit
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item item" href="#" data-bs-toggle="modal" data-bs-target="#deleteTicket" data-ticket-id="@item.TicketId">
+                                                <i class="bx bx-trash bx-xs bx-fw" style="color: #808080;"></i>
+                                                Delete
+                                            </a>
+                                        </li>
+                                    </ul>
+                                }
+                                else if (item.Status == "Resolved")
+                                {
+                                    <button class="btn icon-button" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bx bx-dots-vertical-rounded bx-sm icon-ticket" style="color: #808080;"></i>
+                                    </button>
+                                    <ul class="dropdown-menu menu">
+                                        <li>
+                                            <a class="dropdown-item item" href="#" data-bs-toggle="modal" data-bs-target="#ticketActionModal" data-action-type="reopen" data-ticket-id="@item.TicketId">
+                                                <i class="bx bx-show bx-xs bx-fw" style="color: #808080;"></i>
+                                                Reopen
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item item" href="#" data-bs-toggle="modal" data-bs-target="#ticketActionModal" data-action-type="close" data-ticket-id="@item.TicketId">
+                                                <i class="bx bx-check bx-xs bx-fw" style="color: #808080;"></i>
+                                                Close
+                                            </a>
+                                        </li>
+                                    </ul>
+                                }
+                            </div>
+                        }
 					</div>
                 }
 
