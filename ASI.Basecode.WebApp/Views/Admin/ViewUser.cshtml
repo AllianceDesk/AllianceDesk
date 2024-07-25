@@ -25,7 +25,7 @@
 @Html.Partial("Admin_Header")
 <div class="main relative" >
     @Html.Partial("Admin_Sidebar")
-        <div class="admin-body py-3 relative bg-grey flex flex-col gap-1" style="padding-right: 1rem;">
+    <div class="admin-body py-3 relative bg-grey flex flex-col gap-1" style="padding-right: 1rem;">
 
         <div class="flex" style="padding-right: 2rem; border-right: 1.5px solid #9E9E9E;">
             <div class="flex flex-col justify-content-between">
@@ -598,9 +598,6 @@
 
         $(document).on('click', '[data-agent-teams-agent]', function () {
             console.log("agent clicked");
-
-       
-
 
             const agent = $(this); // Get the clicked agent element
 

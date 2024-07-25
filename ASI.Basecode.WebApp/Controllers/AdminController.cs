@@ -355,6 +355,7 @@ namespace ASI.Basecode.WebApp.Controllers
                                             RoleId = u.RoleId,
                                             UserId = u.UserId.ToString(),
                                         })
+                                        .OrderBy(u => u.Name)
                                         .ToList();
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -367,6 +368,7 @@ namespace ASI.Basecode.WebApp.Controllers
                                             RoleId = u.RoleId,
                                             UserId = u.UserId.ToString(),
                                         })
+                                        .OrderBy(u => u.Name)
                                         .ToList();
             }
 
@@ -575,6 +577,11 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("ViewUser");
         }
 
+        /// <summary>
+        /// Go to the View Teams View
+        /// </summary>
+        /// <returns>View Teams</returns>
+        /// 
         [HttpGet("/ViewTeams")]
         public IActionResult ViewTeams()
         {
@@ -595,15 +602,57 @@ namespace ASI.Basecode.WebApp.Controllers
                                             DepartmentName = _teamService.GetDepartmentName(u.DepartmentId),
                                             TeamNumber = _teamService.GetTeamNumber(u.TeamId.ToString()),
                                         })
+                                        .OrderBy(t => t.TeamName)
                                         .ToList();
 
             var viewModel = new TeamViewModel
             {
                 Teams = teams
             };
+            ViewBag.AdminSidebar = "ViewUser";
 
             return View(viewModel);
+        }
 
+        /// <summary>
+        /// Go to the Team Details View
+        /// </summary>
+        /// <returns>Team Details</returns>
+        /// 
+        [HttpGet("/TeamDetail")]
+        public IActionResult TeamDetail(string teamId)
+        {
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId;
+
+            if (userRole != 1)
+            {
+                return RedirectToAction("Index", "AccessDenied");
+            }
+
+            var data = _userService.GetAllUsers()
+                        .Where(x => x.TeamId.ToString() == teamId)
+                        .Select (u => new UserViewModel{
+                            Name = u.Name,
+                            UserName = u.Username,
+                            Email = u.Email,
+                            RoleId = u.RoleId,
+                        })
+                        .ToList();
+            var teamInfo = _teamService.GetTeams().Where(t => t.TeamId.ToString() == teamId).FirstOrDefault();
+            if (data == null)
+            {
+                return NotFound();
+            }
+            var agentModel = new TeamViewModel
+            {
+                TeamDescription = teamInfo.TeamDescription,
+                TeamName = teamInfo.TeamName,
+                DepartmentName = _teamService.GetDepartmentName(teamInfo.DepartmentId),
+                Agents = data,
+                TeamNumber = data.Count(),
+            };
+
+            return PartialView("TeamDetail", agentModel);
         }
 
         [HttpGet("/AddTeam")]

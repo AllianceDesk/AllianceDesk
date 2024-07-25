@@ -12,59 +12,84 @@
 @Html.Partial("Admin_Header")
 <div class="main">
     @Html.Partial("Admin_Sidebar")
-    <div class="admin-body py-3 relative bg-grey flex flex-col gap-1">
+    <div class="admin-body py-3 relative bg-grey flex flex-col gap-1 pr-4">
 
         <div style="padding-right: 2rem; border-right: 1.5px solid #9E9E9E;">
-            <h2>Team Directory</h2>
-            <div class="flex-Row flex-between">
-                <div class="agent-nav pt-4">
-                    <ul class="flex-Row gap-2">
-                        <a asp-action="ViewUser" class="nav-item" data-td-none data-nav-item>All Users</a>
-                        <a asp-action="ViewTeams" class="nav-item active-admin-nav" data-td-none data-nav-item>Team</a>
-                    </ul>
-                </div>
-                <div class="flex-Row gap-2 justify-content-center align-center">
-                    <div class="j-search-container | flex-Row align-center justify-content-center">
-                        <i class="fa-solid fa-magnifying-glass text-1-5"></i>
-                        <input name="searchString" id="searchInput" class="bg-transparent" type="text" placeholder="Search" value="@ViewBag.SearchString" />
+            <div class="flex flex-col justify-content-between">
+                <div class="flex flex-Row justify-content-between">
+                    <h2>Team Directory</h2>
+                    <div>
+                        <button class="mbtn-primary flex-Row gap-1 color-white bg-red align-center justify-content-center border-0 p-x-1 br-1-5" data-admin-add-btn style="height: 2.6rem;">
+                            <i class="bx bx-user-plus fs-5"></i>
+                            <p class="br-1-5 p-y-1">Add</p>
+                        </button>
                     </div>
-                    <button class="mbtn-primary flex-Row gap-1 color-white bg-red align-center justify-content-center border-0 p-x-1 br-1-5" style="height: 2.6rem;">
-                        <i class="fa-solid fa-filter"></i>
-                        <p class="br-1-5 p-y-1">Filter</p>
-                    </button>
-                    <button class="mbtn-primary flex-Row gap-1 color-white bg-red align-center justify-content-center border-0 p-x-1 br-1-5" data-admin-add-btn style="height: 2.6rem;">
-                        <i class="fa-solid fa-user-plus"></i>
-                        <p class="br-1-5 p-y-1">Add</p>
-                    </button>
+
+                </div>
+                <div class="flex-Row flex-between align-items-end ">
+                    <div class="agent-nav pt-4">
+                        <div class="flex-Row gap-4 pl-2">
+                            <a asp-action="ViewUser" class="nav-item" data-td-none data-nav-item>All Users</a>
+                            <a asp-action="ViewTeams" class="nav-item active-admin-nav" data-td-none data-nav-item>Team</a>
+                        </div>
+                    </div>
+                    <div class="flex-Row gap-2 ">
+                        <div class="flex flex-Row align-items-end justify-content-end">
+                            <div class="j-search-container | flex-Row align-center gap-2">
+                                <i class="bx bx-search-alt text-1-5"></i>
+                                <input id="team-search-input" class="bg-transparent" type="text" placeholder="Search" />
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-3 align-items-end">
+
+                            <div class="text-center flex relative ">
+                                <label class="modal-input flex relative justify-content-center align-items-center" style=" height: 2.6rem; margin-bottom: 0; border: 1px solid #9E9E9E;">
+                                    <select name="users-role" id="users-role" class=" pl-3 mr-4">
+                                        <option value="All" selected disabled>Select Roles</option>
+                                        <option value="All">All</option>
+                                        <option value="User">Users</option>
+                                        <option value="Agent">Agents</option>
+                                        <option value="Admin">Admin</option>
+                                    </select>
+                                    <i class='bx bx-chevron-down' style="position: absolute; top: 20%; right: 5%; font-size: 1.5rem;"></i>
+                                </label>
+                            </div>
+                            @*   <button class="mbtn-primary flex-Row gap-1 color-white bg-red align-center justify-content-center border-0 p-x-1 br-1-5" style="height: 2.6rem;">
+                            <i class="fa-solid fa-filter"></i>
+                            <p class="br-1-5 p-y-1">Filter</p>
+                            </button> *@
+
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="agent-container p-y-1 p-x-1 border-b-2 text-1-5 mb-3">
-                <div style="display: flex; align-items: center;">
+            <div class="agent-container-team p-y-1 p-x-1 border-b-2 text-1-5 mb-3">
+                <div style="display: flex; align-items: center; font-size: 0.9rem;">
                     <div class="flex-Row align-center gap-1 fw-semi">
                         <i class="fa-regular fa-user"></i>
                         <p>Profile</p>
                     </div>
                 </div>
-                <div style="display: flex; justify-content: center; align-items: center;">
+                <div style="display: flex; justify-content: center; align-items: center; font-size: 0.9rem;">
                     <div class="flex-Row align-center gap-1 fw-semi">
                         <i class="fa-regular fa-address-card"></i>
                         <p>Team Name</p>
                     </div>
                 </div>
-                <div style="display: flex; justify-content: center; align-items: center;">
+                <div style="display: flex; justify-content: center; align-items: center; font-size: 0.9rem;">
                     <div class="flex-Row align-center gap-1 fw-semi">
                         <i class='bx bx-buildings'></i>
                         <p>Department</p>
                     </div>
                 </div>
-                <div style="display: flex; justify-content: end; align-items: center;">
+                <div style="display: flex; justify-content: end; align-items: center; font-size: 0.9rem;">
                     <div class="flex-Row align-center gap-1 fw-semi">
                         <i class="fa-solid fa-people-group"></i>
                         <p>Team Size</p>
                     </div>
                 </div>
             </div>
-            <div class="agents-container bg-white">
+            <div class="agents-container flex flex-col gap-1">
                 @if (Model != null && Model.Teams != null && Model.Teams.Any())
                 {
                     @foreach (var item in Model.Teams)
@@ -95,11 +120,48 @@
                 <button id="last-page" disabled><i class="fa-solid fa-angles-right"></i></button>
             </div>
         </div>
-        <div class="hidden modal-admin bg-modal" data-admin-modal-container>
-            <div class="hidden modal-container br-1 bg-white p-y-1 p-x-2" data-modal-add-form>
-                <form asp-action="PostUserAdd" class="hidden modal-container br-1 bg-white p-y-1 p-x-2" data-modal-add-form>
-                </form>
+        <div class="pl-4 hidden" data-admin-edit-details>
+            <div class="flex-Row  align-center justify-content-between p-y-2 border-b-2">
+                <h2>Detail</h2>
+                <u class="fa-solid fa-pen-to-square text-1-5 cursor-pointer color-inactive" data-admin-edit-btn></u>
             </div>
+            <div class="flex p-t-1">
+                <div class="agents-details | margin-1 bg-white flex-Row flex-between p-y-1 p-x-1 align-center">
+                    <div class="user-img-profile br-50 bg-grey"></div>
+                    <div class="flex-col justify-content-center align-center">
+                        <p class="fw-semi">Agent Name</p>
+                        <p class="text-sm">agentemail@gmail.com</p>
+                    </div>
+                    <div class="role-container role-agent fw-semi text-0-5">Agent</div>
+                </div>
+                <div>
+                    <h4>Team</h4>
+                    <div class="agents-details | margin-1 bg-white flex-Row gap-2 p-y-1 p-x-1 align-center">
+                        <div class="user-img-profile br-50 bg-grey"></div>
+                        <div class="flex-col align-center">
+                            <p class="fw-semi">Team2</p>
+                            <p class="text-sm">a@team2</p>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h4>Recent Activity</h4>
+                    <div class="agents-details | margin-1 bg-white flex-Row flex-between p-y-1 p-x-1 align-center">
+                        <div class="user-img-profile br-50 bg-grey"></div>
+                        <div class="flex-col justify-content-center align-center">
+                            <p class="fw-semi">Agent Name</p>
+                            <p class="text-sm">agentemail@gmail.com</p>
+                        </div>
+                        <div class="role-container role-agent fw-semi text-0-5">Agent</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="hidden modal-admin bg-modal" data-admin-modal-container>
+        <div class="hidden modal-container br-1 bg-white p-y-1 p-x-2" data-modal-add-form>
+            <form asp-action="PostUserAdd" class="hidden modal-container br-1 bg-white p-y-1 p-x-2" data-modal-add-form>
+            </form>
         </div>
     </div>
 </div>
@@ -186,9 +248,9 @@
             if (usersToShow.length > 0) {
                 usersToShow.forEach(item => {
                     const userDiv = document.createElement('div');
-                    userDiv.classList.add('agents', 'cursor-pointer', 'p-y-1', 'p-x-1', 'agent-container');
+                    userDiv.classList.add('agents', 'cursor-pointer', 'p-y-1', 'p-x-1', 'agent-container-team', 'br-1-5');
                     userDiv.dataset.agentTeamsAgent = '';
-                    userDiv.dataset.userId = item.UserId;
+                    userDiv.dataset.userId = item.TeamId;
                     userDiv.innerHTML = `
                                                     <div style="display: flex; align-items: center;">
                                                         <div class="user-img-profile br-50 bg-red" style="display: flex; justify-content: center; align-items: center;">
@@ -269,6 +331,43 @@
         $(document).on('click', '[data-admin-add-cancel-btn]', function (e) {
             e.preventDefault(); // Prevent form submission if button is inside a form
             $('[data-admin-modal-container]').addClass('hidden');
+        });
+
+        $(document).on('click', '[data-agent-teams-agent]', function () {
+            console.log("agent clicked");
+
+            const agent = $(this); // Get the clicked agent element
+
+
+            const adminBody = $(".admin-body");
+            const editDetails = $('[data-admin-edit-details]');
+
+            if (agent.hasClass("selected-agent")) {
+                adminBody.removeClass("edit-active");
+                agent.removeClass("selected-agent");
+                editDetails.addClass("hidden");
+                return;
+            }
+
+            teamId = agent.attr('data-user-id');
+            console.log("Team Id", teamId);
+
+            $.ajax({
+                url: '/TeamDetail',
+                type: 'GET',
+                data: { teamId: teamId },
+                success: function (response) {
+                    $('[data-admin-edit-details]').html(response).removeClass('hidden');
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching user details:', status, error);
+                }
+            });
+
+            $('[data-agent-teams-agent]').removeClass("selected-agent");
+            agent.addClass("selected-agent");
+            adminBody.addClass("edit-active");
+            editDetails.removeClass("hidden");
         });
 
         navItems.forEach(navItem => {
