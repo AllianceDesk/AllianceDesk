@@ -132,11 +132,14 @@ namespace ASI.Basecode.Services.Services
                 Title = s.Title,
                 Description = s.Description,
                 DateCreated = s.DateCreated,
-                CreatorId = s.CreatedBy,
-                AgentId = s.AssignedAgent,
-                StatusId = s.StatusId,
                 CategoryId = s.CategoryId,
                 PriorityId = s.PriorityId,
+                StatusId = s.StatusId,
+                Category = s.Category.CategoryName,
+                Priority = s.Priority.PriorityName,
+                Status = s.Status.StatusName,
+                AgentName = s.AssignedAgentNavigation.Name,
+                CreatorName = s.CreatedByNavigation.Name,
             });
         }
 

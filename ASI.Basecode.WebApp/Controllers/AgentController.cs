@@ -273,8 +273,8 @@ namespace ASI.Basecode.WebApp.Controllers
         {
 
             var ticket = _ticketService.GetById(ticketMessage.TicketId);
-                
-            
+
+
             if (ticket == null)
             {
                 return NotFound();

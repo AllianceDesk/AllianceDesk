@@ -51,20 +51,20 @@
                         <p class="details">@item.Description</p>
                     </a>
                     <div class="btn-group option">
-						@if (item.Status == "In Progress")
-						{
-							<button class="btn icon-button" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-								<i class="bx bx-dots-vertical-rounded bx-sm icon-ticket" style="color: #808080;"></i>
-							</button>
-							<ul class="dropdown-menu menu">
-								<li>
-									<a class="dropdown-item item" href="#" data-bs-toggle="modal" data-bs-target="#resolveTicket" data-ticket-id="@item.TicketId">
+                        @if (item.Status == "In Progress")
+                        {
+                            <button class="btn icon-button" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bx bx-dots-vertical-rounded bx-sm icon-ticket" style="color: #808080;"></i>
+                            </button>
+                            <ul class="dropdown-menu menu">
+                                <li>
+                                    <a class="dropdown-item item" href="#" data-bs-toggle="modal" data-bs-target="#resolveTicket" data-ticket-id="@item.TicketId">
                                         <i class="bx bxs-check-circle bx-xs bx-fw" style="color: #808080;"></i>
-										Mark as Resolved
-									</a>
-								</li>
-							</ul>
-						}
+                                        Mark as Resolved
+                                    </a>
+                                </li>
+                            </ul>
+                        }
                     </div>
                 </div>
             }
@@ -94,7 +94,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="modal fade" id="resolveTicket" tabindex="-1" aria-labelledby="resolveTicket" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content p-3">
@@ -183,7 +183,7 @@
                     var ticketId = this.getAttribute('data-ticket-id');
                     document.getElementById('resolveTicketId').value = ticketId;
                     resolveTicketModal.show();
-                } 
+                }
             });
         });
 
