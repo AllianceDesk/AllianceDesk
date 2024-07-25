@@ -5,37 +5,37 @@
 
 }
 
-<div class="ticket-modal1" style="padding: 1em;">
+<div class="ticket-modal1" style="padding: 1em; position: relative;">
     @Html.HiddenFor(model => model.ArticleId)
     <div class="top_modal align-items-center mb-1">
         @if (ViewBag.RoleId == 3)
         {
-            <button type="button" class="btn closebtn1 pb-2 mr-3" data-bs-dismiss="modal" data-backToKBModal-btn>
+            <button type="button" class="btn closebtn1 pb-2 mr-3" style="display: position; top: 0; left: 0;" data-bs-dismiss="modal" data-backToKBModal-btn>
                 <i class='bx bx-left-arrow-alt bx-sm icon' style="color: #45474B; cursor: pointer;"></i>
             </button>
         }
         else
         {
-            <form asp-controller="Article" asp-action="Index" method="get">
+            <form asp-controller="Article" style="position: absolute; top: 1.5rem; left: 1.5rem;" asp-action="Index" method="get">
                 <button type="submit" class="btn closebtn1 pb-2 mr-3" data-bs-dismiss="modal"><i class='bx bx-left-arrow-alt bx-sm icon' style="color: #45474B; cursor: pointer;"></i></button>
             </form>
         }
     </div>
 
-    <div class="top-container mb-3 d-flex justify-content-end">
+    <div class="top-container mb-3 d-flex justify-content-end " >
 
         
         <div class="btn-group d-flex justify-content-end" style="height: 3.5em; width: 25em; font-size: 10px;">
             @if (Model.IsFavorite)
             {
                 <button type="button" class="btn btn-danger me-1" data-article-removeFavorites-btn data-article-id="@Model.ArticleId">
-                    <i class="fa-solid fa-star" style="color: white; cursor: pointer;"></i> Favorites
+                    <i class="fa-solid fa-star" style="color: white; cursor: pointer;"></i> 
                 </button>
             }
             else
             {
                 <button type="button" class="btn btn-danger me-1" data-article-addfavorites-btn data-article-id="@Model.ArticleId">
-                    <i class="fa-regular fa-star" style="color: white; cursor: pointer;"></i> Favorites
+                    <i class="fa-regular fa-star" style="color: white; cursor: pointer;"></i> 
                 </button>
             }
 
@@ -54,7 +54,7 @@
    <hr class="mb-2" style="border-top-color: black; width: 95%;"/>
 
     <h4 class="mb-2 ml-3" >@Html.DisplayFor(model => model.Title)</h4>
-    <p class="email mb-4 ml-3" style="font-size:12px;">Last Edited by:  @Html.DisplayFor(model => model.UpdatedBy)</p>
+    <p class="email mb-4 ml-3" style="font-size:12px;">Last Edited by:  @Html.DisplayFor(model => model.UpdatedBy) on @Model.DateUpdated</p>
     <div style="padding: 1em;">
         <p class="article_details" style="overflow-y: auto; height: 20em; font-size: 14px;">
             @Html.Raw(Model.Body.Replace(Environment.NewLine, "<br />"))

@@ -48,7 +48,13 @@ else if (ViewBag.RoleId == 2)
     @if (ViewBag.RoleId == 3)
     {
         <header class="px-5">
+            <div class="hidden add_button">
 
+                <div class="btn-group">
+                    <button type="button" class="btn btn-danger me-1" data-bs-toggle="modal" data-bs-target="#create" id="addArticleBtn">Add Article</button>
+                </div>
+
+            </div>
             <div>
                 <img src="~/img/alliancedesk-logo.png" style="width: 185px;" alt="logo">
             </div>
