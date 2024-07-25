@@ -81,7 +81,7 @@
 
                                 <h5 class="text-black">@item.TicketNumber:&nbsp;</h5>
 
-                                <h5 class="text-secondary">@item.Title</h5>
+                                <h5 class="text-black">@item.Title</h5>
 
                             </div>
 									
@@ -111,7 +111,7 @@
 							{
 								if(item.Feedback == null)
 								{
-									<button class="btn feedback" type="button" data-bs-toggle="modal" data-bs-target="#fillFeedback" data-ticket-id="@item.TicketId">
+									<button class="btn feedback" type="button" data-bs-toggle="modal" data-bs-target="#fillFeedback" data-ticket-id="@item.TicketId" onclick="event.stopPropagation">
 										<i class="bx bx-user-voice bx-xs bx-fw feedbackIcon"></i>
 										Feedback
 									</button>

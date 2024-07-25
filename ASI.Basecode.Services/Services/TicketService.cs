@@ -105,6 +105,7 @@ namespace ASI.Basecode.Services.Services
             return tickets.Select(s => new TicketViewModel
             {
                 TicketId = s.TicketId,
+                TicketNumber = s.TicketNumber,
                 Title = s.Title,
                 Description = s.Description,
                 DateCreated = s.DateCreated,
@@ -112,6 +113,9 @@ namespace ASI.Basecode.Services.Services
                 Category = s.Category.CategoryName,
                 Priority = s.Priority.PriorityName,
                 Status = s.Status.StatusName,
+                StatusId = s.StatusId,
+                CategoryId = s.CategoryId,
+                PriorityId = s.PriorityId,
                 AgentName = s.AssignedAgentNavigation.Name,
                 CreatorName = s.CreatedByNavigation.Name,
             });
@@ -320,6 +324,7 @@ namespace ASI.Basecode.Services.Services
         {
             TicketMessage newMessage = new TicketMessage();
             newMessage.MessageId = Guid.NewGuid();
+            newMessage.TicketId = message.TicketId;
             newMessage.UserId = _sessionHelper.GetUserIdFromSession();
             newMessage.MessageBody = message.Message;
             newMessage.UserId = _sessionHelper.GetUserIdFromSession();

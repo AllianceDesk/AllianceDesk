@@ -139,7 +139,7 @@ namespace ASI.Basecode.WebApp.Controllers
                 }
             }
 
-            var tickets = _ticketService.GetUserTickets(_sessionHelper.GetUserIdFromSession());
+            var tickets = _ticketService.GetUserTickets(_sessionHelper.GetUserIdFromSession()).AsEnumerable();
 
             if (status != 0)
             {
@@ -151,11 +151,11 @@ namespace ASI.Basecode.WebApp.Controllers
                 tickets = tickets.Where(t => t.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
             }
 
+            var count = tickets.Count();
             var currentPage = page ?? 1;
             var currentStatus = status ?? 0;
             var currentSearchTerm = searchTerm ?? "";
 
-            var count = tickets.Count();
             var statuses = _ticketService.GetStatuses()
                 .Select(c => new KeyValuePair<string, string>(c.StatusId.ToString(), c.StatusName))
                 .ToList();
