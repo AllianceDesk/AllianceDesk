@@ -107,7 +107,7 @@ namespace ASI.Basecode.WebApp.Controllers
         {
             var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
 
-            if(userRole == null || userRole == 0)
+            if (userRole == null || userRole == 0)
             {
                 return RedirectToAction("Account", "Login");
             }
@@ -156,7 +156,7 @@ namespace ASI.Basecode.WebApp.Controllers
             var currentSearchTerm = searchTerm ?? "";
 
             var count = tickets.Count();
-            
+
             var statuses = _ticketService.GetStatuses()
                 .Select(c => new KeyValuePair<string, string>(c.StatusId.ToString(), c.StatusName))
                 .ToList();
@@ -199,7 +199,7 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpGet("Tickets/{id}")]
         public IActionResult Ticket(Guid id)
         {
-            var ticket = _ticketService.GetById(id);
+            var ticket = _ticketService.GetById(Guid.Parse(ticketId));
 
             if (ticket == null)
             {
@@ -230,7 +230,7 @@ namespace ASI.Basecode.WebApp.Controllers
             return View(ticket);
         }
 
-        
+
         [HttpPost("Tickets/{id}/Delete")]
         public IActionResult TicketDelete(string id)
         {
@@ -247,11 +247,12 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("Tickets");
         }
 
-        
+
         [HttpPost("Tickets/{id}/Edit")]
         public IActionResult EditTicketPost(UserTicketsViewModel model)
         {
             var ticket = _ticketService.GetById(model.Ticket.TicketId);
+
             if (ticket == null)
             {
                 return NotFound();
@@ -280,7 +281,7 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("Tickets");
         }
 
-        
+
         [HttpPost("Tickets/{id}/Feedback")]
         public IActionResult TicketFeedback(string id, UserTicketsViewModel model)
         {
@@ -297,7 +298,7 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("Tickets");
         }
 
-        
+
         [HttpPost("Tickets/{id}/Close")]
         public IActionResult TicketClose(string id)
         {
@@ -325,7 +326,7 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("Tickets", new { status = 4 });
         }
 
-        
+
         [HttpPost("Tickets/{id}/Reopen")]
         public IActionResult ReopenTicket(string id)
         {

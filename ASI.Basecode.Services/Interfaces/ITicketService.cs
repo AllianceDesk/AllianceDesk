@@ -31,7 +31,6 @@ namespace ASI.Basecode.Services.Interfaces
                 List<UserViewModel> GetWeeklyTopResolvers();
                 void UpdateStatus(Guid ticketId, byte statusId);
                 void AddFeedback(FeedbackViewModel model);
-
                 void AddActivity(TicketActivityViewModel activity);
         }
 }

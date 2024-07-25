@@ -35,13 +35,13 @@ namespace ASI.Basecode.Services.Services
             ITicketRepository ticketRepository,
             IUserRepository userRepository,
             ICategoryRepository categoryRepository,
-            ITicketPriorityRepository ticketPriorityRepository,
-            ITicketStatusRepository ticketStatusRepository,
-            ITicketActivityRepository ticketActivityRepository,
-            ITicketActivityOperationRepository ticketActivityOperationRepository,
-            ITicketMessageRepository ticketMessageRepository,
-            IFeedbackRepository feedbackRepository,
+            ITicketPriorityRepository priorityRepository,
+            ITicketStatusRepository statusRepository,
             IAttachmentRepository attachmentRepository,
+            ITicketActivityRepository activityRepository,
+            ITicketActivityOperationRepository activityOperationRepository,
+            ITicketMessageRepository messageRepository,
+            IFeedbackRepository feedbackRepository,
             INotificationRepository notificationRepository,
             IMapper mapper,
             ISessionHelper sessionHelper,
@@ -51,18 +51,18 @@ namespace ASI.Basecode.Services.Services
             _ticketRepository = ticketRepository;
             _userRepository = userRepository;
             _categoryRepository = categoryRepository;
-            _priorityRepository = ticketPriorityRepository;
-            _statusRepository = ticketStatusRepository;
-            _ticketActivityRepository = ticketActivityRepository;
-            _ticketActivityOperationRepository = ticketActivityOperationRepository;
-            _ticketMessageRepository = ticketMessageRepository;
+            _priorityRepository = priorityRepository;
+            _statusRepository = statusRepository;
+            _ticketActivityRepository = activityRepository;
+            _ticketActivityOperationRepository = activityOperationRepository;
+            _ticketMessageRepository = messageRepository;
             _feedbackRepository = feedbackRepository;
             _teamRepository = teamRepository;
-            _notificationRepository = notificationRepository;
-            _attachmentRepository = attachmentRepository;
             _notificationService = notificationService;
             _mapper = mapper;
             _sessionHelper = sessionHelper;
+            _notificationRepository = notificationRepository;
+            _attachmentRepository = attachmentRepository;
         }
 
         public IQueryable<TicketViewModel> GetAllTickets()
@@ -83,8 +83,6 @@ namespace ASI.Basecode.Services.Services
                 Description = s.Description,
                 DateCreated = s.DateCreated,
                 CreatorId = s.CreatedBy,
-                AgentId = s.AssignedAgent,
-                StatusId = s.StatusId,
                 Category = s.Category.CategoryName,
                 Priority = s.Priority.PriorityName,
                 Status = s.Status.StatusName,
@@ -103,15 +101,12 @@ namespace ASI.Basecode.Services.Services
                 .Include(t => t.CreatedByNavigation);
 
             return tickets.Select(s => new TicketViewModel
-            {
+            { 
                 TicketId = s.TicketId,
-                TicketNumber = s.TicketNumber,
                 Title = s.Title,
                 Description = s.Description,
                 DateCreated = s.DateCreated,
                 CreatorId = s.CreatedBy,
-                AgentId = s.AssignedAgent,
-                StatusId = s.StatusId,
                 Category = s.Category.CategoryName,
                 Priority = s.Priority.PriorityName,
                 Status = s.Status.StatusName,
@@ -119,10 +114,8 @@ namespace ASI.Basecode.Services.Services
                 CreatorName = s.CreatedByNavigation.Name,
             });
         }
-
         public IQueryable<TicketViewModel> GetAgentTickets(Guid agentId)
         {
-
             var ticketsQuery = _ticketRepository.GetAgentTicketsById(agentId)
                 .Include(t => t.Category)
                 .Include(t => t.Priority)
@@ -130,25 +123,21 @@ namespace ASI.Basecode.Services.Services
                 .Include(t => t.AssignedAgent)
                 .Include(t => t.CreatedByNavigation);
 
-            return ticketsQuery.Select(s => new TicketViewModel
+           return ticketsQuery.Select(s => new TicketViewModel
             {
                 TicketId = s.TicketId,
-                TicketNumber = s.TicketNumber,
                 Title = s.Title,
                 Description = s.Description,
                 DateCreated = s.DateCreated,
+                CreatorId = s.CreatedBy,
+                AgentId = s.AssignedAgent,
+                StatusId = s.StatusId,
                 CategoryId = s.CategoryId,
                 PriorityId = s.PriorityId,
-                StatusId= s.StatusId,
-                Category = s.Category.CategoryName,
-                Priority = s.Priority.PriorityName,
-                Status = s.Status.StatusName,
-                AgentName = s.AssignedAgentNavigation.Name,
-                CreatorName = s.CreatedByNavigation.Name,
             });
         }
 
-        public IQueryable<TicketViewModel> GetWeeklyTickets(DateTime startOfWeek, DateTime endOfWeek)
+         public IQueryable<TicketViewModel> GetWeeklyTickets(DateTime startOfWeek, DateTime endOfWeek)
         {
             var ticketsQuery = _ticketRepository.GetWeeklyTickets(startOfWeek, endOfWeek);
 
@@ -195,9 +184,17 @@ namespace ASI.Basecode.Services.Services
             existingTicket.Description = ticket.Description;
             existingTicket.CategoryId = Convert.ToByte(ticket.CategoryId);
             existingTicket.PriorityId = Convert.ToByte(ticket.PriorityId);
-            existingTicket.AssignedAgent = ticket.AgentId;
+            _ticketRepository.Update(existingTicket);
 
-            _ticketRepository.Update(existingTicket); 
+            /*// Add ticket activity
+            TicketActivity newActivity = new TicketActivity();
+            newActivity.HistoryId = Guid.NewGuid();
+            newActivity.TicketId = existingTicket.TicketId;
+            newActivity.OperationId = 2;
+            newActivity.ModifiedBy = _sessionHelper.GetUserIdFromSession();
+            newActivity.ModifiedAt = DateTime.Now;
+            newActivity.Message = "Ticket updated";
+            _ticketActivityRepository.Add(newActivity);*/
         }
 
         public void UpdateStatus(Guid ticketId, byte statusId)
@@ -205,7 +202,6 @@ namespace ASI.Basecode.Services.Services
             var existingTicket = _ticketRepository.GetTicketById(ticketId);
 
             existingTicket.StatusId = statusId;
-
             _ticketRepository.Update(existingTicket);
         }
 
@@ -220,9 +216,6 @@ namespace ASI.Basecode.Services.Services
                 _ticketActivityRepository.Delete(activity.HistoryId);
             }
 
-            // Delete the ticket messages associated with the ticket
-
-            // Delete the ticket itself
             _ticketRepository.Delete(ticketId);
         }
 
@@ -329,9 +322,9 @@ namespace ASI.Basecode.Services.Services
         {
             TicketMessage newMessage = new TicketMessage();
             newMessage.MessageId = Guid.NewGuid();
-            newMessage.TicketId = message.TicketId;
-            newMessage.MessageBody = message.Message;
             newMessage.UserId = _sessionHelper.GetUserIdFromSession();
+            newMessage.MessageBody = message.Message;
+            newMessage.UserId = message.SentById;
             newMessage.PostedAt = DateTime.Now;
 
             _ticketMessageRepository.Add(newMessage);
@@ -504,11 +497,10 @@ namespace ASI.Basecode.Services.Services
             newActivity.ModifiedBy = _sessionHelper.GetUserIdFromSession();
             newActivity.ModifiedAt = DateTime.Now;
             newActivity.Message = ticketActivityModel.Message;
-            newActivity.OperationId = ticketActivityModel.OperationId;
 
             _ticketActivityRepository.Add(newActivity);
         }
-        
+
         #region private methods
         private void Add(Ticket ticket)
         {
@@ -567,6 +559,7 @@ namespace ASI.Basecode.Services.Services
                 }
             }
         }
+
         #endregion
     }
 }

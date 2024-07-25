@@ -774,7 +774,7 @@ namespace ASI.Basecode.WebApp.Controllers
                     TicketCountsByCategory = ticketCountsByCategory,
                     TicketCountsByStatus = ticketCountsByStatus,
                     TicketCountsByPriority = ticketCountByPriority,
-                    TicketCountByFeedback = ticketCountByFeedback,
+                    TicketCountByFeedback = ticketCountByFeedback
                 };
             });
 
