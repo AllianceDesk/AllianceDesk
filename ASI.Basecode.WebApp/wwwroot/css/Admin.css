@@ -414,6 +414,12 @@ a[data-td-none]:hover {
     align-items: center;
 }
 
+.agent-container-team {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr 1fr;
+    align-items: center;
+}
+
 .pointer_cursor {
     cursor: pointer!important;
 }

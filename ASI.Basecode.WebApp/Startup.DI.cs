@@ -38,6 +38,7 @@ namespace ASI.Basecode.WebApp
             this._services.AddScoped<ITicketService, TicketService>();
             this._services.AddScoped<IArticleService, ArticleService>();
             this._services.AddScoped<INotificationService, NotificationService>();
+            this._services.AddScoped<ITeamService, TeamService>();
 
             // Background Services
             this._services.AddScoped<ITicketCleanupService, TicketCleanupService>();
@@ -60,6 +61,7 @@ namespace ASI.Basecode.WebApp
             this._services.AddScoped<IFavoriteRepository, FavoriteRepository>();
             this._services.AddScoped<IFeedbackRepository, FeedbackRepository>();
             this._services.AddScoped<IAttachmentRepository, AttachmentRepository>();
+            this._services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 
             // Manager Class
             this._services.AddScoped<SignInManager>();
