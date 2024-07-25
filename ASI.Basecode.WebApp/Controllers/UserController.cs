@@ -350,11 +350,11 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("Tickets");
         }
 
-        [HttpGet("/KnowledgeBaseModal")]
-        public IActionResult KnowledgeBaseModal()
+        /*[HttpGet("/KnowledgeBase")]
+        public IActionResult KnowledgeBase()
         {
-            /*ViewBag.SearchString = searchString;
-            ViewBag.CategoryString = category;*/
+            *//*ViewBag.SearchString = searchString;
+            ViewBag.CategoryString = category;*//*
 
             var data = _articleService.RetrieveAll()
                                         .Select(u => new ArticleViewModel
@@ -367,7 +367,7 @@ namespace ASI.Basecode.WebApp.Controllers
                                         })
                                         .OrderBy(u => u.Title)
                                         .ToList();
-            /*if (!String.IsNullOrEmpty(searchString))
+            *//*if (!String.IsNullOrEmpty(searchString))
             {
                 data = _articleService.RetrieveAll()
                                         .Where(u => u.Title.Contains(searchString, StringComparison.OrdinalIgnoreCase))
@@ -398,13 +398,13 @@ namespace ASI.Basecode.WebApp.Controllers
                                             })
                                             .ToList();
                 }
-            }*/
+            }*//*
 
             var viewModel = new UserTicketsViewModel
             {
                 Articles = data
             };
             return View(viewModel);
-        }
+        }*/
     }
 }
