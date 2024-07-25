@@ -9,9 +9,7 @@
     </div>
     
     <div class="logosec">
-        <a asp-action="Index" asp-controller="Notification" style="margin-top: 0.3rem">
-            <i class='bx bx-bell bx-sm' style="color: #45474B; cursor: pointer;"></i>
-        </a>
+        <a asp-action="Index" asp-controller="Notification"><i class='bx bx-bell bx-sm bx-fw pt-1 mr-1 bell_icon' style="cursor: pointer; transform: scale(1.1); color: #45474B;"></i></a>
 
         <div class="btn-group">
             <img src="~/img/profile-logo.png" class="dpicn" data-bs-toggle="dropdown" aria-expanded="false" alt="Profile">
@@ -21,26 +19,6 @@
                 <li><a class="dropdown-item" asp-action="SignOutUser" asp-controller="Account"><i class='bx bx-log-out'></i> Logout</a></li>
             </ul>
         </div>
-
-
-
-        @* <i class='bx bx-cog bx-sm' style="color: #45474B; cursor: pointer;"></i>
-
-        <div class="mr-20 hover-pointer" style="position: relative">           
-
-            <div data-agent-header class="dp">
-                <img src="~/img/profile-logo.png" class="dpicn hover-pointer" alt="dp">           
-            </div>
-
-            <div data-agent-settings class="hidden absolute" style="top:2rem; left:-5rem; background: white; z-index: 10; border: 1px solid black; border-radius: 3px; padding: 0.5rem 1rem;">
-                <div>
-                    <i class="bx bx-log-out bx-xs bx-fw" style="color: #3D3B40;"></i>
-                    <a asp-action="SignOutUser" asp-controller="Account" class="text-black-50">Logout</a>
-                </div>
-
-            </div>
-
-        </div> *@
     </div>
 </div>
 
