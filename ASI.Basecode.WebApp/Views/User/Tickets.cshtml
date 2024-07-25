@@ -125,7 +125,6 @@
 						</a>
                         
                         <div class="btn-group option">
-
 							@if (item.Status == "Open" || item.Status == "Assigned")
 							{
 							    <button class="btn icon-button" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
@@ -382,8 +381,8 @@
                     <div class="modal-footer">
                         <form id="ticketActionForm" method="post">
                             <input type="hidden" name="TicketId" id="ticketActionId" />
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                             <button type="submit" class="btn btn-danger" id="ticketActionButton">Submit</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         </form>
                     </div>
                 </div>
@@ -470,6 +469,9 @@
         </div>
     </div>
 </div>
+
+            timeOut: 1000000,
+            extendedTimeOut: 1000000
 
 <div class="modal fade" id="detail" tabindex="-1">
     <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">

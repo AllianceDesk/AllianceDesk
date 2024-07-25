@@ -101,8 +101,7 @@
     </div>
 </div>
 
-@Html.Partial("TicketUpdatePrio") 
-
+@Html.Partial("TicketUpdatePrio")
 <script>
     const teams = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
     console.log("TEAMS ", teams);

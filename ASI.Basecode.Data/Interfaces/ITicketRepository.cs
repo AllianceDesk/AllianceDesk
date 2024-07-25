@@ -20,9 +20,9 @@ namespace ASI.Basecode.Data.Interfaces
 
         Ticket GetTicketById(Guid id);
 
-        IEnumerable<Ticket> GetUserTicketsById(Guid id);
+        IQueryable<Ticket> GetUserTicketsById(Guid id);
 
-        IEnumerable<Ticket> GetAgentTicketsById(Guid id);
+        IQueryable<Ticket> GetAgentTicketsById(Guid id);
         
         IQueryable<Ticket> GetWeeklyTickets(DateTime startOfWeek, DateTime endOfWeek);
     }

@@ -9,7 +9,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using System.Threading.Tasks;
-using System.Net.Sockets;
+using System.Data.Entity;
 
 namespace ASI.Basecode.Services.Services
 {
@@ -59,19 +59,15 @@ namespace ASI.Basecode.Services.Services
 
         public IQueryable<TicketViewModel> RetrieveAll()
         {
-            var tickets = _ticketRepository.RetrieveAll().ToList();
-            var categories = _categoryRepository.RetrieveAll().ToDictionary(c => c.CategoryId, c => c.CategoryName);
-            var priorities = _priorityRepository.RetrieveAll().ToDictionary(p => p.PriorityId, p => p.PriorityName);
-            var statuses = _statusRepository.RetrieveAll().ToDictionary(st => st.StatusId, st => st.StatusName);
-            var users = _userRepository.GetUsers().ToDictionary(u => u.UserId, u => u.Name);
-            var ticketIds = tickets.Select(t => t.TicketId).ToList();
-            var ticketActivities = _ticketActivityRepository.GetActivitiesByTicketIds(ticketIds).ToList();
+            // Use Include to load related data efficiently
+            var tickets = _ticketRepository.RetrieveAll()
+                .Include(t => t.Category)
+                .Include(t => t.Priority)
+                .Include(t => t.Status)
+                .Include(t => t.AssignedAgent)
+                .Include(t => t.CreatedByNavigation);
 
-            var activitiesByTicketId = ticketActivities
-                .GroupBy(a => a.TicketId)
-                .ToDictionary(g => g.Key, g => g.OrderByDescending(a => a.ModifiedAt).ToList());
-
-            var data = tickets.Select(s => new TicketViewModel
+            return tickets.Select(s => new TicketViewModel
             {
                 TicketId = s.TicketId,
                 TicketNumber = s.TicketNumber,
@@ -81,133 +77,56 @@ namespace ASI.Basecode.Services.Services
                 CreatorId = s.CreatedBy,
                 AgentId = s.AssignedAgent,
                 StatusId = s.StatusId,
-                Category = categories.TryGetValue(s.CategoryId, out var categoryName) ? categoryName : null,
-                Priority = priorities.TryGetValue(s.PriorityId, out var priorityName) ? priorityName : null,
-                Status = statuses.TryGetValue(s.StatusId, out var statusName) ? statusName : null,
-                AgentName = s.AssignedAgent.HasValue && users.TryGetValue(s.AssignedAgent.Value, out var agentName) ? agentName : null,
-                CreatorName = users.TryGetValue(s.CreatedBy, out var creatorName) ? creatorName : null,
-                TicketHistory = activitiesByTicketId.TryGetValue(s.TicketId, out var activities) ?
-                    _mapper.Map<IEnumerable<TicketActivityViewModel>>(activities) : Enumerable.Empty<TicketActivityViewModel>()
+                Category = s.Category.CategoryName,
+                Priority = s.Priority.PriorityName,
+                Status = s.Status.StatusName,
+                AgentName = s.AssignedAgentNavigation.Name,
+                CreatorName = s.CreatedByNavigation.Name,
             });
-
-            return data.AsQueryable();
         }
 
-        public IQueryable<TicketViewModel> GetUserTickets(Guid userId, byte? status, string? searchTerm, string? sortOrder, int? page)
+        public IQueryable<TicketViewModel> GetUserTickets(Guid userId)
         {
-            // Retrieve IQueryable from repository
-            var ticketsQuery = _ticketRepository.GetUserTicketsById(userId);
+            var tickets = _ticketRepository.GetUserTicketsById(userId)
+                .Include(t => t.Category)
+                .Include(t => t.Priority)
+                .Include(t => t.Status)
+                .Include(t => t.AssignedAgent)
+                .Include(t => t.CreatedByNavigation);
 
-            // Retrieve additional data
-            var categories = _categoryRepository.RetrieveAll().ToDictionary(c => c.CategoryId, c => c.CategoryName);
-            var priorities = _priorityRepository.RetrieveAll().ToDictionary(p => p.PriorityId, p => p.PriorityName);
-            var statuses = _statusRepository.RetrieveAll().ToDictionary(st => st.StatusId, st => st.StatusName);
-            var users = _userRepository.GetUsers().ToDictionary(u => u.UserId, u => u.Name);
-            
-            
-            var ticketIds = ticketsQuery.Select(t => t.TicketId).ToList();
-            var ticketActivities = _ticketActivityRepository.GetActivitiesByTicketIds(ticketIds).ToList();
-            
-            var feedbacks = _feedbackRepository.GetFeedbackByTicketIds(ticketIds)
-                .ToDictionary(f => f.TicketId, f => _mapper.Map<FeedbackViewModel>(f));
-
-            var activitiesByTicketId = ticketActivities
-                .GroupBy(a => a.TicketId)
-                .ToDictionary(g => g.Key, g => g.OrderByDescending(a => a.ModifiedAt).ToList());
-
-            // Apply filters
-            if (status.HasValue && status != 0)
-            {
-                ticketsQuery = ticketsQuery.Where(t => t.StatusId == status);
-            }
-
-            if (!string.IsNullOrEmpty(searchTerm))
-            {
-                ticketsQuery = ticketsQuery.Where(t => t.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
-                                                        t.Description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
-            }
-
-            ticketsQuery = ticketsQuery.OrderByDescending(t => t.DateCreated);
-
-            var model = ticketsQuery.Select(s => new TicketViewModel
+            return tickets.Select(s => new TicketViewModel
             {
                 TicketId = s.TicketId,
+                TicketNumber = s.TicketNumber,
                 Title = s.Title,
                 Description = s.Description,
                 DateCreated = s.DateCreated,
                 CreatorId = s.CreatedBy,
                 AgentId = s.AssignedAgent,
                 StatusId = s.StatusId,
-                Category = categories.TryGetValue(s.CategoryId, out var categoryName) ? categoryName : null,
-                Priority = priorities.TryGetValue(s.PriorityId, out var priorityName) ? priorityName : null,
-                Status = statuses.TryGetValue(s.StatusId, out var statusName) ? statusName : null,
-                AgentName = s.AssignedAgent.HasValue && users.TryGetValue(s.AssignedAgent.Value, out var agentName) ? agentName : null,
-                CreatorName = users.TryGetValue(s.CreatedBy, out var creatorName) ? creatorName : null,
-                LatestUpdate = activitiesByTicketId.TryGetValue(s.TicketId, out var activities) ?
-                    activities.OrderByDescending(a => a.ModifiedAt).FirstOrDefault() : null,
-                Feedback = feedbacks.TryGetValue(s.TicketId, out var feedback) ? feedback : null,
-                TicketNumber= s.TicketNumber,
+                Category = s.Category.CategoryName,
+                Priority = s.Priority.PriorityName,
+                Status = s.Status.StatusName,
+                AgentName = s.AssignedAgentNavigation.Name,
+                CreatorName = s.CreatedByNavigation.Name,
             });
-
-            return model.AsQueryable();
         }
 
-        public IQueryable<TicketViewModel> GetAgentTickets(Guid agentId, string? status, string? searchTerm, string? sortOrder, int? page)
+        public IQueryable<TicketViewModel> GetAgentTickets(Guid agentId)
         {
             // Retrieve IQueryable from repository
             var ticketsQuery = _ticketRepository.GetAgentTicketsById(agentId);
-
-            // Retrieve additional data
-            var categories = _categoryRepository.RetrieveAll().ToDictionary(c => c.CategoryId, c => c.CategoryName);
-            var priorities = _priorityRepository.RetrieveAll().ToDictionary(p => p.PriorityId, p => p.PriorityName);
-            var statuses = _statusRepository.RetrieveAll().ToDictionary(st => st.StatusId, st => st.StatusName);
-            var users = _userRepository.GetUsers().ToDictionary(u => u.UserId, u => u.Name);
-
-
-            var ticketIds = ticketsQuery.Select(t => t.TicketId).ToList();
-            var ticketActivities = _ticketActivityRepository.GetActivitiesByTicketIds(ticketIds).ToList();
-
-            var feedbacks = _feedbackRepository.GetFeedbackByTicketIds(ticketIds)
-                .ToDictionary(f => f.TicketId, f => _mapper.Map<FeedbackViewModel>(f));
-
-            var activitiesByTicketId = ticketActivities
-                .GroupBy(a => a.TicketId)
-                .ToDictionary(g => g.Key, g => g.OrderByDescending(a => a.ModifiedAt).ToList());
-
-            // Start applying filters
-            if(status == "Unresolved")
-            {
-                ticketsQuery = ticketsQuery.Where(t => t.StatusId == 1 || t.StatusId == 2 || t.StatusId == 3);
-            } else
-            {
-                ticketsQuery = ticketsQuery.Where(t => t.StatusId == 4 || t.StatusId == 5 );
-            }
-
-            if (!string.IsNullOrEmpty(searchTerm))
-            {
-                ticketsQuery = ticketsQuery.Where(t => t.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
-                                                        t.Description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
-            }
-
-            ticketsQuery = ticketsQuery.OrderByDescending(t => t.DateCreated);
-
              
-            var model = ticketsQuery.Select(s => new TicketViewModel
+            return ticketsQuery.Select(s => new TicketViewModel
             {
                 TicketId = s.TicketId,
                 Title = s.Title,
-                Description = s.Description,
-                DateCreated = s.DateCreated,
-                CreatorId = s.CreatedBy,  
-                Category = categories.TryGetValue(s.CategoryId, out var categoryName) ? categoryName : null,
-                Priority = priorities.TryGetValue(s.PriorityId, out var priorityName) ? priorityName : null,
-                Status = statuses.TryGetValue(s.StatusId, out var statusName) ? statusName : null,
-                CreatorName = users.TryGetValue(s.CreatedBy, out var creatorName) ? creatorName : null,
-                LatestUpdate = activitiesByTicketId.TryGetValue(s.TicketId, out var activities) ?
-                    activities.OrderByDescending(a => a.ModifiedAt).FirstOrDefault() : null,
+                Category = s.Category.CategoryName,
+                Priority = s.Priority.PriorityName,
+                Status = s.Status.StatusName,
+                AgentName = s.AssignedAgentNavigation.Name,
+                CreatorName = s.CreatedByNavigation.Name,
             });
-
-            return model.AsQueryable();
         }
 
         public IQueryable<TicketViewModel> GetWeeklyTickets(DateTime startOfWeek, DateTime endOfWeek)

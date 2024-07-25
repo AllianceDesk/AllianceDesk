@@ -37,12 +37,12 @@ namespace ASI.Basecode.Data.Repositories
                 UnitOfWork.SaveChanges();
             }
         }
-        public IEnumerable<TicketActivity> GetActivitiesByTicketId(Guid ticketId)
+        public IQueryable<TicketActivity> GetActivitiesByTicketId(Guid ticketId)
         {
             return this.GetDbSet<TicketActivity>().Where(x => x.TicketId == ticketId);
         }
 
-        public IEnumerable<TicketActivity> GetActivitiesByTicketIds(List<Guid> ticketId)
+        public IQueryable<TicketActivity> GetActivitiesByTicketIds(List<Guid> ticketId)
         {
             return this.GetDbSet<TicketActivity>().Where(x => ticketId.Contains(x.TicketId));
         }

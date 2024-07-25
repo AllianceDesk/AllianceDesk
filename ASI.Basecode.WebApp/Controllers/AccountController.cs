@@ -121,7 +121,6 @@ namespace ASI.Basecode.WebApp.Controllers
             }
             else
             {
-                // 認証NG
                 TempData["ErrorMessage"] = "Incorrect UserId or Password";
                 return View();
             }

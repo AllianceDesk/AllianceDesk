@@ -10,8 +10,8 @@ namespace ASI.Basecode.Services.Interfaces
         public interface ITicketService
         {
                 IQueryable<TicketViewModel> GetAllTickets();
-                IQueryable<TicketViewModel> GetUserTickets(Guid userId, byte? status, string? searchTerm, string? sortOrder, int? page);
-                IQueryable<TicketViewModel> GetAgentTickets(Guid agentId, string? status, string? searchTerm, string? sortOrder, int? page);
+                IQueryable<TicketViewModel> GetUserTickets(Guid userId);
+                IQueryable<TicketViewModel> GetAgentTickets(Guid agentId);
                 IQueryable<TicketViewModel> GetWeeklyTickets(DateTime startOfWeek, DateTime endOfWeek);
                 Task AddAsync(TicketViewModel ticket);
                 void Update(TicketViewModel ticket);

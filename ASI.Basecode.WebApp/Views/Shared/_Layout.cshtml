@@ -39,8 +39,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
        
 
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/js/Admin.js" asp-append-version="true" defer></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.js"></script>
@@ -49,17 +47,15 @@
     <script src="path/to/chartjs/dist/chart.umd.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js"></script>
-    
-    <!-- Lightbox JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
     
     <script>
         // Configure Toastr options
         toastr.options = {
-            positionClass: "toast-top-center", // Set the notification position to center
-            timeOut: 3000,
+            positionClass: "toast-top-center",
+            timeOut: 2000,
             closeButton: true,
-            progressBar: true
+            progressBar: true,
         };
     </script>
     @await RenderSectionAsync("scripts", required: false)
