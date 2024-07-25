@@ -2,12 +2,10 @@
 
 @section styles {
     <link rel="stylesheet" href="~/css/user_tickets.css" />
-
 }
 
 <div class="ticket-modal1">
-
-    <div class="top_modal d-flex justify-content-between align-items-center mb-4 ">
+    <div class="top_modal d-flex justify-content-between align-items-center mb-4">
         <h3>Knowledge Base</h3>
         <button type="button" class="btn x_button" data-bs-dismiss="modal">
             <a asp-controller="User" asp-action="Tickets" method="get" class='bx bx-x bx-sm x_icon remove_default'></a>
@@ -15,49 +13,105 @@
     </div>
 
     <div class="nav_two">
-
         <div class="filter_button d-flex justify-content-between mb-2 pr-3 pl-3">
-
             <form>
                 <div class="input-group w-100">
-                    <button class="btn btn-outline-secondary remove_default search_button" type="button" id="button-search"><i class='bx bx-search bx-xs bx-fw x_icon'></i></button>
-                    <input type="text" class="form-control remove_default search_field" placeholder="Search" aria-label="Search" aria-describedby="button-search">
+                    <button class="btn btn-outline-secondary remove_default search_button" type="button" id="button-search">
+                        <i class='bx bx-search bx-xs bx-fw x_icon'></i>
+                    </button>
+                    <input type="text" id="searchField" class="form-control remove_default search_field" placeholder="Search" aria-label="Search" aria-describedby="button-search">
                 </div>
             </form>
 
-            <select class="form-select form-select-lg mb-3 remove_default select_button" aria-label="Large select example">
+            <select id="categorySelect" class="form-select form-select-lg mb-3 remove_default select_button" aria-label="Large select example">
                 <option selected>Default</option>
-                <option value="1">Technical</option>
-                <option value="2">Billing</option>
-                <option value="3">General Questions</option>
-                <option value="3">Account Management</option>
-                <option value="3">Customer Support</option>
-                <option value="3">Others</option>
+                <option value="Technical">Technical</option>
+                <option value="Billing">Billing</option>
+                <option value="General Questions">General Questions</option>
+                <option value="Account Management">Account Management</option>
+                <option value="Customer Support">Customer Support</option>
+                <option value="Others">Others</option>
             </select>
-
         </div>
-
     </div>
 
     <hr class="mb-4" style="border-top: 2px solid black; width: 97%;" />
 
-    <div style="overflow-y: auto; height: 20em;" class="pr-3 pl-3">
-        @foreach (var articles in Model.Articles)
-        {
-            <a href="#" class="link_card" style="text-decoration: none; color: black;">
-                <div class="article_card  mb-3" data-bs-toggle="modal" data-bs-target="#detail" data-article-detail-btn data-article-id="@articles.ArticleId" style="background-color: #FEF2F4; padding: 1em; border-radius: 10px;">
-                    <div class="article_top mb-3 d-flex justify-content-between">
-                        <h6>@articles.Title</h6>
-                        <p style="font-size: 14px;">@articles.DateUpdated</p>
-                    </div>
-
-                    @* <p class="mb-3" style="font-size: 14px;">Life seasons open have. Air have of. Lights fill after let third darkness replenish fruitful let. Wherein set image. Creepeth said above gathered bring.</p> *@
-
-                    <h6 class="article_category" style=" color: #e21818; border: 1px solid #e21818; width:auto; padding: 0.5em; border-radius: 10px; background-color: rgba(226, 24, 24, 0.3); text-align: center; font-size: 10px;">
-                        @articles.CategoryNavigation
-                    </h6>
-                </div>
-            </a>
-        }
+    <div style="overflow-y: auto; height: 20em;" class="pr-3 pl-3" data-tickets-container>
     </div>
 </div>
+
+@section scripts {
+    <script>
+        let articles = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        console.log("TEAMS ", articles.Articles);
+
+        let ticketsContainer = document.querySelector("[data-tickets-container]");
+        let categorySelect = document.getElementById('categorySelect');
+        let searchField = document.getElementById('searchField');
+
+        let usersPerPage = 10;
+        let currentPage = 1;
+
+        function renderPage(page, category, searchQuery) {
+            ticketsContainer.innerHTML = '';
+            let usersToShow = articles.Articles;
+
+            if (category && category !== 'Default') {
+                usersToShow = usersToShow.filter(item => item.CategoryNavigation.toLowerCase() === category.toLowerCase());
+            }
+
+            if (searchQuery) {
+                usersToShow = usersToShow.filter(item =>
+                    item.Title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    item.CategoryNavigation.toLowerCase().includes(searchQuery.toLowerCase())
+                );
+            }
+
+            if (usersToShow.length > 0) {
+                usersToShow.forEach(item => {
+                    let userDiv = document.createElement('div');
+                    userDiv.classList.add('link_card');
+                    userDiv.style.color = "black";
+                    userDiv.dataset.agentTeamsAgent = '';
+                    userDiv.dataset.userId = item.TicketId;
+
+                    userDiv.innerHTML = `
+                            <div class="article_card flex flex-col align-items-start mb-3" data-bs-toggle="modal" data-bs-target="#detail" data-article-detail-btn data-article-id="${item.ArticleId}" style="background-color: #FEF2F4; padding: 1em; border-radius: 10px;">
+                                <div class="article_top w-100 mb-3 d-flex justify-content-between">
+                                    <h6>${item.Title}</h6>
+                                    <p style="font-size: 14px;">${item.DateUpdated}</p>
+                                </div>
+                                <h6 class="article_category" style="color: #e21818; border: 1px solid #e21818; width:auto; padding: 0.5em; border-radius: 10px; background-color: rgba(226, 24, 24, 0.1); text-align: center; font-size: 10px;">
+                                    ${item.CategoryNavigation}
+                                </h6>
+                            </div>
+                        `;
+
+                    userDiv.addEventListener('click', () => {
+                        console.log("agent clicked");
+                        if (userDiv.classList.contains("selected-agent")) {
+                            userDiv.classList.remove("selected-agent");
+                            return;
+                        }
+                        userDiv.classList.add("selected-agent");
+                        console.log("User Id", userDiv.getAttribute('data-user-id'));
+                    });
+                    ticketsContainer.appendChild(userDiv);
+                });
+            } else {
+                ticketsContainer.innerHTML = '<p>No agents available.</p>';
+            }
+        }
+
+        categorySelect.addEventListener('change', (event) => {
+            renderPage(currentPage, event.target.value, searchField.value);
+        });
+
+        searchField.addEventListener('input', (event) => {
+            renderPage(currentPage, categorySelect.value, event.target.value);
+        });
+
+        renderPage(currentPage);
+    </script>
+}
