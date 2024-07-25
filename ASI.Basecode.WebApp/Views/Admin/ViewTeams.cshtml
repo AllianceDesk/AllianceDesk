@@ -1,7 +1,7 @@
 ﻿@model ASI.Basecode.Services.ServiceModels.TeamViewModel
 
 @{
-    ViewData["Title"] = "TeamDirectory";
+    ViewData["Title"] = "Team Directory";
 }
 @section styles {
     <link rel="stylesheet" href="~/css/functionalities.css" />
@@ -24,19 +24,17 @@
                     </ul>
                 </div>
                 <div class="flex-Row gap-2 justify-content-center align-center">
-                    <form asp-controller="Admin" asp-action="ViewUser" method="get" id="searchForm" class="flex-Row gap-2 align-items-center justify-content-center">
-                        <div class="j-search-container | flex-Row align-center justify-content-center">
-                            <i class="fa-solid fa-magnifying-glass text-1-5"></i>
-                            <input name="searchString" id="searchInput" class="bg-transparent" type="text" placeholder="Search" value="@ViewBag.SearchString" />
-                        </div>
-                        <button class="mbtn-primary flex-Row gap-1 color-white bg-red align-center justify-content-center border-0 p-x-1 br-1-5" style="height: 2.6rem;">
-                            <i class="fa-solid fa-filter"></i>
-                            <p class="br-1-5 p-y-1">Filter</p>
-                        </button>
-                    </form>
+                    <div class="j-search-container | flex-Row align-center justify-content-center">
+                        <i class="fa-solid fa-magnifying-glass text-1-5"></i>
+                        <input name="searchString" id="searchInput" class="bg-transparent" type="text" placeholder="Search" value="@ViewBag.SearchString" />
+                    </div>
+                    <button class="mbtn-primary flex-Row gap-1 color-white bg-red align-center justify-content-center border-0 p-x-1 br-1-5" style="height: 2.6rem;">
+                        <i class="fa-solid fa-filter"></i>
+                        <p class="br-1-5 p-y-1">Filter</p>
+                    </button>
                     <button class="mbtn-primary flex-Row gap-1 color-white bg-red align-center justify-content-center border-0 p-x-1 br-1-5" data-admin-add-btn style="height: 2.6rem;">
-                        <i class='bx bxs-group'></i>
-                        <p class="br-1-5 p-y-1">Add Team</p>
+                        <i class="fa-solid fa-user-plus"></i>
+                        <p class="br-1-5 p-y-1">Add</p>
                     </button>
                 </div>
             </div>
@@ -55,14 +53,14 @@
                 </div>
                 <div style="display: flex; justify-content: center; align-items: center;">
                     <div class="flex-Row align-center gap-1 fw-semi">
-                        <i class="fa-regular fa-envelope"></i>
+                        <i class='bx bx-buildings'></i>
                         <p>Department</p>
                     </div>
                 </div>
                 <div style="display: flex; justify-content: end; align-items: center;">
                     <div class="flex-Row align-center gap-1 fw-semi">
-                        <i class="fa-solid fa-user-tie"></i>
-                        <p>Team Members Count</p>
+                        <i class="fa-solid fa-people-group"></i>
+                        <p>Team Size</p>
                     </div>
                 </div>
             </div>
@@ -97,6 +95,12 @@
                 <button id="last-page" disabled><i class="fa-solid fa-angles-right"></i></button>
             </div>
         </div>
+        <div class="hidden modal-admin bg-modal" data-admin-modal-container>
+            <div class="hidden modal-container br-1 bg-white p-y-1 p-x-2" data-modal-add-form>
+                <form asp-action="PostUserAdd" class="hidden modal-container br-1 bg-white p-y-1 p-x-2" data-modal-add-form>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -116,8 +120,6 @@
         const agentsContainer = document.querySelector(".agents-container");
         const agentsList = document.querySelectorAll("[data-agent-teams-agent]")
         const modalContainer = document.querySelector("[data-admin-modal-container]")
-
-        const navItems = document.querySelectorAll("[data-nav-item]");
 
         const prevPageBtn = document.getElementById('prev-page');
         const nextPageBtn = document.getElementById('next-page');
@@ -217,59 +219,12 @@
 
         /* BTNS */
 
-        const adminEditCloseBtn = document.querySelector("[data-admin-edit-close-btn]")
-        const adminEditCancelBtn = document.querySelector("[data-admin-edit-cancel-btn]")
-        const adminEditSaveBtn = document.querySelector("[data-admin-edit-save-btn]")
-
         const adminAddCloseBtn = document.querySelector("[data-admin-add-close-btn]")
         const adminAddCancelBtn = document.querySelector("[data-admin-add-cancel-btn]")
         const adminAddSaveBtn = document.querySelector("[data-admin-add-save-btn]")
 
-        const adminDelCloseBtn = document.querySelector("[data-admin-delete-close-btn]")
-        const adminDelCancelBtn = document.querySelector("[data-admin-delete-cancel-btn]")
-        const adminDelSaveBtn = document.querySelector("[data-admin-delete-save-btn]")
-
-        const adminEditBtn = document.querySelector("[data-admin-edit-btn]")
-        const adminEditForm = document.querySelector("[data-modal-edit-form]")
-
         const adminAddBtn = document.querySelector("[data-admin-add-btn]")
         const adminAddForm = document.querySelector("[data-modal-add-form]")
-
-        const adminDelBtn = document.querySelector("[data-admin-delete-btn]")
-        const adminDelForm = document.querySelector("[data-admin-delete-modal]")
-
-        /* DELETE */
-
-        $(document).on('click', '[data-admin-delete-btn]', function () {
-            console.log("correct delete")
-            deleteModalContainer.classList.remove("hidden")
-            adminDelForm.classList.remove("hidden")
-        });
-
-        adminDelBtn.addEventListener("click", () => {
-            console.log("clicking open btn", modalContainer, adminEditBtn)
-            deleteModalContainer.classList.remove("hidden")
-            adminDelForm.classList.remove("hidden")
-        })
-
-
-        adminDelCancelBtn.addEventListener("click", () => {
-            console.log("clicking cancel btn", modalContainer)
-            deleteModalContainer.classList.add("hidden")
-            adminDelForm.classList.add("hidden")
-        })
-
-        adminDelCloseBtn.addEventListener("click", () => {
-            console.log("clicking close btn", modalContainer)
-            deleteModalContainer.classList.add("hidden")
-            adminDelForm.classList.add("hidden")
-        })
-
-        adminDelSaveBtn.addEventListener("click", () => {
-            console.log("clicking save btn", modalContainer)
-            deleteModalContainer.classList.add("hidden")
-            adminDelForm.classList.add("hidden")
-        })
 
         /* ADD */
 
@@ -283,11 +238,10 @@
                 data: form.serialize(),
                 success: function (response) {
                     // Handle successful form submission, such as closing the modal and updating the list
-                    alert('User added successfully');
+                    toastr.success('Team added successfully');
                     $('[data-modal-add-form]').closest('.modal-admin').addClass('hidden');
                     $('[data-modal-add-form]').addClass('hidden');
                     // You may also want to update the user list here
-                    window.location.reload(); // Reload the page to reflect changes
                 },
                 error: function (xhr, status, error) {
                     console.error('Error submitting form:', status, error);
@@ -317,22 +271,27 @@
             $('[data-admin-modal-container]').addClass('hidden');
         });
 
-        /* EDIT */
-        adminEditForm.addEventListener("submit", (e) => {
-            e.preventDefault();
-        })
-
-        $(document).on('click', '[data-admin-edit-cancel-btn], [data-admin-edit-close-btn], [data-admin-edit-save-btn]', function () {
-            $('[data-admin-modal-container]').addClass('hidden');
-            $('[data-modal-edit-form]').addClass('hidden');
-        });
-
         navItems.forEach(navItem => {
             navItem.addEventListener("click", () => {
                 navItems.forEach(a => a.classList.remove("active-admin-nav"));
                 navItem.classList.add("active-admin-nav");
             })
         })
+
+        function updateCharacterCount(textarea, counterId) {
+            var maxLength = textarea.getAttribute('maxlength');
+            var currentLength = textarea.value.length;
+            var counterElement = document.getElementById(counterId);
+
+            counterElement.textContent = currentLength + '/' + maxLength + ' characters';
+
+            // Optional: Add warning style if near the limit
+            if (currentLength > maxLength - 10) {
+                counterElement.classList.add('warning');
+            } else {
+                counterElement.classList.remove('warning');
+            }
+        }
     </script>
 
 }

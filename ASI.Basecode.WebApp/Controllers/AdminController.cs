@@ -407,7 +407,8 @@ namespace ASI.Basecode.WebApp.Controllers
                 Name = data.Name,
                 Email = data.Email,
                 RoleId = data.RoleId,
-                TeamName = _userService.GetTeams().FirstOrDefault(t => t.TeamId == data.TeamId.ToString())?.TeamName
+                TeamName = _userService.GetTeams().FirstOrDefault(t => t.TeamId == data.TeamId.ToString())?.TeamName,
+                RecentUserActivities = _userService.GetUserActivity(UserId),
             };
 
             return PartialView("UserDetails", userModel);
@@ -618,6 +619,17 @@ namespace ASI.Basecode.WebApp.Controllers
             {
                 return RedirectToAction("Index", "AccessDenied");
             }
+
+            var departments = _teamService.GetDepartments()
+                                   .Select(u => new SelectListItem
+                                   {
+                                       Value = u.DepartmentId.ToString(),
+                                       Text = u.DepartmentName
+                                   })
+                                   .ToList();
+
+            // Pass data to ViewBag
+            ViewBag.Departments = new SelectList(departments, "Value", "Text");
 
             return PartialView("AddTeam");
         }

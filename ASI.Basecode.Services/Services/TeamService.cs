@@ -41,6 +41,7 @@ namespace ASI.Basecode.Services.Services
             _departmentRepository = departmentRepository;
         }
 
+        //add team method
         public void AddTeam(TeamViewModel model)
         {
             var team = new Team();
@@ -54,15 +55,19 @@ namespace ASI.Basecode.Services.Services
             }
         }
 
+        //get all departments
         public IEnumerable<Department> GetDepartments()
         {
             return _departmentRepository.RetrieveAll();
         }
+        
+        //get the department name
         public string GetDepartmentName(byte departmentId)
         {
             return _departmentRepository.GetDepartmentById(departmentId).DepartmentName;
         }
 
+        //get agents
         public IEnumerable<UserViewModel> GetAgents()
         {
             var agents = _repository.GetUsers().Where(x => x.RoleId == 2).ToList();

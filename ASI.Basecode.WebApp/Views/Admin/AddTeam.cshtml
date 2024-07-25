@@ -1,6 +1,6 @@
 ﻿@model ASI.Basecode.Services.ServiceModels.TeamViewModel
 
-<div class="hidden modal-container br-1 bg-white p-y-1 p-x-2" data-admin-modal-container>
+<div class="modal-container br-1 bg-white p-y-1 p-x-2" data-admin-modal-container>
     <form asp-controller="Admin" asp-action="PostTeamAdd" method="post" class="flex flex-col gap-2 br-1 bg-white p-y-1 p-x-2" data-modal-add-form>
         <div class="flex-Row justify-content-between">
             <h2>Add Team</h2>
@@ -9,13 +9,28 @@
         <div class="modal-input-container">
             <label class="modal-input relative flex">
                 <span>Team Name</span>
-                <input asp-for="TeamName" class="form-control" type="text" placeholder="unityDesk" />
+                <input asp-for="TeamName" class="form-control" type="text" placeholder="unityDesk" maxlength="50" oninput="updateCharacterCount(this, 'charCount')" />
                 <span asp-validation-for="TeamName" class="text-danger"></span>
+                <span id="charCount" class="text-gray-500" style="text-align:end;">0/300</span>
             </label>
+            <label class="modal-input relative flex">
+                <span>Department</span>
+                <select class="pl-2" asp-for="DepartmentId" asp-items="ViewBag.Departments">
+                    <option selected disabled hidden value="">-- Select Role --</option>
+                </select>
+                <span asp-validation-for="DepartmentId" class="text-danger"></span>
+            </label>
+            <label class="modal-input relative flex">
+                <span>Team Description</span>
+                <textarea asp-for="TeamDescription" class="form-control" type="text" placeholder="unityDesk" maxlength="300" oninput="updateCharacterCount(this, 'charCount')"></textarea>
+                <span asp-validation-for="TeamDescription" class="text-danger"></span>
+                <span id="charCount" class="text-gray-500" style="text-align:end;">0/300</span>
+            </label>
+            
         </div>
         <div class="flex-Row gap-1">
-            <button class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-add-cancel-btn>Cancel</button>
             <button class="mbtn-primary color-white bg-red align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" type="submit">Save</button>
+            <button class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-add-cancel-btn>Cancel</button>
         </div>
     </form>
 </div>

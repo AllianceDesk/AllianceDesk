@@ -1,7 +1,7 @@
 @model ASI.Basecode.Services.ServiceModels.UserViewModel
 
 @{
-    ViewData["Title"] = "Directory";
+    ViewData["Title"] = "User Directory";
     var roleMappings = new Dictionary<int, string>
     {
         { 1, "Admin" },
@@ -25,7 +25,7 @@
 @Html.Partial("Admin_Header")
 <div class="main relative" >
     @Html.Partial("Admin_Sidebar")
-    <div class="admin-body py-3 relative bg-grey flex flex-col gap-1">
+        <div class="admin-body py-3 relative bg-grey flex flex-col gap-1" style="padding-right: 1rem;">
 
         <div class="flex" style="padding-right: 2rem; border-right: 1.5px solid #9E9E9E;">
             <div class="flex flex-col justify-content-between">
@@ -105,13 +105,17 @@
             <div class="agents-container flex flex-col gap-1" >
                     @if (Model != null && Model.Users != null && Model.Users.Any())
                     {
-                        <div class="agents | cursor-pointer flex-Row flex-between p-y-1 p-x-1 align-center" data-agent-teams-agent data-user-id="@item.UserId">
-                            <div class="user-img-profile br-50 bg-red align-center font-weight-normal">
-                                @item.FirstLetter
-                            </div>
-                            <div class="flex-col justify-content-center align-center">
-                                <p class="fw-semi text-1-5">@Html.DisplayFor(modelItem => item.Name)</p>
-                                <p>@Html.DisplayFor(modelItem => item.Email)</p>
+                        @foreach (var item in Model.Users)
+                        {
+                            <div class="agents | cursor-pointer flex-Row flex-between p-y-1 p-x-1 align-center" data-agent-teams-agent data-user-id="@item.UserId">
+                                <div class="user-img-profile br-50 bg-red align-center font-weight-normal">
+                                    @item.FirstLetter
+                                </div>
+                                <div class="flex-col justify-content-center align-center">
+                                    <p class="fw-semi text-1-5">@Html.DisplayFor(modelItem => item.Name)</p>
+                                    <p>@Html.DisplayFor(modelItem => item.Email)</p>
+                                </div>
+                                    <div class="role-container role-agent fw-semi text-0-5">@roleMappings[item.RoleId]</div>
                             </div>
                         }
                     }
