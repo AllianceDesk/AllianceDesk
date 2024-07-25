@@ -280,23 +280,22 @@ namespace ASI.Basecode.WebApp.Controllers
                 return NotFound();
             }
 
-            // Resolve the Ticket
-            ticket.StatusId = 3; 
-            _ticketService.Update(ticket);
-
+            _ticketService.UpdateStatus(ticket.TicketId, 3);
 
             // Add Ticket Message
             _ticketService.AddMessage(ticketMessage);
 
             // Add Ticket Activity
-            TicketActivity ticketActivity = new TicketActivity
+            TicketActivityViewModel ticketActivity = new TicketActivityViewModel
             {
                 TicketId = ticketMessage.TicketId,
-                ModifiedBy = _sessionHelper.GetUserIdFromSession(),
+                UserId = _sessionHelper.GetUserIdFromSession(),
                 ModifiedAt = DateTime.Now,
                 OperationId = 7,
                 Message = $"Agent {ticket.AgentName} resolved the ticket"
             };
+
+            _ticketService.AddActivity(ticketActivity);
 
             return RedirectToAction("Dashboard");
         }

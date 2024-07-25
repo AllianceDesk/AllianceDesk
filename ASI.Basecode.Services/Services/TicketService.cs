@@ -187,17 +187,9 @@ namespace ASI.Basecode.Services.Services
             existingTicket.Description = ticket.Description;
             existingTicket.CategoryId = Convert.ToByte(ticket.CategoryId);
             existingTicket.PriorityId = Convert.ToByte(ticket.PriorityId);
-            _ticketRepository.Update(existingTicket);
+            existingTicket.AssignedAgent = ticket.AgentId;
 
-            /*// Add ticket activity
-            TicketActivity newActivity = new TicketActivity();
-            newActivity.HistoryId = Guid.NewGuid();
-            newActivity.TicketId = existingTicket.TicketId;
-            newActivity.OperationId = 2;
-            newActivity.ModifiedBy = _sessionHelper.GetUserIdFromSession();
-            newActivity.ModifiedAt = DateTime.Now;
-            newActivity.Message = "Ticket updated";
-            _ticketActivityRepository.Add(newActivity);*/
+            _ticketRepository.Update(existingTicket);
         }
 
         public void UpdateStatus(Guid ticketId, byte statusId)
