@@ -288,9 +288,7 @@
 
                 if (target === '#editTicket') {
                     const ticketId = this.getAttribute('data-ticket-id');
-                    document.querySelector('#editTicketForm').action = `/User/Tickets/${ticketId}`;
-
-                    console.log(ticketId);
+                    document.querySelector('#editTicketForm').action = `/User/Tickets/${ticketId}/Edit`;
 
                     fetch(`/User/Tickets/${ticketId}`)
                         .then(response => {
@@ -303,7 +301,6 @@
                             document.querySelector('#EditTicketId').value = ticketId;
                             document.querySelector('#EditTitle').value = data.title;
 
-                            // Set Category
                             const editCategorySelect = document.querySelector('#EditCategory');
                             for (const option of editCategorySelect.options) {
                                 if (parseInt(option.value, 10) === parseInt(data.categoryId, 10)) {
@@ -311,8 +308,7 @@
                                     break;
                                 }
                             }
-
-                            // Set Priority
+                            
                             const editPrioritySelect = document.querySelector('#EditPriority');
                             for (const option of editPrioritySelect.options) {
                                 if (parseInt(option.value, 10) === parseInt(data.priorityId, 10)) {

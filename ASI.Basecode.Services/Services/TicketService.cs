@@ -326,13 +326,13 @@ namespace ASI.Basecode.Services.Services
             return _statusRepository.GetStatusById(id);
         }
 
-        public void SendMessage(TicketMessageViewModel message)
+        public void AddMessage(TicketMessageViewModel message)
         {
             TicketMessage newMessage = new TicketMessage();
             newMessage.MessageId = Guid.NewGuid();
             newMessage.TicketId = message.TicketId;
             newMessage.MessageBody = message.Message;
-            newMessage.UserId = message.SentById;
+            newMessage.UserId = _sessionHelper.GetUserIdFromSession();
             newMessage.PostedAt = DateTime.Now;
 
             _ticketMessageRepository.Add(newMessage);
@@ -391,7 +391,20 @@ namespace ASI.Basecode.Services.Services
 
         public void AssignAgent(Guid ticketId, Guid userId)
         {
+            var user = _userRepository.GetUserById(userId);
+
+            // Assign the Agent
             var existingTicket = _ticketRepository.GetTicketById(ticketId);
+
+            string operation = "";
+            if (existingTicket.AssignedAgent != null)
+            {
+                operation = "was reassigned";
+            }
+            else
+            {
+                operation = "was assigned";
+            }
 
             existingTicket.AssignedAgent = userId;
             existingTicket.StatusId = 2;
@@ -405,6 +418,17 @@ namespace ASI.Basecode.Services.Services
 
             // Add notification for the user to inform that there is an assigned agent for it
             _notificationService.Add(ticketId, existingTicket.CreatedBy.ToString());
+
+            // Add the Ticket Activity
+            TicketActivity newActivity = new TicketActivity();
+            newActivity.HistoryId = Guid.NewGuid();
+            newActivity.TicketId = existingTicket.TicketId;
+            newActivity.OperationId = 3;
+            newActivity.ModifiedBy = _sessionHelper.GetUserIdFromSession();
+            newActivity.ModifiedAt = DateTime.Now;
+            newActivity.Message = $"Ticket {operation} to Agent {user.Name}";
+
+            _ticketActivityRepository.Add(newActivity);
         }
 
         public void AddFeedback(FeedbackViewModel model)
@@ -470,6 +494,20 @@ namespace ASI.Basecode.Services.Services
             return result;
         }
 
+        public void AddActivity(TicketActivityViewModel ticketActivityModel)
+        {
+            TicketActivity newActivity = new TicketActivity();
+            newActivity.HistoryId = Guid.NewGuid();
+            newActivity.TicketId = ticketActivityModel.TicketId;
+            newActivity.OperationId = ticketActivityModel.OperationId;
+            newActivity.ModifiedBy = _sessionHelper.GetUserIdFromSession();
+            newActivity.ModifiedAt = DateTime.Now;
+            newActivity.Message = ticketActivityModel.Message;
+            newActivity.OperationId = ticketActivityModel.OperationId;
+
+            _ticketActivityRepository.Add(newActivity);
+        }
+        
         #region private methods
         private void Add(Ticket ticket)
         {

@@ -247,11 +247,10 @@ namespace ASI.Basecode.WebApp.Controllers
         }
 
         
-        [HttpPost("Tickets/{id}/Edit"), ActionName("TicketEdit")]
-        public IActionResult TicketEditPost(string ticketId, UserTicketsViewModel model)
+        [HttpPost("Tickets/{id}/Edit")]
+        public IActionResult EditTicketPost(UserTicketsViewModel model)
         {
-            Guid guid = Guid.Parse(ticketId);
-            var ticket = _ticketService.GetById(guid);
+            var ticket = _ticketService.GetById(model.Ticket.TicketId);
             if (ticket == null)
             {
                 return NotFound();

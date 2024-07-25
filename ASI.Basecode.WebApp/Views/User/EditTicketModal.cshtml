@@ -11,7 +11,7 @@
                     </button>
                 </div>
 
-                <form id="editTicketForm" asp-action="TicketEdit" method="post">
+                <form id="editTicketForm" asp-action="EditTicketPost" method="post">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <input type="hidden" asp-for="Ticket.TicketId" id="EditTicketId" />
                     <div class="form-floating mb-3">
@@ -51,6 +51,7 @@
                         <button type="submit" class="btn button button_size">
                             Submit
                         </button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     </div>
                 </form>
             </div>

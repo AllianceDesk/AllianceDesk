@@ -23,7 +23,7 @@ namespace ASI.Basecode.Services.Interfaces
                 Category GetCategoryById(byte categoryId);
                 TicketPriority GetPriorityById(byte priorityId);
                 TicketStatus GetStatusById(byte statusId);
-                void SendMessage(TicketMessageViewModel message);
+                void AddMessage(TicketMessageViewModel message);
                 IEnumerable<TicketActivityViewModel> GetHistory(Guid ticketId);
                 IEnumerable<TicketMessageViewModel> GetMessages(Guid ticketId);
                 void AssignAgent(Guid ticketId, Guid userId);
@@ -31,5 +31,7 @@ namespace ASI.Basecode.Services.Interfaces
                 List<UserViewModel> GetWeeklyTopResolvers();
                 void UpdateStatus(Guid ticketId, byte statusId);
                 void AddFeedback(FeedbackViewModel model);
+
+                void AddActivity(TicketActivityViewModel activity);
         }
 }
