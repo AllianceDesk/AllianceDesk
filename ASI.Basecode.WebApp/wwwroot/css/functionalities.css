@@ -367,3 +367,8 @@ p {
 a[asp-action] {
     text-decoration: none;
 }
+
+.alliance-dropdown:focus-within {
+    border: 1px solid #E21818;
+    outline: 1px solid #E21818;
+}

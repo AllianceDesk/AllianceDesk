@@ -3,7 +3,6 @@
 @{
     ViewData["Title"] = "Tickets";
     Layout = "_Layout";
-
 }
 
 @section styles {
@@ -17,59 +16,38 @@
     <div class="admin-body py-3 relative bg-grey">
         <h2 class="">Tickets</h2>
         <div class="view-user-nav pl-2">
-                <div class="agent-nav pt-4">
-                    <div class="flex-Row gap-4 pl-2">
-                    <p class="@(ViewBag.ShowStatus == null ? "active" : "")" >
+            <div class="agent-nav pt-4">
+                <div class="flex-Row gap-4 pl-2">
+                    <p class="@(ViewBag.ShowStatus == null ? "active" : "")">
                         <a asp-controller="Admin" asp-action="Tickets" class="@(ViewBag.ShowStatus == null ? "active_link" : "inactive_link")">All</a>
-                        </p>
-                    <p class="@(ViewBag.ShowStatus == "Unresolved" ? "active" : "")" >
+                    </p>
+                    <p class="@(ViewBag.ShowStatus == "Unresolved" ? "active" : "")">
                         <a asp-controller="Admin" asp-action="Tickets" asp-route-status="Unresolved" class="@(ViewBag.ShowStatus == "Unresolved" ? "active_link" : "inactive_link")">Unresolved</a>
-                        </p>
-                    <p class="@(ViewBag.ShowStatus == "Resolved" ? "active" : "")" >
+                    </p>
+                    <p class="@(ViewBag.ShowStatus == "Resolved" ? "active" : "")">
                         <a asp-controller="Admin" asp-action="Tickets" asp-route-status="Resolved" class="@(ViewBag.ShowStatus == "Resolved" ? "active_link" : "inactive_link")">Resolved</a>
-                        </p>
-                    </div>
+                    </p>
                 </div>
-            
-            <div class="flex-Row gap-2 justify-content-center align-center mb-5  mt-3">
-                @* <div class="input-group">
-                    <button class="btn btn-outline-secondary filter_tickets remove_default" type="submit" id="button-search"><i class='bx bx-search bx-xs bx-fw' style="color: #45474B; cursor: pointer;"></i></button>
-                    <input name="searchString" id="searchInput" type="text" class="form-control filter_tickets remove_default" placeholder="Search Tickets" aria-label="Search" aria-describedby="button-search">
-                </div> *@
-                <form asp-controller="Admin" asp-action="Tickets" method="get" id="searchForm" class="flex-Row gap-2 align-items-center justify-content-center">
-                    <div class="j-search-container | flex-Row align-items-center justify-content-center">
-                        <button class="border-0 ">
-                            <i class="bx bx-fw bx-search-alt bg-grey text-1-5 "></i>
-                        </button>
-                        <input name="searchString" id="searchInput" class="bg-transparent" type="text" placeholder="Search" value="@ViewBag.SearchString" />
-                    </div>
-                </form>
-                <select class="form-select form-select-md filter_tickets remove_default" aria-label="Small select example">
-                    <option selected>Open this select menu</option>
-                    <option value="1">Open</option>
-                    <option value="2">Assigned</option>
-                    <option value="3">In Progress</option>
-                    <option value="3">Resolved</option>
-                    <option value="3">Closed</option>
+            </div>
+            <div class="flex-Row gap-2 justify-content-center align-center mb-5 mt-3">
+                <div class="j-search-container | flex-Row align-items-center justify-content-center">
+                    <button class="border-0">
+                        <i class="bx bx-fw bx-search-alt bg-grey text-1-5"></i>
+                    </button>
+                    <input name="searchString" id="team-search-input" class="bg-transparent" type="text" placeholder="Search" value="@ViewBag.SearchString" />
+                </div>
+                <select id="ticket-status" class="form-select form-select-md filter_tickets remove_default" aria-label="Small select example">
+                    <option value="All" selected>Select Category: </option>
+                    <option value="Technical">Technical</option>
+                    <option value="Billing">Billing</option>
+                    <option value="General Questions">General Questions</option>
+                    <option value="Account Management">Account Management</option>
+                    <option value="Customer Support">Customer Support</option>
+                    <option value="Others">Others</option>
                 </select>
             </div>
         </div>
-        <div class="flex-col rounded-md gap-1" data-tickets-container>
-            @* @foreach (var item in Model)
-        <div class="flex-col rounded-md px-5">
-            @foreach (var item in Model)
-            {
-                <div onclick="window.location.href = '@Url.Action("Tickets", "Admin", new { id = item.TicketId })'" class="agents p-y-2 p-x-2 flex-col mb-3 rounded-2 pointer_cursor">
-                        
-                        <div class="d-flex justify-content-between">
-                            <h5>@item.Title</h5>
-                            <p class="mt-1">@item.RelativeTime</p>
-                        </div>
-                        
-                </div>
-            } *@
-        </div>
-        @* <div class="agents-container bg-white" id="agents-container"></div> *@
+        <div class="flex-col rounded-md gap-1" data-tickets-container></div>
         <div class="pagination-container justify-content-center" data-pagination-container>
             <button id="first-page" disabled><i class="fa-solid fa-angles-left"></i></button>
             <button id="prev-page" disabled><i class="fa-solid fa-angle-left"></i></button>
@@ -81,139 +59,167 @@
 </div>
 
 @section scripts {
+    <script>
+        const teams = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        console.log("TEAMS ", teams);
 
+        const ticketsContainer = document.querySelector("[data-tickets-container]");
+        const prevPageBtn = document.getElementById('prev-page');
+        const nextPageBtn = document.getElementById('next-page');
+        const firstPageBtn = document.getElementById('first-page');
+        const lastPageBtn = document.getElementById('last-page');
+        const pageInfo = document.getElementById('page-info');
+        const paginationCtnr = document.querySelector('[data-pagination-container]');
 
-<script>
-    const teams = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
-    console.log("TEAMS ", teams)
-    const ticketsContainer = document.querySelector("[data-tickets-container]");
-    const prevPageBtn = document.getElementById('prev-page');
-    const nextPageBtn = document.getElementById('next-page');
-    const firstPageBtn = document.getElementById('first-page');
-    const lastPageBtn = document.getElementById('last-page');
-    const pageInfo = document.getElementById('page-info');
-    const pagenationCtnr = document.querySelector('[data-pagination-container]')
+        const usersPerPage = 10;
+        let currentPage = 1;
+        let searchTerm = '';
+        let selectedCategory = 'All';
 
-    const usersPerPage = 10;
-    let currentPage = 1;
+        function updatePaginationControls() {
+            const totalPages = Math.ceil(teams.length / usersPerPage);
 
+            if (totalPages === 1) {
+                paginationCtnr.classList.add('hidden');
+            } else {
+                paginationCtnr.classList.remove('hidden');
+            }
 
-    /* PAGINATION */
-
-    function updatePaginationControls() {
-        const totalPages = Math.ceil(teams.length / usersPerPage);
-
-        if (totalPages == 1) {
-            pagenationCtnr.classList.add('hidden')
+            prevPageBtn.disabled = currentPage === 1;
+            firstPageBtn.disabled = currentPage === 1;
+            nextPageBtn.disabled = currentPage === totalPages;
+            lastPageBtn.disabled = currentPage === totalPages;
+            pageInfo.textContent = `${currentPage}`;
         }
 
-        prevPageBtn.disabled = currentPage === 1;
-        firstPageBtn.disabled = currentPage === 1;
-        nextPageBtn.disabled = currentPage === totalPages;
-        lastPageBtn.disabled = currentPage === totalPages;
-        pageInfo.textContent = `${currentPage}`;
-    }
+        prevPageBtn.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderPage(currentPage);
+            }
+        });
 
-    prevPageBtn.addEventListener('click', () => {
-        if (currentPage > 1) {
-            currentPage--;
-            renderPage(currentPage);
-        }
-    });
+        firstPageBtn.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage = 1;
+                renderPage(currentPage);
+            }
+        });
 
-    firstPageBtn.addEventListener('click', () => {
-        if (currentPage > 1) {
-            currentPage = 1;
-            renderPage(currentPage);
-        }
-    });
+        lastPageBtn.addEventListener('click', () => {
+            const totalPages = Math.ceil(teams.length / usersPerPage);
+            if (currentPage < totalPages) {
+                currentPage = totalPages;
+                renderPage(currentPage);
+            }
+        });
 
-    lastPageBtn.addEventListener('click', () => {
-        const totalPages = Math.ceil(teams.length / usersPerPage);
-        if (currentPage < totalPages) {
-            currentPage = totalPages;
-            renderPage(currentPage);
-        }
-    });
+        nextPageBtn.addEventListener('click', () => {
+            const totalPages = Math.ceil(teams.length / usersPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderPage(currentPage);
+            }
+        });
 
-    nextPageBtn.addEventListener('click', () => {
-        const totalPages = Math.ceil(teams.length / usersPerPage);
-        if (currentPage < totalPages) {
-            currentPage++;
-            renderPage(currentPage);
-        }
-    });
+        const categoryItem = {
+            "Technical": "category-technical",
+            "Billing": "category-billing",
+            "General Questions": "category-gen-question",
+            "Account Management": "category-act-management",
+            "Customer Support": "category-customer-support",
+            "Others": "category-others"
+        };
 
-    const categoryItem = {
-        "Technical": "category-technical",
-        "Billing": "category-billing",
-        "General Questions": "category-gen-question",
-        "Account Management": "category-act-management",
-        "Customer Support": "category-customer-support",
-        "Others": "category-others"
-    }
+        const priorityItem = {
+            "Mid": "priority-medium",
+            "High": "priority-high",
+            "Low": "priority-low",
+        };
 
-    const priorityItem = {
-        "Medium": "priority-medium",
-        "High": "priority-high",
-        "Low": "priority-low",
-    }
-
-    const statusItem = {
+        const statusItem = {
             "Open": "status-open",
             "Closed": "status-closed",
             "Resolved": "status-resolved",
             "In Progress": "status-inprogress",
-    }
+        };
+        let filteredTeams = teams;
 
-    function renderPage(page) {
-        ticketsContainer.innerHTML = '';
-        const start = (page - 1) * usersPerPage;
-        const end = start + usersPerPage;
-        const usersToShow = teams.slice(start, end);
+        function renderPage(page) {
+            ticketsContainer.innerHTML = '';
+            const start = (page - 1) * usersPerPage;
+            const end = start + usersPerPage;
+            const usersToShow = filteredTeams.slice(start, end);
 
-        if (usersToShow.length > 0) {
-            usersToShow.forEach(item => {
-                const userDiv = document.createElement('div');
-                userDiv.classList.add('agents', 'cursor-pointer', 'p-y-1', 'p-x-2', 'flex-col', 'rounded-2');
-                userDiv.dataset.agentTeamsAgent = '';
-                userDiv.dataset.userId = item.TicketId;
+            if (usersToShow.length > 0) {
+                usersToShow.forEach(item => {
+                    const userDiv = document.createElement('div');
+                    userDiv.classList.add('agents', 'cursor-pointer', 'p-y-1', 'p-x-2', 'flex-col', 'rounded-2');
+                    userDiv.dataset.agentTeamsAgent = '';
+                    userDiv.dataset.userId = item.TicketId;
+                    userDiv.innerHTML = `
+                            <div class="d-flex justify-content-between">
+                                <div class="flex flex-col gap-4">
+                                    <h5>${item.TicketNumber}: <span> ${item.Title}</span></h5>
+                                    <div class="flex flex-Row gap-2">
+                                        <div class="role-container ${categoryItem[item.Category]} fw-semi text-0-5">${item.Category}</div>
+                                        <div class="role-container ${priorityItem[item.Priority]} fw-semi text-0-5">${item.Priority}</div>
+                                        <div class="role-container ${statusItem[item.Status]} fw-semi text-0-5">${item.Status}</div>
+                                    </div>
+                                </div>
+                                <p class="mt-1">${item.RelativeTime}</p>
+                            </div>
+                        `;
 
-                userDiv.innerHTML = `
-                                        <div class="d-flex justify-content-between">
-                                            <div class="flex flex-col gap-4">
-                                                <h5>${item.TicketNumber}: <span> ${item.Title}</span></h5>
-                                                <div class="flex flex-Row gap-2">
-                                                        <div class="role-container ${categoryItem[item.Category]} fw-semi text-0-5">${item.Category}</div>
-                                                        <div class="role-container ${priorityItem[item.Priority]} fw-semi text-0-5">${item.Priority}</div>
-                                                        <div class="role-container ${statusItem[item.Status]} fw-semi text-0-5">${item.Status}</div>
-                                                </div>
-                                            </div>
-                                            <p class="mt-1">${item.RelativeTime}</p>
-                                        </div>
-                                    `;
-
-                userDiv.addEventListener('click', () => {
-                    console.log("agent clicked");
-                    if (userDiv.classList.contains("selected-agent")) {
-                        userDiv.classList.remove("selected-agent");
-                        return;
-                    }
-                    userId = userDiv.getAttribute('data-user-id');
-                    console.log("User Id", userId);
-                    const url = `@Url.Action("Tickets", "Admin", new { id = "__ID__" })`.replace('__ID__', userId);
-                    window.location.href = url;
+                    userDiv.addEventListener('click', () => {
+                        console.log("agent clicked");
+                        if (userDiv.classList.contains("selected-agent")) {
+                            userDiv.classList.remove("selected-agent");
+                            return;
+                        }
+                        const userId = userDiv.getAttribute('data-user-id');
+                        console.log("User Id", userId);
+                        const url = `@Url.Action("Tickets", "Admin", new { id = "__ID__" })`.replace('__ID__', userId);
+                        window.location.href = url;
+                    });
+                    ticketsContainer.appendChild(userDiv);
                 });
-                ticketsContainer.appendChild(userDiv);
-            });
-        } else {
-            ticketsContainer.innerHTML = '<p>No agents available.</p>';
+            } else {
+                ticketsContainer.innerHTML = '<p>No agents available.</p>';
+            }
+
+            updatePaginationControls();
         }
 
-        updatePaginationControls();
-    }
+        renderPage(currentPage);
 
-    renderPage(currentPage);
-</script>
+        /* SEARCH */
+        const searchInput = document.getElementById('team-search-input');
+        searchInput.addEventListener('input', () => {
+            searchTerm = searchInput.value.toLowerCase();
+            filterTeams();
+        });
 
+        /* CATEGORY FILTER */
+        const categorySelect = document.getElementById('ticket-status');
+        categorySelect.addEventListener('change', () => {
+            selectedCategory = categorySelect.value;
+            console.log("SELECTED ", selectedCategory)
+            filterTeams();
+        });
+
+        function filterTeams() {
+            filteredTeams = teams.filter(team => {
+                const matchesTitle = team.Title.toLowerCase().includes(searchTerm);
+                const matchesTicketNumber = team.TicketNumber.toLowerCase().includes(searchTerm);
+                const matchesCategory = selectedCategory === "All" || team.Category === selectedCategory;
+                console.log("team category", team.Category, " selectedCat", selectedCategory, "TRUE", matchesCategory)
+                return (matchesTicketNumber || matchesTitle) && matchesCategory;
+            });
+            
+            console.log("FILTERED TITLE", filteredTeams)
+            currentPage = 1;
+            renderPage(currentPage);
+        }
+    </script>
 }

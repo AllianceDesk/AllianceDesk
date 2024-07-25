@@ -55,7 +55,7 @@
                     </label>
                     <label class="modal-input relative flex">
                         <span>Role</span>
-                        <select asp-for="RoleId" class="pl-2" asp-items="ViewBag.UserRoles">
+                        <select disabled asp-for="RoleId" class="pl-2" asp-items="ViewBag.UserRoles">
                             <option selected disabled hidden  value="">-- Select Role --</option>
                         </select>
                         <span asp-validation-for="RoleId" class="text-danger"></span>

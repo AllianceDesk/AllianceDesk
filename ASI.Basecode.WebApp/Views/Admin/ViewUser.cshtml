@@ -57,7 +57,7 @@
                            
                             <div class="text-center flex relative ">
                                 <label class="modal-input flex relative justify-content-center align-items-center" style=" height: 2.6rem; margin-bottom: 0; border: 1px solid #9E9E9E;">
-                                    <select name="users-role" id="users-role" class=" pl-3 mr-4" >
+                                    <select class="alliance-dropdown" name="users-role" id="users-role" class=" pl-3 mr-4" >
                                         <option value="All" selected disabled>Select Roles</option>
                                         <option value="All">All</option>
                                         <option value="User">Users</option>
@@ -77,7 +77,7 @@
                 </div>
             </div>
             <div class="agent-container p-y-1 p-x-1 border-b-2 text-1-5 mb-3">
-                <div style="display: flex; align-items: center; font-size: 0.9rem;">
+                    <div style="display: flex; padding-left: 2rem; align-items: center; font-size: 0.9rem;">
                     <div class="flex-Row align-center gap-1 fw-semi">
                         <i class="bx bx-user"></i>
                         <p>Profile</p>
@@ -95,7 +95,7 @@
                         <p>Email</p>
                     </div>
                 </div>
-                <div style="display: flex; justify-content: end; align-items: center; font-size: 0.9rem;">
+                <div style="display: flex; justify-content: center; align-items: center; font-size: 0.9rem;">
                     <div class="flex-Row align-center gap-1 fw-semi">
                         <i class="fa-solid fa-user-tie"></i>
                         <p>Role</p>
@@ -396,8 +396,9 @@
         function filterTeams() {
             filteredTeams = teams.Users.filter(team => {
                 const matchesSearchTerm = team.Name.toLowerCase().includes(searchTerm);
+                const matchEmailTerm = team.Email.toLowerCase().includes(searchTerm);
                 const matchesRole = selectedRole === "All" || roleMappings[team.RoleId] === selectedRole;
-                return matchesSearchTerm && matchesRole;
+                return matchEmailTerm || matchesSearchTerm && matchesRole;
             });
             currentPage = 1; 
             renderPage(currentPage);

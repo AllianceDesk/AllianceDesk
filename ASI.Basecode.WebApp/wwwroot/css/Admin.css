@@ -1,6 +1,6 @@
 .admin-body {
-    padding-left: 6rem;
-    padding-right: 6rem;
+    padding-left: 4rem;
+    padding-right: 4rem;
     margin: auto;
     width: 100%;
     height: 100%;
@@ -20,7 +20,6 @@
 .j-search-container {
     border: 1px solid #9E9E9E;
     border-radius: 1rem;
-    width: 13rem;
     padding: 0rem 1rem;
 }
 
@@ -98,7 +97,7 @@
 
 .agents {
     background-color: #FFF;
-    transition: background-color box-shadow ease-in-out 300ms;
+    transition:  ease-in-out 300ms;
 }
 
     .agents:hover,
