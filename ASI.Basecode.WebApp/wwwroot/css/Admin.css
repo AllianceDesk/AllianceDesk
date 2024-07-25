@@ -502,12 +502,12 @@ a[data-td-none]:hover {
     border-radius: 4px;
 }
 
-.assigned-to::before {
-    content: 'Assigned to:';
+/*.assigned-to::before {
+    content: 'Description:';
     position: absolute;
     top: -7px;
     left: 8px;
     background-color: white;
     color: black;
     font-size: 0.6rem;
-}
+}*/
