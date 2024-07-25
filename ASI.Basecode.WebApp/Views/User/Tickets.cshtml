@@ -288,9 +288,11 @@
 
                 if (target === '#editTicket') {
                     const ticketId = this.getAttribute('data-ticket-id');
-                    document.querySelector('#editTicketForm').action = `/User/Tickets/${ticketId}/Edit`;
+                    document.querySelector('#editTicketForm').action = `/User/Tickets/${ticketId}`;
 
-                    fetch(`/User/Tickets/${ticketId}/Edit`)
+                    console.log(ticketId);
+
+                    fetch(`/User/Tickets/${ticketId}`)
                         .then(response => {
                             if (!response.ok) {
                                 throw new Error(`Server Error: ${response.status} - ${response.statusText}`);

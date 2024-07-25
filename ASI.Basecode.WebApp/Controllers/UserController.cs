@@ -251,12 +251,11 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("Tickets");
         }
 
-
-        [HttpPost("Tickets/{id}/Edit")]
-        public IActionResult EditTicketPost(UserTicketsViewModel model)
+        [HttpPost("Tickets/{id}/Edit"), ActionName("TicketEdit")]
+        public IActionResult TicketEditPost(string ticketId, UserTicketsViewModel model)
         {
-            var ticket = _ticketService.GetById(model.Ticket.TicketId);
-
+            Guid guid = Guid.Parse(ticketId);
+            var ticket = _ticketService.GetById(guid);
             if (ticket == null)
             {
                 return NotFound();
