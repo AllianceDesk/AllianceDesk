@@ -44,9 +44,16 @@ namespace ASI.Basecode.WebApp.Controllers
             this._sessionHelper = sessionHelper;
         }
 
-
+        #region Agent's Navigation
+        /// <summary>
+        /// Goes to the Agent's Dashboard
+        /// </summary>
+        /// <param name="status">Resolved or Unresolved/param>
+        /// <param name="searchTerm">Search Term on Search Bar</param>
+        /// <param name="page">Current page</param>
+        /// <returns></returns>
         [HttpGet("Dashboard")]
-        public ActionResult Dashboard(string? status, string? searchTerm, string? sortOrder, int? page)
+        public ActionResult Dashboard(string? status, string? searchTerm, int? page)
         {
             Guid userId = _sessionHelper.GetUserIdFromSession();
             var userRole = _userService.GetUserById(userId).RoleId;
@@ -84,70 +91,14 @@ namespace ASI.Basecode.WebApp.Controllers
                 CurrentSearchTerm = currentSearchTerm,
             };
 
-            ViewBag.AgentSidebar = "Overview";
+            ViewData["AgentSidebar"] = "Overview";
             return View(model);
         }
 
-        [HttpGet("Tickets/{id}")]
-        public IActionResult Ticket(string id)
-        {
-            var ticket = _ticketService.GetById(Guid.Parse(id));
-
-            if (ticket == null)
-            {
-                return NotFound(); // Handle ticket not found scenario
-            }
-
-            return Json(new
-            {
-                user = ticket.CreatorName,
-                title = ticket.Title,
-                description = ticket.Description,
-                dateCreated = ticket.DateCreated.ToString("MM dd yyyy hh:mm tt"),
-                files = ticket.AttachmentStrings
-            });
-        }
-
-        [HttpGet("AssignedTickets")]
-        public ActionResult AssignedTickets()
-        {
-            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
-
-            if (userRole != 2)
-            {
-                return RedirectToAction("Index", "AccessDenied");
-            }
-
-            ViewBag.AgentSidebar = "Tickets";
-            return this.View();
-        }
-
-        [HttpGet("TicketDetail")]
-        public ActionResult TicketDetail()
-        {
-            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
-
-            if (userRole != 2)
-            {
-                return RedirectToAction("Index", "AccessDenied");
-            }
-
-            return this.View();
-        }
-
-        [HttpGet("TicketAssignment")]
-        public ActionResult TicketAssignment()
-        {
-            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
-
-            if (userRole != 2)
-            {
-                return RedirectToAction("Index", "AccessDenied");
-            }
-
-            return this.View();
-        }
-
+        /// <summary>
+        /// Goes to the Agents profile.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("AgentProfile")]
         public ActionResult AgentProfile()
         {
@@ -196,12 +147,11 @@ namespace ASI.Basecode.WebApp.Controllers
             return View(userModel);
         }
 
-        [HttpPost("/AgentProfileEdit")]
-        [AllowAnonymous]
         /// <summary>
-        /// Post Request for Adding a User
+        /// Post request for editing the agent's profile.
         /// </summary>
-        /// <returns> View User </returns>
+        /// <returns> Returns to the Agent's Teams Page </returns>
+        [HttpPost("/AgentProfileEdit")]
         public IActionResult AgentProfileEdit(UserViewModel user)
         {
             if (user == null)
@@ -212,9 +162,42 @@ namespace ASI.Basecode.WebApp.Controllers
 
             return RedirectToAction("Teams");
         }
+        #endregion
 
-        [HttpGet("PerformanceReport")]
-        public ActionResult PerformanceReport()
+        #region Ticket
+        /// <summary>
+        /// Gets the Ticket Details of the Ticket
+        /// </summary>
+        /// <param name="id">Ticket Id</param>
+        /// <returns></returns>
+        [HttpGet("Tickets/{id}")]
+        public IActionResult Ticket(string id)
+        {
+            var ticket = _ticketService.GetById(Guid.Parse(id));
+
+            if (ticket == null)
+            {
+                return NotFound(); // Handle ticket not found scenario
+            }
+
+            ViewData["AgentSidebar"] = "Tickets";
+
+            return Json(new
+            {
+                user = ticket.CreatorName,
+                title = ticket.Title,
+                description = ticket.Description,
+                dateCreated = ticket.DateCreated.ToString("MM dd yyyy hh:mm tt"),
+                files = ticket.AttachmentStrings
+            });
+        }
+
+        /// <summary>
+        /// Goes to the Assigned Tickets Page
+        /// </summary>
+        /// <returns>Returns the Tickets Assigned of the Agent who is logged in</returns>
+        [HttpGet("AssignedTickets")]
+        public ActionResult AssignedTickets()
         {
             var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
 
@@ -223,44 +206,50 @@ namespace ASI.Basecode.WebApp.Controllers
                 return RedirectToAction("Index", "AccessDenied");
             }
 
-            var userId = HttpContext.Session.GetString("UserId");
-            if (string.IsNullOrEmpty(userId))
-            {
-                return RedirectToAction("Login", "Account");
-            }
-
-            var user = _userService.GetUserById(Guid.Parse(userId));
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            var userRoles = _userService.GetUserRoles()
-                                        .Select(u => new SelectListItem
-                                        {
-                                            Value = u.RoleId.ToString(),
-                                            Text = u.RoleName
-                                        })
-                                        .ToList();
-
-            ViewBag.UserRoles = userRoles;
-
-            var userModel = new UserViewModel
-            {
-                UserId = user.UserId,
-                UserName = user.Username,
-                Name = user.Name,
-                Email = user.Email,
-                Password = PasswordManager.DecryptPassword(user.Password),
-                RoleId = user.RoleId,
-                TeamId = user.TeamId,
-                RoleName = _userService.GetUserRoles().FirstOrDefault(r => r.RoleId == user.RoleId)?.RoleName,
-                TeamName = _userService.GetTeams().FirstOrDefault(t => t.TeamId == user.TeamId)?.TeamName
-            };
-
-            return View(userModel);
+            ViewData["AgentSidebar"] = "Tickets";
+            
+            return this.View();
         }
 
+        /// <summary>
+        /// Goes to the Ticket Details Page
+        /// </summary>
+        /// <returns>Returns the Details of the Ticket</returns>
+        [HttpGet("TicketDetail")]
+        public ActionResult TicketDetail()
+        {
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
+
+            if (userRole != 2)
+            {
+                return RedirectToAction("Index", "AccessDenied");
+            }
+
+            ViewData["AgentSidebar"] = "Tickets";
+            
+            return this.View();
+        }
+
+        /// <summary>
+        /// Goes to the Ticket Assignment Page
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("TicketAssignment")]
+        public ActionResult TicketAssignment()
+        {
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
+
+            if (userRole != 2)
+            {
+                return RedirectToAction("Index", "AccessDenied");
+            }
+
+            return this.View();
+        }
+
+        #endregion
+        
+        #region User
         [HttpGet("Teams")]
         public ActionResult Teams(string searchString)
         {
@@ -270,9 +259,6 @@ namespace ASI.Basecode.WebApp.Controllers
             {
                 return RedirectToAction("Index", "AccessDenied");
             }
-
-            ViewBag.IsLoginOrRegister = false;
-            ViewBag.AgentSidebar = "ViewUser";
 
             var teamId = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).TeamId;
 
@@ -296,11 +282,16 @@ namespace ASI.Basecode.WebApp.Controllers
             {
                 Users = agents
             };
-            ViewBag.SearchString = searchString;
+
+            ViewData["Search String"] = searchString;
+            ViewData["AgentSidebar"] = "ViewUser";
 
             return View(viewModel);
         }
-
+        /// <summary>
+        /// Goes to the Add User Page
+        /// </summary>
+        /// <returns>Returns the Add Agent View</returns>
         [HttpGet("/AddUserAgent")]
         public IActionResult AddUserAgent()
         {
@@ -326,20 +317,18 @@ namespace ASI.Basecode.WebApp.Controllers
                                         Text = u.RoleName
                                     })
                                     .ToList();
-
             ViewBag.Teams = teams;
             ViewBag.UserRoles = userRoles;
 
             return PartialView("AddUserAgent");
         }
 
-
-        [HttpPost]
-        [Route("AddUserAgent")]
         /// <summary>
         /// Post Request for Adding a User
         /// </summary>
-        /// <returns> View User </returns>
+        /// <returns> Redirects to the Teams Page</returns>
+        [HttpPost]
+        [Route("AddUserAgent")]
         public IActionResult PostUserAddAgent(UserViewModel user)
         {
             _userService.AddUser(user);
@@ -347,20 +336,11 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("Teams");
         }
 
-        [HttpGet("TicketSummary")]
-        public ActionResult TicketSummary()
-        {
-            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
 
-            if (userRole != 2)
-            {
-                return RedirectToAction("Index", "AccessDenied");
-            }
-
-            ViewBag.AgentSidebar = "Analytics";
-            return this.View();
-        }
-
+        /// <summary>
+        /// Goes to the Teams Page
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("ViewTeams")]
         public IActionResult ViewTeams()
         {
@@ -380,15 +360,17 @@ namespace ASI.Basecode.WebApp.Controllers
                                    })
                                    .ToList();
             ViewBag.Teams = new SelectList(teams, "Value", "Text");
-            ViewBag.AgentSidebar = "ViewUser";
+
+            ViewData["AgentSidebar"] = "ViewUser";
             return View();
         }
 
-        [HttpPost("/AddTeamAgent")]
+
         /// <summary>
-        /// Post Request for Adding a User
+        /// Post Request for Adding a Team
         /// </summary>
         /// <returns> View User </returns>
+        [HttpPost("/AddTeamAgent")]
         public IActionResult PostTeamAddAgent(UserViewModel team)
         {
             _userService.AddTeam(team);
@@ -396,7 +378,11 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("Teams");
         }
 
-
+        /// <summary>
+        /// Goes to the Agent Details Page
+        /// </summary>
+        /// <param name="UserId">UserId of the Agents we want to view the details</param>
+        /// <returns></returns>
         [HttpGet("/AgentDetails")]
         public IActionResult AgentDetails(string UserId)
         {
@@ -430,12 +416,12 @@ namespace ASI.Basecode.WebApp.Controllers
             return PartialView("AgentDetails", userModel);
         }
 
-        [HttpGet("/AgentEdit")]
         /// <summary>
-        /// Go to the User Details View
+        /// Goes to the Edit Agent Pagee
         /// </summary>
-        /// <returns> User Details</returns>
-        /// 
+        /// <param name="UserId">UserId of the Agents we want to edit</param>
+        /// <returns></returns>
+        [HttpGet("/AgentEdit")]
         public IActionResult AgentEdit(string UserId)
         {
             var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
@@ -487,11 +473,11 @@ namespace ASI.Basecode.WebApp.Controllers
             return PartialView("AgentEdit", userModel);
         }
 
-        [HttpPost("/AgentEdit")]
         /// <summary>
-        /// Post Request for Adding a User
+        /// Post Request for Editing the Agent
         /// </summary>
-        /// <returns> View User </returns>
+        /// <returns> Redirects to the Team's Page</returns>
+        [HttpPost("/AgentEdit")]
         public IActionResult PostUserEdit(UserViewModel user)
         {
             _userService.UpdateUser(user);
@@ -499,17 +485,91 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("Teams");
         }
 
-
-        [HttpPost("/AgentDelete")]
         /// <summary>
-        /// Post Request for Adding a User
+        /// Post Request for Deleting the Agent
         /// </summary>
-        /// <returns> View User </returns>
+        /// <returns> Redirects to the Team's Page</returns>
+        [HttpPost("/AgentDelete")]
         public IActionResult AgentDelete(string UserId)
         {
             _userService.DeleteUser(Guid.Parse(UserId));
 
             return RedirectToAction("Teams");
         }
+        #endregion
+
+        #region Analytics
+
+        /// <summary>
+        /// Goes to the Ticket Summary Page
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("TicketSummary")]
+        public ActionResult TicketSummary()
+        {
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
+
+            if (userRole != 2)
+            {
+                return RedirectToAction("Index", "AccessDenied");
+            }
+
+            ViewData["AgentSidebar"] = "Analytics";
+            return this.View();
+        }
+
+        /// <summary>
+        /// Goes to the Performance Report Page
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("PerformanceReport")]
+        public ActionResult PerformanceReport()
+        {
+            var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
+
+            if (userRole != 2)
+            {
+                return RedirectToAction("Index", "AccessDenied");
+            }
+
+            var userId = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userId))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var user = _userService.GetUserById(Guid.Parse(userId));
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var userRoles = _userService.GetUserRoles()
+                                        .Select(u => new SelectListItem
+                                        {
+                                            Value = u.RoleId.ToString(),
+                                            Text = u.RoleName
+                                        })
+                                        .ToList();
+
+            ViewData["UserRoles"] = userRoles;
+
+            var userModel = new UserViewModel
+            {
+                UserId = user.UserId,
+                UserName = user.Username,
+                Name = user.Name,
+                Email = user.Email,
+                Password = PasswordManager.DecryptPassword(user.Password),
+                RoleId = user.RoleId,
+                TeamId = user.TeamId,
+                RoleName = _userService.GetUserRoles().FirstOrDefault(r => r.RoleId == user.RoleId)?.RoleName,
+                TeamName = _userService.GetTeams().FirstOrDefault(t => t.TeamId == user.TeamId)?.TeamName
+            };
+
+            return View(userModel);
+        }
+
+        #endregion
     }
 }

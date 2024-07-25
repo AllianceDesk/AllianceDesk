@@ -47,6 +47,10 @@ namespace ASI.Basecode.WebApp.Controllers
             this._articleService = articleService;
         }
 
+        /// <summary>
+        /// Admin Dashboard
+        /// </summary>
+        /// <returns>Returns Admin DashboardView Model</returns>
         [HttpGet("/Dashboard")]
         public ActionResult Dashboard()
         {
@@ -64,16 +68,17 @@ namespace ASI.Basecode.WebApp.Controllers
                 TicketCountsByDay = _ticketService.GetTicketVolume(),
                 TopAgents = _ticketService.GetWeeklyTopResolvers(),
                 FavoriteArticles = _articleService.RetrieveFavorites(),
-
             };
             return this.View(model);
         }
 
         #region Tickets
-        /// <summary>
-        /// Returns Tickets View.
-        /// </summary>
-        /// <returns> Tickets View </returns>
+
+        /// <param name="id">Ticket Id</param>
+        /// <param name="status">Resolved or Unresolved</param>
+        /// <returns>
+        /// Tickets when id is null and a specific ticket when id is provided
+        /// </returns>
         [HttpGet]
         [Route("Tickets/{id?}")]
         public IActionResult Tickets(string? id, string? status)
@@ -181,7 +186,7 @@ namespace ASI.Basecode.WebApp.Controllers
         /// <summary>
         /// Assigns the agent to the ticket.
         /// </summary>
-        /// <param name="model">The model.</param>
+        /// <param name="model">Agent Assignment View Model</param>
         /// <returns></returns>
         [HttpPost("Tickets/Assignment"), ActionName("TicketAssignment")]
         public IActionResult PostTicketAssignment([FromBody] AgentAssignmentViewModel model)
@@ -190,6 +195,11 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("Tickets", new { id = model.TicketId });
         }
 
+        /// <summary>
+        /// Updates the priority of the ticket
+        /// </summary>
+        /// <param name="ticket">The ticket to be modified</param>
+        /// <returns></returns>
         [HttpPost("Tickets/{id}/UpdatePriority")]
         public IActionResult UpdatePriority(TicketViewModel ticket)
         {
@@ -210,9 +220,9 @@ namespace ASI.Basecode.WebApp.Controllers
         #region Users
 
         /// <summary>
-        /// Returns User View
+        /// Go to the User Directory
         /// </summary>
-        /// <returns> Home View </returns>
+        /// <returns> Returns all the user </returns>
         [HttpGet("ViewUser")]
         public ActionResult ViewUser(string searchString)
         {
@@ -258,12 +268,12 @@ namespace ASI.Basecode.WebApp.Controllers
             return View(viewModel);
         }
 
-        [HttpGet("/UserDetails")]
         /// <summary>
         /// Go to the User Details View
         /// </summary>
         /// <returns> User Details</returns>
         /// 
+        [HttpGet("/UserDetails")]
         public IActionResult UserDetails(string UserId)
         {
             var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
@@ -293,11 +303,11 @@ namespace ASI.Basecode.WebApp.Controllers
         }
 
 
-        [HttpGet("/AddUser")]
         /// <summary>
         /// Go to the Add a User View
         /// </summary>
         /// <returns> Add User</returns>
+        [HttpGet("/AddUser")]
         public IActionResult AddUser()
         {
             var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
@@ -331,11 +341,12 @@ namespace ASI.Basecode.WebApp.Controllers
             return PartialView("AddUser");
         }
 
-        [HttpPost("/AddUser")]
+
         /// <summary>
         /// Post Request for Adding a User
         /// </summary>
         /// <returns> View User </returns>
+        [HttpPost("/AddUser")]
         public IActionResult PostUserAdd(UserViewModel user)
         {
             _userService.AddUser(user);
@@ -343,12 +354,12 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("ViewUser");
         }
 
-        [HttpGet("/UserEdit")]
+
         /// <summary>
-        /// Go to the User Details View
+        /// Go to the User Edit View
         /// </summary>
-        /// <returns> User Details</returns>
-        /// 
+        /// <returns> Returns to Edit User </returns>
+        [HttpGet("/UserEdit")]
         public IActionResult UserEdit(string UserId, bool resetPassword)
         {
             var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
@@ -407,11 +418,12 @@ namespace ASI.Basecode.WebApp.Controllers
             return PartialView("UserEdit", userModel);
         }
 
-        [HttpPost("/UserEdit")]
+
         /// <summary>
-        /// Post Request for Adding a User
+        /// Post Request for Editing User
         /// </summary>
-        /// <returns> View User </returns>
+        /// <returns> Returns to View User </returns>
+        [HttpPost("/UserEdit")]
         public IActionResult PostUserEdit(UserViewModel user)
         {
             _userService.UpdateUser(user);
@@ -419,11 +431,11 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("ViewUser");
         }
 
-        [HttpGet("/UserDelete")]
         /// <summary>
-        /// Post Request for Adding a User
+        /// Post Request for Deleting User
         /// </summary>
-        /// <returns> View User </returns>
+        /// <returns> Returns to View User </returns>
+        [HttpGet("/UserDelete")]
         public IActionResult UserDelete(string UserId)
         {
             var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
@@ -441,11 +453,11 @@ namespace ASI.Basecode.WebApp.Controllers
             return PartialView("UserDelete", userToDelete);
         }
 
-        [HttpPost("/UserDelete")]
         /// <summary>
         /// Post Request for Adding a User
         /// </summary>
-        /// <returns> View User </returns>
+        /// <returns> Returns to View User </returns>
+        [HttpPost("/UserDelete")]
         public IActionResult PostUserDelete(string UserId)
         {
             _userService.DeleteUser(Guid.Parse(UserId));
@@ -453,7 +465,11 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("ViewUser");
         }
 
-        [HttpGet("/ViewTeams")]
+
+        /// <summary>
+        /// Go to the Teams View
+        /// </summary>
+         [HttpGet("/ViewTeams")]
         public IActionResult ViewTeams()
         {
             var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
@@ -476,11 +492,11 @@ namespace ASI.Basecode.WebApp.Controllers
             return View();
         }
 
-        [HttpGet("/AddTeam")]
         /// <summary>
-        /// Go to the Add a User View
+        /// Go to the Add Team View
         /// </summary>
-        /// <returns> Add User</returns>
+        /// <returns>The Add Team View</returns>
+        [HttpGet("/AddTeam")]
         public IActionResult AddTeam()
         {
             var userRole = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId;
@@ -493,11 +509,11 @@ namespace ASI.Basecode.WebApp.Controllers
             return PartialView("AddTeam");
         }
 
-        [HttpPost("/AddTeam")]
         /// <summary>
-        /// Post Request for Adding a User
+        /// Post Request for Adding a Team
         /// </summary>
-        /// <returns> View User </returns>
+        /// <returns> Redirects to View Teams</returns>
+        [HttpPost("/AddTeam")]
         public IActionResult PostTeamAdd(UserViewModel team)
         {
             _userService.AddTeam(team);
@@ -507,8 +523,11 @@ namespace ASI.Basecode.WebApp.Controllers
 
         #endregion
 
-        #region Analytics
-
+        #region Analytics        
+        /// <summary>
+        /// Go to Overall Metrics on Analytics
+        /// </summary>
+        /// <returns>Analytics of the all the tickets</returns>
         [HttpGet("AnalyticsOverallMetrics")]
         public IActionResult AnalyticsOverallMetrics()
         {
@@ -561,6 +580,10 @@ namespace ASI.Basecode.WebApp.Controllers
             return View("Views/Admin/AnalyticsOverallMetrics.cshtml", model);
         }
 
+        /// <summary>
+        /// Go to Agent Metrics on Analytics
+        /// </summary>
+        /// <returns>Analytics based on Agent</returns>
         [HttpGet("AnalyticsAgentMetric")]
         public IActionResult AgentMetric()
         {
@@ -643,6 +666,10 @@ namespace ASI.Basecode.WebApp.Controllers
             return View("Views/Admin/AnalyticsAgentMetric.cshtml", agentTicketCounts);
         }
 
+        /// <summary>
+        /// Go to Team Metrics on Analytics
+        /// </summary>
+        /// <returns>Analytics based on Teams</returns>
         [HttpGet("AnalyticsTeamMetric")]
         public IActionResult TeamMetrics()
         {
@@ -760,7 +787,6 @@ namespace ASI.Basecode.WebApp.Controllers
 
             return View("Views/Admin/AnalyticsTeamMetric.cshtml", teamTicketCounts);
         }
-
         #endregion
     }
 }

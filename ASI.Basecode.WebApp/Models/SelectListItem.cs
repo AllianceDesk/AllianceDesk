@@ -24,14 +24,14 @@ namespace ASI.Basecode.WebApp.Models
         /// <param name="value"></param>
         public SelectListItem(string text = "", string value = "")
         {
-            this.Label = text;
+            this.Text = text;
             this.Value = value;
         }
 
         /// <summary>
-        /// Select dropdown item label
+        /// Select dropdown item text
         /// </summary>
-        public string Label { get; set; }
+        public string Text { get; set; }
         /// <summary>
         /// Select dropdown item value
         /// </summary>
