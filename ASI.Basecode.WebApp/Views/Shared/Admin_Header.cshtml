@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Http
 
 @inject IHttpContextAccessor HttpContextAccessor
-<div class="flex-Row justify-content-between py-2" style="border-bottom: 2px solid grey;">
+<div class="flex-Row justify-content-between py-2 px-5" style="border-bottom: 2px solid grey;">
     <div class="logosec hover-pointer">
         <img src="~/img/alliancedesk-logo.png"
              style="width: 185px;" alt="logo"
@@ -12,7 +12,19 @@
         <a asp-action="Index" asp-controller="Notification" style="margin-top: 0.3rem">
             <i class='bx bx-bell bx-sm' style="color: #45474B; cursor: pointer;"></i>
         </a>
-        <i class='bx bx-cog bx-sm' style="color: #45474B; cursor: pointer;"></i>
+
+        <div class="btn-group">
+            <img src="~/img/profile-logo.png" class="dpicn" data-bs-toggle="dropdown" aria-expanded="false" alt="Profile">
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#"><i class='bx bx-user'></i> Profile</a></li>
+                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#settings" style="cursor: pointer;"><i class='bx bx-cog'></i> Settings</a></li>
+                <li><a class="dropdown-item" asp-action="SignOutUser" asp-controller="Account"><i class='bx bx-log-out'></i> Logout</a></li>
+            </ul>
+        </div>
+
+
+
+        @* <i class='bx bx-cog bx-sm' style="color: #45474B; cursor: pointer;"></i>
 
         <div class="mr-20 hover-pointer" style="position: relative">           
 
@@ -28,9 +40,11 @@
 
             </div>
 
-        </div>
+        </div> *@
     </div>
 </div>
+
+@Html.Partial("/Views/User/SettingsModal.cshtml")
 
 <script>
     const agentHeader = document.querySelector("[data-agent-header]")

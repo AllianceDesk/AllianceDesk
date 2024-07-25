@@ -151,7 +151,8 @@ namespace ASI.Basecode.Services.Services
                 CreatorName = users.TryGetValue(s.CreatedBy, out var creatorName) ? creatorName : "Unknown",
                 LatestUpdate = activitiesByTicketId.TryGetValue(s.TicketId, out var activities) ?
                     activities.OrderByDescending(a => a.ModifiedAt).FirstOrDefault() : null,
-                Feedback = feedbacks.TryGetValue(s.TicketId, out var feedback) ? feedback : null
+                Feedback = feedbacks.TryGetValue(s.TicketId, out var feedback) ? feedback : null,
+                TicketNumber= s.TicketNumber,
             });
 
             return model.AsQueryable();
