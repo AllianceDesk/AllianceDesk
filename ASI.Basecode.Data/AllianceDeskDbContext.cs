@@ -20,6 +20,7 @@ namespace ASI.Basecode.Data
         public virtual DbSet<Article> Articles { get; set; }
         public virtual DbSet<Attachment> Attachments { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
+        public virtual DbSet<Department> Departments { get; set; }
         public virtual DbSet<Favorite> Favorites { get; set; }
         public virtual DbSet<Feedback> Feedbacks { get; set; }
         public virtual DbSet<Notification> Notifications { get; set; }
@@ -130,6 +131,16 @@ namespace ASI.Basecode.Data
                     .HasColumnName("category_name");
             });
 
+            modelBuilder.Entity<Department>(entity =>
+            {
+                entity.Property(e => e.DepartmentId).HasColumnName("department_id");
+
+                entity.Property(e => e.DepartmentName)
+                    .IsRequired()
+                    .HasMaxLength(255)
+                    .HasColumnName("department_name");
+            });
+
             modelBuilder.Entity<Favorite>(entity =>
             {
                 entity.HasIndex(e => new { e.UserId, e.ArticleId }, "UQ__Favorite__A57D586875348A79")
@@ -226,10 +237,25 @@ namespace ASI.Basecode.Data
                     .ValueGeneratedNever()
                     .HasColumnName("team_id");
 
+                entity.Property(e => e.DepartmentId)
+                    .HasColumnName("department_id")
+                    .HasDefaultValueSql("((2))");
+
+                entity.Property(e => e.TeamDescription)
+                    .IsRequired()
+                    .HasColumnName("team_description")
+                    .HasDefaultValueSql("('No Description')");
+
                 entity.Property(e => e.TeamName)
                     .IsRequired()
                     .HasMaxLength(50)
                     .HasColumnName("team_name");
+
+                entity.HasOne(d => d.Department)
+                    .WithMany(p => p.Teams)
+                    .HasForeignKey(d => d.DepartmentId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Teams_Departments");
             });
 
             modelBuilder.Entity<Ticket>(entity =>

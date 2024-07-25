@@ -10,5 +10,9 @@ namespace ASI.Basecode.Services.ServiceModels
     {
         public string TeamId { get; set; }
         public string TeamName { get; set; }
+        public string TeamDescription { get; set; }
+        public string DepartmentId { get; set; }
+        public string DepartmentName { get; set; }
+        public string TeamNumber { get; set; }
     }
 }
