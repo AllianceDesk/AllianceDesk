@@ -48,6 +48,8 @@ namespace ASI.Basecode.WebApp.Controllers
             this._articleService = articleService;
         }
 
+        #region User Navigation
+
         [HttpGet("Preferences")]
         public IActionResult GetPreference()
         {
@@ -95,7 +97,10 @@ namespace ASI.Basecode.WebApp.Controllers
             }
         }
 
+        #endregion
+
         #region Tickets
+
         [HttpGet("Tickets")]
         public IActionResult Tickets(byte? status, string? searchTerm, string? sortOrder, int? page)
         {
@@ -224,6 +229,7 @@ namespace ASI.Basecode.WebApp.Controllers
             return View(ticket);
         }
 
+        
         [HttpPost("Tickets/{id}/Delete")]
         public IActionResult TicketDelete(string id)
         {
@@ -264,6 +270,7 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("Tickets");
         }
 
+        
         [HttpPost("Tickets/{id}/Feedback")]
         public IActionResult TicketFeedback(string id, UserTicketsViewModel model)
         {
@@ -280,6 +287,7 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("Tickets");
         }
 
+        
         [HttpPost("Tickets/{id}/Close")]
         public IActionResult TicketClose(string id)
         {
@@ -296,6 +304,7 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("Tickets");
         }
 
+        
         [HttpPost("Tickets/{id}/Reopen")]
         public IActionResult TicketReopen(string id)
         {
@@ -312,8 +321,11 @@ namespace ASI.Basecode.WebApp.Controllers
             return RedirectToAction("Tickets");
         }
 
-        /*[HttpGet("/KnowledgeBase")]
-        public IActionResult KnowledgeBase()
+        #endregion
+
+        #region KnowledgeBase
+        [HttpGet("/KnowledgeBaseModal")]
+        public IActionResult KnowledgeBaseModal()
         {
 
             var data = _articleService.RetrieveAll()
@@ -333,8 +345,8 @@ namespace ASI.Basecode.WebApp.Controllers
                 Articles = data
             };
             return View(viewModel);
-        }*/
+        }
 
-        #endregion 
+        #endregion
     }
 }
