@@ -1,8 +1,7 @@
 ﻿@model ASI.Basecode.Services.ServiceModels.TeamViewModel
 
 @{
-    ViewData["Title"] = "Teams";
-    var teams = ViewBag.Teams as SelectList;
+    ViewData["Title"] = "TeamDirectory";
 }
 @section styles {
     <link rel="stylesheet" href="~/css/functionalities.css" />
@@ -12,95 +11,266 @@
 @Html.Partial("Admin_Header")
 <div class="main">
     @Html.Partial("Admin_Sidebar")
-    <div class="admin-body py-3 bg-grey relative">
+    <div class="admin-body py-3 relative bg-grey flex flex-col gap-1">
+
         <div style="padding-right: 2rem; border-right: 1.5px solid #9E9E9E;">
-            <h1>Agents and Team</h1>
+            <h2>Team Directory</h2>
             <div class="flex-Row flex-between">
                 <div class="agent-nav pt-4">
                     <ul class="flex-Row gap-2">
-                        <a asp-action="ViewUser" data-admin-btn class="nav-item" data-nav-item>Agents</a>
-                        <a asp-action="ViewTeams" data-admin-btn class="nav-item active-admin-nav" data-nav-item>Team</a>
+                        <a asp-action="ViewUser" class="nav-item" data-td-none data-nav-item>All Users</a>
+                        <a asp-action="ViewTeams" class="nav-item active-admin-nav" data-td-none data-nav-item>Team</a>
                     </ul>
                 </div>
                 <div class="flex-Row gap-2 justify-content-center align-center">
-                    <div class="j-search-container | flex-Row align-center justify-content-center">
-                        <i class="fa-solid fa-magnifying-glass text-1-5"></i>
-                        <input class="bg-transparent" type="text" placeholder="Search" />
-                    </div>
-                    <button class="mbtn-primary flex-Row gap-1 color-white bg-red align-center justify-content-center border-0 p-x-1 br-1-5" style="height: 2.6rem;" data-admin-add-btn>
-                        <i class="fa-solid fa-user-plus"></i>
-                        <p class="br-1-5 p-y-1">Add</p>
+                    <form asp-controller="Admin" asp-action="ViewUser" method="get" id="searchForm" class="flex-Row gap-2 align-items-center justify-content-center">
+                        <div class="j-search-container | flex-Row align-center justify-content-center">
+                            <i class="fa-solid fa-magnifying-glass text-1-5"></i>
+                            <input name="searchString" id="searchInput" class="bg-transparent" type="text" placeholder="Search" value="@ViewBag.SearchString" />
+                        </div>
+                        <button class="mbtn-primary flex-Row gap-1 color-white bg-red align-center justify-content-center border-0 p-x-1 br-1-5" style="height: 2.6rem;">
+                            <i class="fa-solid fa-filter"></i>
+                            <p class="br-1-5 p-y-1">Filter</p>
+                        </button>
+                    </form>
+                    <button class="mbtn-primary flex-Row gap-1 color-white bg-red align-center justify-content-center border-0 p-x-1 br-1-5" data-admin-add-btn style="height: 2.6rem;">
+                        <i class='bx bxs-group'></i>
+                        <p class="br-1-5 p-y-1">Add Team</p>
                     </button>
                 </div>
             </div>
-            <div class="flex-Row flex-between p-y-1 p-x-1 border-b-2 text-1-5 mb-3">
-                <div class="flex-Row align-center gap-1 fw-semi">
-                    <i class="fa-regular fa-address-card"></i>
-                    <p>Team Name</p>
+            <div class="agent-container p-y-1 p-x-1 border-b-2 text-1-5 mb-3">
+                <div style="display: flex; align-items: center;">
+                    <div class="flex-Row align-center gap-1 fw-semi">
+                        <i class="fa-regular fa-user"></i>
+                        <p>Profile</p>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: center; align-items: center;">
+                    <div class="flex-Row align-center gap-1 fw-semi">
+                        <i class="fa-regular fa-address-card"></i>
+                        <p>Team Name</p>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: center; align-items: center;">
+                    <div class="flex-Row align-center gap-1 fw-semi">
+                        <i class="fa-regular fa-envelope"></i>
+                        <p>Department</p>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: end; align-items: center;">
+                    <div class="flex-Row align-center gap-1 fw-semi">
+                        <i class="fa-solid fa-user-tie"></i>
+                        <p>Team Members Count</p>
+                    </div>
                 </div>
             </div>
-            @if (teams != null && teams.Any())
-            {
-                <div class="agents-container bg-white">
-                    @foreach (var team in teams)
+            <div class="agents-container bg-white">
+                @if (Model != null && Model.Teams != null && Model.Teams.Any())
+                {
+                    @foreach (var item in Model.Teams)
                     {
-                        <div class="agents | flex-Row flex-between p-y-1 p-x-1 align-center" data-agents-1>
-                            <div class="flex-col justify-content-center align-center">
-                                <p class="fw-semi text-1-5">@team.Text</p>
+                        <div class="agents | cursor-pointer flex-Row flex-between p-y-1 p-x-1 align-center" data-agent-teams-agent data-user-id="@item.TeamId">
+                            <div class="user-img-profile br-50 bg-red align-center font-weight-normal">
+                                @item.FirstLetter
                             </div>
+                            <div class="flex-col justify-content-center align-center">
+                                <p class="fw-semi text-1-5">@Html.DisplayFor(modelItem => item.TeamName)</p>
+                                <div class="role-container role-agent fw-semi text-0-5">@Html.DisplayFor(modelItem => item.DepartmentName)</div>
+                            </div>
+                            <p>@Html.DisplayFor(modelItem => item.TeamNumber)</p>
                         </div>
                     }
-                </div>
-            }
-            else
-            {
-                <p>No teams available.</p>
-            }
-        </div>
-        <div class="hidden modal-admin bg-modal" data-admin-modal-container>
-            <div class="flex flex-col gap-2 br-1 bg-white p-y-1 p-x-2 w-25">
-                <form asp-action="PostTeamAdd" method="post" data-modal-add-form class="flex flex-col gap-4">
-                    @Html.AntiForgeryToken()
-                    <div class="flex-Row justify-content-between">
-                        <h2>Add Team</h2>
-                        <i class="text-md fa-regular fa-circle-xmark hover-pointer" data-admin-add-close-btn></i>
-                    </div>
-                    <div>
-                        <label class="modal-input relative flex">
-                            <span>Team Name</span>
-                            <input asp-for="TeamName" type="text" placeholder="John Doe" />
-                            <span asp-validation-for="TeamName" class="text-danger"></span>
-                        </label>
-                    </div>
-                    <div class="flex-Row gap-1">
-                        <button type="button" class="color-white bg-btn-accent align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-add-cancel-btn>Cancel</button>
-                        <button type="submit" class="mbtn-primary color-white bg-red align-center justify-content-center border-0 p-y-0-5 p-x-1 br-1-5" data-admin-add-save-btn>Save</button>
-                    </div>
-                </form>
+                }
+                else
+                {
+                    <p>No teams available.</p>
+                }
+            </div>
+            <div class="agents-container bg-white" id="agents-container"></div>
+            <div class="pagination-container justify-content-center" data-pagination-container>
+                <button id="first-page" disabled><i class="fa-solid fa-angles-left"></i></button>
+                <button id="prev-page" disabled><i class="fa-solid fa-angle-left"></i></button>
+                <span class="bg-White br-1 py-2 px-4" id="page-info"></span>
+                <button id="next-page"><i class="fa-solid fa-angle-right"></i></button>
+                <button id="last-page" disabled><i class="fa-solid fa-angles-right"></i></button>
             </div>
         </div>
     </div>
 </div>
 
+
+
 @section scripts {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <script>
-        const addBtn = document.querySelector('[data-admin-add-btn]');
-        const cancelBtn = document.querySelector("[data-admin-add-cancel-btn]");
-        const closeBtn = document.querySelector("[data-admin-add-close-btn]");
-        const modalCtnr = document.querySelector("[data-admin-modal-container]");
+        //VARIABLES
+        let userId = null
 
-        addBtn.addEventListener("click", () => {
-            modalCtnr.classList.remove("hidden");
+        const teams = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        console.log("TEAMS ", teams.Teams)
+
+        const adminBody = document.querySelector(".admin-body");
+        const agentsContainer = document.querySelector(".agents-container");
+        const agentsList = document.querySelectorAll("[data-agent-teams-agent]")
+        const modalContainer = document.querySelector("[data-admin-modal-container]")
+
+        const navItems = document.querySelectorAll("[data-nav-item]");
+
+        const prevPageBtn = document.getElementById('prev-page');
+        const nextPageBtn = document.getElementById('next-page');
+        const firstPageBtn = document.getElementById('first-page');
+        const lastPageBtn = document.getElementById('last-page');
+        const pageInfo = document.getElementById('page-info');
+        const pagenationCtnr = document.querySelector('[data-pagination-container]')
+
+        const usersPerPage = 10;
+        let currentPage = 1;
+
+        /* PAGINATION */
+
+        function updatePaginationControls() {
+            const totalPages = Math.ceil(teams.Teams.length / usersPerPage);
+
+            if (totalPages == 1) {
+                pagenationCtnr.classList.add('hidden')
+            }
+
+            prevPageBtn.disabled = currentPage === 1;
+            firstPageBtn.disabled = currentPage === 1;
+            nextPageBtn.disabled = currentPage === totalPages;
+            lastPageBtn.disabled = currentPage === totalPages;
+            pageInfo.textContent = `${currentPage}`;
+        }
+
+        prevPageBtn.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderPage(currentPage);
+            }
         });
 
-        cancelBtn.addEventListener("click", () => {
-            modalCtnr.classList.add("hidden");
+        firstPageBtn.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage = 1;
+                renderPage(currentPage);
+            }
         });
 
-        closeBtn.addEventListener("click", () => {
-            modalCtnr.classList.add("hidden");
+        lastPageBtn.addEventListener('click', () => {
+            const totalPages = Math.ceil(teams.Teams.length / usersPerPage);
+            if (currentPage < totalPages) {
+                currentPage = totalPages;
+                renderPage(currentPage);
+            }
         });
+
+        nextPageBtn.addEventListener('click', () => {
+            const totalPages = Math.ceil(teams.Teams.length / usersPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderPage(currentPage);
+            }
+        });
+
+        function renderPage(page) {
+            agentsContainer.innerHTML = '';
+            const start = (page - 1) * usersPerPage;
+            const end = start + usersPerPage;
+            const usersToShow = teams.Teams.slice(start, end);
+
+            if (usersToShow.length > 0) {
+                usersToShow.forEach(item => {
+                    const userDiv = document.createElement('div');
+                    userDiv.classList.add('agents', 'cursor-pointer', 'p-y-1', 'p-x-1', 'agent-container');
+                    userDiv.dataset.agentTeamsAgent = '';
+                    userDiv.dataset.userId = item.UserId;
+                    userDiv.innerHTML = `
+                                                    <div style="display: flex; align-items: center;">
+                                                        <div class="user-img-profile br-50 bg-red" style="display: flex; justify-content: center; align-items: center;">
+                                                            <span class="fw-semi text-1-5 color-white">${item.FirstLetter}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div style="display: flex; justify-content: center; align-items: center;">
+                                                        <p class="fw-semi text-1-5">${item.TeamName}</p>
+                                                    </div>
+                                                    <div style="display: flex; justify-content: center; align-items: center;">
+                                                        <div class="role-container role-agent fw-semi text-0-5">${item.DepartmentName}</div>
+                                                    </div>
+                                                    <div style="display: flex; justify-content: end; align-items: center;">
+                                                                <p>${item.TeamNumber}</p>
+                                                    </div>
+                                                `;
+                    agentsContainer.appendChild(userDiv);
+                });
+            } else {
+                agentsContainer.innerHTML = '<p>No agents available.</p>';
+            }
+
+            updatePaginationControls();
+        }
+
+        renderPage(currentPage);
+
+
+        /* BTNS */
+
+        const adminEditCloseBtn = document.querySelector("[data-admin-edit-close-btn]")
+        const adminEditCancelBtn = document.querySelector("[data-admin-edit-cancel-btn]")
+        const adminEditSaveBtn = document.querySelector("[data-admin-edit-save-btn]")
+
+        const adminAddCloseBtn = document.querySelector("[data-admin-add-close-btn]")
+        const adminAddCancelBtn = document.querySelector("[data-admin-add-cancel-btn]")
+        const adminAddSaveBtn = document.querySelector("[data-admin-add-save-btn]")
+
+        const adminDelCloseBtn = document.querySelector("[data-admin-delete-close-btn]")
+        const adminDelCancelBtn = document.querySelector("[data-admin-delete-cancel-btn]")
+        const adminDelSaveBtn = document.querySelector("[data-admin-delete-save-btn]")
+
+        const adminEditBtn = document.querySelector("[data-admin-edit-btn]")
+        const adminEditForm = document.querySelector("[data-modal-edit-form]")
+
+        const adminAddBtn = document.querySelector("[data-admin-add-btn]")
+        const adminAddForm = document.querySelector("[data-modal-add-form]")
+
+        const adminDelBtn = document.querySelector("[data-admin-delete-btn]")
+        const adminDelForm = document.querySelector("[data-admin-delete-modal]")
+
+        /* DELETE */
+
+        $(document).on('click', '[data-admin-delete-btn]', function () {
+            console.log("correct delete")
+            deleteModalContainer.classList.remove("hidden")
+            adminDelForm.classList.remove("hidden")
+        });
+
+        adminDelBtn.addEventListener("click", () => {
+            console.log("clicking open btn", modalContainer, adminEditBtn)
+            deleteModalContainer.classList.remove("hidden")
+            adminDelForm.classList.remove("hidden")
+        })
+
+
+        adminDelCancelBtn.addEventListener("click", () => {
+            console.log("clicking cancel btn", modalContainer)
+            deleteModalContainer.classList.add("hidden")
+            adminDelForm.classList.add("hidden")
+        })
+
+        adminDelCloseBtn.addEventListener("click", () => {
+            console.log("clicking close btn", modalContainer)
+            deleteModalContainer.classList.add("hidden")
+            adminDelForm.classList.add("hidden")
+        })
+
+        adminDelSaveBtn.addEventListener("click", () => {
+            console.log("clicking save btn", modalContainer)
+            deleteModalContainer.classList.add("hidden")
+            adminDelForm.classList.add("hidden")
+        })
+
+        /* ADD */
 
         // Handle form submission
         $(document).on('submit', '[data-modal-add-form]', function (e) {
@@ -111,10 +281,11 @@
                 type: 'POST',
                 data: form.serialize(),
                 success: function (response) {
-                    // Handle successful form submission
-                    alert('Team added successfully');
-                    modalCtnr.classList.add("hidden");
-                    // Optionally, update the team list here
+                    // Handle successful form submission, such as closing the modal and updating the list
+                    alert('User added successfully');
+                    $('[data-modal-add-form]').closest('.modal-admin').addClass('hidden');
+                    $('[data-modal-add-form]').addClass('hidden');
+                    // You may also want to update the user list here
                     window.location.reload(); // Reload the page to reflect changes
                 },
                 error: function (xhr, status, error) {
@@ -122,5 +293,45 @@
                 }
             });
         });
+
+        adminAddBtn.addEventListener("click", () => {
+            fetch('/AddTeam')
+                .then(response => response.text())
+                .then(data => {
+                    document.querySelector("[data-modal-add-form]").innerHTML = data;
+                    document.querySelector("[data-admin-modal-container]").classList.remove("hidden");
+                    document.querySelector("[data-modal-add-form]").classList.remove("hidden");
+                })
+                .catch(error => console.error('Error:', error));
+            console.log("clicking open btn", modalContainer, adminEditBtn)
+        })
+
+        $(document).on('click', '[data-admin-add-close-btn]', function () {
+            $('[data-admin-modal-container]').addClass('hidden');
+        });
+
+
+        $(document).on('click', '[data-admin-add-cancel-btn]', function (e) {
+            e.preventDefault(); // Prevent form submission if button is inside a form
+            $('[data-admin-modal-container]').addClass('hidden');
+        });
+
+        /* EDIT */
+        adminEditForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+        })
+
+        $(document).on('click', '[data-admin-edit-cancel-btn], [data-admin-edit-close-btn], [data-admin-edit-save-btn]', function () {
+            $('[data-admin-modal-container]').addClass('hidden');
+            $('[data-modal-edit-form]').addClass('hidden');
+        });
+
+        navItems.forEach(navItem => {
+            navItem.addEventListener("click", () => {
+                navItems.forEach(a => a.classList.remove("active-admin-nav"));
+                navItem.classList.add("active-admin-nav");
+            })
+        })
     </script>
+
 }
