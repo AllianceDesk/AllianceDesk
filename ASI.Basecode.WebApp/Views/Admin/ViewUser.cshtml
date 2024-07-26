@@ -339,6 +339,12 @@
             }
         });
 
+        const rolesDesign = {
+            "Agent": "role-agent",
+            "Admin": "role-admin",
+            "User": "role-user"
+        }
+
         function renderPage(page) {
             agentsContainer.innerHTML = '';
             const start = (page - 1) * usersPerPage;
@@ -366,7 +372,7 @@
                                                 <p>${item.Email}</p>
                                             </div>
                                             <div style="display: flex; justify-content: end; align-items: center;">
-                                                <div class="role-container role-agent fw-semi text-0-5">${roleMappings[item.RoleId]}</div>
+                                                        <div class="role-container ${rolesDesign[roleMappings[item.RoleId]]} fw-semi text-0-5">${roleMappings[item.RoleId]}</div>
                                             </div>
                                         `;
                     agentsContainer.appendChild(userDiv);
