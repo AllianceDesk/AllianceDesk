@@ -512,17 +512,24 @@ namespace ASI.Basecode.WebApp.Controllers
                 return RedirectToAction("Index", "AccessDenied");
             }
 
-            ViewBag.IsLoginOrRegister = false;
-            var teams = _userService.GetTeams()
-                                   .Select(t => new SelectListItem
-                                   {
-                                       Value = t.TeamId.ToString(),
-                                       Text = t.TeamName
-                                   })
-                                   .ToList();
-            ViewBag.Teams = new SelectList(teams, "Value", "Text");
-            ViewBag.AdminSidebar = "ViewUser";
-            return View();
+            var teams = _teamService.GetTeams()
+                                        .Select(u => new TeamViewModel
+                                        {
+                                            TeamName = u.TeamName,
+                                            TeamId = u.TeamId,
+                                            TeamDescription = u.TeamDescription,
+                                            DepartmentId = u.DepartmentId,
+                                            DepartmentName = _teamService.GetDepartmentName(u.DepartmentId),
+                                            TeamNumber = _teamService.GetTeamNumber(u.TeamId.ToString()),
+                                        })
+                                        .OrderBy(t => t.TeamName)
+                                        .ToList();
+
+            var viewModel = new TeamViewModel
+            {
+                Teams = teams
+            };
+            return View(viewModel);
         }
 
         /// <summary>
