@@ -10,6 +10,7 @@ using ASI.Basecode.Services.Interfaces;
 using AutoMapper;
 using Microsoft.Extensions.Hosting;
 using ASI.Basecode.Resources.Constants;
+using System.Collections.Generic;
 
 namespace ASI.Basecode.Services.Services
 {
@@ -18,16 +19,21 @@ namespace ASI.Basecode.Services.Services
         private readonly ITicketRepository _ticketRepository;
         private readonly ITicketActivityRepository _ticketActivityRepository;
         private readonly INotificationRepository _notificationRepository;
-        public TicketCleanupService(ITicketRepository ticketRepository, ITicketActivityRepository ticketActivityRepository, INotificationRepository notificationRepository)
+        private readonly IUserRepository _userRepository;
+        public TicketCleanupService(ITicketRepository ticketRepository,
+                                    ITicketActivityRepository ticketActivityRepository,
+                                    INotificationRepository notificationRepository,
+                                    IUserRepository userRepository)
         {
             _ticketRepository = ticketRepository;
             _ticketActivityRepository = ticketActivityRepository;
             _notificationRepository = notificationRepository;
+            _userRepository = userRepository;
         }
 
         public async Task CleanupTicketsAsync()
         {
-            var oneWeekAgo = DateTime.Now.AddDays(-7); // Calculate date threshold
+            var oneWeekAgo = DateTime.Now.AddDays(-10); // Calculate date threshold
 
             // Retrieve unique Ticket IDs for tickets that are resolved and outdated
             var ticketIds = await _ticketActivityRepository.RetrieveAll()
@@ -82,12 +88,58 @@ namespace ASI.Basecode.Services.Services
                 Title = $"Ticket {ticket.TicketNumber} was automatically closed",
                 RecipientId = ticket.CreatedBy,
                 TicketId = ticket.TicketId,
-                Body = $"Your ticket '{ticket.Title}' has been automatically closed because it has been 7 days since it was resolved."
+                Body = $"Your ticket '{ticket.Title}' has been automatically closed because it has been 10 days since it was resolved."
             }).ToList();
 
             await _notificationRepository.AddNotificationsAsync(notifications);
+        }
 
-            Console.WriteLine($"Closed {ticketsToClose.Count} tickets.");
+        public async Task NotifyAgentsonIdleTicketsAsync()
+        {
+            var oneWeekAgo = DateTime.Now.AddDays(-7); // Calculate date threshold
+
+            // Retrieve unique Ticket IDs for tickets that have activities in the last 7 days
+            var ticketIds = await _ticketActivityRepository.RetrieveAll()
+                .Where(ta => ta.ModifiedAt > oneWeekAgo)
+                .Select(ta => ta.TicketId)
+                .Distinct()
+                .ToListAsync();
+
+            var tickets = _ticketRepository.RetrieveAll()
+                .Where(t => ticketIds.Contains(t.TicketId))
+                .ToList();
+
+
+            var admins = _userRepository.GetUsers().Where(u => u.RoleId == 1).ToList();
+
+
+
+            // Define the list to store notifications
+            var notifications = new List<Notification>();
+
+            // Iterate through the tickets to close
+            foreach (var ticket in tickets)
+            {
+                if (ticket.AssignedAgent.HasValue)
+                {
+                    // Create the notification for the idle ticket for the assigned agent
+                    var notification = new Notification
+                    {
+                        NotificationId = Guid.NewGuid(),
+                        Title = $"Ticket {ticket.TicketNumber} has been idle",
+                        RecipientId = ticket.AssignedAgent.Value,  // Use the assigned agent's ID
+                        TicketId = ticket.TicketId,
+                        Body = $"Ticket '{ticket.Title}' has been idle for 7 days and is now being closed. Please review or reassign as needed."
+                    };
+
+                    // Add the notification to the list
+                    notifications.Add(notification);
+                }
+            }
+
+
+            // Add notifications to the repository
+            await _notificationRepository.AddNotificationsAsync(notifications);
         }
     }
 }

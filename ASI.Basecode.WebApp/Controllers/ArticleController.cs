@@ -59,7 +59,8 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpGet ("/KnowledgeBase")]
         public IActionResult Index(string searchString, string category)
         {
-            ViewBag.RoleId = _userRepository.GetUsers().Where(u => u.UserId == _sessionHelper.GetUserIdFromSession()).FirstOrDefault().RoleId;
+            var roleId = _userRepository.GetUsers().Where(u => u.UserId == _sessionHelper.GetUserIdFromSession()).FirstOrDefault().RoleId;
+            ViewBag.RoleId = roleId;
             ViewBag.AdminSidebar = "Index";
             ViewBag.AgentSidebar = "Index";
             ViewBag.SearchString = searchString;

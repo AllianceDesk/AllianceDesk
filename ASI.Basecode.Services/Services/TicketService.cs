@@ -203,6 +203,11 @@ namespace ASI.Basecode.Services.Services
         {
             var existingTicket = _ticketRepository.GetTicketById(ticketId);
 
+            if(statusId == 4)
+            {
+                existingTicket.DateClosed = DateTime.Now;
+            }
+
             existingTicket.StatusId = statusId;
             _ticketRepository.Update(existingTicket);
         }
@@ -266,6 +271,12 @@ namespace ASI.Basecode.Services.Services
                 }
             }
 
+            string resolvedMessage = "";
+            if(ticket.StatusId == 4)
+            {
+                resolvedMessage = _ticketMessageRepository.GetMessagesByTicketId(ticketId).FirstOrDefault().MessageBody;
+            }
+
             TicketActivityViewModel ticketActivityViewModel = new TicketActivityViewModel { Message = latestUpdateMessage, ModifiedAt = latestUpdateDate };
 
             var ticketViewModel = new TicketViewModel
@@ -276,6 +287,7 @@ namespace ASI.Basecode.Services.Services
                 DateCreated = ticket.DateCreated,
                 CategoryId = ticket.CategoryId,
                 PriorityId = ticket.PriorityId,
+                StatusId = ticket.StatusId,
                 TicketNumber = ticket.TicketNumber,
                 Category = categories.TryGetValue(ticket.CategoryId, out var categoryName) ? categoryName : "Unknown",
                 Priority = priorities.TryGetValue(ticket.PriorityId, out var priorityName) ? priorityName : "Unknown",
@@ -284,7 +296,8 @@ namespace ASI.Basecode.Services.Services
                 AgentName = ticket.AssignedAgent.HasValue && users.TryGetValue(ticket.AssignedAgent.Value, out var agentName) ? agentName : "Unknown",
                 TeamName = null,
                 LatestUpdate = new TicketActivity { Message = latestUpdateMessage, ModifiedAt = latestUpdateDate },
-                AttachmentStrings = attachmentFilePaths
+                AttachmentStrings = attachmentFilePaths,
+                ResolvedMessage = resolvedMessage
             };
 
             return ticketViewModel;

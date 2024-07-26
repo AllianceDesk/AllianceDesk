@@ -25,14 +25,14 @@
             </div>
         </div>
 
-        <div class="agent-metrics | flex-Row justify-content-between gap-2 w-100">
-            <div class="h-full">
+        <div class=" | flex-Row justify-content-between gap-2 w-100" style="display: grid; grid-template-columns: 30% 70%;">
+            <div class="">
                 <div class="j-search-container | flex-Row align-center gap-2">
                     <i class="fa-solid fa-magnifying-glass text-1-5"></i>
                     <input id="team-search-input" class="bg-transparent" type="text" placeholder="Search" />
                 </div>
 
-                <div id="teams-list" class="h-100 flex flex-col gap-1 mt-4">
+                <div id="teams-list" class="flex flex-col gap-1 mt-4">
                     @foreach (var item in Model)
                     {
                         <div class="flex-Row bg-White cursor-pointer p-x-1 p-y-0-5 gap-1 align-items-center"
@@ -43,13 +43,20 @@
                         </div>
                     }
                 </div>
+                <div class="pagination-container justify-content-center" data-pagination-container>
+                    <button style="padding: 0.1rem 0.5rem;" id="first-page" disabled><i class="fa-solid fa-angles-left"></i></button>
+                    <button style="padding: 0.1rem 0.5rem;" id="prev-page" disabled><i class="fa-solid fa-angle-left"></i></button>
+                    <span class="bg-White br-1 py-1 px-4" id="page-info"></span>
+                    <button style="padding: 0.1rem 0.5rem;" id="next-page"><i class="fa-solid fa-angle-right"></i></button>
+                    <button style="padding: 0.1rem 0.5rem;" id="last-page" disabled><i class="fa-solid fa-angles-right"></i></button>
+                </div>
             </div>
 
-            <div class="overflow-hidden flex flex-col gap-2">
-                <div class="bg-White p-x-0-5 p-y-0-5 br-1-5">
+            <div class="flex flex-col gap-2">
+                <div class="bg-White p-x-0-5 p-y-0-5 br-1-5">   
                     <canvas id="LineTicketVolumeMetric"></canvas>
                 </div>
-                <div class="bg-White p-x-0-5 p-y-0-5 br-1-5 h-100 flex flex-Row justify-content-between">
+                <div class="bg-White p-x-0-5 p-y-0-5 br-1-5 " style="display: grid; grid-template-columns: 0.5fr 0.5fr;">
                     <div class="bg-White p-x-0-5 p-y-0-5 br-1-5">
                         <p class="text-center">Ticket Status</p>
                         <canvas id="pieChartStatus"></canvas>
@@ -71,12 +78,37 @@
         $(document).ready(function () {
             const teams = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
 
-            console.log("TEAMS", teams)
+            console.log("TEAMS", teams);
+            const paginationContainer = document.querySelector('.pagination-container');
+            const prevPageBtn = document.getElementById('prev-page');
+            const nextPageBtn = document.getElementById('next-page');
+            const firstPageBtn = document.getElementById('first-page');
+            const lastPageBtn = document.getElementById('last-page');
+            const pageInfo = document.getElementById('page-info');
+
+            let currentPage = 1;
+            const teamsPerPage = 10;
+            let filteredTeams = teams;
+
+            function updatePaginationControls() {
+                const totalPages = Math.ceil(filteredTeams.length / teamsPerPage);
+                console.log("TOTAL PAGES ", totalPages);
+
+                prevPageBtn.disabled = currentPage === 1;
+                firstPageBtn.disabled = currentPage === 1;
+                nextPageBtn.disabled = currentPage === totalPages;
+                lastPageBtn.disabled = currentPage === totalPages;
+                pageInfo.textContent = `${currentPage}`;
+            }
 
             function renderTeams(teamsToRender) {
                 const teamsList = document.getElementById('teams-list');
                 teamsList.innerHTML = '';
-                teamsToRender.forEach(team => {
+                const startIndex = (currentPage - 1) * teamsPerPage;
+                const endIndex = startIndex + teamsPerPage;
+                const teamsToShow = teamsToRender.slice(startIndex, endIndex);
+
+                teamsToShow.forEach(team => {
                     const teamDiv = document.createElement('div');
                     teamDiv.classList.add('flex-Row', 'bg-White', 'cursor-pointer', 'p-x-1', 'p-y-0-5', 'gap-2', 'align-items-center');
                     teamDiv.dataset.teamId = team.Team.TeamId;
@@ -108,7 +140,39 @@
                         }
                     });
                 });
+                updatePaginationControls();
             }
+
+            // Event listeners for pagination buttons
+            prevPageBtn.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderTeams(filteredTeams);
+                }
+            });
+
+            firstPageBtn.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage = 1;
+                    renderTeams(filteredTeams);
+                }
+            });
+
+            lastPageBtn.addEventListener('click', () => {
+                const totalPages = Math.ceil(filteredTeams.length / teamsPerPage);
+                if (currentPage < totalPages) {
+                    currentPage = totalPages;
+                    renderTeams(filteredTeams);
+                }
+            });
+
+            nextPageBtn.addEventListener('click', () => {
+                const totalPages = Math.ceil(filteredTeams.length / teamsPerPage);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderTeams(filteredTeams);
+                }
+            });
 
             function updateCharts(ticketVolume, ticketStatus, ticketCategory) {
                 // Update Line Chart
@@ -141,14 +205,15 @@
             }
 
             // Initial rendering
-            renderTeams(Object.values(teams));
+            renderTeams(filteredTeams);
 
             const searchInput = document.getElementById('team-search-input');
             searchInput.addEventListener('input', () => {
                 const searchTerm = searchInput.value.toLowerCase();
-                const filteredTeams = Object.values(teams).filter(team =>
+                filteredTeams = teams.filter(team =>
                     team.Team.TeamName.toLowerCase().includes(searchTerm)
                 );
+                currentPage = 1; // Reset to first page on search
                 renderTeams(filteredTeams);
             });
 
@@ -209,5 +274,4 @@
             }
         });
     </script>
-
 }

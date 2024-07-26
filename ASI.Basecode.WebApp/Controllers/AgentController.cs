@@ -23,6 +23,7 @@ namespace ASI.Basecode.WebApp.Controllers
     {
         private readonly IUserService _userService;
         private readonly ITicketService _ticketService;
+        private readonly INotificationService _notificationService;
         private readonly ISessionHelper _sessionHelper;
         /// <summary>
         /// Constructor
@@ -38,10 +39,12 @@ namespace ASI.Basecode.WebApp.Controllers
                               IConfiguration configuration,
                               IUserService userService,
                               ITicketService ticketService,
+                              INotificationService notificationService,
                               IMapper mapper = null) : base(httpContextAccessor, loggerFactory, configuration, mapper)
         {
             this._userService = userService;
             this._ticketService = ticketService;
+            this._notificationService = notificationService;
             this._sessionHelper = sessionHelper;
         }
 
@@ -271,7 +274,8 @@ namespace ASI.Basecode.WebApp.Controllers
         [HttpPost("ResolveTicket")]
         public IActionResult ResolveTicket(TicketMessageViewModel ticketMessage)
         {
-
+            DateTime resolved = DateTime.Now;
+            ticketMessage.PostedAt = resolved;
             var ticket = _ticketService.GetById(ticketMessage.TicketId);
 
 
@@ -290,12 +294,15 @@ namespace ASI.Basecode.WebApp.Controllers
             {
                 TicketId = ticketMessage.TicketId,
                 UserId = _sessionHelper.GetUserIdFromSession(),
-                ModifiedAt = DateTime.Now,
+                ModifiedAt = resolved,
                 OperationId = 7,
                 Message = $"Agent {ticket.AgentName} resolved the ticket"
             };
 
             _ticketService.AddActivity(ticketActivity);
+
+            // Create Notification
+            _notificationService.Add(ticket.TicketId.ToString(), ticket.CreatorId.ToString());
 
             return RedirectToAction("Dashboard");
         }

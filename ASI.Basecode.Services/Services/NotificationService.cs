@@ -62,17 +62,20 @@ namespace ASI.Basecode.Services.Services
             }
 
             var ticketInfo = _ticketRepository.GetTicketById(Guid.Parse(ticketId));
-                
-            var newNotification = new Notification();
-            newNotification.NotificationId = Guid.NewGuid();
-            newNotification.TicketId = Guid.Parse(ticketId);
-            newNotification.Title = ticketInfo.Title;
-            newNotification.Body = ticketInfo.Description;
-            newNotification.DateCreated = DateTime.Now;
-            newNotification.RecipientId = Guid.Parse(userId);
-            newNotification.Status = true;
 
-            _notificationRepository.Add(newNotification);
+            if (ticketInfo == null)
+            {
+                var newNotification = new Notification();
+                newNotification.NotificationId = Guid.NewGuid();
+                newNotification.TicketId = Guid.Parse(ticketId);
+                newNotification.Title = ticketInfo.Title;
+                newNotification.Body = ticketInfo.Description;
+                newNotification.DateCreated = DateTime.Now;
+                newNotification.RecipientId = Guid.Parse(userId);
+                newNotification.Status = true;
+                
+                _notificationRepository.Add(newNotification);
+            }
         }
 
         /// <summary>

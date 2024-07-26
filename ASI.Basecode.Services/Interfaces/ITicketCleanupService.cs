@@ -9,5 +9,6 @@ namespace ASI.Basecode.Services.Interfaces
     public interface ITicketCleanupService
     {
         Task CleanupTicketsAsync();
+        Task NotifyAgentsonIdleTicketsAsync();
     }
 }

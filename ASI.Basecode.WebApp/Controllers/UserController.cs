@@ -273,7 +273,7 @@ namespace ASI.Basecode.WebApp.Controllers
             _ticketService.AddActivity(newActivity);
 
             // Redirect to the Tickets action
-            return RedirectToAction("Tickets", new { status = 4 });
+            return RedirectToAction("Tickets", new { status = 1 });
         }
 
 

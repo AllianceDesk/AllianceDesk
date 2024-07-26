@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<ASI.Basecode.Services.ServiceModels.AnalyticsAgentMetricViewModel>
+
 @{
     ViewData["Title"] = "Tickets";
     Layout = "_Layout";
@@ -12,41 +13,24 @@
 <div class="main">
     @Html.Partial("Admin_Sidebar")
     <div class="admin-body py-3 relative bg-grey">
-        @* Status *@
-        <p class="hidden" data-aom-open>5</p>
-        <p class="hidden" data-aom-resolved>10</p>
-        <p class="hidden" data-aom-inprogress>15</p>
-        <p class="hidden" data-aom-closed>16</p>
-        @* Category *@
-        <p class="hidden" data-aom-technical>5</p>
-        <p class="hidden" data-aom-billing>10</p>
-        <p class="hidden" data-aom-generalInquiry>15</p>
-        <p class="hidden" data-aom-others>16</p>
-        @* TicketVolume *@
-        <p class="hidden" data-tm-1star>5</p>
-        <p class="hidden" data-tm-2star>10</p>
-        <p class="hidden" data-tm-3star>15</p>
-        <p class="hidden" data-tm-4star>12</p>
-        <p class="hidden" data-tm-5star>16</p>
         <h2>Analytics</h2>
         <div class="view-user-nav">
             <div class="agent-nav pt-4">
                 <div class="flex-Row gap-4 pl-2 mb-4">
-                    <a asp-action="AnalyticsOverallMetrics" data-td-none asp-controller="Admin" class="nav-item  " data-ticketsall-nav-item data-status="unresolved">Overall Metrics</a>
-                    <a asp-action="AnalyticsTeamMetric" data-td-none asp-controller="Admin" class="nav-item " data-ticketsall-nav-item data-status="resolved">Team Metric</a>
+                    <a asp-action="AnalyticsOverallMetrics" data-td-none asp-controller="Admin" class="nav-item" data-ticketsall-nav-item data-status="unresolved">Overall Metrics</a>
+                    <a asp-action="AnalyticsTeamMetric" data-td-none asp-controller="Admin" class="nav-item" data-ticketsall-nav-item data-status="resolved">Team Metric</a>
                     <a asp-action="AgentMetric" data-td-none asp-controller="Admin" class="nav-item active-admin-nav" data-ticketsall-nav-item data-status="resolved">Agent Metrics</a>
                 </div>
             </div>
-           
         </div>
-        
-        <div class="agent-metrics | flex-Row justify-content-between gap-2 w-100">
-            <div class="h-full">
+
+        <div class=" | flex-Row justify-content-between gap-2 w-100" style="display: grid; grid-template-columns: 30% 70%;">
+            <div>
                 <div class="j-search-container | flex-Row align-center gap-2">
                     <i class="fa-solid fa-magnifying-glass text-1-5"></i>
                     <input id="team-search-input" class="bg-transparent" type="text" placeholder="Search" />
                 </div>
-                <div id="teams-list" class="h-100 flex flex-col gap-1 mt-4">
+                <div id="teams-list" class=" flex flex-col gap-1 mt-4">
                     @foreach (var item in Model)
                     {
                         <div class="flex-Row bg-White cursor-pointer p-x-1 p-y-0-5 gap-1 align-items-center"
@@ -57,36 +41,24 @@
                         </div>
                     }
                 </div>
-                <div class="h-100 flex flex-col gap-1 mt-4">
-                    <div class="flex-Row bg-White p-x-1 p-y-0-5 gap-1 align-items-center align-items-center">
-                        <div class="p-y-1 p-x-1 br-50 bg-grey"></div>
-                        <h6 class="H6">Username</h6>
-                        <div class="role-container role-agent fw-semi text-0-5 text-sm">IT SUPPORT</div>
-                    </div>
-                    <div class="flex-Row bg-White  p-x-1 p-y-0-5 gap-1 align-items-center align-items-center">
-                        <div class="p-y-1 p-x-1 br-50 bg-grey"></div>
-                        <h6 class="H6">Username</h6>
-                        <div class="role-container  role-agent fw-semi text-0-5 text-sm">IT SUPPORT</div>
-                    </div>
-                    <div class="flex-Row bg-White  p-x-1 p-y-0-5 gap-1 align-items-center align-items-center">
-                        <div class="p-y-1 p-x-1 br-50 bg-grey"></div>
-                        <h6 class="H6">Username</h6>
-                        <div class="role-container role-agent fw-semi text-0-5 text-sm">IT SUPPORT</div>
-                    </div>
+                <div class="pagination-container justify-content-center" data-pagination-container>
+                    <button style="padding: 0.1rem 0.5rem;" id="first-page" disabled><i class="fa-solid fa-angles-left"></i></button>
+                    <button style="padding: 0.1rem 0.5rem;" id="prev-page" disabled><i class="fa-solid fa-angle-left"></i></button>
+                    <span class="bg-White br-1 py-1 px-4" id="page-info"></span>
+                    <button style="padding: 0.1rem 0.5rem;" id="next-page"><i class="fa-solid fa-angle-right"></i></button>
+                    <button style="padding: 0.1rem 0.5rem;" id="last-page" disabled><i class="fa-solid fa-angles-right"></i></button>
                 </div>
-         
             </div>
-            <div class="overflow-hidden flex flex-col gap-2 ">
-            
-                <div class="bg-White  p-x-0-5 p-y-0-5 br-1-5">
+            <div class="overflow-hidden flex flex-col gap-2">
+                <div class="bg-White p-x-0-5 p-y-0-5 br-1-5">
                     <canvas id="LineTicketVolumeMetric"></canvas>
                 </div>
-                <div class="bg-White p-x-0-5 p-y-0-5 br-1-5 h-100 flex flex-Row justify-content-between ">
-                    <div class="bg-White  p-x-0-5 p-y-0-5 br-1-5">
+                <div class="bg-White p-x-0-5 p-y-0-5 br-1-5 flex flex-Row justify-content-between">
+                    <div class="bg-White p-x-0-5 p-y-0-5 br-1-5">
                         <p class="text-center">Ticket Status</p>
                         <canvas id="pieChartStatus"></canvas>
                     </div>
-                    <div class="bg-White  p-x-0-5 p-y-0-5 br-1-5">
+                    <div class="bg-White p-x-0-5 p-y-0-5 br-1-5">
                         <p class="text-center">Ticket Category</p>
                         <canvas id="pieChartCategory"></canvas>
                     </div>
@@ -96,7 +68,6 @@
     </div>
 </div>
 
-
 @section scripts {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -104,19 +75,46 @@
         $(document).ready(function () {
             const teams = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
 
-            console.log("TEAMS", teams)
+            console.log("TEAMS", teams);
+
+            const paginationContainer = document.querySelector('.pagination-controls');
+            const prevPageBtn = document.getElementById('prev-page');
+            const nextPageBtn = document.getElementById('next-page');
+            const firstPageBtn = document.getElementById('first-page');
+            const lastPageBtn = document.getElementById('last-page');
+            const pageInfo = document.getElementById('page-info');
+
+            let currentPage = 1;
+            const usersPerPage = 10;
+            let filteredTeams = teams;
+
+            function updatePaginationControls() {
+                const totalPages = Math.ceil(filteredTeams.length / usersPerPage);
+                console.log("TOTAL PAGES ", totalPages);
+
+                prevPageBtn.disabled = currentPage === 1;
+                firstPageBtn.disabled = currentPage === 1;
+                nextPageBtn.disabled = currentPage === totalPages;
+                lastPageBtn.disabled = currentPage === totalPages;
+                pageInfo.textContent = `${currentPage}`;
+            }
+
             function renderTeams(teamsToRender) {
                 const teamsList = document.getElementById('teams-list');
                 teamsList.innerHTML = '';
-                teamsToRender.forEach(team => {
+                const startIndex = (currentPage - 1) * usersPerPage;
+                const endIndex = startIndex + usersPerPage;
+                const teamsToShow = teamsToRender.slice(startIndex, endIndex);
+
+                teamsToShow.forEach(team => {
                     const teamDiv = document.createElement('div');
                     teamDiv.classList.add('flex-Row', 'bg-White', 'cursor-pointer', 'p-x-1', 'p-y-0-5', 'gap-2', 'align-items-center');
                     teamDiv.dataset.userId = team.Agent.UserId;
                     teamDiv.dataset.teamItem = '';
                     teamDiv.innerHTML = `
-                                    <div class="p-y-1 p-x-1 br-50 bg-grey"></div>
-                                            <h6 class="H6">${team.Agent.Name}</h6>
-                                `;
+                                                    <div class="p-y-1 p-x-1 br-50 bg-grey"></div>
+                                                            <h6 class="H6">${team.Agent.Name}</h6>
+                                                `;
                     teamsList.appendChild(teamDiv);
                 });
 
@@ -128,11 +126,11 @@
                         });
                         item.classList.add('selected-agent');
 
-                        console.log("ITEM", item)
+                        console.log("ITEM", item);
                         const userId = item.dataset.userId;
-                        console.log("User ID", userId)
+                        console.log("User ID", userId);
                         const teamActive = teams.find(team => team.Agent.UserId === userId);
-                        console.log("TEAM ACTIVE", teamActive)
+                        console.log("TEAM ACTIVE", teamActive);
                         if (teamActive) {
                             const ticketVolume = teamActive.TicketCountsByPriority;
                             const ticketStatus = teamActive.TicketCountsByStatus;
@@ -142,47 +140,80 @@
                         }
                     });
                 });
+                updatePaginationControls();
             }
+
+            // Event listeners for pagination buttons
+            prevPageBtn.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderTeams(filteredTeams);
+                }
+            });
+
+            firstPageBtn.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage = 1;
+                    renderTeams(filteredTeams);
+                }
+            });
+
+            lastPageBtn.addEventListener('click', () => {
+                const totalPages = Math.ceil(filteredTeams.length / usersPerPage);
+                if (currentPage < totalPages) {
+                    currentPage = totalPages;
+                    renderTeams(filteredTeams);
+                }
+            });
+
+            nextPageBtn.addEventListener('click', () => {
+                const totalPages = Math.ceil(filteredTeams.length / usersPerPage);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderTeams(filteredTeams);
+                }
+            });
 
             function updateCharts(ticketVolume, ticketStatus, ticketCategory) {
                 // Update Line Chart
                 lineChart.data.datasets[0].data = [
-                    ticketVolume["1star"] || 0,
-                    ticketVolume["2star"] || 0,
-                    ticketVolume["3star"] || 0,
-                    ticketVolume["4star"] || 0,
-                    ticketVolume["5star"] || 0
+                    ticketVolume["1star"] || 24,
+                    ticketVolume["2star"] || 12,
+                    ticketVolume["3star"] || 17,
+                    ticketVolume["4star"] || 52,
+                    ticketVolume["5star"] || 40
                 ];
                 lineChart.update();
 
                 // Update Status Chart
                 statusChart.data.datasets[0].data = [
-                    ticketStatus["Open"] || 0,
-                    ticketStatus["Resolved"] || 0,
-                    ticketStatus["In Progress"] || 0,
-                    ticketStatus["Closed"] || 0
+                    ticketStatus["Open"] || 8,
+                    ticketStatus["Resolved"] || 51,
+                    ticketStatus["In Progress"] || 23,
+                    ticketStatus["Closed"] || 10
                 ];
                 statusChart.update();
 
                 // Update Category Chart
                 categoryChart.data.datasets[0].data = [
-                    ticketCategory["Technical"] || 0,
-                    ticketCategory["Billing"] || 0,
-                    ticketCategory["General Inquiry"] || 0,
-                    ticketCategory["Others"] || 0
+                    ticketCategory["Technical"] || 15,
+                    ticketCategory["Billing"] || 2,
+                    ticketCategory["General Inquiry"] || 7,
+                    ticketCategory["Others"] || 8
                 ];
                 categoryChart.update();
             }
 
             // Initial rendering
-            renderTeams(Object.values(teams));
+            renderTeams(filteredTeams);
 
             const searchInput = document.getElementById('team-search-input');
             searchInput.addEventListener('input', () => {
                 const searchTerm = searchInput.value.toLowerCase();
-                const filteredTeams = Object.values(teams).filter(team =>
+                filteredTeams = Object.values(teams).filter(team =>
                     team.Agent.Name.toLowerCase().includes(searchTerm)
                 );
+                currentPage = 1; // Reset to the first page when searching
                 renderTeams(filteredTeams);
             });
 
@@ -243,6 +274,4 @@
             }
         });
     </script>
-
- 
 }

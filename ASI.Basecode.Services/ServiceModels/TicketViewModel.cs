@@ -65,7 +65,8 @@ namespace ASI.Basecode.Services.ServiceModels
         public DateTime DateAssigned { get; set; }
         
         public TicketActivity LatestUpdate { get; set; }
-        
+
+        public string ResolvedMessage { get; set; }
         public string RelativeTime
         {
             get

@@ -119,6 +119,8 @@ namespace ASI.Basecode.WebApp.Controllers
             if (id != null)
             {
                 Guid ticketId = Guid.Parse(id);
+                
+
 
                 var ticket = _ticketService.GetById(ticketId);
                 return View("/Views/Admin/TicketDetail.cshtml", ticket);
@@ -268,8 +270,9 @@ namespace ASI.Basecode.WebApp.Controllers
 
             ViewBag.IsLoginOrRegister = false;
             ViewBag.AdminSidebar = "ViewUser";
-            ViewBag.SelectRoles = new List<string> { "All User", "User", "Agent", "Admin" };
+
             var users = _userService.GetAllUsers()
+                                        .Where(u => u.Username != "System")
                                         .Select(u => new UserViewModel
                                         {
                                             Name = u.Name,
@@ -278,6 +281,7 @@ namespace ASI.Basecode.WebApp.Controllers
                                             UserId = u.UserId,
                                         })
                                         .ToList();
+
             if (!String.IsNullOrEmpty(searchString))
             {
                 users = _userService.GetAllUsers()
@@ -323,13 +327,15 @@ namespace ASI.Basecode.WebApp.Controllers
             }
 
             var team = _userService.GetTeams().FirstOrDefault(t => t.TeamId.Equals(data.TeamId));
+            Guid guid = Guid.Parse(UserId);
             var userModel = new UserViewModel
             {
-                UserId = Guid.Parse(UserId),
+                UserId = guid,
                 Name = data.Name,
                 Email = data.Email,
                 RoleId = data.RoleId,
-                TeamName = _userService.GetTeams().FirstOrDefault(t => t.TeamId == data.TeamId)?.TeamName
+                TeamName = _userService.GetTeams().FirstOrDefault(t => t.TeamId == data.TeamId)?.TeamName,
+                RecentUserActivities = _userService.GetUserActivity(guid)
             };
 
             return PartialView("UserDetails", userModel);
@@ -636,33 +642,26 @@ namespace ASI.Basecode.WebApp.Controllers
             var agents = _userService.GetAgents().ToList();
             var teams = _userService.GetTeams().ToList();
 
+
             var categories = _ticketService.GetCategories().ToList();
             var statuses = _ticketService.GetStatuses().ToList();
             var priorities = _ticketService.GetPriorities().ToList();
 
-            var tickets = _ticketService.GetAllTickets();
+            // First, retrieve tickets from the database
+            var tickets = _ticketService.GetAllTickets()
+                .Where(t => t.DateCreated >= startOfWeek && t.DateCreated < endOfWeek && t.AgentId.HasValue)
+                .ToList();
+     
+            var ticketsByAgentDictionary = tickets
+                .Where(t => t.AgentId.HasValue)
+                .GroupBy(t => t.AgentId.Value)
+                .ToDictionary(g => g.Key, g => g.ToList());
 
-            var ticketsByAgentQuery = tickets
-                .Where(t => t.DateCreated >= startOfWeek && t.DateCreated < endOfWeek)
-                .GroupBy(t => t.AgentId)
-                .Select(g => new
-                {
-                    AgentId = g.Key,
-                    Tickets = g.ToList()
-                });
-
-            // Materialize the query into a dictionary
-            var ticketsByAgent = ticketsByAgentQuery
-                .ToDictionary(
-                    g => g.AgentId,
-                    g => g.Tickets
-                );
-
-
+            // Compute metrics for each agent
             var agentTicketCounts = agents.Select(agent =>
             {
-                var agentTickets = ticketsByAgent.ContainsKey(agent.UserId)
-                    ? ticketsByAgent[agent.UserId]
+                var agentTickets = ticketsByAgentDictionary.TryGetValue(agent.UserId, out var ticketsForAgent)
+                    ? ticketsForAgent
                     : new List<TicketViewModel>();
 
                 // Count tickets by category
@@ -689,12 +688,11 @@ namespace ASI.Basecode.WebApp.Controllers
                         UserId = agent.UserId,
                         Name = agent.Name,
                     },
-
                     TicketCountsByCategory = ticketCountsByCategory,
                     TicketCountsByStatus = ticketCountsByStatus,
                     TicketCountsByPriority = ticketCountByPriority
                 };
-            });
+            }).ToList(); // Materialize into memory
 
             return View("Views/Admin/AnalyticsAgentMetric.cshtml", agentTicketCounts);
         }
