@@ -68,7 +68,7 @@ namespace ASI.Basecode.WebApp.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            var user = _userService.GetUserById(Guid.Parse(userId).ToString());
+            var user = _userService.GetUserById(Guid.Parse(userId));
             if (user == null)
             {
                 return NotFound();
@@ -103,9 +103,9 @@ namespace ASI.Basecode.WebApp.Controllers
                 RecipientId = data.RecipientId,
                 DateCreated = data.DateCreated,
                 TicketNumber = data.TicketNumber,
-                TicketStatus = _ticketService.GetById(data.TicketId).Status,
-                AgentName = _ticketService.GetById(data.TicketId).AgentName,
-                RoleId = _userService.GetUserById(_sessionHelper.GetUserIdFromSession().ToString()).RoleId,
+                TicketStatus = _ticketService.GetById(Guid.Parse(data.TicketId)).Status,
+                AgentName = _ticketService.GetById(Guid.Parse(data.TicketId)).AgentName,
+                RoleId = _userService.GetUserById(_sessionHelper.GetUserIdFromSession()).RoleId,
             };
 
             return PartialView("DetailModal", viewModal);

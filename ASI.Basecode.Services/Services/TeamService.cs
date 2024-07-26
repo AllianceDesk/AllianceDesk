@@ -77,7 +77,7 @@ namespace ASI.Basecode.Services.Services
 
         public int GetTeamNumber(string teamId)
         {
-            return GetAgents().Where(u => u.TeamId == teamId).Count();
+            return GetAgents().Where(u => u.TeamId.ToString() == teamId).Count();
         }
 
         public IEnumerable<TeamViewModel> GetTeams()

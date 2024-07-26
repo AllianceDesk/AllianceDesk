@@ -3,7 +3,6 @@
 @{
     ViewData["Title"] = "Tickets";
     Layout = "_Layout";
-
 }
 
 @section styles {
@@ -18,8 +17,9 @@
     <div class="admin-body p-y-3 relative bg-grey flex flex-col gap-1">
         <div class="flex-Row justify-content-between">
             <div id="buttonContainer">
+                <a asp-action="Dashboard" asp-route-status="All" class="btn btn-primary @(Model.CurrentStatus == "All" ? "activeButton" : "inactiveButton")">All</a>
                 <a asp-action="Dashboard" asp-route-status="Unresolved" class="btn btn-primary @(Model.CurrentStatus == "Unresolved" ? "activeButton" : "inactiveButton")">Unresolved</a>
-                <a asp-action="Dashboard" asp-route-status="Resolved" class ="btn btn-primary @(Model.CurrentStatus == "Resolved" ? "activeButton" : "inactiveButton")">Resolved</a>
+                <a asp-action="Dashboard" asp-route-status="Resolved" class="btn btn-primary @(Model.CurrentStatus == "Resolved" ? "activeButton" : "inactiveButton")">Resolved</a>
             </div>
 
             <div class="flex-Row gap-2 justify-content-center align-center mb-5 mt-3">
@@ -30,40 +30,51 @@
                 <option selected>Date</option>
                 <option value="1">Category</option>
             </select>
-        
         </div>
 
         <div id="card_content">
-            @foreach (var item in Model.Tickets)
+            @if(Model.Tickets.Count() > 0)
             {
-                <div class="ticket-container">
-                    <a href="#" data-bs-toggle="modal" data-bs-target="#viewTicket" class="ticket-link" data-ticket-id="@item.TicketId">
-                        <div class="top-container">
-                            @*  <img class="image" src="@item.Image" alt="image"> *@
-                            <div class="nameDateContainer">
+                @foreach (var item in Model.Tickets)
+                {
+                    <div class="ticket-container">
+                        <a data-bs-toggle="modal" data-bs-target="#viewTicket" class="ticket-link" data-ticket-id="@item.TicketId">
+                            <div class="top-container">
+                                @*  <img class="image" src="@item.Image" alt="image"> *@
+                                <div class="nameDateContainer">
 
-                                <h5 class="name">@item.CreatorName</h5>
-                                <p class="date">@item.RelativeTime</p>
+                                    <h5 class="name">@item.CreatorName</h5>
+                                    <p class="date">@item.RelativeTime</p>
+                                </div>
                             </div>
+                            <h2 class="question">@item.Title</h2>
+                            <p class="details">@item.Description</p>
+                        </a>
+                        <div class="btn-group option">
+                            @if (item.Status == "In Progress")
+                            {
+                                <button class="btn icon-button" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bx bx-dots-vertical-rounded bx-sm icon-ticket" style="color: #808080;"></i>
+                                </button>
+                                <ul class="dropdown-menu menu">
+                                    <li>
+                                        <a class="dropdown-item item" href="#" data-bs-toggle="modal" data-bs-target="#resolveTicket" data-ticket-id="@item.TicketId">
+                                            <i class="bx bxs-check-circle bx-xs bx-fw" style="color: #808080;"></i>
+                                            Mark as Resolved
+                                        </a>
+                                    </li>
+                                </ul>
+                            }
                         </div>
-                        <h2 class="question">@item.Title</h2>
-                        <p class="details">@item.Description</p>
-                    </a>
-                    @* Add Dropdown Menu Later Here *@
-                    @* <div class="btn-group option">
-                        <button class="btn icon-button" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bx bx-dots-vertical-rounded bx-sm icon-ticket" style="color: #808080;"></i>
-                        </button>
-
-                        
-                        <ul class="dropdown-menu menu">
-                        </ul>
-                    </div> *@
-                </div>
+                    </div>
+                }
+            } else
+            {
+                <h1 class="d-flex justify-content-center align-items-center h-75">No tickets found</h1>
             }
         </div>
-      
-        <div class="modal fade" id="viewTicket" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+        <div class="modal fade" id="viewTicket" tabindex="-1" aria-labelledby="viewTicket" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="ticket-modal1">
@@ -85,7 +96,33 @@
 
                     <div class="gallery" id="ViewGallery"></div>
                 </div>
-            }
+            </div>
+        </div>
+
+        <div class="modal fade" id="resolveTicket" tabindex="-1" aria-labelledby="resolveTicket" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content p-3">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="ticketActionModalLabel">Resolve Ticket</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form asp-controller="Agent" asp-action="ResolveTicket" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="modal-body">
+                            <input type="hidden" asp-for="TicketMessage.TicketId" id="resolveTicketId" />
+                            <div class="form-floating mb-3">
+                                <textarea asp-for="TicketMessage.Message" class="form-control" placeholder="Description" id="floatingTextarea2" style="height: 100px"></textarea>
+                                <span asp-validation-for="TicketMessage.Message" class="text-danger"></span>
+                                <label for="floatingTextarea2">Message</label>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-danger">Submit</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -94,26 +131,11 @@
     document.addEventListener('DOMContentLoaded', function () {
 
         const viewTicketModal = new bootstrap.Modal(document.getElementById('viewTicket'));
-
-        var dpIcon = document.querySelector('.dpicn');
-        var dropdownMenu = document.getElementById('dropdownMenu');
-
-        dpIcon.addEventListener('click', function (event) {
-            event.stopPropagation();
-
-            if (dropdownMenu.style.display === 'block') {
-                dropdownMenu.style.display = 'none';
-            } else {
-                dropdownMenu.style.display = 'block';
-            }
-        });
+        const resolveTicketModal = new bootstrap.Modal(document.getElementById('resolveTicket'));
 
         document.querySelectorAll('[data-bs-toggle="modal"]').forEach(element => {
             element.addEventListener('click', function () {
                 const target = this.getAttribute('data-bs-target');
-
-                console.log("Target was clicked");
-
 
                 if (target == '#viewTicket') {
                     var ticketId = this.getAttribute('data-ticket-id');
@@ -122,7 +144,6 @@
                         .then(response => response.json())
                         .then(data => {
 
-                            console.log(data);
                             document.querySelector('#ViewName').textContent = data.user;
                             document.querySelector('#ViewDate').textContent = data.dateCreated;
                             document.querySelector('#ViewTitle').textContent = data.title;
@@ -147,31 +168,27 @@
                             });
 
                             viewTicketModal.show();
-
                         })
                         .catch(error => console.error('Error fetching ticket data:', error));
-                } else {
-                    const modal = new bootstrap.Modal(document.querySelector(target));
-                    modal.show();
+                } else if (target == '#resolveTicket') {
+                    var ticketId = this.getAttribute('data-ticket-id');
+                    document.getElementById('resolveTicketId').value = ticketId;
+                    resolveTicketModal.show();
                 }
             });
         });
 
-        // Get all modal elements
         const modals = document.querySelectorAll('.modal');
 
         modals.forEach(modal => {
-            // Find the close button within this specific modal
             const closeButton = modal.querySelector('[data-bs-dismiss="modal"]');
 
             if (closeButton) {
                 closeButton.addEventListener('click', function () {
-                    // Get the corresponding Bootstrap modal instance
                     const modalInstance = bootstrap.Modal.getInstance(modal);
 
                     if (modalInstance) {
-                        modalInstance.hide(); // Hide the correct modal
-                        // Manually remove backdrop if it still exists
+                        modalInstance.hide();
                         const backdrop = document.querySelector('.modal-backdrop');
                         if (backdrop) {
                             backdrop.remove();
@@ -187,28 +204,25 @@
             });
         });
 
-		document.getElementById('search-input').addEventListener('keypress', function (event) {
-			if (event.keyCode === 13) {
-				event.preventDefault(); // Prevent form submission
+        document.getElementById('search-input').addEventListener('keypress', function (event) {
+            if (event.keyCode === 13) {
+                event.preventDefault(); // Prevent form submission
 
-				var searchTerm = this.value;
-				var status = '@Model.CurrentStatus';
-				var url = '@Url.Action("Dashboard")';
+                var searchTerm = this.value;
+                var status = '@Model.CurrentStatus';
+                var url = '@Url.Action("Dashboard")';
 
-				// Construct the URL with the appropriate parameters
-				if (status !== 'All') {
-					url += '?status=' + encodeURIComponent(status);
-				}
+                // Construct the URL with the appropriate parameters
+                if (status !== 'All') {
+                    url += '?status=' + encodeURIComponent(status);
+                }
 
-				if (searchTerm) {
-					url += (url.indexOf('?') === -1 ? '?' : '&') + 'searchTerm=' + encodeURIComponent(searchTerm);
-				}
+                if (searchTerm) {
+                    url += (url.indexOf('?') === -1 ? '?' : '&') + 'searchTerm=' + encodeURIComponent(searchTerm);
+                }
 
-				location.replace(url);
-			}
-		});
+                location.replace(url);
+            }
+        });
     });
 </script>
-
-
-

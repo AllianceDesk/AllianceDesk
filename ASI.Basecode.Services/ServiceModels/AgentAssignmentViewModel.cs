@@ -8,15 +8,16 @@ using System.Threading.Tasks;
 namespace ASI.Basecode.Services.ServiceModels
 {
     public class AgentAssignmentViewModel
-    {   
-        public string TicketId { get; set; }
+    {
+        public Guid TicketId { get; set; }
+        public string TicketNumber { get; set; }
         public string Title { get; set; }
         public DateTime CreatedAt { get; set; }
         public string Description { get; set; }
         public List<UserViewModel> Agents { get; set; } // Assuming User is your user model
-        public List<AnalyticsAgentMetricViewModel> AssignedTicketCounts { get; set; }
-
+        public Dictionary<Guid, int> TicketCount { get; set; }
+        
         //For submitting the form
-        public string SelectedAgentId { get; set; }
+        public Guid SelectedAgentId { get; set; }
     }
 }

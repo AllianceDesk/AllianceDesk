@@ -42,9 +42,9 @@ namespace ASI.Basecode.Data.Repositories
             }
         }
 
-        public void Delete(String id)
+        public void Delete(Guid id)
         {
-            var ticketToDelete = this.GetDbSet<Ticket>().FirstOrDefault(x => x.TicketId.ToString() == id);
+            var ticketToDelete = this.GetDbSet<Ticket>().FirstOrDefault(x => x.TicketId == id);
 
             if (ticketToDelete != null)
             {
@@ -58,14 +58,14 @@ namespace ASI.Basecode.Data.Repositories
             return this.GetDbSet<Ticket>().FirstOrDefault(x => x.TicketId == id);
         }
 
-        public IEnumerable<Ticket> GetUserTicketsById(Guid id)
+        public IQueryable<Ticket> GetUserTicketsById(Guid id)
         {
            return this.GetDbSet<Ticket>().Where(x => x.CreatedBy == id);
         }
 
-        public IEnumerable<Ticket> GetAgentTicketsById(Guid id)
+        public IQueryable<Ticket> GetAgentTicketsById(Guid id)
         {
-            return this.GetDbSet<Ticket>().Where(x => x.AssignedAgent != null && x.AssignedAgent == id);
+            return this.GetDbSet<Ticket>().Where(x => x.AssignedAgent == id);
         }
         
         public IQueryable<Ticket> GetWeeklyTickets(DateTime startOfWeek, DateTime endOfWeek)

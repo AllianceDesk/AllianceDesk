@@ -11,10 +11,9 @@
 @* <div>
     @Html.AntiForgeryToken()
 </div> *@
-@Html.Partial("General_Header") 
 <div>
 
-    <div class="login-container" style="height: calc(100vh - 66.51px);">
+    <div class="login-container">
     
         <form method="post" action="/Account/Login" id="loginForm">
 
@@ -54,6 +53,7 @@
 
         // Check for error message and display Toastr notification
         var errorMessage = '@TempData["ErrorMessage"]';
+        
         if (errorMessage) {
             toastr.error(errorMessage);
         }

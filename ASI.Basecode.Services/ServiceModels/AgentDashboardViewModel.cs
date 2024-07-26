@@ -13,6 +13,6 @@ namespace ASI.Basecode.Services.ServiceModels
         public int TotalPages { get; set; }
         public string CurrentStatus { get; set; }
         public string CurrentSearchTerm { get; set; }
-
+        public TicketMessageViewModel TicketMessage { get; set; }
     }
 }

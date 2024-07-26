@@ -13,7 +13,7 @@
 <div class="main">
     @Html.Partial("Admin_Sidebar")
     <div class="admin-body py-3 relative bg-grey mx-auto">
-       <h2>Welcome Back, @ViewBag.Name</h2>
+       <h2>Welcome Back, @ViewData["Name"]</h2>
        <div class="flex flex-col gap-2">
            <p class="text-1-5">Top Performing Agents of the Week</p>
            <div class="flex-Row gap-1">

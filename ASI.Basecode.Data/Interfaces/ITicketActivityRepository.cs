@@ -12,8 +12,8 @@ namespace ASI.Basecode.Data.Interfaces
         void Add(TicketActivity ticketActivity);
         IQueryable<TicketActivity> RetrieveAll();
         void Delete(Guid id);
-        IEnumerable<TicketActivity> GetActivitiesByTicketId(Guid ticketId);
-        IEnumerable<TicketActivity> GetActivitiesByTicketIds(List<Guid> ticketId);
+        IQueryable<TicketActivity> GetActivitiesByTicketId(Guid ticketId);
+        IQueryable<TicketActivity> GetActivitiesByTicketIds(List<Guid> ticketId);
         Task AddTicketActivitiesAsync(List<TicketActivity> ticketActivities);
     }
 }

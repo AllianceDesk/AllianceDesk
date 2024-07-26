@@ -2,6 +2,7 @@
 using Basecode.Data.Repositories;
 using System.Collections.Generic;
 using ASI.Basecode.Data.Models;
+using System;
 using System.Linq;
 
 
@@ -25,9 +26,9 @@ namespace ASI.Basecode.Data.Repositories
             return this.GetDbSet<TicketMessage>();
         }
 
-        public IEnumerable<TicketMessage> GetMessagesByTicketId(string ticketId)
+        public IEnumerable<TicketMessage> GetMessagesByTicketId(Guid ticketId)
         { 
-            return this.GetDbSet<TicketMessage>().Where(x => x.TicketId.ToString() == ticketId);
+            return this.GetDbSet<TicketMessage>().Where(x => x.TicketId == ticketId);
         }
     }
 }
